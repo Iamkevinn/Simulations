@@ -1,0 +1,356 @@
+<!-- ESTILOS (CSS) -->
+<style>
+    .chat-wrapper {
+        font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+        max-width: 450px; /* Ancho tipo móvil */
+        margin: 0 auto;
+        background: #e5ddd5; /* Fondo tipo WhatsApp */
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        display: flex;
+        flex-direction: column;
+        height: 600px;
+        position: relative;
+    }
+
+    /* Header */
+    .chat-header {
+        background: #075e54;
+        color: white;
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 10;
+    }
+    .avatar {
+        width: 40px;
+        height: 40px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        color: #075e54;
+    }
+    .status { font-size: 12px; opacity: 0.8; }
+
+    /* Área de mensajes */
+    .chat-body {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); /* Trama sutil */
+        background-size: 300px;
+    }
+
+    /* Burbujas */
+    .bubble {
+        max-width: 80%;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        line-height: 1.4;
+        position: relative;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        animation: slideIn 0.3s ease;
+    }
+    .incoming {
+        background: white;
+        align-self: flex-start;
+        border-top-left-radius: 0;
+    }
+    .outgoing {
+        background: #dcf8c6;
+        align-self: flex-end;
+        border-top-right-radius: 0;
+    }
+    .system {
+        background: rgba(255,255,255,0.8);
+        align-self: center;
+        font-size: 12px;
+        padding: 5px 10px;
+        border-radius: 10px;
+        color: #555;
+        text-align: center;
+        margin: 10px 0;
+    }
+
+    /* Animación de "Escribiendo..." */
+    .typing-indicator {
+        background: white;
+        padding: 10px 15px;
+        border-radius: 20px;
+        align-self: flex-start;
+        display: none; /* Oculto por defecto */
+        gap: 5px;
+        width: fit-content;
+    }
+    .dot {
+        width: 8px;
+        height: 8px;
+        background: #b6b5b5;
+        border-radius: 50%;
+        animation: bounce 1.4s infinite ease-in-out both;
+    }
+    .dot:nth-child(1) { animation-delay: -0.32s; }
+    .dot:nth-child(2) { animation-delay: -0.16s; }
+
+    /* Área de opciones (Footer) */
+    .chat-options {
+        background: #f0f0f0;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        border-top: 1px solid #ddd;
+    }
+    .option-btn {
+        background: white;
+        border: 1px solid #ddd;
+        padding: 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        text-align: center;
+        color: #333;
+        font-weight: 600;
+        transition: all 0.2s;
+        font-size: 14px;
+    }
+    .option-btn:hover { background: #075e54; color: white; border-color: #075e54; }
+
+    /* Violentómetro Bar */
+    .meter-container {
+        height: 6px;
+        background: #ddd;
+        width: 100%;
+    }
+    .meter-fill {
+        height: 100%;
+        width: 0%;
+        background: #4caf50;
+        transition: width 1s ease, background 1s ease;
+    }
+
+    /* Animaciones Keyframes */
+    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+    
+    /* Shake effect para violencia alta */
+    .shake { animation: shake 0.5s; }
+    @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
+
+</style>
+
+<!-- ESTRUCTURA HTML -->
+<div class="chat-wrapper" id="game-window">
+    <div class="chat-header">
+        <div class="avatar">JP</div>
+        <div>
+            <div style="font-weight:bold;">Juan Pablo (Supervisor)</div>
+            <div class="status" id="status-text">En línea</div>
+        </div>
+    </div>
+
+    <div class="chat-body" id="chat-box">
+        <div class="system">Hoy</div>
+        <!-- Los mensajes se inyectan aquí con JS -->
+        
+        <!-- Elemento de carga "Escribiendo..." -->
+        <div class="typing-indicator" id="typing-dots">
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+    </div>
+
+    <!-- Barra del Violentómetro -->
+    <div class="meter-container">
+        <div class="meter-fill" id="violence-meter"></div>
+    </div>
+
+    <!-- Botones de decisión -->
+    <div class="chat-options" id="options-box">
+        <button class="option-btn" onclick="startGame()">Comenzar Simulación</button>
+    </div>
+</div>
+
+<!-- LÓGICA JAVASCRIPT -->
+<script>
+    // --- 1. LA HISTORIA (CONFIGURACIÓN) ---
+    // Aquí puedes editar los textos, las opciones y el nivel de violencia (0 a 100)
+    
+    const historia = {
+        'inicio': {
+            mensajes: [
+                "Hola. Necesito verte en mi oficina ahora.",
+                "Trae el reporte de ventas. Espero que esté decente esta vez."
+            ],
+            opciones: [
+                { texto: "Voy enseguida, Juan Pablo.", siguiente: 'sumisa', nivel: 10 },
+                { texto: "¿Pasa algo malo con el reporte?", siguiente: 'pregunta', nivel: 20 }
+            ]
+        },
+        'sumisa': {
+            mensajes: [
+                "Más te vale. No tengo tiempo para tus errores.",
+                "A veces pienso que te queda grande el puesto, sinceramente."
+            ],
+            opciones: [
+                { texto: "Lo siento, me esforzaré más.", siguiente: 'gaslighting', nivel: 40 },
+                { texto: "Creo que ese comentario está fuera de lugar.", siguiente: 'defensa', nivel: 30 }
+            ]
+        },
+        'pregunta': {
+            mensajes: [
+                "Uy, qué agresiva amaneciste.",
+                "Solo ven. Y baja el tono, que aquí mando yo."
+            ],
+            opciones: [
+                { texto: "(Ir a la oficina en silencio)", siguiente: 'gaslighting', nivel: 45 },
+                { texto: "No fui agresiva, solo pregunté.", siguiente: 'defensa', nivel: 50 }
+            ]
+        },
+        'gaslighting': {
+            mensajes: [
+                "Mira, estás histérica. Siempre te tomas todo personal.",
+                "Deberías aprender a manejar tus emociones si quieres seguir trabajando aquí."
+            ],
+            nota: "⚠️ ALERTA: Esto es Gaslighting (Invalidación).",
+            opciones: [
+                { texto: "Finalizar Simulación", siguiente: 'fin', nivel: 70 }
+            ]
+        },
+        'defensa': {
+            mensajes: [
+                "¿Me vas a contestar? Cuidado con quién crees que eres.",
+                "Si no te gusta mi gestión, ahí tienes la puerta. Hay 10 personas esperando tu puesto."
+            ],
+            nota: "⚠️ ALERTA: Amenaza de despido e intimidación.",
+            opciones: [
+                { texto: "Finalizar Simulación", siguiente: 'fin', nivel: 85 }
+            ]
+        },
+        'fin': {
+            mensajes: [
+                "<b>CONCLUSIÓN:</b>",
+                "Has experimentado violencia psicológica laboral.",
+                "Identificamos: Intimidación, menosprecio y amenazas.",
+                "En el violentómetro, esto está en zona Naranja/Roja."
+            ],
+            opciones: [
+                { texto: "Reiniciar", siguiente: 'inicio', nivel: 0 }
+            ]
+        }
+    };
+
+    // --- 2. MOTOR DEL JUEGO (NO NECESITAS TOCAR ESTO) ---
+
+    const chatBox = document.getElementById('chat-box');
+    const optionsBox = document.getElementById('options-box');
+    const typingDots = document.getElementById('typing-dots');
+    const statusText = document.getElementById('status-text');
+    const meter = document.getElementById('violence-meter');
+    const gameWindow = document.getElementById('game-window');
+
+    function startGame() {
+        chatBox.innerHTML = '<div class="system">Hoy</div>'; // Limpiar chat
+        chatBox.appendChild(typingDots); // Volver a meter los puntos
+        loadNode('inicio');
+    }
+
+    function loadNode(nodeId) {
+        // Limpiar opciones viejas
+        optionsBox.innerHTML = '';
+        const nodo = historia[nodeId];
+
+        // Procesar mensajes uno por uno con delay
+        let delay = 0;
+
+        nodo.mensajes.forEach((msg, index) => {
+            // Tiempo para "leer" y "escribir"
+            delay += 1000 + (msg.length * 20); 
+
+            setTimeout(() => {
+                showTyping(); // Mostrar ...
+            }, delay - 1000);
+
+            setTimeout(() => {
+                hideTyping();
+                addMessage(msg, 'incoming');
+                
+                // Si es el último mensaje y hay nota, mostrarla
+                if (index === nodo.mensajes.length - 1) {
+                    if (nodo.nota) addMessage(nodo.nota, 'system');
+                    showOptions(nodo.opciones);
+                    updateMeter(nodo.opciones[0].nivel || 0); // Actualizar barra visualmente (usamos el nivel de la primera opción como referencia visual del momento)
+                }
+            }, delay);
+        });
+    }
+
+    function addMessage(text, type) {
+        const div = document.createElement('div');
+        div.className = `bubble ${type}`;
+        div.innerHTML = text;
+        
+        // Insertar antes del indicador de "escribiendo"
+        chatBox.insertBefore(div, typingDots);
+        
+        // Scroll al fondo
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Efecto de sonido/vibración visual si es un mensaje agresivo
+        if(type === 'incoming') {
+            gameWindow.classList.add('shake');
+            setTimeout(() => gameWindow.classList.remove('shake'), 500);
+        }
+    }
+
+    function showTyping() {
+        typingDots.style.display = 'flex';
+        statusText.innerText = 'Escribiendo...';
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function hideTyping() {
+        typingDots.style.display = 'none';
+        statusText.innerText = 'En línea';
+    }
+
+    function showOptions(opciones) {
+        opciones.forEach(op => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = op.texto;
+            btn.onclick = () => selectOption(op);
+            optionsBox.appendChild(btn);
+        });
+    }
+
+    function selectOption(opcion) {
+        // Mostrar mi respuesta
+        addMessage(opcion.texto, 'outgoing');
+        optionsBox.innerHTML = ''; // Quitar botones para que no pulse de nuevo
+        
+        // Actualizar nivel de violencia real
+        updateMeter(opcion.nivel);
+
+        // Cargar siguiente nodo tras breve pausa
+        setTimeout(() => {
+            if(opcion.siguiente) loadNode(opcion.siguiente);
+        }, 1000);
+    }
+
+    function updateMeter(nivel) {
+        meter.style.width = nivel + '%';
+        
+        // Cambiar color según gravedad
+        if(nivel < 30) meter.style.background = '#4caf50'; // Verde
+        else if(nivel < 60) meter.style.background = '#ff9800'; // Naranja
+        else meter.style.background = '#f44336'; // Rojo
+    }
+</script>

@@ -1,0 +1,331 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="case-three-wrapper">
+    <!-- Fondo de Partículas Constante (Canvas) -->
+    <canvas id="particleCanvas"></canvas>
+
+    <div class="case-content">
+        <!-- Badge de Ubicación/Contexto -->
+        <div class="territory-badge" data-aos="fade-down">
+            <i class="fas fa-map-marked-alt"></i>
+            <span>Contextos Rurales y Étnicos</span>
+        </div>
+
+        <header class="case-header">
+            <h1 style="color:white;">Caso 3: Feminismos Comunitarios y <span class="eco-text">Defensa del Territorio</span></h1>
+            <div class="header-line"></div>
+        </header>
+
+        <!-- Bloque Central de Análisis -->
+        <div class="main-insight-card">
+            <div class="card-glow-border"></div>
+            <div class="insight-inner">
+                <div class="leader-icon">
+                    <i class="fas fa-hands-holding-child"></i>
+                </div>
+                <div class="insight-text">
+                    <p>Se analiza el rol de <strong>mujeres lideresas</strong> quienes enfrentan violencias múltiples por su liderazgo social y territorial.</p>
+                </div>
+            </div>
+            <!-- Decoración de "Raíces" -->
+            <div class="root-decoration"></div>
+        </div>
+
+        <!-- Sección de Desafíos (Preguntas) -->
+        <div class="questions-zone">
+            <h2 class="section-title">Ejes de Reflexión</h2>
+            
+            <div class="challenge-grid">
+                <!-- Pregunta 1 -->
+                <div class="challenge-item">
+                    <div class="c-header">
+                        <span class="c-index">A</span>
+                        <i class="fas fa-earth-americas icons"></i>
+                    </div>
+                    <div class="c-body">
+                        <p>¿Qué diferencia a los feminismos latinoamericanos de los europeos?</p>
+                    </div>
+                    <div class="hover-reveal">Explorar Identidad</div>
+                </div>
+
+                <!-- Pregunta 2 -->
+                <div class="challenge-item">
+                    <div class="c-header">
+                        <span class="c-index">B</span>
+                        <i class="fas fa-triangle-exclamation icons"></i>
+                    </div>
+                    <div class="c-body">
+                        <p>¿Por qué estas lideresas enfrentan mayores riesgos?</p>
+                    </div>
+                    <div class="hover-reveal">Analizar Riesgos</div>
+                </div>
+
+                <!-- Pregunta 3 -->
+                <div class="challenge-item highlight-unp">
+                    <div class="c-header">
+                        <span class="c-index">C</span>
+                        <i class="fas fa-shield-alt icons"></i>
+                    </div>
+                    <div class="c-body">
+                        <p>¿Cómo debe responder la <strong>UNP</strong> ante estas realidades?</p>
+                    </div>
+                    <div class="hover-reveal">Misión Institucional</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+
+:root {
+    --eco-green: #10b981;
+    --eco-gold: #f59e0b;
+    --deep-earth: #06100b;
+    --glass-eco: rgba(16, 185, 129, 0.05);
+    --border-eco: rgba(16, 185, 129, 0.2);
+}
+
+.case-three-wrapper {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--deep-earth);
+    color: #ecfdf5;
+    min-height: 900px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    padding: 80px 20px;
+    border-radius: 40px;
+}
+
+#particleCanvas {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.case-content {
+    position: relative;
+    z-index: 1;
+    max-width: 850px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Territory Badge */
+.territory-badge {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid var(--eco-green);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    color: var(--eco-green);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Header */
+.case-header { text-align: center; margin-bottom: 60px; }
+.case-header h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 15px; }
+.eco-text { color: var(--eco-green); text-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+.header-line { width: 100px; height: 3px; background: var(--eco-gold); margin: 0 auto; border-radius: 10px; }
+
+/* Insight Card */
+.main-insight-card {
+    position: relative;
+    width: 100%;
+    background: var(--glass-eco);
+    border-radius: 30px;
+    padding: 40px;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-eco);
+    margin-bottom: 80px;
+    transition: 0.5s;
+}
+
+.main-insight-card:hover {
+    transform: scale(1.02);
+    border-color: var(--eco-green);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.insight-inner {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.leader-icon {
+    width: 80px; height: 80px;
+    background: var(--eco-green);
+    color: var(--deep-earth);
+    border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem;
+}
+
+.insight-text p { font-size: 1.25rem; line-height: 1.6; color: #d1fae5; }
+
+/* Question Grid */
+.questions-zone { width: 100%; }
+.section-title { text-align: center; margin-bottom: 40px; font-size: 1.8rem; color: var(--eco-gold); }
+
+.challenge-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.challenge-item {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border-eco);
+    border-radius: 24px;
+    padding: 30px;
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    transition: 0.4s;
+    overflow: hidden;
+}
+
+.challenge-item:hover {
+    background: rgba(16, 185, 129, 0.08);
+    border-color: var(--eco-green);
+    transform: translateX(15px);
+}
+
+.c-index {
+    font-size: 0.8rem; font-weight: 800; color: var(--eco-green);
+    position: absolute; top: 15px; left: 15px; opacity: 0.5;
+}
+
+.c-header { font-size: 2rem; color: var(--eco-gold); }
+
+.c-body p { font-size: 1.1rem; margin: 0; line-height: 1.5; }
+
+.hover-reveal {
+    position: absolute;
+    right: -100px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--eco-green);
+    font-weight: 700;
+    transition: 0.4s;
+    opacity: 0;
+}
+
+.challenge-item:hover .hover-reveal {
+    right: 30px;
+    opacity: 1;
+}
+
+.highlight-unp {
+    border-left: 5px solid var(--eco-gold);
+}
+
+/* Canvas Animation Styles */
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* Mobile */
+@media (max-width: 1200px) {
+    .insight-inner { flex-direction: column; text-align: center; }
+    .challenge-item { grid-template-columns: 1fr; text-align: center; gap: 15px; }
+    .c-body {width: 99%;}
+}
+</style>
+
+<script>
+/**
+ * SISTEMA DE PARTÍCULAS BIO-LUMINISCENTES
+ * Animación constante de "semillas/conexiones"
+ */
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
+let particlesArray;
+
+function initCanvas() {
+    canvas.width = canvas.parentElement.offsetWidth;
+    canvas.height = canvas.parentElement.offsetHeight;
+}
+
+class Particle {
+    constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 1;
+        this.speedX = Math.random() * 0.5 - 0.25;
+        this.speedY = Math.random() * 0.5 - 0.25;
+        this.opacity = Math.random() * 0.5 + 0.1;
+    }
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x > canvas.width) this.x = 0;
+        if (this.x < 0) this.x = canvas.width;
+        if (this.y > canvas.height) this.y = 0;
+        if (this.y < 0) this.y = canvas.height;
+    }
+    draw() {
+        ctx.fillStyle = `rgba(16, 185, 129, ${this.opacity})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+function handleParticles() {
+    for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+    }
+}
+
+function createParticles() {
+    particlesArray = [];
+    const numberOfParticles = 70;
+    for (let i = 0; i < numberOfParticles; i++) {
+        particlesArray.push(new Particle());
+    }
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    handleParticles();
+    requestAnimationFrame(animate);
+}
+
+window.addEventListener('resize', initCanvas);
+initCanvas();
+createParticles();
+animate();
+
+// Micro-interacción de revelado al scroll
+const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
+        }
+    });
+});
+
+document.querySelectorAll('.challenge-item, .main-insight-card').forEach(el => {
+    el.style.opacity = "0";
+    el.style.transform = "translateY(30px)";
+    el.style.transition = "all 0.8s ease-out";
+    obs.observe(el);
+});
+</script>

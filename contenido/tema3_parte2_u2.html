@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+    :root {
+        --bg-main: #1a1a2e;
+        --card-bg: #16213e;
+        --accent-alert: #e94560; /* Rojo Violencia */
+        --accent-success: #0f3460; /* Azul Institucional Oscuro */
+        --accent-light: #533483; /* Morado Transformación */
+        --text-color: #eaeaea;
+        --neon-blue: #00fff5;
+    }
+
+    * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-main);
+        color: var(--text-color);
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* --- FONDO AMBIENTAL --- */
+    .ambient-grid {
+        position: absolute; width: 200%; height: 200%;
+        background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 60px 60px;
+        transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+        animation: gridFlow 40s linear infinite;
+        z-index: 0; pointer-events: none;
+    }
+    @keyframes gridFlow { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
+
+    /* --- HUD SUPERIOR --- */
+    .hud-header {
+        height: 70px; background: rgba(22, 33, 62, 0.95);
+        border-bottom: 2px solid var(--accent-light);
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 0 20px; z-index: 50; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    }
+    .hud-title { font-weight: bold; text-transform: uppercase; letter-spacing: 1px; color: var(--neon-blue); }
+    
+    .progress-track { width: 150px; height: 10px; background: #0f3460; border-radius: 5px; overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; background: var(--accent-alert); transition: width 0.5s; }
+
+    /* --- CONTENEDOR PRINCIPAL --- */
+    .game-stage {
+        flex-grow: 1; position: relative; z-index: 10;
+        display: flex; justify-content: center; align-items: center;
+        padding: 20px; overflow: hidden;
+    }
+
+    /* --- FASE 1: TARJETAS GIRATORIAS (TEORÍA) --- */
+    #phase1 { display: flex; gap: 30px; width: 100%; max-width: 1000px; justify-content: center; flex-wrap: wrap; }
+    
+    .flip-card {
+        background-color: transparent;
+        width: 300px; height: 400px;
+        perspective: 1000px; cursor: pointer;
+    }
+    
+    .flip-card-inner {
+        position: relative; width: 100%; height: 100%;
+        text-align: center; transition: transform 0.8s;
+        transform-style: preserve-3d;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    
+    .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+    
+    .flip-front, .flip-back {
+        position: absolute; width: 100%; height: 100%;
+        -webkit-backface-visibility: hidden; backface-visibility: hidden;
+        border-radius: 15px; padding: 20px;
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        border: 2px solid var(--accent-light);
+    }
+    
+    .flip-front {
+        background: linear-gradient(135deg, var(--card-bg), #1a1a2e);
+    }
+    .flip-icon { font-size: 4rem; margin-bottom: 20px; animation: floatIcon 3s infinite ease-in-out; }
+    @keyframes floatIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+    .flip-back {
+        background: var(--accent-light); color: white;
+        transform: rotateY(180deg); text-align: left;
+        font-size: 0.9rem; line-height: 1.5; overflow-y: auto;
+    }
+    .flip-back h3 { border-bottom: 1px solid white; padding-bottom: 10px; width: 100%; text-align: center; }
+
+    /* --- FASE 2: AUDITORÍA DE EXPEDIENTE (CASO SIMULADO) --- */
+    #phase2 { display: none; width: 100%; max-width: 800px; flex-direction: column; align-items: center; }
+    
+    .case-folder {
+        background: #f4f4f4; color: #333;
+        width: 100%; padding: 30px; border-radius: 5px;
+        transform: rotate(-1deg); position: relative;
+        box-shadow: 10px 10px 40px rgba(0,0,0,0.5);
+        min-height: 400px;
+    }
+    .folder-label {
+        position: absolute; top: -15px; left: 0; background: #e0e0e0;
+        padding: 5px 20px; font-weight: bold; border-radius: 5px 5px 0 0;
+    }
+    
+    .evidence-grid {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;
+    }
+    
+    .evidence-item {
+        background: #fff; border: 2px dashed #999; padding: 15px;
+        cursor: pointer; transition: 0.3s; position: relative;
+    }
+    .evidence-item:hover { background: #ffeaea; border-color: var(--accent-alert); }
+    
+    .evidence-item.detected {
+        background: #ffe6e6; border: 2px solid var(--accent-alert);
+        color: var(--accent-alert); font-weight: bold;
+        animation: shake 0.5s;
+    }
+    .evidence-item.detected::after {
+        content: 'DETECTADO'; position: absolute; top: -10px; right: -10px;
+        background: var(--accent-alert); color: white; font-size: 0.7rem; padding: 2px 5px; transform: rotate(10deg);
+    }
+
+    @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
+
+    /* --- FASE 3: RECONFIGURACIÓN (ESTRATEGIAS) --- */
+    #phase3 { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 900px; }
+    
+    .strategy-board {
+        display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 100%;
+    }
+    
+    .strategy-module {
+        background: rgba(255,255,255,0.05); border: 1px solid var(--neon-blue);
+        padding: 20px; border-radius: 10px; cursor: pointer;
+        display: flex; align-items: center; gap: 15px;
+        transition: 0.3s; opacity: 0.7;
+    }
+    .strategy-module:hover { opacity: 1; background: rgba(0, 255, 245, 0.1); }
+    
+    .strategy-module.active {
+        background: linear-gradient(90deg, var(--accent-success), var(--accent-light));
+        border-color: white; opacity: 1; transform: scale(1.02);
+        box-shadow: 0 0 20px var(--accent-light);
+    }
+    
+    .module-icon { font-size: 1.5rem; background: rgba(0,0,0,0.3); width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; border-radius: 50%; }
+
+    /* --- CONTROLES --- */
+    .controls {
+        height: 80px; background: rgba(22, 33, 62, 0.95);
+        display: flex; justify-content: center; align-items: center;
+        gap: 20px; z-index: 50; border-top: 1px solid var(--accent-light);
+    }
+    .nav-btn {
+        background: transparent; border: 1px solid var(--text-color); color: var(--text-color);
+        padding: 10px 20px; border-radius: 30px; cursor: pointer; transition: 0.3s;
+    }
+    .nav-btn.active { background: var(--accent-alert); border-color: var(--accent-alert); font-weight: bold; }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* MODAL */
+    .modal-overlay {
+        position: fixed; top:0; left:0; width:100%; height:100%;
+        background: rgba(0,0,0,0.9); z-index: 100;
+        display: none; justify-content: center; align-items: center; padding: 20px;
+    }
+    .modal-box {
+        background: var(--card-bg); border: 2px solid var(--neon-blue);
+        padding: 30px; max-width: 600px; text-align: center; border-radius: 10px;
+        box-shadow: 0 0 50px rgba(0, 255, 245, 0.2); animation: popUp 0.4s;
+    }
+    @keyframes popUp { from{transform:scale(0.8); opacity:0;} to{transform:scale(1); opacity:1;} }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .evidence-grid, .strategy-board { grid-template-columns: 1fr; }
+        .flip-card { width: 100%; height: 350px; }
+    }
+
+</style>
+</head>
+<body>
+
+<div class="ambient-grid"></div>
+
+<!-- HUD -->
+<div class="hud-header">
+    <div class="hud-title" id="phase-title">FASE 1: CATEGORIZACIÓN</div>
+    <div>
+        <div style="font-size:0.7rem; text-align:right; margin-bottom:5px;">SINCRONIZACIÓN</div>
+        <div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div>
+    </div>
+</div>
+
+<!-- ESCENARIO -->
+<div class="game-stage">
+
+    <!-- FASE 1: TARJETAS (TEORÍA) -->
+    <div id="phase1">
+        <!-- Tarjeta 1: Jurídico -->
+        <div class="flip-card" onclick="flipCard(this, 1)">
+            <div class="flip-card-inner">
+                <div class="flip-front">
+                    <div class="flip-icon">⚖️</div>
+                    <h3>3.1 ENFOQUE JURÍDICO</h3>
+                    <p style="opacity:0.7; font-size:0.8rem;">(Clic para analizar)</p>
+                </div>
+                <div class="flip-back">
+                    <h3>DERECHO INTERNACIONAL Y CONSTITUCIONAL</h3>
+                    <p>La violencia institucional se refiere a daños, omisiones o tratos revictimizantes ejercidos por agentes del Estado.</p>
+                    <ul style="text-align:left; padding-left:20px;">
+                        <li>Vulneración del derecho a la igualdad.</li>
+                        <li>Violación al debido proceso.</li>
+                        <li>Afectación a la no discriminación.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 2: Político -->
+        <div class="flip-card" onclick="flipCard(this, 2)">
+            <div class="flip-card-inner">
+                <div class="flip-front">
+                    <div class="flip-icon">🏛️</div>
+                    <h3>3.2 ENFOQUE POLÍTICO</h3>
+                    <p style="opacity:0.7; font-size:0.8rem;">(Clic para analizar)</p>
+                </div>
+                <div class="flip-back">
+                    <h3>EJERCICIO DE PODER</h3>
+                    <ul style="text-align:left; padding-left:20px;">
+                        <li>Forma de ejercicio de poder.</li>
+                        <li>Reproduce violencias coloniales, patriarcales y raciales.</li>
+                        <li>Deteriora la confianza institucional.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 2: EXPEDIENTE (IMPACTOS) -->
+    <div id="phase2">
+        <div class="case-folder">
+            <div class="folder-label">EXPEDIENTE D-2025</div>
+            <h2 style="color:#d32f2f; border-bottom:2px solid #999; padding-bottom:10px;">ANÁLISIS DE CASO DISCIPLINARIO SIMULADO</h2>
+            <p style="font-size:0.9rem;"><strong>Instrucción:</strong> Identifique y marque las fallas en el proceso disciplinario y el trato institucional.</p>
+            
+            <div class="evidence-grid">
+                <div class="evidence-item" onclick="markEvidence(this)">Investigaciones sin enfoque diferencial</div>
+                <div class="evidence-item" onclick="markEvidence(this)">Sanciones desproporcionadas</div>
+                <div class="evidence-item" onclick="markEvidence(this)">Minimización de denuncias</div>
+                <div class="evidence-item" onclick="markEvidence(this)">Revictimización procedimental</div>
+                <div class="evidence-item" onclick="markEvidence(this)">Reproducción de estereotipos y falta de empatía</div>
+                <div class="evidence-item" onclick="markEvidence(this)">Prioridad administrativa sobre derechos</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 3: ESTRATEGIAS (RECONFIGURACIÓN) -->
+    <div id="phase3">
+        <h2 style="color:var(--neon-blue); text-align:center; margin-bottom:20px;">6. ESTRATEGIAS PARA DESMONTAR PRÁCTICAS</h2>
+        <p style="text-align:center; margin-bottom:20px;">Active los módulos necesarios para transformar la UNP.</p>
+        
+        <div class="strategy-board">
+            <div class="strategy-module" onclick="activateModule(this)">
+                <div class="module-icon">📚</div>
+                <div><strong>FORMACIÓN CONTINUA</strong><br>En enfoque diferencial.</div>
+            </div>
+            <div class="strategy-module" onclick="activateModule(this)">
+                <div class="module-icon">🔄</div>
+                <div><strong>REVISIÓN DE PROTOCOLOS</strong><br>Actualización normativa.</div>
+            </div>
+            <div class="strategy-module" onclick="activateModule(this)">
+                <div class="module-icon">🗣️</div>
+                <div><strong>FOROS INTERNOS</strong><br>Espacios de reflexión crítica.</div>
+            </div>
+            <div class="strategy-module" onclick="activateModule(this)">
+                <div class="module-icon">🛠️</div>
+                <div><strong>HERRAMIENTAS PEDAGÓGICAS</strong><br>Guías, videos y simulaciones.</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- CONTROLES -->
+<div class="controls">
+    <button class="nav-btn active" onclick="goPhase(1)">1. CATEGORÍAS</button>
+    <button class="nav-btn" onclick="goPhase(2)">2. IMPACTOS</button>
+    <button class="nav-btn" onclick="goPhase(3)">3. ESTRATEGIAS</button>
+</div>
+
+<!-- MODAL FINAL -->
+<div class="modal-overlay" id="modal">
+    <div class="modal-box">
+        <h2 style="color:var(--neon-blue)">TRANSFORMACIÓN COMPLETADA</h2>
+        <p style="margin:20px 0; line-height:1.6;">
+            La incorporación de los feminismos comunitarios y decoloniales, junto con el desmontaje de las discriminaciones estructurales, fortalece una UNP más preventiva, legítima y comprometida con la protección integral desde los derechos humanos.
+        </p>
+        <button onclick="document.getElementById('modal').style.display='none'" style="background:var(--accent-light); color:white; border:none; padding:10px 20px; font-weight:bold; cursor:pointer;">FINALIZAR MÓDULO</button>
+    </div>
+</div>
+
+<script>
+    let progress = 0;
+    
+    // FASE 1
+    let flippedCards = 0;
+    function flipCard(card, id) {
+        if(card.classList.contains('flipped')) return;
+        card.classList.add('flipped');
+        flippedCards++;
+        updateProgress(15);
+        if(flippedCards === 2) {
+            setTimeout(() => {
+                document.querySelectorAll('.nav-btn')[1].classList.add('active'); // Sugerir siguiente
+            }, 1000);
+        }
+    }
+
+    // FASE 2
+    let evidenceCount = 0;
+    function markEvidence(item) {
+        if(item.classList.contains('detected')) return;
+        item.classList.add('detected');
+        evidenceCount++;
+        updateProgress(10);
+    }
+
+    // FASE 3
+    let modulesActive = 0;
+    function activateModule(mod) {
+        if(mod.classList.contains('active')) return;
+        mod.classList.add('active');
+        modulesActive++;
+        updateProgress(10);
+        
+        if(modulesActive === 4) {
+            setTimeout(() => {
+                document.getElementById('modal').style.display = 'flex';
+                document.getElementById('progress-bar').style.background = "var(--neon-blue)";
+            }, 1000);
+        }
+    }
+
+    function updateProgress(val) {
+        progress += val;
+        if(progress > 100) progress = 100;
+        document.getElementById('progress-bar').style.width = progress + '%';
+    }
+
+    function goPhase(n) {
+        document.getElementById('phase1').style.display = 'none';
+        document.getElementById('phase2').style.display = 'none';
+        document.getElementById('phase3').style.display = 'none';
+        
+        document.querySelectorAll('.nav-btn').forEach((b, i) => {
+            b.classList.toggle('active', i+1 === n);
+        });
+
+        const title = document.getElementById('phase-title');
+
+        if(n === 1) {
+            document.getElementById('phase1').style.display = 'flex';
+            title.innerText = "1. CATEGORÍA JURÍDICA Y POLÍTICA";
+        } else if (n === 2) {
+            document.getElementById('phase2').style.display = 'flex';
+            title.innerText = "2. ANÁLISIS DE CASO DISCIPLINARIO";
+        } else {
+            document.getElementById('phase3').style.display = 'flex';
+            title.innerText = "3. ESTRATEGIAS DE DESMONTAJE";
+        }
+    }
+
+    // Init
+    goPhase(1);
+
+</script>
+
+</body>
+</html>

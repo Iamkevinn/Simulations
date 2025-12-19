@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+    :root {
+        --bg-core: #110e1b;
+        --bad: #f43f5e;
+        --good: #10b981;
+        --epist: #d946ef;
+        --gold: #fbbf24;
+        --glass: rgba(15, 23, 42, 0.9);
+        --text: #f1f5f9;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-core);
+        color: var(--text);
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* --- FONDO --- */
+    .ambient-bg {
+        position: absolute; width: 100%; height: 100%;
+        background: radial-gradient(circle at center, #1e1b4b 0%, #020617 80%);
+        z-index: 0;
+    }
+    .grid-lines {
+        position: absolute; width: 200%; height: 200%;
+        background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+        background-size: 30px 30px;
+        opacity: 0.3;
+        animation: rotateBg 120s linear infinite; /* Más lento para no marear */
+    }
+    @keyframes rotateBg { from { transform: translate(-25%, -25%) rotate(0deg); } to { transform: translate(-25%, -25%) rotate(360deg); } }
+
+    /* --- ARENA DE JUEGO --- */
+    .game-arena {
+        flex-grow: 1;
+        position: relative;
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    /* SVG para líneas curvas */
+    .svg-layer {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        pointer-events: none; z-index: 1;
+    }
+    
+    .energy-path {
+        fill: none;
+        stroke: var(--gold);
+        stroke-width: 4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+        animation: drawFlow 1.5s forwards ease-in-out;
+        filter: drop-shadow(0 0 10px var(--gold));
+    }
+    @keyframes drawFlow { to { stroke-dashoffset: 0; } }
+
+    /* NÚCLEO CENTRAL (Sin animación flotante) */
+    .core-system {
+        position: absolute;
+        width: 110px; height: 110px;
+        background: rgba(15, 23, 42, 0.95);
+        border: 2px solid white;
+        border-radius: 50%;
+        display: flex; justify-content: center; align-items: center;
+        text-align: center; font-weight: bold; font-size: 0.8rem;
+        box-shadow: 0 0 40px rgba(255,255,255,0.15);
+        z-index: 20;
+        transition: all 0.5s;
+    }
+    .core-system::before {
+        content: ''; position: absolute; width: 140%; height: 140%;
+        border: 1px dashed rgba(255,255,255,0.2); border-radius: 50%;
+        animation: spin 30s linear infinite;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    
+    .core-system.active {
+        border-color: var(--gold);
+        box-shadow: 0 0 60px var(--gold);
+        background: rgba(251, 191, 36, 0.2);
+        animation: pulseCore 0.6s 2;
+    }
+    @keyframes pulseCore { 50% { transform: scale(1.1); } }
+
+    /* --- NODOS FLOTANTES --- */
+    .node {
+        position: absolute;
+        width: 55px; height: 55px;
+        border-radius: 50%;
+        display: flex; justify-content: center; align-items: center;
+        font-size: 1.4rem; cursor: pointer;
+        background: rgba(30, 41, 59, 0.8);
+        border: 2px solid rgba(255,255,255,0.2);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        transition: transform 0.3s, background 0.3s, border-color 0.3s;
+        z-index: 10;
+        
+        /* Configuración base de la animación (duración se define en JS) */
+        animation-name: floatOrbit;
+        animation-timing-function: ease-in-out;
+        animation-iteration-count: infinite;
+    }
+
+    /* Animación de Flotación */
+    @keyframes floatOrbit {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); } /* Flotan 15px hacia arriba */
+        100% { transform: translateY(0px); }
+    }
+    
+    /* Pausar animación al pasar el mouse para facilitar clic */
+    .node:hover { 
+        animation-play-state: paused;
+        transform: scale(1.2) translateY(-5px); 
+        z-index: 50; 
+        background: rgba(255,255,255,0.1);
+    }
+
+    /* Estado Activo (Seleccionado) */
+    .node.active { 
+        background: white; color: black; 
+        transform: scale(1.2); 
+        z-index: 50; 
+        box-shadow: 0 0 20px white;
+        animation: none; /* Dejar de flotar si está seleccionado */
+    }
+
+    .node-bad { border-color: var(--bad); color: var(--bad); }
+    .node-good { border-color: var(--good); color: var(--good); }
+    
+    /* EPISTEMOLOGÍA (Top) */
+    .node-epist {
+        width: auto; height: auto;
+        padding: 8px 15px; border-radius: 20px;
+        background: rgba(217, 70, 239, 0.2);
+        border: 1px solid var(--epist); color: var(--epist);
+        font-size: 0.9rem; font-weight: bold;
+    }
+
+    /* ESTADO RESUELTO */
+    .node.resolved {
+        background: var(--gold); color: black; border-color: white;
+        box-shadow: 0 0 30px var(--gold);
+        animation: pop 0.5s; /* Se detiene el float, hace pop */
+    }
+    @keyframes pop { 50% { transform: scale(1.4); } }
+
+    /* --- HUD INFERIOR --- */
+    .hud-panel {
+        background: var(--glass);
+        border-top: 3px solid var(--epist);
+        padding: 20px; z-index: 100;
+        min-height: 180px;
+        display: flex; flex-direction: column;
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+    }
+    .hud-header { display: flex; justify-content: space-between; color: var(--epist); font-weight: bold; font-size: 0.8rem; margin-bottom: 8px; }
+    .hud-content { font-size: 0.9rem; line-height: 1.5; color: #cbd5e1; flex-grow: 1; max-height: 150px; overflow-y: auto; }
+    
+    .action-btn {
+        margin-top: 10px;
+        background: linear-gradient(90deg, var(--gold), #f59e0b);
+        border: none; padding: 12px; width: 100%;
+        color: black; font-weight: bold; border-radius: 6px;
+        cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+        display: none; animation: slideUp 0.3s;
+    }
+    @keyframes slideUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    /* MODAL VICTORIA */
+    .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 200; justify-content: center; align-items: center; padding: 20px; }
+    .modal-box { background: #0f172a; border: 2px solid var(--gold); padding: 30px; text-align: center; border-radius: 15px; max-width: 500px; animation: pop 0.5s; }
+
+</style>
+</head>
+<body>
+
+    <div class="ambient-bg"><div class="grid-lines"></div></div>
+
+    <div class="game-arena" id="arena">
+        <svg class="svg-layer" id="svg-layer"></svg>
+
+        <!-- NÚCLEO (Fijo) -->
+        <div class="core-system" id="core">UNP<br>SYSTEM</div>
+
+        <!-- NODOS (Flotantes via CSS + JS Random) -->
+        <div class="node node-epist" id="epist" onclick="showEpist()">🧠 EPISTEMOLOGÍAS</div>
+
+        <!-- RETOS (Izquierda) -->
+        <div class="node node-bad" id="bad1" onclick="selectNode('bad1')">⚠️</div>
+        <div class="node node-bad" id="bad2" onclick="selectNode('bad2')">🔫</div>
+        <div class="node node-bad" id="bad3" onclick="selectNode('bad3')">📉</div>
+        <div class="node node-bad" id="bad4" onclick="selectNode('bad4')">👤</div>
+
+        <!-- SOLUCIONES (Derecha) -->
+        <div class="node node-good" id="good1" onclick="selectNode('good1')">🤝</div>
+        <div class="node node-good" id="good2" onclick="selectNode('good2')">🛡️</div>
+        <div class="node node-good" id="good3" onclick="selectNode('good3')">👂</div>
+        <div class="node node-good" id="good4" onclick="selectNode('good4')">🌿</div>
+    </div>
+
+    <!-- HUD -->
+    <div class="hud-panel">
+        <div class="hud-header">
+            <span>SISTEMA DE MANDO</span>
+            <span id="score">TRANSFORMACIÓN: 0%</span>
+        </div>
+        <div class="hud-content" id="hud-desc">
+            <strong>Misión:</strong> El sistema tiene bloqueos <b>(Rojo, abajo)</b>.<br>
+            Toca un Problema y luego su Solución Comunitaria <b>(Verde, arriba)</b> para generar la conexión.
+        </div>
+        <button class="action-btn" id="btn-action">VINCULAR Y TRANSFORMAR</button>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal" id="win-modal">
+        <div class="modal-box">
+            <h2 style="color:var(--gold)">¡SISTEMA TRANSFORMADO!</h2>
+            <p style="color:#cbd5e1">Has integrado la protección colectiva y los saberes locales en la UNP.</p>
+            <button onclick="location.reload()" style="background:var(--gold); border:none; padding:10px 20px; font-weight:bold; cursor:pointer; margin-top:15px; border-radius:5px;">REINICIAR</button>
+        </div>
+    </div>
+
+<script>
+    // --- 1. CONFIGURACIÓN Y POSICIONAMIENTO ORBITAL ---
+    function positionElements() {
+        const arena = document.getElementById('arena');
+        const centerX = arena.offsetWidth / 2;
+        const centerY = arena.offsetHeight / 2;
+        
+        // Radio dinámico
+        const minDim = Math.min(arena.offsetWidth, arena.offsetHeight);
+        const radius = minDim < 600 ? minDim * 0.38 : 220; 
+
+        // Epistemología (Top)
+        const epist = document.getElementById('epist');
+        epist.style.left = (centerX - epist.offsetWidth/2) + 'px';
+        epist.style.top = (centerY - radius - 50) + 'px';
+
+        // Izquierda (Rojos): 135° a 225°
+        distributeArc(['bad1', 'bad2', 'bad3', 'bad4'], 135, 225, centerX, centerY, radius);
+
+        // Derecha (Verdes): -45° a 45°
+        distributeArc(['good1', 'good2', 'good3', 'good4'], -45, 45, centerX, centerY, radius);
+    }
+
+    function distributeArc(ids, startAngle, endAngle, cx, cy, r) {
+        const step = (endAngle - startAngle) / (ids.length - 1);
+        ids.forEach((id, index) => {
+            const angleDeg = startAngle + (step * index);
+            const angleRad = (angleDeg - 90) * (Math.PI / 180);
+            
+            const el = document.getElementById(id);
+            const x = cx + r * Math.cos(angleRad);
+            const y = cy + r * Math.sin(angleRad);
+            
+            el.style.left = (x - el.offsetWidth/2) + 'px';
+            el.style.top = (y - el.offsetHeight/2) + 'px';
+        });
+    }
+
+    // --- ALEATORIEDAD DE ANIMACIÓN ---
+    // Esto asegura que no parezcan robots moviéndose al unísono
+    function randomizeFloat() {
+        const nodes = document.querySelectorAll('.node');
+        nodes.forEach(node => {
+            // Duración entre 3s y 6s
+            const duration = 3 + Math.random() * 3;
+            // Retraso entre 0s y 2s
+            const delay = Math.random() * 2;
+            
+            node.style.animationDuration = `${duration}s`;
+            node.style.animationDelay = `${delay}s`;
+        });
+    }
+
+    window.addEventListener('load', () => {
+        positionElements();
+        randomizeFloat();
+    });
+    window.addEventListener('resize', positionElements);
+
+
+    // --- 2. LÓGICA DEL JUEGO ---
+    const db = {
+        epist: { title: "3. EPISTEMOLOGÍAS FEMINISTAS", text: "Cuestionan quién produce conocimiento. Visibilizan experiencias de mujeres indígenas, afro y disidentes como fuentes legítimas de saber." },
+        
+        bad1: { title: "RETO: RIGIDEZ BUROCRÁTICA", text: "Exigencia de pruebas descontextualizadas. No se reconocen amenazas informales.", pair: "good3" }, 
+        bad2: { title: "RETO: MODELOS MILITARIZADOS", text: "Dependencia de armas que ignoran la autonomía territorial y generan desconfianza.", pair: "good4" }, 
+        bad3: { title: "RETO: FALTA DE CAPACITACIÓN", text: "Dificultad para reconocer autoridades comunitarias y falta de enfoque étnico.", pair: "good1" }, 
+        bad4: { title: "RETO: ENFOQUE INDIVIDUAL", text: "Se protege al individuo aislado, ignorando la dimensión colectiva.", pair: "good2" }, 
+
+        good1: { title: "SOLUCIÓN: ARTICULACIÓN AUTORIDADES", text: "Participación de cabildos/consejos. Capacitación a escoltas en enfoque diferencial." },
+        good2: { title: "SOLUCIÓN: PROTECCIÓN COLECTIVA", text: "Diseñar esquemas con la comunidad. Análisis de riesgo comunitario." },
+        good3: { title: "SOLUCIÓN: ESCUCHA DE SABERES", text: "No revictimizar. Construir seguridad desde marcos conceptuales locales." },
+        good4: { title: "SOLUCIÓN: PROTOCOLOS CULTURALES", text: "Respeto a autonomía territorial. Reconocimiento de guardias indígenas/cimarronas." }
+    };
+
+    let activeBad = null;
+    let activeGood = null;
+    let solved = 0;
+    const btn = document.getElementById('btn-action');
+
+    function selectNode(id) {
+        if(document.getElementById(id).classList.contains('resolved')) return;
+
+        const el = document.getElementById(id);
+        const type = id.startsWith('bad') ? 'bad' : 'good';
+
+        if(type === 'bad') {
+            document.querySelectorAll('.node-bad').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            activeBad = id;
+            
+            activeGood = null;
+            document.querySelectorAll('.node-good').forEach(n => n.classList.remove('active'));
+            btn.style.display = 'none';
+
+            updateHud(db[id].title, db[id].text + "<br><br><span style='color:var(--bad)'>Selecciona la solución correspondiente.</span>");
+        } else {
+            if(!activeBad) {
+                updateHud("ACCIÓN REQUERIDA", "Primero selecciona un problema (Rojo) del lado izquierdo.");
+                return;
+            }
+            document.querySelectorAll('.node-good').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            activeGood = id;
+            updateHud(db[id].title, db[id].text);
+            
+            btn.style.display = 'block';
+            btn.onclick = tryMatch;
+        }
+    }
+
+    function tryMatch() {
+        if(db[activeBad].pair === activeGood) {
+            success(activeBad, activeGood);
+        } else {
+            updateHud("ERROR DE VINCULACIÓN", "<strong style='color:orange'>Esta solución no encaja con el problema.</strong> Intenta otra.");
+            document.getElementById(activeGood).classList.remove('active');
+            activeGood = null;
+            btn.style.display = 'none';
+        }
+    }
+
+    function success(badId, goodId) {
+        const b = document.getElementById(badId);
+        const g = document.getElementById(goodId);
+        const c = document.getElementById('core');
+
+        // Stop float animation by removing animation style inline (if needed) or adding resolved class
+        b.className = "node resolved"; b.innerHTML = "✨";
+        g.className = "node resolved"; g.innerHTML = "✨";
+        
+        drawCurvedLine(b, c, g);
+
+        c.classList.add('active');
+        setTimeout(() => c.classList.remove('active'), 1000);
+
+        solved++;
+        document.getElementById('score').innerText = `TRANSFORMACIÓN: ${(solved/4)*100}%`;
+        
+        activeBad = null; activeGood = null; btn.style.display = 'none';
+        updateHud("¡CONEXIÓN EXITOSA!", "Protocolo integrado correctamente.");
+
+        if(solved === 4) {
+            setTimeout(() => {
+                c.innerText = "UNP\n2.0"; c.style.color = "var(--gold)";
+                document.getElementById('win-modal').style.display = 'flex';
+            }, 1500);
+        }
+    }
+
+    function drawCurvedLine(startEl, centerEl, endEl) {
+        const svg = document.getElementById('svg-layer');
+        const svgRect = svg.getBoundingClientRect();
+
+        const getCenter = (el) => {
+            const r = el.getBoundingClientRect();
+            return { x: r.left + r.width/2 - svgRect.left, y: r.top + r.height/2 - svgRect.top };
+        };
+
+        const p1 = getCenter(startEl);
+        const pc = getCenter(centerEl);
+        const p2 = getCenter(endEl);
+
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("class", "energy-path");
+        
+        const d = `M ${p1.x},${p1.y} Q ${p1.x},${pc.y} ${pc.x},${pc.y} Q ${p2.x},${pc.y} ${p2.x},${p2.y}`;
+
+        path.setAttribute("d", d);
+        svg.appendChild(path);
+    }
+
+    function showEpist() { updateHud(db.epist.title, db.epist.text); }
+    function updateHud(t, txt) { document.getElementById('hud-desc').innerHTML = `<strong style="color:var(--epist)">${t}</strong><br>${txt}`; }
+
+</script>
+
+</body>
+</html>

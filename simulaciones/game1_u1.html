@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+    /* --- ESTILOS GENERALES Y AMBIENTACIÓN --- */
+    :root {
+        --bg-color: #0f172a;
+        --card-bg: rgba(30, 41, 59, 0.7);
+        --accent: #8b5cf6; /* Violeta */
+        --success: #10b981;
+        --error: #ef4444; /* Rojo Alerta */
+        --warning: #f59e0b;
+        --unp-blue: #0ea5e9; 
+        --text-main: #f8fafc;
+    }
+
+    #game-wrapper {
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        min-height: 650px;
+        color: var(--text-main);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    /* Fondo animado */
+    #game-wrapper::before {
+        content: '';
+        position: absolute;
+        top: -50%; left: -50%; width: 200%; height: 200%;
+        background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 10%, transparent 40%);
+        animation: pulseBg 10s infinite alternate;
+        pointer-events: none;
+    }
+
+    @keyframes pulseBg {
+        0% { transform: scale(1) rotate(0deg); }
+        100% { transform: scale(1.2) rotate(10deg); }
+    }
+
+    /* Tarjeta principal */
+    .game-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 30px;
+        width: 100%;
+        max-width: 650px;
+        position: relative;
+        z-index: 10;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        transition: border-color 0.5s ease;
+    }
+
+    /* HUD */
+    .hud {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .score-box {
+        background: rgba(0,0,0,0.3);
+        padding: 5px 15px;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .progress-container {
+        width: 100%;
+        height: 8px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 4px;
+        margin-bottom: 25px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: var(--unp-blue);
+        width: 0%;
+        transition: width 0.5s ease;
+    }
+
+    /* Tipografía */
+    h2 {
+        color: var(--accent);
+        margin-top: 0;
+        font-size: 1.6rem;
+        text-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+    }
+
+    p {
+        color: #cbd5e1;
+        line-height: 1.6;
+        font-size: 1.05rem;
+        margin-bottom: 20px;
+    }
+
+    /* Botones */
+    .btn-game {
+        background: linear-gradient(90deg, var(--accent), var(--unp-blue));
+        border: none;
+        padding: 16px 20px;
+        color: white;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        display: block;
+        width: 100%;
+        margin: 12px 0;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-game:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+    }
+
+    .option-btn {
+        background: rgba(255, 255, 255, 0.08);
+        text-align: left;
+        border: 1px solid rgba(255,255,255,0.1);
+        text-transform: none;
+        font-weight: normal;
+        position: relative;
+        padding-left: 20px;
+    }
+    
+    .option-btn:hover {
+        background: rgba(139, 92, 246, 0.15);
+        border-color: var(--accent);
+    }
+
+    .option-btn::before {
+        content: '>';
+        position: absolute;
+        left: 10px; /* Ajuste visual */
+        opacity: 0;
+        transition: opacity 0.2s;
+        color: var(--accent);
+    }
+
+    .option-btn:hover::before {
+        opacity: 1;
+    }
+
+    /* Escenas */
+    .scene { display: none; animation: slideIn 0.4s ease-out; }
+    .scene.active { display: block; }
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Feedback Modal */
+    .feedback-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(15, 23, 42, 0.98);
+        z-index: 50;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+        text-align: center;
+        border-radius: 20px;
+    }
+
+    .feedback-icon { font-size: 4rem; margin-bottom: 15px; }
+    
+    /* Estados Finales */
+    .state-success { border-color: var(--success); box-shadow: 0 0 30px rgba(16, 185, 129, 0.2); }
+    .state-fail { border-color: var(--error); box-shadow: 0 0 30px rgba(239, 68, 68, 0.2); }
+
+    .final-score-display {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin: 20px 0;
+        color: white;
+    }
+
+    @media (max-width: 600px) {
+        h2 { font-size: 1.3rem; }
+        .btn-game { font-size: 0.9rem; padding: 14px; }
+        .hud { font-size: 0.75rem; flex-direction: column; gap: 5px; align-items: center; }
+    }
+</style>
+</head>
+<body>
+
+<div id="game-wrapper">
+    <div class="game-card" id="card-container">
+        
+        <!-- HUD Superior -->
+        <div class="hud">
+            <span class="score-box" id="level-display">FASE: INICIACIÓN</span>
+            <span class="score-box" id="score-display">🛡️ INTEGRIDAD: 0%</span>
+        </div>
+        <div class="progress-container"><div class="progress-fill" id="progress-bar"></div></div>
+
+        <!-- ESCENA 0: INTRODUCCIÓN -->
+        <div class="scene active" id="scene-0">
+            <h2>Protocolo: Ruta Convenio 190</h2>
+            <p><strong>ATENCIÓN:</strong> Estás entrando en una simulación de casos reales en la UNP.</p>
+            <p>Para certificarte como un espacio seguro, debes demostrar que comprendes la <strong>Ley 2365 de 2024</strong> y sus diferencias con otras normativas.</p>
+            <p style="color: var(--warning); font-size: 0.9rem;">⚠️ Si tu nivel de integridad cae por debajo del 75%, el protocolo fallará y deberás reintentar.</p>
+            <button class="btn-game" onclick="startGame()">Comenzar Misión</button>
+        </div>
+
+        <!-- ESCENA 1: PREGUNTA 1 -->
+        <div class="scene" id="scene-1">
+            <h2>Caso 1: El Pasillo</h2>
+            <p>Detectas burlas sistemáticas hacia una compañera por su forma de vestir. El jefe de área dice: "Son cosas de la cultura de oficina".</p>
+            <p>Según el Convenio 190, ¿qué dimensión se está vulnerando?</p>
+            <button class="btn-game option-btn" onclick="handleAnswer(1, false)">Solo es un problema de convivencia leve.</button>
+            <button class="btn-game option-btn" onclick="handleAnswer(1, true)">Es violencia simbólica y psicológica legitimada por la jerarquía.</button>
+            <button class="btn-game option-btn" onclick="handleAnswer(1, false)">Es un problema de código de vestimenta.</button>
+        </div>
+
+        <!-- ESCENA 2: PREGUNTA 2 -->
+        <div class="scene" id="scene-2">
+            <h2>Caso 2: El Contratista</h2>
+            <p>Un contratista por prestación de servicios acosa a una funcionaria. Él alega inmunidad porque "no es empleado de planta".</p>
+            <p><strong>Ley 2365:</strong> ¿Tiene razón?</p>
+            <button class="btn-game option-btn" onclick="handleAnswer(2, true)">NO. La ley aplica a todos (contratistas, aprendices) sin importar vinculación.</button>
+            <button class="btn-game option-btn" onclick="handleAnswer(2, false)">SI. Solo Recursos Humanos puede sancionar a empleados directos.</button>
+        </div>
+
+        <!-- ESCENA 3: PREGUNTA 3 -->
+        <div class="scene" id="scene-3">
+            <h2>Caso 3: La Herramienta</h2>
+            <p>Para evitar que la denuncia se pierda en el olvido, ¿dónde debe registrar el Gobierno este caso obligatoriamente?</p>
+            <button class="btn-game option-btn" onclick="handleAnswer(3, false)">En el archivo general de la nación.</button>
+            <button class="btn-game option-btn" onclick="handleAnswer(3, true)">En el SIVIGE (Sistema de Información de Violencias de Género).</button>
+            <button class="btn-game option-btn" onclick="handleAnswer(3, false)">En la página web de la alcaldía local.</button>
+        </div>
+
+        <!-- ESCENA 4: PREGUNTA 4 -->
+        <div class="scene" id="scene-4">
+            <h2>Caso 4: Jurisdicción</h2>
+            <p>Llega una alerta: "Amenazan a una mujer candidata al senado para que abandone su campaña".</p>
+            <p>¿Activas el protocolo de la Ley 2365 (Acoso Laboral/Sexual)?</p>
+            <button class="btn-game option-btn" onclick="handleAnswer(4, false)">Sí, es violencia contra la mujer.</button>
+            <button class="btn-game option-btn" onclick="handleAnswer(4, true)">No, activo la Ley 2453 (Violencia Política).</button>
+        </div>
+
+        <!-- ESCENA FINAL: DINÁMICA -->
+        <div class="scene" id="scene-final">
+            <h2 id="final-title">Resultados</h2>
+            <div id="final-icon" class="feedback-icon"></div>
+            <p id="final-message"></p>
+            <div class="final-score-display" id="final-score">0%</div>
+            <button class="btn-game" id="final-btn" onclick="resetGame()">Reiniciar</button>
+        </div>
+
+        <!-- FEEDBACK OVERLAY (Pop-up) -->
+        <div id="feedback-modal" class="feedback-overlay">
+            <div id="fb-icon" class="feedback-icon"></div>
+            <h3 id="fb-title" style="color:var(--accent); margin:10px 0;"></h3>
+            <p id="fb-text" style="font-size: 1rem;"></p>
+            <button class="btn-game" style="width: auto; padding: 10px 40px;" onclick="closeFeedback()">Siguiente >></button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Configuración del juego
+    let gameState = {
+        score: 0,
+        currentScene: 0,
+        answers: [] // Para rastrear qué respondió
+    };
+
+    const maxScorePerQuestion = 25; // 4 preguntas = 100%
+    const passingScore = 75; // Necesita 3 de 4 para ganar
+
+    // Datos de Feedback Educativo
+    const feedbackDB = {
+        1: {
+            correct: "¡Exacto! La violencia no es solo física. Los comentarios sexistas normalizados por jefes son violencia institucional.",
+            incorrect: "Error. No es 'cultura'. El Convenio 190 define esto como violencia que afecta la salud psicológica."
+        },
+        2: {
+            correct: "¡Correcto! La Ley 2365 cierra esa brecha. Protege a cualquier persona en el entorno laboral, tenga o no contrato laboral.",
+            incorrect: "¡Peligro! Esa es una excusa común de los agresores. La Ley 2365 es explícita: cubre contratistas y pasantes."
+        },
+        3: {
+            correct: "¡Muy bien! Sin datos en el SIVIGE, la violencia se vuelve invisible y no se pueden crear políticas públicas reales.",
+            incorrect: "Incorrecto. El registro debe ser centralizado en el SIVIGE para garantizar seguimiento estatal."
+        },
+        4: {
+            correct: "¡Excelente distinción! Ley 2365 es para el trabajo/educación. Ley 2453 es para participación política.",
+            incorrect: "Cuidado. Mezclar las leyes entorpece la ruta jurídica. Violencia Política = Ley 2453. Acoso Laboral/Sexual = Ley 2365."
+        }
+    };
+
+    function startGame() {
+        gameState.score = 0;
+        gameState.currentScene = 1;
+        updateUI();
+        showScene(1);
+    }
+
+    function showScene(n) {
+        // Ocultar todas las escenas
+        document.querySelectorAll('.scene').forEach(el => el.classList.remove('active'));
+        // Mostrar la deseada
+        document.getElementById(`scene-${n}`).classList.add('active');
+        // Actualizar barra de progreso
+        let progress = ((n-1) / 4) * 100;
+        if(n === 'final') progress = 100;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+        
+        // Texto de nivel
+        const levels = ["Intro", "La Realidad", "Ley 2365", "El Registro", "Jurisdicción", "Evaluación"];
+        const lvlIdx = (n === 'final') ? 5 : n;
+        document.getElementById('level-display').innerText = `FASE: ${levels[lvlIdx]}`;
+    }
+
+    function handleAnswer(qIndex, isCorrect) {
+        const modal = document.getElementById('feedback-modal');
+        const icon = document.getElementById('fb-icon');
+        const title = document.getElementById('fb-title');
+        const text = document.getElementById('fb-text');
+
+        if (isCorrect) {
+            gameState.score += maxScorePerQuestion;
+            icon.innerText = "✅";
+            title.innerText = "Respuesta Correcta";
+            title.style.color = "var(--success)";
+            text.innerText = feedbackDB[qIndex].correct;
+        } else {
+            icon.innerText = "❌";
+            title.innerText = "Respuesta Incorrecta";
+            title.style.color = "var(--error)";
+            text.innerText = feedbackDB[qIndex].incorrect;
+        }
+        
+        updateUI();
+        
+        // Mostrar modal
+        modal.style.display = "flex";
+        // Configurar siguiente paso
+        modal.dataset.nextScene = (qIndex < 4) ? qIndex + 1 : 'final';
+    }
+
+    function closeFeedback() {
+        document.getElementById('feedback-modal').style.display = "none";
+        const next = document.getElementById('feedback-modal').dataset.nextScene;
+        
+        if (next === 'final') {
+            evaluateGame();
+        } else {
+            showScene(parseInt(next));
+        }
+    }
+
+    function evaluateGame() {
+        showScene('final');
+        const card = document.getElementById('card-container');
+        const title = document.getElementById('final-title');
+        const msg = document.getElementById('final-message');
+        const scoreDisplay = document.getElementById('final-score');
+        const btn = document.getElementById('final-btn');
+        const icon = document.getElementById('final-icon');
+
+        scoreDisplay.innerText = `${gameState.score}%`;
+
+        if (gameState.score >= passingScore) {
+            // VICTORIA
+            card.classList.add('state-success');
+            card.classList.remove('state-fail');
+            icon.innerText = "🛡️";
+            title.innerText = "MISIÓN CUMPLIDA";
+            title.style.color = "var(--success)";
+            msg.innerHTML = "Has demostrado un alto compromiso ético y normativo.<br>La UNP es un lugar más seguro gracias a tu conocimiento.";
+            btn.innerText = "Finalizar Módulo";
+            btn.style.background = "var(--success)";
+        } else {
+            // DERROTA
+            card.classList.add('state-fail');
+            card.classList.remove('state-success');
+            icon.innerText = "⚠️";
+            title.innerText = "ALERTA DE RIESGO";
+            title.style.color = "var(--error)";
+            msg.innerHTML = "Tu conocimiento sobre el protocolo es insuficiente.<br>Las brechas entre norma y práctica ponen en riesgo a las víctimas.";
+            btn.innerText = "Reintentar Entrenamiento";
+            btn.style.background = "var(--error)";
+            
+            // Obligar a reintentar
+            btn.onclick = resetGame;
+        }
+    }
+
+    function updateUI() {
+        document.getElementById('score-display').innerText = `🛡️ INTEGRIDAD: ${gameState.score}%`;
+        
+        // Color dinámico del score
+        const scoreBox = document.getElementById('score-display');
+        if (gameState.score < 50) scoreBox.style.color = "var(--text-main)";
+        else if (gameState.score < 75) scoreBox.style.color = "var(--warning)";
+        else scoreBox.style.color = "var(--success)";
+    }
+
+    function resetGame() {
+        // Limpiar estados visuales
+        document.getElementById('card-container').classList.remove('state-success', 'state-fail');
+        startGame();
+    }
+</script>
+
+</body>
+</html>

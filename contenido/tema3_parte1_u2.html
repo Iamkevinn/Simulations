@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+    :root {
+        --bg-blueprint: #003366; /* Azul Plano */
+        --line-blue: #4da6ff;
+        --text-white: #ffffff;
+        --highlight: #ffcc00; /* Amarillo Obra/Alerta */
+        --detected: #00ff99;  /* Verde Éxito */
+        --grid-color: rgba(77, 166, 255, 0.2);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-blueprint);
+        color: var(--text-white);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        cursor: crosshair;
+    }
+
+    /* --- 1. FONDO "BLUEPRINT" --- */
+    .blueprint-grid {
+        position: absolute; top: 0; left: 0; width: 200%; height: 200%;
+        background-image: 
+            linear-gradient(var(--grid-color) 1px, transparent 1px),
+            linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+        background-size: 40px 40px;
+        transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-100px);
+        animation: scrollGrid 20s linear infinite;
+        z-index: 0; pointer-events: none;
+    }
+    @keyframes scrollGrid { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
+
+    .measure-line {
+        position: absolute; background: var(--line-blue); opacity: 0.5;
+        animation: drawLine 4s infinite alternate;
+    }
+    @keyframes drawLine { 0% { width: 0; opacity: 0; } 50% { opacity: 1; } 100% { width: 200px; opacity: 0; } }
+
+    /* --- HUD --- */
+    .hud {
+        height: 60px; background: rgba(0, 20, 40, 0.9);
+        border-bottom: 2px solid var(--line-blue);
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 0 20px; z-index: 50;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+    .hud-title { 
+        font-family: 'Courier New', monospace; font-weight: bold; 
+        color: var(--highlight); text-transform: uppercase; letter-spacing: 1px;
+    }
+    .mode-badge {
+        background: var(--line-blue); color: #001a33; 
+        padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 0.8rem;
+    }
+
+    /* --- ESCENARIO --- */
+    .stage {
+        flex-grow: 1; position: relative; z-index: 10;
+        display: flex; justify-content: center; align-items: center;
+        overflow: hidden;
+    }
+
+    /* FASE 1: RAYOS X */
+    #phase1 { width: 100%; height: 100%; position: relative; }
+    
+    .mask-container {
+        position: absolute; top:0; left:0; width:100%; height:100%;
+        background: var(--bg-blueprint);
+        mask-image: radial-gradient(circle 120px at var(--x) var(--y), transparent 0%, black 100%);
+        -webkit-mask-image: radial-gradient(circle 120px at var(--x) var(--y), transparent 0%, black 100%);
+        z-index: 15;
+        display: flex; justify-content: center; align-items: center;
+    }
+    .revealed-content {
+        position: absolute; top:0; left:0; width:100%; height:100%;
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        padding: 40px; text-align: center;
+        background: rgba(0, 51, 102, 0.9);
+        z-index: 5;
+    }
+
+    /* --- FASE 2: RADAR INTERACTIVO (CORREGIDO) --- */
+    .radar-container {
+        display: none; flex-direction: column; align-items: center; justify-content: center;
+        width: 100%; height: 100%;
+    }
+    
+    .radar-scope {
+        width: 320px; height: 320px;
+        border: 2px solid var(--line-blue); border-radius: 50%;
+        position: relative;
+        background: radial-gradient(circle, rgba(0,0,0,0) 0%, rgba(77, 166, 255, 0.1) 100%);
+        box-shadow: 0 0 30px rgba(77, 166, 255, 0.1);
+    }
+    
+    .radar-sweep {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        border-radius: 50%;
+        background: conic-gradient(from 0deg, transparent 0deg, rgba(77, 166, 255, 0.5) 60deg, transparent 60deg);
+        animation: radarSpin 3s linear infinite;
+        z-index: 2; pointer-events: none;
+    }
+    @keyframes radarSpin { 100% { transform: rotate(360deg); } }
+
+    /* Puntos Interactivos (Blips) */
+    .blip {
+        position: absolute;
+        width: 35px; height: 35px;
+        border-radius: 50%;
+        background: var(--highlight);
+        display: flex; justify-content: center; align-items: center;
+        font-weight: bold; color: black; font-size: 1.2rem;
+        cursor: pointer; z-index: 10;
+        box-shadow: 0 0 15px var(--highlight);
+        animation: pulseBlip 1s infinite;
+        transition: all 0.3s;
+    }
+    @keyframes pulseBlip { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
+
+    .blip:hover { transform: scale(1.4); background: white; }
+
+    .blip.analyzed {
+        width: auto; height: auto; padding: 5px 15px;
+        border-radius: 4px; background: var(--detected);
+        color: black; font-size: 0.8rem; font-weight: bold;
+        animation: none; box-shadow: 0 0 20px var(--detected);
+        z-index: 20; transform: scale(1);
+    }
+
+    .radar-readout {
+        margin-top: 20px;
+        background: rgba(0, 20, 40, 0.9);
+        border: 1px solid var(--highlight);
+        padding: 15px; width: 90%; max-width: 500px;
+        color: var(--highlight); font-family: 'Courier New', monospace;
+        min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    }
+
+    /* --- FASE 3: SIMULACIÓN DE CASO (Mesa de Trabajo - INTACTA) --- */
+    .workspace {
+        width: 100%; max-width: 1000px; height: 100%;
+        display: none; grid-template-columns: 1fr 1fr; gap: 20px;
+        padding: 20px; overflow-y: auto;
+    }
+
+    .case-file {
+        background: white; color: #333;
+        padding: 20px; border-radius: 2px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+        transform: rotate(-1deg);
+        font-family: 'Courier New', monospace;
+        position: relative;
+    }
+    .paper-clip {
+        position: absolute; top: -10px; right: 20px; width: 15px; height: 40px;
+        border: 4px solid #888; border-radius: 10px; border-bottom: none;
+    }
+    .stamp {
+        border: 3px solid var(--bg-blueprint); color: var(--bg-blueprint);
+        font-weight: bold; padding: 5px; display: inline-block;
+        transform: rotate(-10deg); margin-bottom: 15px; font-size: 1.2rem;
+    }
+
+    .analysis-board {
+        display: flex; flex-direction: column; gap: 15px;
+    }
+    .question-slot {
+        background: rgba(0, 51, 102, 0.8); border: 1px solid var(--line-blue);
+        padding: 15px; border-radius: 5px;
+        transition: all 0.3s;
+    }
+    .question-slot.active { border-color: var(--highlight); background: rgba(255, 204, 0, 0.1); }
+    
+    .answer-options {
+        display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;
+    }
+    .option-btn {
+        background: transparent; border: 1px solid white; color: white;
+        padding: 5px 10px; font-size: 0.8rem; cursor: pointer;
+        border-radius: 15px; transition: 0.2s;
+    }
+    .option-btn:hover { background: rgba(255,255,255,0.2); }
+    .option-btn.selected { background: var(--highlight); color: black; border-color: var(--highlight); }
+
+    /* CONTROLES */
+    .controls {
+        height: 70px; background: rgba(0, 20, 40, 0.95);
+        display: flex; justify-content: center; align-items: center;
+        gap: 20px; z-index: 50; border-top: 1px solid var(--line-blue);
+    }
+    .nav-btn {
+        width: 14px; height: 14px; background: rgba(255,255,255,0.2);
+        border-radius: 2px; cursor: pointer; transform: rotate(45deg);
+        transition: 0.3s;
+    }
+    .nav-btn.active { background: var(--highlight); box-shadow: 0 0 10px var(--highlight); }
+
+    /* MODAL */
+    .modal-overlay {
+        position: fixed; top:0; left:0; width:100%; height:100%;
+        background: rgba(0,0,0,0.9); z-index: 100;
+        display: none; justify-content: center; align-items: center; padding: 20px;
+    }
+    .modal-box {
+        background: var(--bg-blueprint); border: 2px solid var(--highlight);
+        padding: 30px; max-width: 600px; text-align: center;
+        color: white; font-family: 'Segoe UI', sans-serif;
+        box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    }
+
+    @media (max-width: 768px) {
+        .workspace { grid-template-columns: 1fr; }
+        .case-file { min-height: 200px; }
+        .radar-scope { width: 280px; height: 280px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="blueprint-grid"></div>
+<div class="measure-line" style="top:20%; left:10%;"></div>
+<div class="measure-line" style="bottom:30%; right:10%;"></div>
+
+<!-- HUD -->
+<div class="hud">
+    <div class="hud-title">ANÁLISIS ESTRUCTURAL</div>
+    <div class="mode-badge" id="mode-badge">MODO: ESCÁNER</div>
+</div>
+
+<!-- ESCENARIO -->
+<div class="stage" id="stage-area">
+
+    <!-- FASE 1: DEFINICIÓN (LINTERNA) -->
+    <div id="phase1">
+        <div class="revealed-content">
+            <h2 style="color:var(--highlight); text-transform:uppercase; margin-bottom:20px;">¿Qué son las discriminaciones estructurales?</h2>
+            <p style="font-size:1.1rem; max-width:700px; margin-bottom:30px;">
+                Desigualdades insertas en <strong>normas, procedimientos y culturas institucionales</strong>. No dependen de actos individuales, sino que se reproducen de manera sistemática.
+            </p>
+            <div style="text-align:left; max-width:700px;">
+                <h3 style="color:var(--line-blue);">CARACTERÍSTICAS OCULTAS:</h3>
+                <ul style="list-style:none; padding:0;">
+                    <li style="margin-bottom:10px;">🔍 Incorporadas en reglamentos y protocolos.</li>
+                    <li style="margin-bottom:10px;">🔍 Decisiones "neutrales" con impacto desigual.</li>
+                    <li style="margin-bottom:10px;">🔍 Normalizadas en la cultura organizacional.</li>
+                    <li style="margin-bottom:10px;">🔍 Afectan a poblaciones históricamente excluidas.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="mask-container" id="mask">
+            <div style="text-align:center; opacity:0.4; margin-top:200px; pointer-events:none;">
+                <div style="font-size:3rem;">🔦</div>
+                <p>MUEVE EL CURSOR PARA REVELAR LA ESTRUCTURA</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 2: RADAR INTERACTIVO (CORREGIDO) -->
+    <div id="phase2" class="radar-container">
+        <h2 style="color:var(--highlight); margin-bottom:20px;">Poblaciones más impactadas</h2>
+        <div class="radar-scope">
+            <div class="radar-sweep"></div>
+            
+            <!-- Puntos Interactivos (Visibles desde el inicio) -->
+            <div class="blip" style="top:20%; left:50%;" onclick="analyzeBlip(this, 'MUJERES', 'Afectación desproporcionada por roles de género.')">!</div>
+            <div class="blip" style="top:60%; left:20%;" onclick="analyzeBlip(this, 'LGBTIQ+', 'Prejuicios en la evaluación de riesgo.')">!</div>
+            <div class="blip" style="top:50%; left:75%;" onclick="analyzeBlip(this, 'INDÍGENAS', 'Desconocimiento de sus formas de protección.')">!</div>
+            <div class="blip" style="top:80%; left:45%;" onclick="analyzeBlip(this, 'AFRO', 'Racismo estructural institucional.')">!</div>
+            <div class="blip" style="top:30%; left:25%;" onclick="analyzeBlip(this, 'LÍDERES', 'Estigmatización de la labor de defensa.')">!</div>
+        </div>
+
+        <div class="radar-readout" id="radar-msg">
+            SISTEMA DE DETECCIÓN ACTIVO.<br>HAGA CLIC EN LAS SEÑALES DE ALERTA (!) PARA IDENTIFICAR LA POBLACIÓN.
+        </div>
+    </div>
+
+    <!-- FASE 3: SIMULACIÓN DE CASO (TU VERSIÓN FAVORITA) -->
+    <div id="phase3" class="workspace">
+        <!-- Expediente -->
+        <div class="case-file">
+            <div class="paper-clip"></div>
+            <div class="stamp">CASO HIPOTÉTICO #001</div>
+            <h3>SOLICITUD: NEGACIÓN MEDIDA DE PROTECCIÓN</h3>
+            <p style="font-size:0.9rem;">
+                <strong>Descripción:</strong> Se niega esquema a una lideresa rural porque "no presentó pruebas formales (denuncias en Fiscalía)" de las amenazas recibidas en su vereda, donde no hay presencia estatal.
+            </p>
+            <hr style="border:1px dashed #ccc; margin:15px 0;">
+            <p style="font-size:0.8rem; color:#555;">
+                <strong>Misión:</strong> Como grupo de análisis, identifique las fallas estructurales usando el panel derecho.
+            </p>
+        </div>
+
+        <!-- Panel de Análisis -->
+        <div class="analysis-board">
+            <div class="question-slot" id="q1">
+                <div style="font-size:0.8rem; color:var(--line-blue);">1. ¿Qué norma, procedimiento o práctica institucional interviene?</div>
+            </div>
+
+            <div class="question-slot" id="q2">
+                <div style="font-size:0.8rem; color:var(--line-blue);">2. ¿La decisión afecta de manera diferenciada a alguna población?</div>
+            </div>
+
+            <div class="question-slot" id="q3">
+                <div style="font-size:0.8rem; color:var(--line-blue);">3. ¿Qué elementos de discriminación estructural se identifican?</div>
+            </div>
+
+            <button onclick="submitAnalysis()" style="background:var(--highlight); border:none; padding:10px; font-weight:bold; cursor:pointer; margin-top:10px; width:100%;">SOCIALIZAR CONCLUSIONES</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- CONTROLES -->
+<div class="controls">
+    <div class="nav-btn active" onclick="goToPhase(1)"></div>
+    <div class="nav-btn" onclick="goToPhase(2)"></div>
+    <div class="nav-btn" onclick="goToPhase(3)"></div>
+</div>
+
+<!-- MODAL FEEDBACK -->
+<div class="modal-overlay" id="modal">
+    <div class="modal-box">
+        <h2 style="color:var(--highlight)">ANÁLISIS COMPLETADO</h2>
+        <p id="modal-text"></p>
+        <button onclick="closeModal()" style="background:var(--highlight); border:none; padding:10px 20px; font-weight:bold; cursor:pointer; margin-top:15px;">CERRAR</button>
+    </div>
+</div>
+
+<script>
+    // --- FASE 1: LINTERNA ---
+    const stage = document.getElementById('stage-area');
+    const mask = document.getElementById('mask');
+
+    const moveMask = (x, y) => {
+        mask.style.setProperty('--x', x + 'px');
+        mask.style.setProperty('--y', y + 'px');
+    };
+
+    stage.addEventListener('mousemove', (e) => {
+        const rect = stage.getBoundingClientRect();
+        moveMask(e.clientX - rect.left, e.clientY - rect.top);
+    });
+    
+    stage.addEventListener('touchmove', (e) => {
+        const rect = stage.getBoundingClientRect();
+        moveMask(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
+    });
+
+    // --- FASE 2: RADAR INTERACTIVO (CORREGIDO) ---
+    function analyzeBlip(element, name, desc) {
+        if(element.classList.contains('analyzed')) return;
+
+        // Efecto visual al hacer clic
+        element.classList.add('analyzed');
+        element.innerText = name; 
+        
+        // Actualizar panel de texto
+        const readout = document.getElementById('radar-msg');
+        readout.innerHTML = `<strong style="color:white">${name}:</strong> ${desc}`;
+        readout.style.borderColor = "var(--detected)";
+        readout.style.color = "var(--detected)";
+    }
+
+    // --- FASE 3: EJERCICIO (INTACTO) ---
+    let answers = { q1: null, q2: null, q3: null };
+
+    function selectOption(qId, btn, isCorrect) {
+        const parent = document.getElementById(qId);
+        parent.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        answers[qId] = isCorrect;
+    }
+
+    function submitAnalysis() {
+        if (answers.q1 === true && answers.q2 === true && answers.q3 === true) {
+            showModal("¡CONCLUSIÓN CORRECTA!<br>Has identificado exitosamente cómo una norma aparentemente neutral (exigencia de denuncia) genera exclusión estructural en contextos rurales.");
+        } else {
+            showModal("Revisa: ¿La norma es realmente neutral? ¿Afecta a todos por igual?");
+        }
+    }
+
+    // --- NAVEGACIÓN ---
+    function goToPhase(n) {
+        document.querySelectorAll('.nav-btn').forEach((b, i) => {
+            b.classList.toggle('active', i+1 === n);
+        });
+        
+        document.getElementById('phase1').style.display = 'none';
+        document.getElementById('phase2').style.display = 'none';
+        document.getElementById('phase3').style.display = 'none';
+
+        const badge = document.getElementById('mode-badge');
+
+        if(n === 1) {
+            document.getElementById('phase1').style.display = 'block';
+            badge.innerText = "MODO: RAYOS X";
+        } else if (n === 2) {
+            document.getElementById('phase2').style.display = 'flex';
+            badge.innerText = "MODO: RADAR";
+        } else {
+            document.getElementById('phase3').style.display = 'grid';
+            if(window.innerWidth <= 768) document.getElementById('phase3').style.display = 'flex';
+            badge.innerText = "MODO: SIMULACIÓN";
+        }
+    }
+
+    function showModal(txt) {
+        document.getElementById('modal-text').innerHTML = txt;
+        document.getElementById('modal').style.display = 'flex';
+    }
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+    }
+
+    // Init
+    mask.style.setProperty('--x', '50%');
+    mask.style.setProperty('--y', '50%');
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparativa Ley 2365 vs 2453</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+    /* =========================================
+       1. CONFIGURACIÓN CYBERPUNK
+       ========================================= */
+    * { box-sizing: border-box; }
+    
+    :root {
+        --neon-cyan: #00f3ff;   /* Ley 2365 */
+        --neon-pink: #bc13fe;   /* Ley 2453 */
+        --dark-bg: #050510;
+        --panel-bg: rgba(10, 10, 25, 0.85);
+        --text-main: #e0e0ff;
+        --grid-line: rgba(0, 243, 255, 0.1);
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Rajdhani', sans-serif;
+        background-color: var(--dark-bg);
+        color: var(--text-main);
+        overflow-x: hidden;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* =========================================
+       2. FONDO ANIMADO (RED DIGITAL)
+       ========================================= */
+    .cyber-wrapper {
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+        padding: 40px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    /* Grilla de fondo en movimiento 3D */
+    .perspective-grid {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 200%;
+        background-image: 
+            linear-gradient(var(--grid-line) 1px, transparent 1px),
+            linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+        background-size: 50px 50px;
+        transform: perspective(500px) rotateX(60deg);
+        animation: gridMove 20s linear infinite;
+        z-index: 0;
+        opacity: 0.3;
+    }
+
+    @keyframes gridMove {
+        from { transform: perspective(500px) rotateX(60deg) translateY(0); }
+        to { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+    }
+
+    /* Partículas flotantes */
+    .particles {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 1;
+        pointer-events: none;
+        background: radial-gradient(circle, transparent 20%, var(--dark-bg) 90%); /* Viñeta */
+    }
+
+    /* =========================================
+       3. INTERFAZ PRINCIPAL
+       ========================================= */
+    .interface-container {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 1100px;
+        background: var(--panel-bg);
+        border: 1px solid var(--neon-cyan);
+        box-shadow: 0 0 20px rgba(0, 243, 255, 0.15), inset 0 0 50px rgba(0,0,0,0.8);
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        padding: 5px; /* Gap para el borde doble */
+        clip-path: polygon(
+            0 0, 100% 0, 100% 95%, 95% 100%, 0 100% /* Corte futurista esquina */
+        );
+    }
+
+    .inner-border {
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 10px;
+        padding: 30px;
+        height: 100%;
+    }
+
+    /* HEADER */
+    .cyber-header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .status-bar {
+        display: flex;
+        justify-content: space-between;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.7rem;
+        color: var(--neon-cyan);
+        margin-bottom: 10px;
+        letter-spacing: 2px;
+        opacity: 0.8;
+    }
+
+    h1 {
+        font-family: 'Orbitron', sans-serif;
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        margin: 0;
+        background: linear-gradient(90deg, var(--neon-cyan), #fff, var(--neon-pink));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+        text-transform: uppercase;
+    }
+
+    .vs-badge {
+        font-size: 1.5rem;
+        color: white;
+        font-weight: 900;
+        background: rgba(255,255,255,0.1);
+        padding: 2px 15px;
+        border-radius: 4px;
+        margin: 0 10px;
+        display: inline-block;
+        transform: skew(-15deg);
+    }
+
+    /* =========================================
+       4. CONTROLES DE NAVEGACIÓN (BOTONES CHIPS)
+       ========================================= */
+    .control-deck {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .data-chip {
+        background: rgba(0,0,0,0.4);
+        border: 1px solid var(--neon-cyan);
+        color: var(--neon-cyan);
+        padding: 12px 25px;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+        text-transform: uppercase;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .data-chip:hover {
+        background: rgba(0, 243, 255, 0.2);
+        box-shadow: 0 0 15px var(--neon-cyan);
+        text-shadow: 0 0 5px white;
+    }
+
+    .data-chip.active {
+        background: var(--neon-cyan);
+        color: var(--dark-bg);
+        font-weight: 900;
+        box-shadow: 0 0 20px var(--neon-cyan);
+    }
+
+    .data-chip.read::after {
+        content: '✓';
+        position: absolute;
+        top: 2px; right: 5px;
+        font-size: 0.7rem;
+    }
+
+    /* =========================================
+       5. PANTALLA HOLOGRÁFICA (CONTENIDO)
+       ========================================= */
+    .holo-screen {
+        display: flex;
+        gap: 20px;
+        min-height: 300px;
+        position: relative;
+    }
+
+    /* COLUMNA IZQUIERDA (2365) */
+    .data-column {
+        flex: 1;
+        background: linear-gradient(180deg, rgba(0, 243, 255, 0.05) 0%, rgba(0,0,0,0) 100%);
+        border-top: 2px solid var(--neon-cyan);
+        padding: 20px;
+        position: relative;
+        transition: 0.5s;
+        opacity: 0; /* Oculto inicialmente */
+        transform: translateY(20px);
+    }
+
+    /* COLUMNA DERECHA (2453) */
+    .data-column.right-col {
+        background: linear-gradient(180deg, rgba(188, 19, 254, 0.05) 0%, rgba(0,0,0,0) 100%);
+        border-top: 2px solid var(--neon-pink);
+    }
+
+    .data-column.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Títulos de columna */
+    .col-header {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .col-header.blue { color: var(--neon-cyan); text-shadow: 0 0 8px var(--neon-cyan); }
+    .col-header.pink { color: var(--neon-pink); text-shadow: 0 0 8px var(--neon-pink); }
+
+    .source-tag {
+        font-size: 0.7rem;
+        background: rgba(255,255,255,0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+        margin-left: auto;
+        color: #fff;
+        opacity: 0.7;
+    }
+
+    /* Texto del contenido */
+    .content-text {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        text-align: justify;
+    }
+
+    .highlight-blue { color: #80fbff; font-weight: 700; }
+    .highlight-pink { color: #eabfff; font-weight: 700; }
+
+    /* Animación de escaneo */
+    .scan-line {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 5px;
+        background: rgba(255,255,255,0.5);
+        box-shadow: 0 0 10px white;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .holo-screen.scanning .scan-line {
+        animation: scanDown 0.5s linear;
+        opacity: 1;
+    }
+
+    @keyframes scanDown {
+        0% { top: 0; opacity: 1; }
+        100% { top: 100%; opacity: 0; }
+    }
+
+    /* =========================================
+       6. CONCLUSIÓN DESBLOQUEABLE
+       ========================================= */
+    .conclusion-module {
+        margin-top: 40px;
+        border: 1px dashed rgba(255,255,255,0.3);
+        padding: 20px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.5s;
+        filter: grayscale(1);
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .conclusion-module.unlocked {
+        border: 2px solid #00ff6a; /* Verde éxito */
+        background: rgba(0, 255, 106, 0.05);
+        filter: grayscale(0);
+        opacity: 1;
+        cursor: default;
+        box-shadow: 0 0 30px rgba(0, 255, 106, 0.1);
+    }
+
+    .lock-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        background: rgba(5, 5, 16, 0.9);
+        z-index: 5;
+    }
+
+    .conclusion-module.unlocked .lock-overlay {
+        display: none;
+    }
+
+    .conc-title { font-family: 'Orbitron'; font-size: 1.5rem; color: #00ff6a; margin-bottom: 20px; }
+    
+    .conc-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        text-align: left;
+    }
+
+    .conc-item {
+        background: rgba(0,0,0,0.3);
+        padding: 15px;
+        border-left: 3px solid;
+    }
+    
+    .conc-item.c1 { border-color: var(--neon-cyan); }
+    .conc-item.c2 { border-color: var(--neon-pink); }
+
+    /* =========================================
+       7. MEDIA QUERIES (RESPONSIVE)
+       ========================================= */
+    @media (max-width: 768px) {
+        .holo-screen {
+            flex-direction: column; /* Apilar en móvil */
+        }
+        
+        h1 { font-size: 1.8rem; }
+        .vs-badge { font-size: 1.2rem; display: block; width: 50px; margin: 5px auto; transform: none; text-align: center; }
+
+        .data-column { min-height: auto; }
+        
+        .conc-grid { grid-template-columns: 1fr; }
+
+        .control-deck { gap: 10px; }
+        .data-chip { padding: 10px 15px; font-size: 0.8rem; flex: 1 1 40%; }
+    }
+</style>
+</head>
+<body>
+
+<div class="cyber-wrapper">
+    <!-- Fondo 3D -->
+    <div class="perspective-grid"></div>
+    <div class="particles"></div>
+
+    <div class="interface-container">
+        <div class="inner-border">
+            
+            <!-- HEADER -->
+            <header class="cyber-header">
+                <div class="status-bar">
+                    <span>SYS.DATE: DEC-2025</span>
+                    <span>SECURE CONNECTION: ACTIVE</span>
+                </div>
+                <h1>LEY 2365 <span class="vs-badge">VS</span> LEY 2453</h1>
+                <p style="color: #aaa; margin-top: 5px;">Módulo de Análisis Comparativo - Violencia de Género</p>
+            </header>
+
+            <!-- CONTROLES -->
+            <div class="control-deck">
+                <button class="data-chip" onclick="loadData('objeto', this)">🎯 OBJETO</button>
+                <button class="data-chip" onclick="loadData('ambito', this)">🌍 ÁMBITO</button>
+                <button class="data-chip" onclick="loadData('derechos', this)">🛡️ DERECHOS</button>
+                <button class="data-chip" onclick="loadData('sujetos', this)">👥 SUJETOS</button>
+            </div>
+
+            <!-- PANTALLA HOLOGRÁFICA -->
+            <div class="holo-screen" id="holo-display">
+                <div class="scan-line"></div>
+                
+                <!-- COLUMNA IZQUIERDA -->
+                <div class="data-column" id="col-left">
+                    <div class="col-header blue">
+                        <i class="fas fa-building"></i> LEY 2365 (2024)
+                        <span class="source-tag">Cancillería</span>
+                    </div>
+                    <div class="content-text" id="text-left">
+                        <span style="color:gray; font-style:italic;">// Esperando selección de datos... Inicie secuencia.</span>
+                    </div>
+                </div>
+
+                <!-- COLUMNA DERECHA -->
+                <div class="data-column right-col" id="col-right">
+                    <div class="col-header pink">
+                        <i class="fas fa-landmark"></i> LEY 2453 (2025)
+                        <span class="source-tag">Función Pública</span>
+                    </div>
+                    <div class="content-text" id="text-right">
+                        <span style="color:gray; font-style:italic;">// Sistema en espera...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONCLUSIÓN -->
+            <div class="conclusion-module" id="conclusion-box">
+                <div class="lock-overlay">
+                    <i class="fas fa-lock" style="font-size: 2rem; color: #aaa; margin-bottom: 10px;"></i>
+                    <span style="letter-spacing: 2px;">ANALIZA LOS 4 PUNTOS PARA DESBLOQUEAR CONCLUSIÓN</span>
+                </div>
+                
+                <h3 class="conc-title"><i class="fas fa-unlock-alt"></i> SÍNTESIS DEL SISTEMA</h3>
+                <div class="conc-grid">
+                    <div class="conc-item c1">
+                        <strong>📌 LEY 2365 (Laboral/Educativo):</strong><br>
+                        Marco jurídico para <span class="highlight-blue">prevenir y proteger contra el acoso sexual</span> en empresas y universidades. Impone obligaciones a empleadores e integra sistemas de información.
+                    </div>
+                    <div class="conc-item c2">
+                        <strong>📌 LEY 2453 (Político):</strong><br>
+                        Regula exclusivamente la <span class="highlight-pink">violencia política contra mujeres</span>. Su enfoque es distinto: proteger la representación y participación democrática, no el contrato laboral.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // BASE DE DATOS DE INFORMACIÓN
+    const comparisonData = {
+        'objeto': {
+            left: "Prevenir, atender y proteger contra el <span class='highlight-blue'>acoso sexual</span> en el trabajo y en instituciones de educación superior.",
+            right: "Prevenir y sancionar la <span class='highlight-pink'>violencia política</span> por razón de género contra las mujeres."
+        },
+        'ambito': {
+            left: "Exclusivamente en el ámbito <span class='highlight-blue'>laboral y educativo</span> (Empresas, Universidades, SENA, etc).",
+            right: "Exclusivamente en el ámbito <span class='highlight-pink'>político y electoral</span> (Partidos, Corporaciones Públicas, Campañas)."
+        },
+        'derechos': {
+            left: "Garantiza protección, atención integral y no repetición específicamente para víctimas de <span class='highlight-blue'>acoso sexual</span>.",
+            right: "Garantiza la prevención y sanción de cualquier violencia que impida el ejercicio de la <span class='highlight-pink'>participación política</span>."
+        },
+        'sujetos': {
+            left: "Empleadores, trabajadores, estudiantes, docentes e instituciones educativas.",
+            right: "Mujeres candidatas, elegidas o en ejercicio de cargos políticos de representación."
+        }
+    };
+
+    let viewedTopics = new Set();
+    const totalTopics = 4;
+
+    function loadData(topic, btn) {
+        // 1. Activar botón visualmente
+        document.querySelectorAll('.data-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        btn.classList.add('read'); // Marcar como leído permanentemente
+
+        // 2. Efecto de escaneo
+        const screen = document.getElementById('holo-display');
+        const colLeft = document.getElementById('col-left');
+        const colRight = document.getElementById('col-right');
+        
+        // Reiniciar animación columnas
+        colLeft.classList.remove('active');
+        colRight.classList.remove('active');
+        screen.classList.remove('scanning');
+
+        // Pequeño delay para simular procesamiento
+        setTimeout(() => {
+            screen.classList.add('scanning'); // Línea de luz bajando
+            
+            // 3. Cargar contenido
+            document.getElementById('text-left').innerHTML = comparisonData[topic].left;
+            document.getElementById('text-right').innerHTML = comparisonData[topic].right;
+
+            // 4. Mostrar columnas
+            colLeft.classList.add('active');
+            colRight.classList.add('active');
+
+            // 5. Lógica de juego (Desbloquear conclusión)
+            viewedTopics.add(topic);
+            checkConclusion();
+        }, 300);
+    }
+
+    function checkConclusion() {
+        if (viewedTopics.size === totalTopics) {
+            setTimeout(() => {
+                const box = document.getElementById('conclusion-box');
+                box.classList.add('unlocked');
+                
+                // Scroll suave hacia la conclusión en móviles
+                if(window.innerWidth < 768) {
+                    box.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 1000);
+        }
+    }
+
+    // Animación inicial
+    window.onload = () => {
+        // Simular carga de sistema
+        setTimeout(() => {
+            document.querySelector('.cyber-header').style.opacity = '1';
+        }, 500);
+    };
+</script>
+
+</body>
+</html>

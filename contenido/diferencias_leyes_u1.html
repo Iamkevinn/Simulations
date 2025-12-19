@@ -492,11 +492,6 @@
             setTimeout(() => {
                 const box = document.getElementById('conclusion-box');
                 box.classList.add('unlocked');
-                
-                // Scroll suave hacia la conclusión en móviles
-                if(window.innerWidth < 768) {
-                    box.scrollIntoView({ behavior: 'smooth' });
-                }
             }, 1000);
         }
     }

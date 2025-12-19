@@ -1,0 +1,375 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+<div class="final-audit-wrapper">
+    <!-- Fondo: Patrón de sellos de agua sutiles en movimiento -->
+    <div class="watermark-bg"></div>
+
+    <div class="audit-container">
+        
+        <!-- HEADER -->
+        <header class="audit-header">
+            <div class="header-line"></div>
+            <h1>Seguimiento y Principios</h1>
+            <p>Ley 2365 de 2024 - Evaluación de Impacto</p>
+        </header>
+
+        <!-- SECCIÓN 1: ENTES DE CONTROL (TARJETAS DUALES) -->
+        <div class="control-grid">
+            <!-- Entidad 1 -->
+            <div class="control-card left-card" data-aos="fade-right">
+                <div class="icon-stamp"><i class="fas fa-landmark"></i></div>
+                <div class="card-text">
+                    <h3>MinTrabajo & Procuraduría</h3>
+                    <p>Deben evaluar y emitir <strong>informes anuales</strong> sobre el impacto de la ley y su implementación.</p>
+                </div>
+            </div>
+
+            <!-- Conector Visual -->
+            <div class="connector-line-v">
+                <div class="connector-dot"></div>
+            </div>
+
+            <!-- Entidad 2 -->
+            <div class="control-card right-card" data-aos="fade-left">
+                <div class="icon-stamp education"><i class="fas fa-graduation-cap"></i></div>
+                <div class="card-text">
+                    <h3>Ministerio de Educación</h3>
+                    <p>Hace lo mismo para el <strong>contexto educativo</strong> (evaluación y emisión de informes anuales).</p>
+                    <span class="source-mini">Fuente: Cancillería</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: PRINCIPIOS (PILARES) -->
+        <div class="principles-section">
+            <div class="section-badge">📌 Principios y Enfoques Integrales</div>
+            
+            <div class="pillars-container">
+                <!-- Pilar 1 -->
+                <div class="pillar-item">
+                    <div class="pillar-head"><i class="fas fa-balance-scale"></i></div>
+                    <div class="pillar-body">
+                        <h4>Justicia</h4>
+                        <p>Igualdad, dignidad y justicia restaurativa.</p>
+                    </div>
+                </div>
+
+                <!-- Pilar 2 -->
+                <div class="pillar-item">
+                    <div class="pillar-head"><i class="fas fa-gavel"></i></div>
+                    <div class="pillar-body">
+                        <h4>Proceso</h4>
+                        <p>Debido proceso e imparcialidad.</p>
+                    </div>
+                </div>
+
+                <!-- Pilar 3 -->
+                <div class="pillar-item">
+                    <div class="pillar-head"><i class="fas fa-users-rays"></i></div>
+                    <div class="pillar-body">
+                        <h4>Enfoques</h4>
+                        <p>Género, derechos humanos, diferencial e interseccional.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="citation-center">Fuente: Normograma ICFES</div>
+        </div>
+
+        <!-- GAMIFICACIÓN FINAL: FIRMA DE CIERRE -->
+        <div class="final-action-zone">
+            <p class="action-instruction">Para finalizar el módulo, certifica la revisión de la norma:</p>
+            <button class="sign-btn" onclick="signDocument(this)">
+                <i class="fas fa-pen-nib"></i> FIRMAR REVISIÓN
+            </button>
+            
+            <!-- Sello Oculto -->
+            <div id="final-stamp" class="stamp-animation">
+                <div class="stamp-circle">
+                    <span>MÓDULO FINALIZADO</span>
+                    <i class="fas fa-check-double"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+/* VARIABLES (Mantenemos consistencia con el bloque anterior) */
+:root {
+    --f-blue: #1e3a8a;
+    --f-gold: #d97706;
+    --f-white: #ffffff;
+    --f-bg: #f8fafc;
+    --f-text: #334155;
+    --f-green: #15803d;
+}
+
+.final-audit-wrapper {
+    position: relative;
+    background-color: var(--f-bg);
+    font-family: 'Lato', sans-serif;
+    color: var(--f-text);
+    padding: 80px 20px;
+    overflow: hidden;
+    min-height: 700px;
+    display: flex;
+    justify-content: center;
+}
+
+/* FONDO MARCA DE AGUA ANIMADO */
+.watermark-bg {
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background-image: radial-gradient(var(--f-blue) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.05;
+    transform: rotate(15deg);
+    animation: slideBg 60s linear infinite;
+    z-index: 0;
+}
+
+@keyframes slideBg {
+    from { transform: rotate(15deg) translateY(0); }
+    to { transform: rotate(15deg) translateY(-100px); }
+}
+
+.audit-container {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    width: 100%;
+}
+
+/* HEADER */
+.audit-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.header-line { width: 60px; height: 4px; background: var(--f-gold); margin: 0 auto 20px auto; border-radius: 2px; }
+.audit-header h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--f-blue); margin: 0; }
+.audit-header p { font-size: 1.1rem; color: #64748b; margin-top: 10px; text-transform: uppercase; letter-spacing: 2px; }
+
+/* SECCIÓN 1: ENTES DE CONTROL */
+.control-grid {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 80px;
+    flex-wrap: wrap; /* Para responsive */
+}
+
+.control-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    flex: 1;
+    min-width: 280px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-top: 4px solid var(--f-blue);
+    transition: 0.3s;
+}
+
+.control-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(30, 58, 138, 0.15); }
+
+.icon-stamp {
+    width: 60px; height: 60px;
+    background: #eff6ff;
+    color: var(--f-blue);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.icon-stamp.education { background: #fff7ed; color: var(--f-gold); }
+.right-card { border-top-color: var(--f-gold); }
+
+.card-text h3 { margin: 0 0 10px 0; font-family: 'Playfair Display', serif; font-size: 1.2rem; }
+.card-text p { margin: 0; font-size: 0.95rem; line-height: 1.5; }
+.source-mini { font-size: 0.7rem; color: #94a3b8; font-style: italic; display: block; margin-top: 8px; }
+
+/* Conector Visual (Línea central) */
+.connector-line-v {
+    width: 2px;
+    background: #e2e8f0;
+    position: relative;
+    margin: 0 20px;
+    display: block;
+}
+
+.connector-dot {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px; height: 10px;
+    background: var(--f-blue);
+    border-radius: 50%;
+    outline: 4px solid white;
+}
+
+/* SECCIÓN 2: PRINCIPIOS */
+.principles-section {
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-badge {
+    display: inline-block;
+    background: var(--f-blue);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    box-shadow: 0 5px 15px rgba(30, 58, 138, 0.3);
+}
+
+.pillars-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+}
+
+.pillar-item {
+    padding: 20px;
+    border-radius: 12px;
+    background: #f8fafc;
+    transition: 0.3s;
+    border: 1px solid transparent;
+}
+
+.pillar-item:hover {
+    background: white;
+    border-color: var(--f-gold);
+    box-shadow: 0 10px 20px rgba(217, 119, 6, 0.1);
+}
+
+.pillar-head {
+    font-size: 2.5rem;
+    color: var(--f-blue);
+    margin-bottom: 15px;
+}
+
+.pillar-body h4 { margin: 0 0 10px 0; font-size: 1.1rem; color: var(--f-dark); }
+.pillar-body p { margin: 0; font-size: 0.9rem; color: #64748b; }
+
+.citation-center { margin-top: 30px; font-size: 0.8rem; color: #94a3b8; font-style: italic; }
+
+/* SECCIÓN 3: FIRMA (ACCIÓN FINAL) */
+.final-action-zone {
+    text-align: center;
+    position: relative;
+    height: 150px; /* Espacio para el sello */
+}
+
+.action-instruction { font-size: 1rem; color: var(--f-blue); margin-bottom: 20px; font-weight: 700; }
+
+.sign-btn {
+    background: var(--f-gold);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(217, 119, 6, 0.3);
+    transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sign-btn:hover { background: #b45309; transform: translateY(-2px); }
+.sign-btn.signed { background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* ANIMACIÓN SELLO */
+.stamp-animation {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s;
+}
+
+.stamp-animation.active {
+    animation: stampIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.stamp-circle {
+    width: 200px; height: 200px;
+    border: 5px double var(--f-green);
+    border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: var(--f-green);
+    font-weight: 900;
+    text-transform: uppercase;
+    transform: rotate(-15deg);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(2px);
+}
+
+.stamp-circle span { font-size: 1.2rem; letter-spacing: 2px; text-align: center; }
+.stamp-circle i { font-size: 3rem; margin-top: 10px; }
+
+@keyframes stampIn {
+    0% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+/* RESPONSIVE */
+@media (max-width: 1158px) {
+    .control-grid { flex-direction: column; }
+    .connector-line-v { width: 100%; height: 2px; margin: 20px 0; display: none; } /* Ocultar conector en móvil */
+    .control-card { min-width: 100%; }
+}
+</style>
+
+<script>
+function signDocument(btn) {
+    if (btn.classList.contains('signed')) return;
+
+    // 1. Cambiar estado del botón
+    btn.innerHTML = '<i class="fas fa-check"></i> REVISIÓN FIRMADA';
+    btn.classList.add('signed');
+
+    // 2. Activar Sonido (Opcional, aquí solo visual)
+    
+    // 3. Activar animación de sello
+    const stamp = document.getElementById('final-stamp');
+    
+    setTimeout(() => {
+        stamp.classList.add('active');
+    }, 200);
+}
+
+// Micro-animación de entrada al scroll
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.control-card, .principles-section').forEach(el => {
+    el.style.opacity = "0";
+    el.style.transform = "translateY(30px)";
+    el.style.transition = "all 0.6s ease-out";
+    observer.observe(el);
+});
+</script>

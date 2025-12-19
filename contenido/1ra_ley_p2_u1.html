@@ -1,0 +1,420 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+<div class="compliance-board-wrapper">
+    <!-- Fondo Animado: Red Institucional (Sutil y elegante) -->
+    <div class="mesh-bg"></div>
+
+    <div class="board-container">
+        
+        <!-- HEADER -->
+        <header class="board-header">
+            <div class="header-content">
+                <div class="icon-badge"><i class="fas fa-clipboard-check"></i></div>
+                <div class="title-group">
+                    <h2>Principales Obligaciones</h2>
+                    <p>Ley 2365 de 2024 - Medidas de Implementación</p>
+                </div>
+            </div>
+            
+            <!-- GAMIFICACIÓN: Barra de Cumplimiento -->
+            <div class="compliance-tracker">
+                <span class="tracker-label">ESTADO DE LECTURA</span>
+                <div class="tracker-bar-bg">
+                    <div class="tracker-fill" id="compliance-fill"></div>
+                </div>
+                <div class="tracker-count" id="tracker-text">0/3</div>
+            </div>
+        </header>
+
+        <!-- GRID DE TARJETAS (RESPONSIVE) -->
+        <div class="protocol-grid">
+
+            <!-- TARJETA 1: EMPLEADOR -->
+            <div class="protocol-card" id="card-1" onclick="toggleProtocol(1)">
+                <div class="card-status-strip"></div>
+                <div class="card-header">
+                    <div class="icon-box"><i class="fas fa-user-tie"></i></div>
+                    <h3>Obligaciones del Empleador</h3>
+                    <div class="toggle-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                
+                <div class="card-body">
+                    <div class="body-content">
+                        <p class="intro-p">Los empleadores tienen el deber mandatorio de:</p>
+                        <ul class="check-list">
+                            <li>Prevenir, investigar y sancionar el acoso sexual.</li>
+                            <li>Crear políticas internas, protocolos y rutas de atención fácilmente accesibles y difundidos.</li>
+                            <li>Establecer mecanismos que garanticen <strong>protección inmediata</strong> y la no repetición de hechos.</li>
+                            <li>Informar a las víctimas de su derecho a acudir ante la Fiscalía.</li>
+                            <li>Remitir quejas y denuncias a la autoridad competente cuando la víctima lo solicite.</li>
+                            <li>Publicar semestralmente estadísticas anonimizadas sobre quejas y sanciones.</li>
+                        </ul>
+                        <div class="source-tag">Fuente: Cancillería</div>
+                    </div>
+                </div>
+                <div class="card-footer-status">PENDIENTE DE REVISIÓN</div>
+            </div>
+
+            <!-- TARJETA 2: VÍCTIMAS -->
+            <div class="protocol-card" id="card-2" onclick="toggleProtocol(2)">
+                <div class="card-status-strip"></div>
+                <div class="card-header">
+                    <div class="icon-box"><i class="fas fa-shield-heart"></i></div>
+                    <h3>Garantías para Víctimas</h3>
+                    <div class="toggle-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                
+                <div class="card-body">
+                    <div class="body-content">
+                        <p class="intro-p">Derechos de la víctima (y denunciantes):</p>
+                        <ul class="check-list">
+                            <li>Trato respetuoso, libre de estigmas y con enfoque de género e inclusión.</li>
+                            <li>Atención emocional y psicológica.</li>
+                            <li>Cambios en su puesto o condiciones de trabajo para evitar interacción con el agresor.</li>
+                            <li><strong>Teletrabajo</strong> si hay riesgo.</li>
+                            <li>Continuar en su trabajo sin sanción si decide terminar contrato por riesgo.</li>
+                        </ul>
+                        <div class="alert-box">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Un despido dentro de los 6 meses posteriores a la queja se presume retaliatorio y puede generar multas.</span>
+                        </div>
+                        <div class="source-tag">Fuente: Cancillería</div>
+                    </div>
+                </div>
+                <div class="card-footer-status">PENDIENTE DE REVISIÓN</div>
+            </div>
+
+            <!-- TARJETA 3: SISTEMA DE QUEJAS -->
+            <div class="protocol-card" id="card-3" onclick="toggleProtocol(3)">
+                <div class="card-status-strip"></div>
+                <div class="card-header">
+                    <div class="icon-box"><i class="fas fa-file-signature"></i></div>
+                    <h3>Sistema de Quejas</h3>
+                    <div class="toggle-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                
+                <div class="card-body">
+                    <div class="body-content">
+                        <ul class="check-list">
+                            <li>Cualquier persona que conozca hechos de acoso sexual puede presentar queja ante el empleador o institución.</li>
+                            <li>La presentación de la queja interna <strong>no es requisito</strong> para acudir a instancias penales o disciplinarias.</li>
+                        </ul>
+                        <p class="intro-p" style="margin-top: 15px;"><strong>Registro Nacional:</strong> El Gobierno incorporará al Sistema Integrado de Información de Violencias de Género (SIVIGE) un apartado específico para registrar estas quejas.</p>
+                        <div class="source-tag">Fuente: Cancillería</div>
+                    </div>
+                </div>
+                <div class="card-footer-status">PENDIENTE DE REVISIÓN</div>
+            </div>
+
+        </div>
+
+        <!-- MENSAJE FINAL -->
+        <div id="compliance-msg" class="success-banner">
+            <i class="fas fa-check-circle"></i> MÓDULO DE OBLIGACIONES COMPLETADO
+        </div>
+
+    </div>
+</div>
+
+<style>
+/* HERENCIA DE VARIABLES (CONSISTENCIA VISUAL) */
+:root {
+    --cb-blue: #1e3a8a;
+    --cb-dark: #0f172a;
+    --cb-gold: #d97706;
+    --cb-light: #f1f5f9;
+    --cb-green: #10b981;
+    --cb-white: #ffffff;
+    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.compliance-board-wrapper {
+    position: relative;
+    background: #e2e8f0;
+    font-family: 'Lato', sans-serif;
+    color: var(--cb-dark);
+    padding: 60px 20px;
+    min-height: 800px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+/* FONDO MESH ANIMADO */
+.mesh-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: 
+        radial-gradient(at 80% 0%, hsla(217,91%,60%,0.1) 0px, transparent 50%),
+        radial-gradient(at 0% 50%, hsla(38,94%,51%,0.1) 0px, transparent 50%),
+        radial-gradient(at 80% 50%, hsla(220,10%,90%,1) 0px, transparent 50%);
+    background-size: 150% 150%;
+    animation: meshMove 15s ease infinite;
+    z-index: 0;
+}
+
+@keyframes meshMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.board-container {
+    position: relative;
+    z-index: 2;
+    max-width: 1000px;
+    width: 100%;
+}
+
+/* HEADER */
+.board-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--cb-white);
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 40px;
+    border-left: 6px solid var(--cb-blue);
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.header-content { display: flex; align-items: center; gap: 15px; }
+
+.icon-badge {
+    width: 50px; height: 50px;
+    background: var(--cb-blue);
+    color: white;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+}
+
+.title-group h2 {
+    font-family: 'Playfair Display', serif;
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--cb-blue);
+}
+
+.title-group p { margin: 5px 0 0 0; color: #64748b; font-size: 0.9rem; }
+
+/* TRACKER */
+.compliance-tracker {
+    text-align: right;
+    min-width: 200px;
+}
+
+.tracker-label { font-size: 0.7rem; font-weight: 700; color: var(--cb-gold); display: block; margin-bottom: 5px; }
+.tracker-bar-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
+.tracker-fill { width: 0%; height: 100%; background: var(--cb-green); transition: width 0.5s ease; }
+.tracker-count { font-size: 0.8rem; margin-top: 5px; font-weight: 700; }
+
+/* GRID DE TARJETAS */
+.protocol-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+/* DISEÑO DE TARJETA (ACCORDION STYLE) */
+.protocol-card {
+    background: var(--cb-white);
+    border-radius: 12px;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    border: 1px solid transparent;
+}
+
+.protocol-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.card-status-strip {
+    height: 4px;
+    background: #cbd5e1;
+    width: 100%;
+    transition: 0.3s;
+}
+
+/* HEADER TARJETA */
+.card-header {
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icon-box {
+    width: 40px; height: 40px;
+    background: #f1f5f9;
+    color: var(--cb-blue);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    transition: 0.3s;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    flex-grow: 1;
+    color: var(--cb-dark);
+}
+
+.toggle-icon {
+    color: #94a3b8;
+    transition: transform 0.4s;
+}
+
+/* BODY TARJETA (OCULTO) */
+.card-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #fafafa;
+}
+
+.body-content { padding: 0 25px 25px 25px; }
+
+.check-list { list-style: none; padding: 0; margin: 15px 0; }
+.check-list li {
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #334155;
+}
+
+.check-list li::before {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    left: 0; top: 2px;
+    color: var(--cb-gold);
+    font-size: 0.8rem;
+}
+
+.alert-box {
+    background: #fff1f2;
+    border-left: 4px solid #e11d48;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #881337;
+    margin: 15px 0;
+}
+
+.source-tag {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    text-align: right;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+/* FOOTER STATUS */
+.card-footer-status {
+    background: #f8fafc;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #64748b;
+    border-top: 1px solid #e2e8f0;
+    transition: 0.3s;
+}
+
+/* ESTADOS ACTIVOS (JS) */
+.protocol-card.active { border-color: var(--cb-blue); }
+.protocol-card.active .card-status-strip { background: var(--cb-blue); }
+.protocol-card.active .toggle-icon { transform: rotate(180deg); }
+.protocol-card.active .card-body { max-height: 800px; } /* Altura suficiente para el contenido */
+
+/* ESTADOS COMPLETADOS (JS) */
+.protocol-card.verified .card-status-strip { background: var(--cb-green); }
+.protocol-card.verified .icon-box { background: var(--cb-green); color: white; }
+.protocol-card.verified .card-footer-status { background: var(--cb-green); color: white; content: 'VERIFICADO'; }
+
+/* MENSAJE EXITO */
+.success-banner {
+    margin-top: 30px;
+    background: var(--cb-green);
+    color: white;
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: 700;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.5s;
+}
+
+.success-banner.show { opacity: 1; transform: translateY(0); }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .board-header { flex-direction: column; text-align: center; }
+    .compliance-tracker { width: 100%; text-align: center; margin-top: 10px; }
+    .protocol-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<script>
+// ESTADO DE LA GAMIFICACIÓN
+let verifiedCount = 0;
+const totalCards = 3;
+const cardStatus = { 1: false, 2: false, 3: false };
+
+function toggleProtocol(id) {
+    const card = document.getElementById(`card-${id}`);
+    const footer = card.querySelector('.card-footer-status');
+    
+    // Toggle de clase active para abrir/cerrar acordeón
+    // Si queremos que se cierre uno al abrir otro, descomentar la siguiente línea:
+    // document.querySelectorAll('.protocol-card').forEach(c => c !== card ? c.classList.remove('active') : null);
+
+    card.classList.toggle('active');
+
+    // Lógica de "Lectura/Verificación"
+    // Solo marca como verificado si no estaba verificado antes
+    if (!cardStatus[id]) {
+        // Pequeño delay para simular que el usuario "leyó" al abrir
+        setTimeout(() => {
+            cardStatus[id] = true;
+            verifiedCount++;
+            
+            // Cambios visuales de verificación
+            card.classList.add('verified');
+            footer.innerText = "VERIFICADO";
+            footer.innerHTML = '<i class="fas fa-check"></i> PROTOCOLO VERIFICADO';
+            
+            updateTracker();
+        }, 600); // Se verifica 0.6 segs después de abrir
+    }
+}
+
+function updateTracker() {
+    const fill = document.getElementById('compliance-fill');
+    const text = document.getElementById('tracker-text');
+    
+    const percentage = (verifiedCount / totalCards) * 100;
+    fill.style.width = `${percentage}%`;
+    text.innerText = `${verifiedCount}/${totalCards}`;
+
+    if (verifiedCount === totalCards) {
+        document.getElementById('compliance-msg').classList.add('show');
+    }
+}
+</script>

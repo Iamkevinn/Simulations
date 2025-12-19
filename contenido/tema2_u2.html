@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+    :root {
+        --bg-deep: #0f0518; /* Oscuridad profunda */
+        --gold: #fbbf24;    /* Ancestralidad */
+        --magenta: #d946ef; /* Feminismo */
+        --teal: #2dd4bf;    /* Territorio/Naturaleza */
+        --text: #e0e7ff;
+        --glass: rgba(20, 10, 30, 0.85);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-deep);
+        color: var(--text);
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* --- 1. FONDO "COSMOVISIÓN" (El que te gustó) --- */
+    .cosmos-bg {
+        position: absolute;
+        width: 100%; height: 100%;
+        background: radial-gradient(circle at center, #2e1065 0%, #000000 90%);
+        z-index: 0;
+    }
+    .particle {
+        position: absolute;
+        border-radius: 50%;
+        background: white;
+        opacity: 0.3;
+        animation: rise 15s infinite linear;
+    }
+    @keyframes rise {
+        from { transform: translateY(110vh); opacity: 0; }
+        50% { opacity: 0.5; }
+        to { transform: translateY(-10vh); opacity: 0; }
+    }
+
+    /* --- 2. ESCENARIO CENTRAL: EL CUERPO-TERRITORIO --- */
+    .main-stage {
+        flex-grow: 1;
+        position: relative;
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    /* Contenedor del Gráfico SVG (El "Cuerpo") */
+    .territory-visual {
+        width: 100%;
+        max-width: 500px; /* Tamaño máximo en escritorio */
+        height: 60%;
+        position: relative;
+        opacity: 0.8;
+        transition: all 0.5s;
+    }
+
+    /* SVG Styles */
+    svg { width: 100%; height: 100%; overflow: visible; }
+    
+    .path-base { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 2; }
+    
+    /* Líneas animadas que representan los conceptos */
+    .path-active {
+        fill: none;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+        transition: stroke-dashoffset 2s ease-out;
+        filter: drop-shadow(0 0 5px currentColor);
+    }
+    
+    /* Animación constante de "Latido" del centro */
+    .core-pulse {
+        transform-origin: center;
+        animation: heartbeat 3s infinite ease-in-out;
+    }
+    @keyframes heartbeat { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
+
+    /* PANEL DE INFORMACIÓN (Overlay Inteligente) */
+    .info-overlay {
+        position: absolute;
+        top: 20px; right: 20px;
+        width: 300px;
+        max-height: 50vh;
+        background: rgba(15, 5, 25, 0.9);
+        border-left: 3px solid var(--magenta);
+        padding: 20px;
+        backdrop-filter: blur(10px);
+        overflow-y: auto;
+        opacity: 0;
+        transform: translateX(50px);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 0 10px 10px 0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .info-overlay.visible { opacity: 1; transform: translateX(0); }
+
+    .info-title {
+        font-size: 1.1rem; font-weight: bold; margin-bottom: 10px;
+        text-transform: uppercase; letter-spacing: 1px;
+        color: var(--magenta); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;
+    }
+    .info-body { font-size: 0.9rem; line-height: 1.5; color: #cbd5e1; }
+    .highlight-list { margin-top: 10px; padding-left: 15px; border-left: 2px solid rgba(255,255,255,0.1); }
+    .highlight-item { margin-bottom: 8px; font-size: 0.85rem; }
+
+    /* --- 3. CONTROLES (GRID 2x2) --- */
+    .controls-dock {
+        z-index: 20;
+        background: rgba(5, 2, 10, 0.95);
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding: 15px;
+        width: 100%;
+        /* Grid por defecto para móvil */
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+        gap: 10px;
+    }
+
+    .stone-btn {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: var(--text);
+        padding: 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        height: 60px;
+        text-align: center;
+    }
+
+    /* Indicador visual de "Energía" en el botón */
+    .stone-btn::before {
+        content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px;
+        background: currentColor; transform: scaleX(0); transition: transform 0.3s;
+    }
+    .stone-btn.active::before { transform: scaleX(1); }
+    
+    .stone-btn.active { background: rgba(255,255,255,0.1); font-weight: bold; border-color: currentColor; box-shadow: 0 0 15px -5px currentColor; }
+
+    /* Colores por botón */
+    .btn-fem { color: #e879f9; }      /* Rosa */
+    .btn-intro { color: #a78bfa; }    /* Violeta */
+    .btn-com { color: #fbbf24; }      /* Oro */
+    .btn-dec { color: #2dd4bf; }      /* Verde Agua */
+
+    /* RESPONSIVE DESKTOP (> 1200px) */
+    @media (min-width: 1201px) {
+        .controls-dock {
+            display: flex; justify-content: center; gap: 20px;
+            background: transparent; margin-bottom: 30px; border: none;
+        }
+        .stone-btn { width: 200px; height: 70px; background: var(--glass); }
+        .info-overlay { 
+            width: 350px; top: 50%; transform: translateY(-50%) translateX(50px); right: 5%; 
+        }
+        .info-overlay.visible { transform: translateY(-50%) translateX(0); }
+        .territory-visual { max-width: 400px; margin-right: 150px; } /* Desplazar visual para equilibrar con texto */
+    }
+
+    /* RESPONSIVE MOBILE (< 1200px) - Ajustes específicos visuales */
+    @media (max-width: 1200px) {
+        .info-overlay {
+            width: 90%; top: 10px; right: 50%; transform: translateX(50%) translateY(-20px);
+            left: auto; max-height: 40vh;
+            border-left: none; border-top: 3px solid var(--magenta);
+            border-radius: 0 0 10px 10px;
+        }
+        .info-overlay.visible { transform: translateX(50%) translateY(0); }
+        
+        .territory-visual { height: 45%; margin-top: 40vh; /* Bajar el visual para que no lo tape el texto */ }
+        
+        .controls-dock { padding-bottom: 30px; /* Espacio para safe area en iOS */ }
+    }
+
+</style>
+</head>
+<body>
+
+    <!-- FONDO DE PARTÍCULAS -->
+    <div class="cosmos-bg" id="particles"></div>
+
+    <!-- ESCENARIO PRINCIPAL -->
+    <div class="main-stage">
+        
+        <!-- VISUALIZADOR SVG (Metáfora: Cuerpo-Territorio) -->
+        <div class="territory-visual">
+            <svg viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+                <!-- Definiciones de gradientes -->
+                <defs>
+                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="2" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                </defs>
+
+                <!-- 1. BASE: La Silueta Abstracta (Siempre visible, tenue) -->
+                <path class="path-base" d="M100,50 C120,50 130,70 130,90 C130,120 110,140 100,160 C90,140 70,120 70,90 C70,70 80,50 100,50 Z M100,160 L100,280" />
+                
+                <!-- 2. CORE: Feminismo General (El corazón/centro) -->
+                <circle id="vis-fem" cx="100" cy="90" r="15" fill="none" stroke="#e879f9" stroke-width="2" class="core-pulse" style="opacity:0; transition: opacity 1s;" />
+                <path id="vis-fem-rays" class="path-active" stroke="#e879f9" d="M100,90 L60,50 M100,90 L140,50 M100,90 L60,130 M100,90 L140,130" style="stroke-dashoffset: 1000;" />
+
+                <!-- 3. INTRO: Conexión (El tronco se ilumina) -->
+                <path id="vis-intro" class="path-active" stroke="#a78bfa" d="M100,90 L100,200" style="stroke-dashoffset: 1000;" />
+                
+                <!-- 4. COMUNITARIO: Raíces (Territorio-Tierra) -->
+                <path id="vis-com" class="path-active" stroke="#fbbf24" d="M100,200 C80,230 60,220 40,250 M100,200 C120,230 140,220 160,250 M100,220 C100,250 100,260 100,290" style="stroke-dashoffset: 1000;" />
+                
+                <!-- 5. DECOLONIAL: Ramas Superiores (Rompiendo la caja) -->
+                <path id="vis-dec" class="path-active" stroke="#2dd4bf" d="M100,50 C80,30 60,40 40,20 M100,50 C120,30 140,40 160,20 M100,30 L100,10" style="stroke-dashoffset: 1000;" />
+            </svg>
+        </div>
+
+        <!-- TEXTO FLOTANTE -->
+        <div class="info-overlay" id="info-box">
+            <div class="info-title" id="info-title"></div>
+            <div class="info-body" id="info-content"></div>
+        </div>
+
+    </div>
+
+    <!-- CONTROLES (Cuadrícula 2x2 en móvil) -->
+    <div class="controls-dock">
+        <div class="stone-btn btn-fem" onclick="activate('fem', this)">
+            1. ¿QUÉ ES?
+        </div>
+        <div class="stone-btn btn-intro" onclick="activate('intro', this)">
+            2. CORRIENTES
+        </div>
+        <div class="stone-btn btn-com" onclick="activate('com', this)">
+            2.1 COMUNITARIO
+        </div>
+        <div class="stone-btn btn-dec" onclick="activate('dec', this)">
+            2.2 DECOLONIAL
+        </div>
+    </div>
+
+<script>
+    // --- GENERACIÓN DE PARTÍCULAS ---
+    const bg = document.getElementById('particles');
+    for(let i=0; i<40; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 3 + 1;
+        p.style.width = size + 'px'; p.style.height = size + 'px';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        p.style.animationDelay = (Math.random() * 5) + 's';
+        bg.appendChild(p);
+    }
+
+    // --- DATOS (CONTENIDO EXACTO) ---
+    const data = {
+        fem: {
+            title: "1. ¿Qué es el feminismo?",
+            color: "#e879f9",
+            text: `El feminismo es un conjunto de corrientes políticas, sociales y teóricas que buscan eliminar las desigualdades basadas en el género y garantizar el ejercicio pleno de los derechos de las mujeres y diversidades.<br><br>
+            <strong>En América Latina:</strong> Se ha nutrido de experiencias territoriales, comunitarias y étnicas que cuestionan los modelos occidentales hegemónicos.`,
+            animIds: ['vis-fem', 'vis-fem-rays'] // IDs del SVG a activar
+        },
+        intro: {
+            title: "2. Feminismos Comunitarios y Decoloniales",
+            color: "#a78bfa",
+            text: `Estas corrientes emergen desde contextos indígenas, afrodescendientes y rurales.<br><br>
+            <strong>Propuesta:</strong> Una lectura crítica del patriarcado articulado al:
+            <div class="highlight-list">
+                <div class="highlight-item">• Colonialismo</div>
+                <div class="highlight-item">• Racismo</div>
+                <div class="highlight-item">• Extractivismo</div>
+            </div>`,
+            animIds: ['vis-intro']
+        },
+        com: {
+            title: "2.1 Feminismo Comunitario",
+            color: "#fbbf24",
+            text: `Surge en Bolivia y Guatemala (mujeres indígenas y rurales).<br><br>
+            <strong>Principios fundamentales:</strong>
+            <div class="highlight-list">
+                <div class="highlight-item">• Defensa del <strong>territorio-cuerpo</strong> y territorio-tierra como inseparables.</div>
+                <div class="highlight-item">• Resistencia a violencias coloniales.</div>
+                <div class="highlight-item">• Centralidad de lo colectivo y ancestral.</div>
+                <div class="highlight-item">• Violencia contra el cuerpo = primera colonización.</div>
+            </div>`,
+            animIds: ['vis-com']
+        },
+        dec: {
+            title: "2.2 Feminismo Decolonial",
+            color: "#2dd4bf",
+            text: `Surge desde mujeres afrodescendientes, indígenas y académicas.<br><br>
+            <strong>Ejes centrales:</strong>
+            <div class="highlight-list">
+                <div class="highlight-item">• Desmontar efectos del colonialismo en saberes.</div>
+                <div class="highlight-item">• Cuestionar modelos occidentales impuestos.</div>
+                <div class="highlight-item">• Valorar saberes ancestrales y locales.</div>
+                <div class="highlight-item">• Analizar racismo estructural y relaciones centro–periferia.</div>
+            </div>`,
+            animIds: ['vis-dec']
+        }
+    };
+
+    function activate(key, btn) {
+        // 1. Resetear UI
+        document.querySelectorAll('.stone-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // 2. Apagar todas las líneas del SVG primero
+        document.querySelectorAll('.path-active').forEach(path => {
+            path.style.strokeDashoffset = "1000"; // Ocultar línea
+        });
+        document.getElementById('vis-fem').style.opacity = "0";
+
+        // 3. Cargar Textos
+        const infoBox = document.getElementById('info-box');
+        const content = data[key];
+        
+        infoBox.classList.remove('visible'); // Ocultar para transición
+        
+        setTimeout(() => {
+            document.getElementById('info-title').innerText = content.title;
+            document.getElementById('info-title').style.borderColor = content.color;
+            document.getElementById('info-title').style.color = content.color;
+            document.getElementById('info-content').innerHTML = content.text;
+            infoBox.style.borderTopColor = content.color; // Para móvil
+            infoBox.style.borderLeftColor = content.color; // Para desktop
+            
+            infoBox.classList.add('visible'); // Mostrar nuevo texto
+        }, 300);
+
+        // 4. Activar Animación SVG específica (Significancia Visual)
+        // La lógica aquí es "acumulativa" para dar sensación de construcción
+        // Pero para diferenciar temas, resaltaremos las partes específicas
+        
+        setTimeout(() => {
+            if (key === 'fem') {
+                document.getElementById('vis-fem').style.opacity = "1";
+                document.getElementById('vis-fem-rays').style.strokeDashoffset = "0";
+            }
+            else if (key === 'intro') {
+                // Intro conecta centro con tierra
+                document.getElementById('vis-fem').style.opacity = "0.5";
+                document.getElementById('vis-intro').style.strokeDashoffset = "0";
+            }
+            else if (key === 'com') {
+                // Comunitario dibuja las RAÍCES (Tierra)
+                document.getElementById('vis-intro').style.strokeDashoffset = "0"; // Mantiene tronco
+                document.getElementById('vis-com').style.strokeDashoffset = "0"; // Dibuja raíces
+            }
+            else if (key === 'dec') {
+                // Decolonial dibuja las RAMAS (Hacia afuera/Mente)
+                document.getElementById('vis-intro').style.strokeDashoffset = "0";
+                document.getElementById('vis-dec').style.strokeDashoffset = "0";
+            }
+        }, 100);
+    }
+</script>
+
+</body>
+</html>

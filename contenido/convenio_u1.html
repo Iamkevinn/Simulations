@@ -1,0 +1,273 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="c190-mission-wrapper">
+    <!-- Fondo de Cuadrícula Dinámica (Radar) -->
+    <div class="radar-grid"></div>
+    <div class="scan-line-v"></div>
+
+    <div class="mission-dashboard">
+        <!-- Encabezado de la Misión -->
+        <header class="dashboard-header">
+            <div class="mission-id">REF: CONVENIO 190 OIT / UNP-COL</div>
+            <h1 class="glitch-title" data-text="ESTRATEGIA LÚDICO-CRÍTICA">ESTRATEGIA LÚDICO-CRÍTICA</h1>
+            <p class="subtitle">Implementación para un mundo del trabajo libre de violencia y acoso</p>
+        </header>
+
+        <!-- Secciones Interactivas (Módulos de Datos) -->
+        <div class="modules-container">
+            
+            <!-- MÓDULO 1: EL DIAGNÓSTICO -->
+            <div class="module-box info-trigger" onclick="toggleDetail('diag')">
+                <div class="module-status">ESTADO: CRÍTICO</div>
+                <div class="module-icon"><i class="fas fa-triangle-exclamation"></i></div>
+                <h3 style="color:rgba(255, 255, 255, 0.725);">1. Contexto Institucional</h3>
+                <div class="mini-bar"><div class="fill" style="width: 85%;"></div></div>
+                <div id="diag" class="module-detail">
+                    <p>La violencia y el acoso son problemáticas <strong>estructurales y multidimensionales</strong>. En la UNP, la naturaleza de las funciones puede normalizar prácticas autoritarias y violencias simbólicas que debemos desaprender.</p>
+                </div>
+            </div>
+
+            <!-- MÓDULO 2: EL MARCO C190 -->
+            <div class="module-box info-trigger" onclick="toggleDetail('norm')">
+                <div class="module-status">ESTADO: NORMATIVO</div>
+                <div class="module-icon"><i class="fas fa-gavel"></i></div>
+                <h3 style="color:rgba(255, 255, 255, 0.725);">2. Marco Convenio 190</h3>
+                <div class="mini-bar"><div class="fill" style="width: 100%; background: var(--c190-cyan);"></div></div>
+                <div id="norm" class="module-detail">
+                    <p>Reconoce el derecho a un mundo del trabajo libre de violencia. Incluye espacios físicos, comunicaciones y trayectos. Protege contra la violencia <strong>física, psicológica, sexual, económica y simbólica</strong>.</p>
+                </div>
+            </div>
+
+            </div>
+            
+        </div>
+
+        <!-- Panel de Mensaje de Impacto -->
+        <footer class="impact-panel">
+            <div class="alert-box">
+                <i class="fas fa-shield-virus"></i>
+                <div class="alert-text">
+                    <strong>La violencia de género institucional:</strong>  se manifiesta en lenguajes sexistas, invisibilización, deslegitimación de denuncias y abuso del poder jerárquico.
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;700;900&display=swap');
+
+:root {
+    --c190-bg: #05080a;
+    --c190-cyan: #00f2ff;
+    --c190-purple: #bc13fe;
+    --c190-red: #ff3e3e;
+    --c190-glass: rgba(10, 20, 25, 0.8);
+    --c190-border: rgba(0, 242, 255, 0.2);
+}
+
+.c190-mission-wrapper {
+    background-color: var(--c190-bg);
+    font-family: 'Inter', sans-serif;
+    color: white;
+    padding: 60px 20px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 30px;
+    border: 1px solid var(--c190-border);
+}
+
+/* Fondo Radar Animado */
+.radar-grid {
+    position: absolute;
+    top: 0; left: 0; width: 200%; height: 200%;
+    background-image: 
+        linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+    transform: perspective(500px) rotateX(60deg);
+    animation: grid-move 20s linear infinite;
+    opacity: 0.5;
+}
+
+@keyframes grid-move {
+    from { transform: perspective(500px) rotateX(60deg) translateY(0); }
+    to { transform: perspective(500px) rotateX(60deg) translateY(40px); }
+}
+
+.scan-line-v {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 4px;
+    background: linear-gradient(to right, transparent, var(--c190-cyan), transparent);
+    box-shadow: 0 0 15px var(--c190-cyan);
+    z-index: 1;
+    animation: scan-v 4s linear infinite;
+}
+
+@keyframes scan-v {
+    0% { top: -5%; }
+    100% { top: 105%; }
+}
+
+.mission-dashboard {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Header */
+.dashboard-header { text-align: center; margin-bottom: 50px; }
+.mission-id { font-family: 'Share Tech Mono', monospace; color: var(--c190-cyan); letter-spacing: 4px; font-size: 0.8rem; margin-bottom: 10px; }
+
+.glitch-title {
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    font-weight: 900;
+    position: relative;
+    text-transform: uppercase;
+}
+
+.glitch-title::before, .glitch-title::after {
+    content: attr(data-text);
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0.8;
+}
+
+.glitch-title::before { color: var(--c190-purple); left: -2px; animation: glitch 3s infinite; }
+.glitch-title::after { color: var(--c190-cyan); left: 2px; animation: glitch 3s infinite reverse; }
+
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+}
+
+/* Modules */
+.modules-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.module-box {
+    background: var(--c190-glass);
+    border: 1px solid var(--c190-border);
+    padding: 25px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.module-box:hover {
+    background: rgba(0, 242, 255, 0.05);
+    border-color: var(--c190-cyan);
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+}
+
+.module-status {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    position: absolute;
+    top: 15px; right: 20px;
+    color: var(--c190-cyan);
+}
+
+.module-icon {
+    font-size: 1.8rem;
+    color: var(--c190-cyan);
+    margin-bottom: 15px;
+}
+
+.module-box h3 {
+    font-size: 1.3rem;
+    margin: 10px 0;
+    font-weight: 700;
+}
+
+.mini-bar {
+    width: 100px;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    margin-bottom: 15px;
+}
+
+.mini-bar .fill {
+    height: 100%;
+    background: var(--c190-red);
+}
+
+/* Accordion Logic */
+.module-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+    color: #cbd5e1;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.module-box.active .module-detail {
+    max-height: 1000px;
+    margin-top: 15px;
+    transition: max-height 1s ease-in-out;
+}
+
+/* Footer Impact */
+.impact-panel { margin-top: 50px; }
+.alert-box {
+    background: linear-gradient(90deg, var(--c190-purple), transparent);
+    border: 1px solid var(--c190-purple);
+    padding: 25px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.alert-box i { font-size: 2rem; color: white; animation: pulse 2s infinite; }
+.alert-text { font-size: 1.1rem; }
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .c190-mission-wrapper { padding: 40px 15px; }
+    .glitch-title { font-size: 1.5rem; }
+}
+</style>
+
+<script>
+/**
+ * Lógica de interacción para la "Consola"
+ * Permite expandir los módulos como un sistema de archivos
+ */
+function toggleDetail(id) {
+    // Cerrar otros si se desea (opcional)
+    // document.querySelectorAll('.module-box').forEach(b => b.classList.remove('active'));
+    
+    const box = event.currentTarget;
+    box.classList.toggle('active');
+}
+
+// Micro-interacción: Simular "carga de sistema"
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("C190 System Booting...");
+    const boxes = document.querySelectorAll('.module-box');
+    boxes.forEach((box, index) => {
+        setTimeout(() => {
+            box.style.opacity = "1";
+            box.style.transform = "translateX(0)";
+        }, 300 * index);
+    });
+});
+</script>

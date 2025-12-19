@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caso 4: Monitor Territorial</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* =========================================
+       1. VARIABLES Y BASE TÁCTICA
+       ========================================= */
+    * { box-sizing: border-box; }
+
+    :root {
+        --radar-bg: #0b1215;
+        --radar-green: #00ff41;
+        --radar-dim: rgba(0, 255, 65, 0.2);
+        --alert-amber: #ffb300;
+        --danger-red: #ff3d00;
+        --text-color: #e0ffe4;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Chakra Petch', sans-serif;
+        background-color: var(--radar-bg);
+        color: var(--text-color);
+        overflow-x: hidden;
+        min-height: 100vh;
+        padding-bottom: 50px;
+    }
+
+    /* =========================================
+       2. FONDO ANIMADO (RADAR & TOPOGRAFÍA)
+       ========================================= */
+    .tactical-bg {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: -1;
+        background: 
+            linear-gradient(rgba(11, 18, 21, 0.9), rgba(11, 18, 21, 0.95)),
+            repeating-linear-gradient(0deg, transparent, transparent 49px, var(--radar-dim) 50px),
+            repeating-linear-gradient(90deg, transparent, transparent 49px, var(--radar-dim) 50px);
+        background-size: 100% 100%, 50px 50px, 50px 50px;
+        perspective: 1000px;
+    }
+
+    .radar-sweep {
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 150vmax; height: 150vmax;
+        transform: translate(-50%, -50%);
+        background: conic-gradient(from 0deg, transparent 0deg, var(--radar-dim) 60deg, transparent 90deg);
+        border-radius: 50%;
+        animation: radarSpin 8s infinite linear;
+        opacity: 0.3;
+        pointer-events: none;
+    }
+
+    @keyframes radarSpin {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .grid-move {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-image: linear-gradient(0deg, transparent 24%, rgba(0, 255, 65, .05) 25%, rgba(0, 255, 65, .05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 65, .05) 75%, rgba(0, 255, 65, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 255, 65, .05) 25%, rgba(0, 255, 65, .05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 65, .05) 75%, rgba(0, 255, 65, .05) 76%, transparent 77%, transparent);
+        background-size: 50px 50px;
+        animation: gridScroll 20s linear infinite;
+    }
+
+    @keyframes gridScroll {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(50px); }
+    }
+
+    /* =========================================
+       3. CONTENEDOR PRINCIPAL
+       ========================================= */
+    .monitor-container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 20px;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* HEADER */
+    .monitor-header {
+        border: 1px solid var(--radar-green);
+        background: rgba(0, 20, 0, 0.6);
+        padding: 15px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: 0 0 15px var(--radar-dim);
+    }
+
+    .header-icon {
+        font-size: 2rem;
+        color: var(--radar-green);
+        animation: blink 2s infinite;
+    }
+
+    .monitor-header h1 {
+        font-family: 'Share Tech Mono', monospace;
+        margin: 0;
+        font-size: 1.2rem;
+        text-transform: uppercase;
+        color: var(--radar-green);
+    }
+
+    .monitor-header p {
+        margin: 5px 0 0 0;
+        font-size: 0.8rem;
+        color: #fff;
+        opacity: 0.7;
+    }
+
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    /* =========================================
+       4. SECCIÓN 1: ESCANEO DE RIESGOS (RADAR)
+       ========================================= */
+    .section-box {
+        margin-bottom: 40px;
+        border-top: 2px solid var(--radar-green);
+        padding-top: 15px;
+    }
+
+    .title-bar {
+        font-family: 'Share Tech Mono', monospace;
+        background: var(--radar-dim);
+        color: var(--radar-green);
+        padding: 5px 10px;
+        display: inline-block;
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+    }
+
+    .radar-interface {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        margin: 0 auto;
+        border: 2px solid var(--radar-dim);
+        border-radius: 50%;
+        background: radial-gradient(circle, transparent 20%, rgba(0,255,65,0.05) 80%);
+        overflow: hidden; /* Mantiene los blips dentro */
+    }
+
+    .radar-crosshair {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%; height: 100%;
+        background: 
+            linear-gradient(0deg, transparent 49%, var(--radar-dim) 50%, transparent 51%),
+            linear-gradient(90deg, transparent 49%, var(--radar-dim) 50%, transparent 51%);
+    }
+
+    /* PUNTOS DE RIESGO (BLIPS) */
+    .blip {
+        position: absolute;
+        width: 20px; height: 20px;
+        background: var(--danger-red);
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 10px var(--danger-red);
+        animation: pulseBlip 1.5s infinite;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: black;
+        font-weight: bold;
+    }
+
+    .blip.safe { background: var(--radar-green); box-shadow: 0 0 10px var(--radar-green); animation: none; }
+
+    /* Posiciones de los blips */
+    .b1 { top: 30%; left: 40%; }
+    .b2 { top: 60%; left: 70%; }
+    .b3 { top: 70%; left: 20%; }
+
+    @keyframes pulseBlip {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 61, 0, 0.7); }
+        70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 61, 0, 0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 61, 0, 0); }
+    }
+
+    /* Mensaje de Info del Radar */
+    .radar-info-panel {
+        background: rgba(0,0,0,0.8);
+        border: 1px solid var(--danger-red);
+        padding: 15px;
+        margin-top: 20px;
+        display: none;
+        animation: textTyping 0.3s ease-out;
+    }
+
+    .radar-info-panel.show { display: block; }
+
+    /* =========================================
+       5. SECCIÓN 2: DIAGNÓSTICO DE FALLOS
+       ========================================= */
+    .diagnostic-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .error-log {
+        background: rgba(20, 0, 0, 0.5);
+        border-left: 4px solid var(--danger-red);
+        padding: 15px;
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: 0.3s;
+        position: relative;
+    }
+
+    .error-log:hover { background: rgba(50, 0, 0, 0.6); }
+
+    .error-log i { color: var(--danger-red); margin-right: 10px; }
+
+    .error-detail {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+        color: #aaa;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        padding-left: 25px;
+    }
+
+    .error-log.fixed {
+        border-left-color: var(--radar-green);
+        background: rgba(0, 20, 0, 0.5);
+    }
+    .error-log.fixed i { color: var(--radar-green); }
+    .error-log.fixed .error-title { text-decoration: line-through; opacity: 0.5; }
+
+    /* =========================================
+       6. SECCIÓN 3: PROTOCOLO DE GÉNERO (BLUEPRINT)
+       ========================================= */
+    .protocol-deck {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 15px;
+    }
+
+    .module-card {
+        background: rgba(255, 179, 0, 0.05);
+        border: 1px solid var(--alert-amber);
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .module-card:active { transform: scale(0.95); }
+
+    .module-card.installed {
+        background: rgba(0, 255, 65, 0.1);
+        border-color: var(--radar-green);
+        box-shadow: 0 0 10px var(--radar-dim);
+    }
+
+    .module-icon { font-size: 2rem; margin-bottom: 10px; color: var(--alert-amber); }
+    .module-card.installed .module-icon { color: var(--radar-green); }
+
+    .module-text { font-size: 0.8rem; font-weight: bold; }
+
+    .system-status {
+        margin-top: 20px;
+        text-align: center;
+        font-family: 'Share Tech Mono';
+        color: var(--radar-green);
+        font-size: 1.2rem;
+        opacity: 0;
+        transition: 0.5s;
+    }
+
+    .system-status.online { opacity: 1; text-shadow: 0 0 10px var(--radar-green); }
+
+    /* =========================================
+       RESPONSIVE
+       ========================================= */
+    @media (max-width: 400px) {
+        .radar-interface { width: 260px; height: 260px; }
+        .monitor-header h1 { font-size: 1rem; }
+        .protocol-deck { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+
+<!-- Fondo Táctico -->
+<div class="tactical-bg">
+    <div class="grid-move"></div>
+    <div class="radar-sweep"></div>
+</div>
+
+<div class="monitor-container">
+    
+    <!-- HEADER -->
+    <header class="monitor-header">
+        <i class="fas fa-satellite-dish header-icon"></i>
+        <div>
+            <h1>CASO 4: LIDERESAS Y PAZ</h1>
+            <p>Monitoreo de riesgo: Mujeres y LGBTIQ+</p>
+        </div>
+    </header>
+
+    <!-- 1. RADAR DE RIESGOS -->
+    <div class="section-box">
+        <div class="title-bar">/// FASE 1: ESCANEO DE AMENAZAS</div>
+        <p style="font-size: 0.9rem; margin-bottom: 20px;">Toque los <span style="color:var(--danger-red)">puntos rojos</span> en el radar para identificar riesgos específicos.</p>
+
+        <div class="radar-interface">
+            <div class="radar-crosshair"></div>
+            <!-- Puntos interactivos -->
+            <div class="blip b1" onclick="scanThreat(this, 'Estigmatización: Por ser ex-combatientes y por desafiar roles de género tradicionales.')">1</div>
+            <div class="blip b2" onclick="scanThreat(this, 'Violencia Sexual: Utilizada como mecanismo de corrección o castigo en el territorio.')">2</div>
+            <div class="blip b3" onclick="scanThreat(this, 'Ataque al Núcleo: Amenazas directas a hijos y familia para forzar el desplazamiento.')">3</div>
+        </div>
+
+        <div id="radarInfo" class="radar-info-panel">
+            <strong style="color:var(--danger-red)">ALERTA DETECTADA:</strong>
+            <p id="radarText" style="margin: 5px 0 0 0;">...</p>
+        </div>
+    </div>
+
+    <!-- 2. DIAGNÓSTICO DE FALENCIAS -->
+    <div class="section-box">
+        <div class="title-bar">/// FASE 2: DIAGNÓSTICO DE FALLOS</div>
+        <p style="font-size: 0.9rem;">El sistema de protección actual presenta errores críticos. Toque para analizar.</p>
+
+        <div class="diagnostic-grid">
+            <div class="error-log" onclick="fixError(this)">
+                <span class="error-title"><i class="fas fa-exclamation-triangle"></i> ERROR: ENFOQUE DURO</span>
+                <div class="error-detail">
+                    Medidas basadas solo en armas y chalecos. Esto aumenta la visibilidad y el riesgo en zonas rurales.
+                </div>
+            </div>
+
+            <div class="error-log" onclick="fixError(this)">
+                <span class="error-title"><i class="fas fa-times-circle"></i> ERROR: RIGIDEZ</span>
+                <div class="error-detail">
+                    Esquemas que no se adaptan a las labores de cuidado o maternidad de las lideresas.
+                </div>
+            </div>
+            
+            <div class="error-log" onclick="fixError(this)">
+                <span class="error-title"><i class="fas fa-bug"></i> ERROR: PREJUICIOS</span>
+                <div class="error-detail">
+                    Escoltas que ejercen violencia simbólica o discriminación contra protegidas LGBTIQ+.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. INCORPORACIÓN DE ENFOQUE (SOLUCIÓN) -->
+    <div class="section-box" style="border-bottom: 2px solid var(--radar-green);">
+        <div class="title-bar">/// FASE 3: INSTALAR PROTOCOLO DE GÉNERO</div>
+        <p style="font-size: 0.9rem;">Instale los módulos necesarios para corregir el esquema.</p>
+
+        <div class="protocol-deck">
+            <div class="module-card" onclick="installModule(this)">
+                <i class="fas fa-users module-icon"></i>
+                <div class="module-text">MEDIDAS COLECTIVAS</div>
+            </div>
+            <div class="module-card" onclick="installModule(this)">
+                <i class="fas fa-mobile-alt module-icon"></i>
+                <div class="module-text">MEDIDAS INMATERIALES</div>
+            </div>
+            <div class="module-card" onclick="installModule(this)">
+                <i class="fas fa-heart module-icon"></i>
+                <div class="module-text">ESCOLTAS DE CONFIANZA</div>
+            </div>
+        </div>
+
+        <div id="finalStatus" class="system-status">
+            <i class="fas fa-check-circle"></i> SISTEMA SEGURO Y ADAPTADO
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // FASE 1: RADAR
+    function scanThreat(element, text) {
+        // Vibración
+        if (navigator.vibrate) navigator.vibrate(50);
+        
+        // Visual Update
+        element.classList.add('safe');
+        element.style.background = "var(--radar-green)";
+        
+        // Show Info
+        const panel = document.getElementById('radarInfo');
+        const txt = document.getElementById('radarText');
+        
+        panel.classList.remove('show');
+        void panel.offsetWidth; // Trigger reflow
+        panel.classList.add('show');
+        
+        txt.innerHTML = text;
+    }
+
+    // FASE 2: DIAGNÓSTICO
+    function fixError(element) {
+        // Toggle open detail
+        const detail = element.querySelector('.error-detail');
+        if (detail.style.maxHeight) {
+            detail.style.maxHeight = null;
+        } else {
+            // Cerrar otros (opcional, dejamos abierto para leer)
+            detail.style.maxHeight = detail.scrollHeight + "px";
+            // Marcar como 'analizado'
+            element.classList.add('fixed');
+            element.querySelector('.error-title').innerHTML = '<i class="fas fa-search"></i> FALLO IDENTIFICADO';
+        }
+    }
+
+    // FASE 3: INSTALACIÓN
+    let modulesInstalled = 0;
+    const totalModules = 3;
+
+    function installModule(element) {
+        if(element.classList.contains('installed')) return;
+
+        element.classList.add('installed');
+        if (navigator.vibrate) navigator.vibrate([50, 50, 50]); // Doble pulso
+        
+        modulesInstalled++;
+
+        if(modulesInstalled === totalModules) {
+            document.getElementById('finalStatus').classList.add('online');
+            // Sonido opcional o efecto final
+        }
+    }
+</script>
+
+</body>
+</html>

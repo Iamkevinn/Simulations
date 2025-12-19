@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+    /* --- ESTILOS VISUALES (Mismo diseño Cyber-UNP) --- */
+    :root {
+        --bg-deep: #020617;
+        --grid-line: rgba(56, 189, 248, 0.15);
+        --neon-blue: #0ea5e9;
+        --neon-purple: #d8b4fe;
+        --alert-red: #f43f5e;
+        --text-ui: #94a3b8;
+        --holo-green: #34d399;
+    }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-deep);
+        color: white;
+        font-family: 'Consolas', 'Courier New', monospace;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        user-select: none; /* Evita selección de texto accidental */
+    }
+
+    /* Fondo Animado */
+    .grid-background {
+        position: absolute;
+        width: 200vw; height: 200vh;
+        background-image: 
+            linear-gradient(var(--grid-line) 1px, transparent 1px),
+            linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+        background-size: 50px 50px;
+        transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+        animation: gridMove 30s linear infinite;
+        z-index: 0; opacity: 0.5;
+    }
+    @keyframes gridMove {
+        0% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); }
+        100% { transform: perspective(500px) rotateX(60deg) translateY(50px) translateZ(-200px); }
+    }
+
+    /* Interfaz Principal */
+    .main-interface {
+        position: relative; z-index: 10;
+        width: 95%; max-width: 1300px; height: 90vh;
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid var(--neon-blue);
+        backdrop-filter: blur(8px);
+        display: grid;
+        grid-template-columns: 280px 1fr 320px;
+        grid-template-rows: 60px 1fr 180px;
+        box-shadow: 0 0 40px rgba(14, 165, 233, 0.15);
+    }
+
+    /* Header */
+    .hud-header {
+        grid-column: 1 / -1;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 25px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        background: rgba(2, 6, 23, 0.6);
+    }
+
+    /* Panel Izquierdo (Menú) */
+    .panel-left {
+        grid-row: 2 / 3;
+        padding: 20px;
+        border-right: 1px solid rgba(255,255,255,0.1);
+        display: flex; flex-direction: column; gap: 12px;
+    }
+    
+    .layer-btn {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--text-ui);
+        color: var(--text-ui);
+        padding: 12px 15px;
+        cursor: pointer;
+        text-align: left;
+        font-family: inherit;
+        font-size: 0.8rem;
+        transition: all 0.2s;
+        position: relative;
+    }
+    .layer-btn:hover { background: rgba(14, 165, 233, 0.1); border-color: var(--neon-blue); color: white; }
+    .layer-btn.active {
+        background: var(--neon-blue); color: #000; font-weight: bold;
+        box-shadow: 0 0 15px rgba(14, 165, 233, 0.5); border-color: var(--neon-blue);
+    }
+
+    /* Panel Central (Visualización) */
+    .panel-center {
+        grid-row: 2 / 3;
+        position: relative;
+        overflow: hidden;
+        display: flex; justify-content: center; align-items: center;
+        background: radial-gradient(circle, transparent 20%, #000 100%);
+    }
+
+    /* Silueta Humana */
+    .human-silhouette {
+        width: 320px; height: 550px;
+        background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png');
+        background-size: contain; background-repeat: no-repeat; background-position: center;
+        filter: invert(1) brightness(0.4) opacity(0.2);
+        position: relative;
+        transition: filter 0.5s ease;
+    }
+
+    /* Escáner */
+    .scanner-line {
+        position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+        background: var(--alert-red);
+        box-shadow: 0 0 15px var(--alert-red);
+        animation: scan 4s ease-in-out infinite;
+        opacity: 0.8; pointer-events: none;
+    }
+    @keyframes scan { 0% { top: 5%; } 50% { top: 95%; } 100% { top: 5%; } }
+
+    /* Puntos Interactivos (Hotspots) */
+    .hotspot {
+        position: absolute;
+        width: 18px; height: 18px;
+        background: var(--neon-purple);
+        border-radius: 50%;
+        cursor: pointer;
+        animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+        border: 2px solid white;
+        z-index: 20;
+        display: none; /* Se activan via JS */
+    }
+    .hotspot:hover { transform: scale(1.3); background: white; animation: none; }
+    @keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+
+    /* Panel Derecho (Datos) */
+    .panel-right {
+        grid-row: 2 / 3;
+        border-left: 1px solid rgba(255,255,255,0.1);
+        padding: 20px;
+        overflow-y: auto;
+        background: rgba(0,0,0,0.2);
+        display: flex; flex-direction: column; gap: 15px;
+    }
+
+    .data-card {
+        background: rgba(30, 41, 59, 0.6);
+        border-left: 3px solid var(--neon-purple);
+        padding: 15px;
+        font-size: 0.8rem;
+        line-height: 1.4;
+        animation: slideIn 0.3s ease-out;
+        color: #e2e8f0;
+    }
+    .data-card strong { color: var(--neon-purple); display: block; margin-bottom: 5px; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+    /* Panel Inferior (Texto / Narrativa) */
+    .panel-bottom {
+        grid-column: 1 / -1;
+        border-top: 1px solid var(--neon-blue);
+        background: rgba(2, 6, 23, 0.9);
+        padding: 20px 30px;
+        display: flex; flex-direction: column;
+    }
+
+    .console-header {
+        font-size: 0.75rem; color: var(--neon-blue); margin-bottom: 10px;
+        letter-spacing: 2px; text-transform: uppercase;
+    }
+
+    .console-text {
+        color: #f1f5f9; font-size: 0.95rem; line-height: 1.6;
+        height: 100%; overflow-y: auto;
+    }
+    
+    .cursor::after { content: '█'; animation: blink 0.8s infinite; color: var(--neon-blue); margin-left: 5px; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* Botón Final */
+    .action-btn {
+        position: absolute; bottom: 30px; right: 30px;
+        background: var(--neon-blue); border: none;
+        padding: 10px 25px; color: black; font-weight: bold;
+        cursor: pointer; font-family: inherit;
+        clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        transition: all 0.2s;
+    }
+    .action-btn:hover { background: white; transform: scale(1.05); }
+
+    /* Modal Final */
+    .modal {
+        display: none; position: fixed; top:0; left:0; width:100%; height:100%;
+        background: rgba(0,0,0,0.95); z-index: 100;
+        justify-content: center; align-items: center;
+    }
+    .modal-box {
+        width: 60%; max-width: 800px;
+        border: 1px solid var(--holo-green);
+        background: #0f172a; padding: 40px;
+        box-shadow: 0 0 60px rgba(16, 185, 129, 0.2);
+        color: #e2e8f0; position: relative;
+    }
+</style>
+</head>
+<body>
+
+<div class="grid-background"></div>
+
+<div class="main-interface">
+    
+    <!-- HEADER -->
+    <div class="hud-header">
+        <div>
+            <span style="color:var(--neon-blue)">UNP</span> // SISTEMA DE ANÁLISIS INTERSECCIONAL
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-ui);">UNIDAD 02: TEMA 1</div>
+    </div>
+
+    <!-- PANEL IZQUIERDO: MENÚ -->
+    <div class="panel-left">
+        <div style="font-size:0.7rem; color:#64748b; margin-bottom:5px;">PROTOCOLOS DISPONIBLES</div>
+        
+        <button class="layer-btn" onclick="loadContent('1.1', this)">1.1 HISTORIA Y SIGNIFICADO</button>
+        <button class="layer-btn" onclick="loadContent('1.2', this)">1.2 CRÍTICA SISTEMA SEXO-GÉNERO</button>
+        <button class="layer-btn" onclick="activateScanner(this)">1.3 ANÁLISIS DE RIESGO (CASOS)</button>
+
+        <div style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+            <div style="font-size: 0.7rem; color: var(--text-ui);">ESTADO DEL ESCÁNER</div>
+            <div style="height: 4px; background: #333; margin-top: 5px; border-radius: 2px;">
+                <div id="progress" style="width: 10%; height: 100%; background: var(--alert-red); transition: width 0.5s;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL CENTRAL: ESCENARIO -->
+    <div class="panel-center">
+        <div class="scanner-line"></div>
+        <div class="human-silhouette" id="silhouette">
+            <!-- HOTSPOTS (1.3) -->
+            <div class="hotspot" style="top: 20%; left: 50%;" id="spot-indigena" onclick="showCaseData('indigena')"></div>
+            <div class="hotspot" style="top: 35%; left: 30%;" id="spot-afro" onclick="showCaseData('afro')"></div>
+            <div class="hotspot" style="top: 60%; left: 65%;" id="spot-campesina" onclick="showCaseData('campesina')"></div>
+            <div class="hotspot" style="top: 25%; left: 40%;" id="spot-trans" onclick="showCaseData('trans')"></div>
+            <div class="hotspot" style="top: 15%; left: 65%;" id="spot-lider" onclick="showCaseData('lider')"></div>
+        </div>
+    </div>
+
+    <!-- PANEL DERECHO: DATOS CLAVE -->
+    <div class="panel-right" id="data-panel">
+        <div style="text-align: center; color: var(--text-ui); margin-top: 50px; font-size: 0.8rem;">
+            SELECCIONE UN PROTOCOLO<br>PARA INICIAR CARGA DE DATOS...
+        </div>
+    </div>
+
+    <!-- PANEL INFERIOR: TEXTO -->
+    <div class="panel-bottom">
+        <div class="console-header">REGISTRO DE SALIDA DEL SISTEMA</div>
+        <div class="console-text">
+            <span id="output-text"></span><span class="cursor"></span>
+        </div>
+        <button class="action-btn" onclick="showFinalReport()">VER APLICACIÓN UNP (2.0)</button>
+    </div>
+
+</div>
+
+<!-- MODAL FINAL (2.0) -->
+<div class="modal" id="final-modal">
+    <div class="modal-box">
+        <button onclick="document.getElementById('final-modal').style.display='none'" style="position:absolute; top:10px; right:10px; background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+        <h2 style="color: var(--holo-green); border-bottom: 1px solid var(--holo-green); padding-bottom: 10px; margin-top: 0;">2. APLICACIÓN DEL ENFOQUE EN LA UNP</h2>
+        <div style="overflow-y: auto; max-height: 60vh; line-height: 1.6; font-size: 0.95rem;">
+            <p>Para la UNP, la interseccionalidad implica:</p>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 10px; padding-left: 15px; border-left: 2px solid var(--holo-green);">Identificar riesgos específicos según género, etnia y territorio.</li>
+                <li style="margin-bottom: 10px; padding-left: 15px; border-left: 2px solid var(--holo-green);">Reconocer que una mujer indígena lideresa enfrenta riesgos distintos a los de una mujer periodista urbana.</li>
+                <li style="margin-bottom: 10px; padding-left: 15px; border-left: 2px solid var(--holo-green);">Analizar factores combinados, como el caso de mujeres trans desplazadas que además son defensoras de derechos humanos.</li>
+                <li style="margin-bottom: 10px; padding-left: 15px; border-left: 2px solid var(--holo-green);">Evaluar el riesgo de forma más precisa, comprendiendo que las amenazas no afectan de manera homogénea a todas las personas protegidas.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- BASE DE DATOS EXACTA (SIN MODIFICACIONES) ---
+    const contentDB = {
+        intro: "Bienvenida al sistema. Este módulo aborda la Diversidad de Enfoques de Género mediante metodologías activas para fortalecer la comprensión crítica del enfoque interseccional en el análisis de riesgo de la UNP.",
+        
+        "1.1": `<strong>1.1 Historia y significado del enfoque interseccional:</strong><br><br>A través de actividades interactivas y juegos de roles, se abordó el origen y evolución del enfoque interseccional, comprendido como una herramienta analítica que examina cómo múltiples formas de discriminación se cruzan, generando riesgos y vulnerabilidades específicas.<br><br>Se identificaron categorías como: Género, Etnia, Clase social, Orientación sexual, Discapacidad, Edad y Ubicación territorial.<br><br>Estas categorías no actúan de manera aislada, sino que se entrelazan.`,
+        
+        "1.2": `<strong>1.2 Crítica al sistema sexo-género y tensiones contemporáneas:</strong><br><br>El análisis crítico se desarrolló mediante simulaciones sobre tensiones actuales:<br>• Roles de género impuestos socialmente.<br>• Discriminación estructural.<br>• Violencias basadas en género y diversidad sexual.<br><br>Reflexión clave: Las instituciones deben adaptar sus enfoques para responder a realidades complejas y cambiantes.`,
+
+        "1.3": `<strong>1.3 Enfoques interseccionales en análisis de riesgo:</strong><br><br>Se aplicó el enfoque al análisis de riesgo en Colombia. <br><br>INSTRUCCIÓN: Haga clic en los puntos parpadeantes sobre la silueta para analizar los casos específicos de vulnerabilidad (Mujeres indígenas, Afrodescendientes, Campesinas, LGBTIQ+ y Lideresas).`
+    };
+
+    const casesDB = {
+        indigena: { title: "MUJERES INDÍGENAS", text: "Violencias territoriales, desplazamiento forzado y afectación cultural." },
+        afro: { title: "MUJERES AFRODESCENDIENTES", text: "Violencia sexual, racismo estructural y pobreza histórica." },
+        campesina: { title: "MUJERES CAMPESINAS", text: "Acceso limitado a la tierra, estigmatización y exclusión institucional." },
+        trans: { title: "PERSONAS LGBTIQ+ (TRANS)", text: "Violencia correctiva, amenazas de actores armados y exclusión social." },
+        lider: { title: "LIDERESAS SOCIALES", text: "Amenazas directas por su rol comunitario y defensa del territorio." }
+    };
+
+    // --- VARIABLE DE CONTROL PARA EVITAR EL ERROR ---
+    let currentTypingTimeout = null; 
+
+    // Función de escritura corregida
+    function typeWriter(text) {
+        const display = document.getElementById('output-text');
+        
+        // 1. CANCELAR cualquier escritura previa (Solución al bug)
+        if (currentTypingTimeout) {
+            clearTimeout(currentTypingTimeout);
+        }
+
+        // 2. Limpiar el display inmediatamente
+        display.innerHTML = ""; 
+
+        let i = 0;
+        // Velocidad de escritura
+        const speed = 10; 
+
+        function typing() {
+            // Manejo simple de etiquetas HTML (para que no escriba < b r > letra por letra)
+            if (text.charAt(i) === '<') {
+                const tagEnd = text.indexOf('>', i);
+                display.innerHTML += text.substring(i, tagEnd + 1);
+                i = tagEnd + 1;
+            } else {
+                display.innerHTML += text.charAt(i);
+                i++;
+            }
+
+            if (i < text.length) {
+                // Guardamos el ID del timeout en la variable global
+                currentTypingTimeout = setTimeout(typing, speed);
+            } else {
+                currentTypingTimeout = null; // Limpiamos cuando termina
+            }
+        }
+        typing();
+    }
+
+    // Carga inicial
+    window.onload = function() {
+        typeWriter(contentDB.intro);
+    };
+
+    // Control de Botones 1.1 y 1.2
+    function loadContent(key, btn) {
+        resetButtons();
+        btn.classList.add('active');
+        hideHotspots();
+        
+        // Escribir contenido
+        typeWriter(contentDB[key]);
+
+        // Actualizar datos laterales
+        const panel = document.getElementById('data-panel');
+        panel.innerHTML = `<div class="data-card"><strong>DATOS CLAVE (${key})</strong>Se ha cargado la información teórica en la consola inferior.</div>`;
+        
+        updateProgress(30);
+    }
+
+    // Activación del Escáner 1.3
+    function activateScanner(btn) {
+        resetButtons();
+        btn.classList.add('active');
+        
+        // Mostrar Hotspots
+        const hotspots = document.querySelectorAll('.hotspot');
+        hotspots.forEach(spot => spot.style.display = 'block');
+        
+        // Cambiar visual silueta
+        document.getElementById('silhouette').style.filter = "invert(1) brightness(0.8) opacity(0.6) drop-shadow(0 0 10px red)";
+        
+        typeWriter(contentDB["1.3"]);
+        
+        document.getElementById('data-panel').innerHTML = `<div class="data-card" style="border-color:var(--alert-red)"><strong>ESCÁNER ACTIVO</strong>Detectando vulnerabilidades específicas...<br>Seleccione los objetivos en la silueta.</div>`;
+        
+        updateProgress(60);
+    }
+
+    // Mostrar datos de casos (1.3)
+    function showCaseData(caseId) {
+        const data = casesDB[caseId];
+        const panel = document.getElementById('data-panel');
+        
+        // Crear tarjeta
+        const card = document.createElement('div');
+        card.className = 'data-card';
+        card.style.borderColor = 'var(--neon-purple)';
+        card.innerHTML = `<strong>${data.title}</strong>${data.text}`;
+        
+        // Insertar arriba
+        panel.insertBefore(card, panel.firstChild);
+        
+        // Feedback inmediato en consola también
+        typeWriter(`ANÁLISIS DETECTADO: ${data.title}. Riesgos: ${data.text}`);
+        
+        updateProgress(90);
+    }
+
+    function showFinalReport() {
+        document.getElementById('final-modal').style.display = 'flex';
+        updateProgress(100);
+    }
+
+    function resetButtons() {
+        document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+    }
+
+    function hideHotspots() {
+        document.querySelectorAll('.hotspot').forEach(h => h.style.display = 'none');
+        document.getElementById('silhouette').style.filter = "invert(1) brightness(0.4) opacity(0.2)";
+    }
+
+    function updateProgress(val) {
+        document.getElementById('progress').style.width = val + "%";
+        if(val > 80) document.getElementById('progress').style.background = "var(--holo-green)";
+    }
+
+</script>
+
+</body>
+</html>

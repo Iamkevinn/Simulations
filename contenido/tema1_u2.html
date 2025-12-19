@@ -4,469 +4,433 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
-    /* --- VARIABLES & BASE --- */
+    /* --- VARIABLES & ESTÉTICA CYBERPUNK --- */
     :root {
         --bg-deep: #020617;
-        --grid-line: rgba(56, 189, 248, 0.15);
         --neon-blue: #0ea5e9;
         --neon-purple: #d8b4fe;
         --alert-red: #f43f5e;
+        --holo-green: #10b981;
+        --glass: rgba(15, 23, 42, 0.85);
         --text-ui: #94a3b8;
-        --holo-green: #34d399;
-        --glass-bg: rgba(15, 23, 42, 0.85);
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     body {
         margin: 0;
         background-color: var(--bg-deep);
         color: white;
-        font-family: 'Consolas', 'Courier New', monospace;
+        font-family: 'Segoe UI', 'Roboto', sans-serif;
         height: 100vh;
         width: 100vw;
         overflow: hidden;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        flex-direction: column;
     }
 
-    /* --- FONDO ANIMADO --- */
+    /* --- FONDO ANIMADO (Siempre visible) --- */
     .grid-background {
         position: absolute;
-        width: 200vw; height: 200vh;
+        top: 0; left: 0; width: 200%; height: 200%;
         background-image: 
-            linear-gradient(var(--grid-line) 1px, transparent 1px),
-            linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-        background-size: 50px 50px;
-        transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
-        animation: gridMove 30s linear infinite;
-        z-index: 0; opacity: 0.5;
+            linear-gradient(rgba(14, 165, 233, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(14, 165, 233, 0.1) 1px, transparent 1px);
+        background-size: 40px 40px;
+        transform: perspective(300px) rotateX(60deg) translateY(-100px);
+        animation: gridMove 20s linear infinite;
+        z-index: 0; pointer-events: none;
     }
-    @keyframes gridMove {
-        0% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); }
-        100% { transform: perspective(500px) rotateX(60deg) translateY(50px) translateZ(-200px); }
-    }
+    @keyframes gridMove { 0% { transform: perspective(300px) rotateX(60deg) translateY(0); } 100% { transform: perspective(300px) rotateX(60deg) translateY(40px); } }
 
-    /* --- LAYOUT PRINCIPAL RESPONSIVE --- */
-    .main-interface {
-        position: relative; z-index: 10;
-        width: 100%; height: 100%;
-        max-width: 1400px; /* Tope para pantallas ultra-wide */
-        background: var(--glass-bg);
-        display: grid;
-        /* Default: Desktop layout */
-        grid-template-columns: 260px 1fr 300px; 
-        grid-template-rows: 60px 1fr 150px; 
-        box-shadow: 0 0 40px rgba(0,0,0,0.5);
-    }
-
-    /* Header */
-    .hud-header {
-        grid-column: 1 / -1;
-        grid-row: 1 / 2;
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 0 20px;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        background: rgba(2, 6, 23, 0.9);
-    }
-
-    /* Panel Izquierdo (Menú) */
-    .panel-left {
-        grid-column: 1 / 2;
-        grid-row: 2 / 3;
-        padding: 20px;
-        border-right: 1px solid rgba(255,255,255,0.1);
-        display: flex; flex-direction: column; gap: 10px;
-        background: rgba(2, 6, 23, 0.4);
-        overflow-y: auto;
-    }
-
-    /* Panel Central (Visual) */
-    .panel-center {
-        grid-column: 2 / 3;
-        grid-row: 2 / 3;
-        position: relative;
-        overflow: hidden;
-        display: flex; justify-content: center; align-items: center;
-        background: radial-gradient(circle, transparent 20%, #000 100%);
-    }
-
-    /* Panel Derecho (Datos) */
-    .panel-right {
-        grid-column: 3 / 4;
-        grid-row: 2 / 3;
-        border-left: 1px solid rgba(255,255,255,0.1);
-        padding: 20px;
-        overflow-y: auto;
-        background: rgba(0,0,0,0.2);
-        display: flex; flex-direction: column; gap: 15px;
-    }
-
-    /* Panel Inferior (Consola) */
-    .panel-bottom {
-        grid-column: 1 / -1;
-        grid-row: 3 / 4;
-        border-top: 1px solid var(--neon-blue);
+    /* --- ESTRUCTURA DE LAYOUT (Mobile First Approach) --- */
+    
+    /* 1. HEADER (Compacto) */
+    .top-bar {
+        height: 50px;
         background: rgba(2, 6, 23, 0.95);
-        padding: 15px 20px;
-        display: flex; flex-direction: column;
-        position: relative;
+        border-bottom: 1px solid var(--neon-blue);
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 15px;
+        z-index: 50; flex-shrink: 0;
     }
+    .status-indicator { font-size: 0.7rem; color: var(--holo-green); animation: blink 2s infinite; }
+    @keyframes blink { 50% { opacity: 0.3; } }
 
-    /* --- COMPONENTES VISUALES --- */
-
-    /* Silueta Ajustable */
-    .human-silhouette {
-        width: 100%; 
-        max-width: 300px; /* Límite en desktop */
-        height: 80%;
-        background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png');
-        background-size: contain; background-repeat: no-repeat; background-position: center;
-        filter: invert(1) brightness(0.4) opacity(0.2);
-        position: relative;
-        transition: filter 0.5s ease;
-    }
-
-    .hotspot {
-        position: absolute;
-        width: 6%; padding-bottom: 6%; /* Mantiene aspecto 1:1 responsive */
-        background: var(--neon-purple);
-        border-radius: 50%;
-        cursor: pointer;
-        animation: ping 1.5s infinite;
-        border: 2px solid white;
-        z-index: 20;
-        display: none;
-        transform: translate(-50%, -50%); /* Centrar exactamente en el punto */
-    }
-
-    .layer-btn {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid var(--text-ui);
-        color: var(--text-ui);
-        padding: 12px;
-        cursor: pointer;
-        font-family: inherit; font-size: 0.8rem;
-        transition: all 0.2s;
-        text-align: left;
-    }
-    .layer-btn.active {
-        background: var(--neon-blue); color: #000; font-weight: bold; border-color: var(--neon-blue);
-    }
-
-    .data-card {
-        background: rgba(30, 41, 59, 0.9);
-        border-left: 3px solid var(--neon-purple);
+    /* 2. AREA DE INFORMACIÓN (Panel Superior Fijo) */
+    .info-display-zone {
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(5px);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
         padding: 15px;
-        font-size: 0.85rem;
-        color: #e2e8f0;
-        animation: slideIn 0.3s ease-out;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    }
-    .data-card strong { display: block; margin-bottom: 5px; color: var(--neon-purple); }
-
-    .console-text {
-        color: #f1f5f9; font-size: 0.9rem; line-height: 1.5;
-        flex-grow: 1; overflow-y: auto;
+        overflow-y: auto;
+        position: relative;
+        z-index: 40;
+        transition: all 0.3s;
     }
     
-    .action-btn {
-        position: absolute; bottom: 20px; right: 20px;
-        background: var(--neon-blue); border: none;
-        padding: 8px 20px; color: black; font-weight: bold;
-        cursor: pointer; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    .info-card {
+        background: rgba(30, 41, 59, 0.6);
+        border-left: 3px solid var(--neon-blue);
+        padding: 15px;
+        border-radius: 0 8px 8px 0;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        margin-bottom: 10px;
+    }
+    @keyframes slideInRight { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    /* 3. ÁREA VISUAL (El Sujeto y Animaciones) */
+    .visual-stage {
+        flex-grow: 1; /* Ocupa el espacio restante */
+        position: relative;
+        display: flex; justify-content: center; align-items: center;
+        overflow: hidden;
+        z-index: 10;
     }
 
-    /* --- RESPONSIVE MEDIA QUERIES --- */
-
-    /* 1. Laptop Pequeña / Tablet Horizontal (< 1200px) */
-    @media (max-width: 1200px) {
-        .main-interface {
-            grid-template-columns: 220px 1fr; /* 2 Columnas */
-            grid-template-rows: 50px 1fr 120px;
-        }
-        .panel-right {
-            /* Se convierte en Overlay Flotante */
-            position: absolute;
-            right: 0; top: 50px; bottom: 120px;
-            width: 280px;
-            background: rgba(15, 23, 42, 0.95);
-            border-left: 1px solid var(--neon-blue);
-            transform: translateX(100%); /* Oculto por defecto */
-            transition: transform 0.3s ease;
-            z-index: 50;
-        }
-        .panel-right.active { transform: translateX(0); }
+    /* Silueta */
+    .subject-wrapper {
+        position: relative;
+        width: 280px; height: 90%;
+        display: flex; justify-content: center; align-items: center;
     }
 
-    /* 2. Móvil / Tablet Vertical (< 768px) */
-    @media (max-width: 768px) {
-        .main-interface {
-            display: flex; flex-direction: column; /* Stack vertical completo */
-        }
-
-        .hud-header { height: 50px; padding: 0 10px; font-size: 0.8rem; flex-shrink: 0; }
-
-        .panel-center {
-            flex-grow: 1; /* Ocupa el mayor espacio disponible */
-            min-height: 40vh;
-        }
-        
-        .human-silhouette { max-width: 200px; height: 70%; }
-
-        /* El menú lateral pasa a ser una barra inferior o intermedia scrolleable */
-        .panel-left {
-            order: 3; /* Poner encima de la consola o debajo */
-            height: auto; max-height: 150px;
-            flex-direction: row; /* Botones horizontales */
-            overflow-x: auto;
-            border-right: none; border-top: 1px solid rgba(255,255,255,0.1);
-            padding: 10px; flex-shrink: 0;
-            white-space: nowrap;
-        }
-        
-        .layer-btn { 
-            min-width: 200px; /* Para que tengan buen tamaño táctil */
-            margin-right: 10px;
-        }
-
-        .panel-bottom {
-            order: 4;
-            height: 200px; flex-shrink: 0;
-            padding: 10px;
-        }
-        
-        .action-btn { 
-            position: static; width: 100%; margin-top: 10px; 
-            text-align: center;
-        }
-
-        /* Ajuste del Panel Derecho (Datos) en móvil */
-        .panel-right {
-            top: 50px; bottom: 0; width: 100%; /* Pantalla completa menos header */
-            height: auto;
-            background: rgba(2, 6, 23, 0.98);
-        }
-        
-        /* Botón para cerrar panel de datos en móvil */
-        .close-panel-btn {
-            display: block !important;
-            margin-bottom: 10px;
-            text-align: right; color: var(--alert-red);
-        }
+    .silhouette {
+        width: 100%; height: 100%;
+        background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png');
+        background-size: contain; background-repeat: no-repeat; background-position: center;
+        filter: invert(1) brightness(0.6) opacity(0.5) drop-shadow(0 0 5px var(--neon-blue));
+        transition: all 0.5s;
     }
 
-    /* Botón cerrar (Solo visible en responsive) */
-    .close-panel-btn { display: none; cursor: pointer; font-weight: bold; }
+    /* Animación Láser (Siempre activa) */
+    .scanner-laser {
+        position: absolute; width: 120%; height: 2px;
+        background: var(--alert-red);
+        box-shadow: 0 0 15px var(--alert-red);
+        top: 0;
+        animation: scanAnim 3s ease-in-out infinite;
+        opacity: 0.8; pointer-events: none;
+    }
+    @keyframes scanAnim { 0% { top: 0%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
 
-    /* Modal Final */
-    .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 100; justify-content: center; align-items: center; padding: 20px; }
-    .modal-box { width: 100%; max-width: 600px; border: 1px solid var(--holo-green); background: #0f172a; padding: 20px; max-height: 80vh; overflow-y: auto; }
+    /* Hotspots (Puntos de interacción) */
+    .hotspot {
+        position: absolute;
+        width: 40px; height: 40px; /* Área táctil grande */
+        display: flex; justify-content: center; align-items: center;
+        cursor: pointer;
+        z-index: 20;
+        display: none; /* Se activan en 1.3 */
+    }
+    .hotspot-dot {
+        width: 12px; height: 12px;
+        background: var(--neon-purple);
+        border: 2px solid white;
+        border-radius: 50%;
+        box-shadow: 0 0 10px var(--neon-purple);
+        animation: pulseDot 1.5s infinite;
+    }
+    @keyframes pulseDot { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(216, 180, 254, 0.7); } 70% { transform: scale(1.5); box-shadow: 0 0 0 10px rgba(216, 180, 254, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(216, 180, 254, 0); } }
 
-    /* Ajuste de scrollbars para móvil */
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
-    ::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 2px; }
+    /* 4. CONTROLES (Navegación Horizontal) */
+    .controls-dock {
+        height: 80px;
+        background: rgba(2, 6, 23, 0.98);
+        border-top: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        overflow-x: auto; /* Scroll horizontal */
+        padding: 0 15px;
+        gap: 15px;
+        z-index: 50; flex-shrink: 0;
+        /* Ocultar barra de scroll estética */
+        scrollbar-width: none; 
+    }
+    .controls-dock::-webkit-scrollbar { display: none; }
 
+    .nav-btn {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--neon-blue);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        white-space: nowrap;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.2s;
+        flex-shrink: 0;
+    }
+    .nav-btn.active {
+        background: var(--neon-blue);
+        color: black;
+        font-weight: bold;
+        box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
+    }
+    .final-btn {
+        background: var(--holo-green);
+        border-color: var(--holo-green);
+        color: black; font-weight: bold;
+    }
+
+    /* --- ESTILOS DE ESCRITORIO (Media Query) --- */
+    @media (min-width: 1200px) {
+        body { flex-direction: row; }
+        .top-bar { position: absolute; top:0; width: 100%; background: transparent; border: none; }
+        
+        .info-display-zone {
+            width: 300px; order: 1;
+            border-right: 1px solid rgba(255,255,255,0.1); border-bottom: none;
+            padding-top: 60px;
+        }
+        
+        .visual-stage { order: 2; height: 100%; }
+        .subject-wrapper { width: 400px; }
+        
+        .controls-dock {
+            width: 300px; height: 100%; order: 3;
+            flex-direction: column; justify-content: center;
+            border-top: none; border-left: 1px solid rgba(255,255,255,0.1);
+            overflow-y: auto; overflow-x: hidden;
+            padding-top: 60px;
+        }
+        .nav-btn { width: 100%; text-align: center; border-radius: 8px; margin-bottom: 10px; }
+    }
+
+    /* MODAL (Para sección 2.0) */
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.95);
+        z-index: 100;
+        display: none; justify-content: center; align-items: center;
+        padding: 20px;
+    }
+    .modal-content {
+        background: #0f172a;
+        border: 1px solid var(--holo-green);
+        width: 100%; max-width: 600px;
+        max-height: 80vh; overflow-y: auto;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+    }
+    .modal-title { color: var(--holo-green); font-size: 1.2rem; margin-bottom: 15px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
+    .modal-text { font-size: 0.95rem; line-height: 1.6; color: #cbd5e1; }
+    .close-modal { background: var(--holo-green); border: none; padding: 10px 20px; color: black; font-weight: bold; border-radius: 5px; margin-top: 20px; width: 100%; cursor: pointer; }
+    /* --- ESTILOS PARA TABLETS Y MÓVILES (< 1200px) --- */
+@media (max-width: 1200px) {
+    
+    /* El cuerpo vuelve a ser vertical */
+    body { flex-direction: column; }
+
+    /* Ajuste de la zona de controles a Cuadrícula 2x2 */
+    .controls-dock {
+        /* Dimensiones y posición */
+        width: 100%; 
+        height: auto; /* Altura automática para que quepan las filas */
+        order: 3; 
+        padding: 15px;
+        
+        /* Definición de la Cuadrícula (Grid) */
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* 2 columnas iguales */
+        grid-template-rows: auto auto;   /* 2 filas automáticas */
+        gap: 10px; /* Espacio entre botones */
+        
+        /* Quitar estilos anteriores de scroll o bordes laterales */
+        overflow: visible; 
+        border-left: none;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        background: rgba(2, 6, 23, 0.98);
+    }
+
+    /* Asegurar que los botones llenen su celda en la cuadrícula */
+    .nav-btn {
+        width: 100%;
+        height: 50px; /* Altura cómoda para el dedo */
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        white-space: normal; /* Permitir que el texto baje de línea si es largo */
+        line-height: 1.1;
+        font-size: 0.75rem; /* Ajuste leve de letra para que quepa bien */
+    }
+
+    /* Ajustes visuales de las otras zonas para que no se rompan */
+    .top-bar { position: relative; border-bottom: 1px solid var(--neon-blue); }
+    .visual-stage { order: 2; height: auto; flex-grow: 1; }
+    .subject-wrapper { width: 100%; max-width: 300px; }
+}
 </style>
 </head>
 <body>
 
-<div class="grid-background"></div>
+    <div class="grid-background"></div>
 
-<div class="main-interface">
-    
-    <!-- HEADER -->
-    <div class="hud-header">
-        <div><span style="color:var(--neon-blue)">UNP</span> // Diversidad de enfoques de género</div>
-        <div style="font-size: 0.7rem; color: var(--text-ui);">U02-T1</div>
+    <!-- 1. BARRA SUPERIOR (Indicadores) -->
+    <div class="top-bar">
+        <div style="font-weight:bold; color:var(--neon-blue);">UNP // SISTEMA TÁCTICO</div>
+        <div class="status-indicator">● MONITOREO ACTIVO</div>
     </div>
 
-    <!-- PANEL IZQUIERDO: MENÚ (Ahora horizontal en móvil) -->
-    <div class="panel-left">
-        <button class="layer-btn" onclick="loadContent('1.1', this)">1.1 HISTORIA</button>
-        <button class="layer-btn" onclick="loadContent('1.2', this)">1.2 SISTEMA SEXO-GÉNERO</button>
-        <button class="layer-btn" onclick="activateScanner(this)">1.3 ANÁLISIS RIESGO</button>
-        
-        <!-- Barra de progreso pequeña -->
-        <div style="min-width: 100px; padding: 10px; display: flex; flex-direction: column; justify-content: center;">
-             <div style="font-size: 0.6rem; margin-bottom: 2px;">PROGRESO</div>
-             <div style="height: 4px; background: #333; width: 100%;">
-                <div id="progress" style="width: 10%; height: 100%; background: var(--alert-red); transition: width 0.5s;"></div>
+    <!-- 2. PANEL DE INFORMACIÓN (Fijo arriba) -->
+    <div class="info-display-zone" id="info-panel">
+        <div class="info-card" style="border-left-color: var(--text-ui);">
+            <strong style="color:white;">SISTEMA INICIADO</strong><br>
+            Seleccione un módulo en la barra inferior para cargar datos.
+        </div>
+    </div>
+
+    <!-- 3. ESCENARIO VISUAL (Animado) -->
+    <div class="visual-stage">
+        <div class="subject-wrapper">
+            <div class="scanner-laser"></div>
+            <div class="silhouette" id="silhouette"></div>
+
+            <!-- Puntos Interactivos (Posición absoluta relativa al wrapper) -->
+            <!-- Ajustados para ser fáciles de tocar en móvil -->
+            <div class="hotspot" style="top: 15%; left: 45%;" onclick="loadCase('indigena')"><div class="hotspot-dot"></div></div>
+            <div class="hotspot" style="top: 30%; left: 25%;" onclick="loadCase('afro')"><div class="hotspot-dot"></div></div>
+            <div class="hotspot" style="top: 25%; left: 65%;" onclick="loadCase('trans')"><div class="hotspot-dot"></div></div>
+            <div class="hotspot" style="top: 50%; left: 40%;" onclick="loadCase('campesina')"><div class="hotspot-dot"></div></div>
+            <div class="hotspot" style="top: 15%; left: 65%;" onclick="loadCase('lider')"><div class="hotspot-dot"></div></div>
+        </div>
+    </div>
+
+    <!-- 4. BARRA DE CONTROLES (Scroll Horizontal en Móvil) -->
+    <div class="controls-dock">
+        <button class="nav-btn" onclick="activateSection('1.1', this)">1.1 HISTORIA</button>
+        <button class="nav-btn" onclick="activateSection('1.2', this)">1.2 TENSIÓN</button>
+        <button class="nav-btn" onclick="activateScanner(this)">1.3 RIESGO (INTERACTIVO)</button>
+        <button class="nav-btn final-btn" onclick="showFinalReport()">2.0 APLICACIÓN UNP</button>
+    </div>
+
+    <!-- 5. MODAL FINAL -->
+    <div class="modal-overlay" id="final-modal">
+        <div class="modal-content">
+            <div class="modal-title">2. APLICACIÓN DEL ENFOQUE EN LA UNP</div>
+            <div class="modal-text">
+                <p>Durante el desarrollo académico se enfatizó que, para la UNP, la interseccionalidad implica:</p>
+                <ul style="padding-left: 20px;">
+                    <li><strong>Identificar riesgos específicos</strong> según género, etnia y territorio.</li>
+                    <li>Reconocer que una mujer indígena lideresa enfrenta riesgos distintos a los de una mujer periodista urbana.</li>
+                    <li>Analizar factores combinados (Ej: mujeres trans desplazadas defensoras de DDHH).</li>
+                    <li>Evaluar el riesgo de forma más precisa, comprendiendo que las amenazas no afectan de manera homogénea.</li>
+                </ul>
+                <p style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 5px;">
+                    <strong>Desafío Actual:</strong> Crítica a los modelos de evaluación excesivamente estandarizados que no incorporan suficientes capas de vulnerabilidad.
+                </p>
             </div>
+            <button class="close-modal" onclick="document.getElementById('final-modal').style.display='none'">CERRAR REPORTE</button>
         </div>
     </div>
-
-    <!-- PANEL CENTRAL: VISUAL -->
-    <div class="panel-center">
-        <div class="human-silhouette" id="silhouette">
-            <!-- HOTSPOTS (Posicionados en % para ser responsive) -->
-            <div class="hotspot" style="top: 20%; left: 50%;" id="spot-indigena" onclick="showCaseData('indigena')"></div>
-            <div class="hotspot" style="top: 35%; left: 30%;" id="spot-afro" onclick="showCaseData('afro')"></div>
-            <div class="hotspot" style="top: 60%; left: 65%;" id="spot-campesina" onclick="showCaseData('campesina')"></div>
-            <div class="hotspot" style="top: 25%; left: 40%;" id="spot-trans" onclick="showCaseData('trans')"></div>
-            <div class="hotspot" style="top: 15%; left: 65%;" id="spot-lider" onclick="showCaseData('lider')"></div>
-        </div>
-        
-        <!-- Aviso de escáner en móvil -->
-        <div style="position: absolute; bottom: 10px; font-size: 0.7rem; color: var(--alert-red); opacity: 0.7;">
-            SISTEMA ACTIVO
-        </div>
-    </div>
-
-    <!-- PANEL DERECHO: DATOS (Flotante en responsive) -->
-    <div class="panel-right" id="data-panel">
-        <div class="close-panel-btn" onclick="closeDataPanel()">[ CERRAR X ]</div>
-        <div id="data-content-area">
-            <div style="text-align: center; color: var(--text-ui); font-size: 0.8rem; margin-top: 20px;">
-                SELECCIONE PROTOCOLO
-            </div>
-        </div>
-    </div>
-
-    <!-- PANEL INFERIOR: CONSOLA -->
-    <div class="panel-bottom">
-        <div class="console-text">
-            <span style="color:var(--neon-blue)">>> </span><span id="output-text"></span>
-        </div>
-        <button class="action-btn" onclick="showFinalReport()">VER APLICACIÓN UNP</button>
-    </div>
-
-</div>
-
-<!-- MODAL FINAL -->
-<div class="modal" id="final-modal">
-    <div class="modal-box">
-        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-            <h3 style="margin:0; color:var(--holo-green)">2. APLICACIÓN UNP</h3>
-            <button onclick="document.getElementById('final-modal').style.display='none'" style="background:none; border:none; color:white; font-size:1.2rem;">X</button>
-        </div>
-        <div style="line-height: 1.6; font-size: 0.9rem;">
-            <p><strong>La interseccionalidad en la UNP implica:</strong></p>
-            <ul style="padding-left: 20px;">
-                <li>Identificar riesgos específicos según género, etnia y territorio.</li>
-                <li>Reconocer diferencias (Ej: Mujer indígena vs Periodista urbana).</li>
-                <li>Analizar factores combinados (Trans + Desplazada).</li>
-                <li>Evaluar riesgo de forma precisa y no homogénea.</li>
-            </ul>
-            <p style="border-top: 1px solid #333; padding-top: 10px; color: var(--text-ui);">
-                <em>Desafío detectado: Superar modelos estandarizados que ignoran capas de vulnerabilidad.</em>
-            </p>
-        </div>
-    </div>
-</div>
 
 <script>
-    // --- BASE DE DATOS (TEXTO ÍNTEGRO) ---
-    const contentDB = {
-        intro: "Iniciando sistema... Seleccione un módulo (1.1, 1.2) o active el escáner de riesgo (1.3).",
-        "1.1": `<strong>1.1 Historia y significado:</strong><br>Enfoque interseccional como herramienta analítica. Examina cómo se cruzan discriminaciones (Género, Etnia, Clase, etc) generando riesgos específicos.`,
-        "1.2": `<strong>1.2 Crítica sistema sexo-género:</strong><br>Análisis de roles impuestos, discriminación estructural y violencias basadas en género. La UNP debe adaptar sus enfoques a realidades complejas.`,
-        "1.3": `<strong>1.3 ANÁLISIS DE RIESGO:</strong><br>Escáner activo. Toque los puntos en la silueta para identificar vulnerabilidades específicas (Indígenas, Afro, Lideresas, etc).`
-    };
-
-    const casesDB = {
-        indigena: { title: "MUJERES INDÍGENAS", text: "Violencias territoriales, desplazamiento y afectación cultural." },
-        afro: { title: "MUJERES AFRODESCENDIENTES", text: "Violencia sexual, racismo estructural y pobreza histórica." },
-        campesina: { title: "MUJERES CAMPESINAS", text: "Acceso limitado a la tierra, estigmatización y exclusión." },
-        trans: { title: "POBLACIÓN TRANS", text: "Violencia correctiva, amenazas armadas y exclusión social." },
-        lider: { title: "LIDERESAS SOCIALES", text: "Amenazas directas por rol comunitario y defensa del territorio." }
-    };
-
-    let currentTypingTimeout = null;
-
-    // Typewriter corregido (sin bugs de mezcla)
-    function typeWriter(text) {
-        const display = document.getElementById('output-text');
-        if (currentTypingTimeout) clearTimeout(currentTypingTimeout);
-        display.innerHTML = "";
-        let i = 0;
-        function typing() {
-            if (text.charAt(i) === '<') {
-                const tagEnd = text.indexOf('>', i);
-                display.innerHTML += text.substring(i, tagEnd + 1);
-                i = tagEnd + 1;
-            } else {
-                display.innerHTML += text.charAt(i);
-                i++;
-            }
-            if (i < text.length) currentTypingTimeout = setTimeout(typing, 15);
-            else currentTypingTimeout = null;
+    // --- CONTENIDO EXACTO (INTEGRIDAD DE DATOS) ---
+    const db = {
+        "1.1": {
+            title: "1.1 HISTORIA Y SIGNIFICADO",
+            color: "#0ea5e9", // Azul
+            text: `<strong>A través de actividades interactivas y juegos de roles</strong>, se abordó el origen y evolución del enfoque interseccional, comprendido como una herramienta analítica que examina cómo múltiples formas de discriminación se cruzan.<br><br>
+            <strong>Categorías identificadas:</strong><br>
+             Género<br> Etnia<br> Clase social<br> Orientación sexual<br> Discapacidad<br> Edad<br> Ubicación territorial<br><br>
+            <em>Estas categorías no actúan de manera aislada, sino que se entrelazan.</em>`
+        },
+        "1.2": {
+            title: "1.2 CRÍTICA SISTEMA SEXO-GÉNERO",
+            color: "#d8b4fe", // Morado
+            text: `<strong>El análisis crítico</strong> se desarrolló mediante debates guiados y simulaciones sobre tensiones actuales:<br><br>
+            • Roles de género impuestos socialmente.<br>
+            • Discriminación estructural.<br>
+            • Violencias basadas en género y diversidad sexual.<br><br>
+            <strong>Reflexión:</strong> Las instituciones, incluida la UNP, deben adaptar sus enfoques para responder a realidades sociales complejas.`
+        },
+        "1.3": {
+            title: "1.3 ANÁLISIS DE RIESGO (MODO ESCÁNER)",
+            color: "#f43f5e", // Rojo
+            text: `<strong>MODO INTERACTIVO ACTIVADO.</strong><br>
+            Aplicación práctica del enfoque interseccional al análisis de riesgo en Colombia.<br><br>
+            <span style="color:#f43f5e; font-weight:bold;">INSTRUCCIÓN:</span> Toque los puntos parpadeantes sobre la silueta para analizar los casos específicos (Mujeres indígenas, afro, trans, etc.).`
         }
-        typing();
+    };
+
+    const cases = {
+        indigena: { title: "MUJERES INDÍGENAS", text: "Violencias territoriales, desplazamiento forzado y afectación cultural." },
+        afro: { title: "MUJERES AFRODESCENDIENTES", text: "Violencia sexual, racismo estructural y pobreza histórica." },
+        campesina: { title: "MUJERES CAMPESINAS", text: "Acceso limitado a la tierra, estigmatización y exclusión institucional." },
+        trans: { title: "PERSONAS LGBTIQ+ (TRANS)", text: "Violencia correctiva, amenazas de actores armados y exclusión social." },
+        lider: { title: "LIDERESAS SOCIALES", text: "Amenazas directas por su rol comunitario y defensa del territorio." }
+    };
+
+    // --- FUNCIONES DE INTERFAZ ---
+
+    function resetUI() {
+        // Quitar clases activas de botones
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        // Ocultar hotspots
+        document.querySelectorAll('.hotspot').forEach(h => h.style.display = 'none');
+        // Reset visual silueta
+        document.getElementById('silhouette').style.filter = "invert(1) brightness(0.6) opacity(0.5) drop-shadow(0 0 5px var(--neon-blue))";
     }
 
-    window.onload = function() { typeWriter(contentDB.intro); };
+    function updateInfoPanel(title, content, color) {
+        const panel = document.getElementById('info-panel');
+        // Crear nueva tarjeta
+        const card = document.createElement('div');
+        card.className = 'info-card';
+        card.style.borderLeftColor = color;
+        card.innerHTML = `<div style="color:${color}; font-weight:bold; margin-bottom:5px; text-transform:uppercase;">${title}</div>${content}`;
+        
+        // Limpiar panel y agregar nueva (o acumular si prefieres, aquí reemplazamos para no saturar mobile)
+        panel.innerHTML = ''; 
+        panel.appendChild(card);
+    }
 
-    function loadContent(key, btn) {
+    function activateSection(key, btn) {
         resetUI();
         btn.classList.add('active');
-        typeWriter(contentDB[key]);
-        updateProgress(30);
         
-        // En móvil/tablet, abrimos el panel derecho para confirmar carga
-        openDataPanel(`<div class="data-card"><strong>MÓDULO CARGADO</strong>Revise la consola inferior para ver la teoría.</div>`);
+        const data = db[key];
+        updateInfoPanel(data.title, data.text, data.color);
+
+        // Efecto visual en la silueta según tema
+        const sil = document.getElementById('silhouette');
+        if(key === '1.2') {
+            sil.style.filter = "invert(1) brightness(0.8) opacity(0.7) drop-shadow(0 0 10px var(--neon-purple))";
+        }
     }
 
     function activateScanner(btn) {
         resetUI();
         btn.classList.add('active');
-        document.querySelectorAll('.hotspot').forEach(h => h.style.display = 'block');
-        document.getElementById('silhouette').style.filter = "invert(1) brightness(0.8) opacity(0.8) drop-shadow(0 0 15px red)";
-        typeWriter(contentDB["1.3"]);
-        updateProgress(60);
         
-        // Mensaje en panel
-        openDataPanel(`<div class="data-card" style="border-color:var(--alert-red)"><strong>ESCÁNER ACTIVO</strong><br>Interactúe con la silueta.</div>`);
+        const data = db["1.3"];
+        updateInfoPanel(data.title, data.text, data.color);
+
+        // Activar Modo Escáner Visual
+        const sil = document.getElementById('silhouette');
+        sil.style.filter = "invert(1) brightness(0.5) sepia(1) hue-rotate(-50deg) saturate(5) drop-shadow(0 0 15px red)";
+        
+        // Mostrar Hotspots
+        document.querySelectorAll('.hotspot').forEach(h => h.style.display = 'flex');
     }
 
-    function showCaseData(caseId) {
-        const data = casesDB[caseId];
-        const html = `<div class="data-card" style="border-color:var(--neon-purple)"><strong>${data.title}</strong>${data.text}</div>`;
-        
-        openDataPanel(html);
-        typeWriter(`Riesgo detectado: ${data.title}`);
-        updateProgress(90);
-    }
-
-    // Lógica Responsive para el panel derecho
-    function openDataPanel(htmlContent) {
-        const panel = document.getElementById('data-panel');
-        const contentArea = document.getElementById('data-content-area');
-        
-        // Insertar contenido nuevo arriba
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = htmlContent;
-        contentArea.insertBefore(tempDiv.firstChild, contentArea.firstChild);
-        
-        // Si estamos en móvil/tablet, forzar la clase active para mostrar el overlay
-        if (window.innerWidth <= 1200) {
-            panel.classList.add('active');
-        }
-    }
-
-    function closeDataPanel() {
-        document.getElementById('data-panel').classList.remove('active');
-    }
-
-    function resetUI() {
-        document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.hotspot').forEach(h => h.style.display = 'none');
-        document.getElementById('silhouette').style.filter = "invert(1) brightness(0.4) opacity(0.2)";
-        // No limpiamos el panel de datos histórico, solo cerramos en móvil
-        if (window.innerWidth <= 1200) closeDataPanel();
+    function loadCase(caseId) {
+        const data = cases[caseId];
+        // Inyectar tarjeta de caso en el panel superior SIN borrar la instrucción principal (opcional) o reemplazando
+        updateInfoPanel("CASO IDENTIFICADO: " + data.title, data.text, "#f43f5e");
     }
 
     function showFinalReport() {
         document.getElementById('final-modal').style.display = 'flex';
-        updateProgress(100);
     }
 
-    function updateProgress(val) {
-        const bar = document.getElementById('progress');
-        bar.style.width = val + "%";
-        if(val > 80) bar.style.background = "var(--holo-green)";
-    }
 </script>
 
 </body>

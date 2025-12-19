@@ -1,0 +1,390 @@
+<!-- ESTILOS (CSS) -->
+<style>
+    /* --- ENTORNO --- */
+    .street-sim-wrapper {
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        max-width: 400px;
+        height: 720px;
+        margin: 0 auto;
+        background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364); /* Noche urbana */
+        color: white;
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        display: flex;
+        flex-direction: column;
+        border: 4px solid #111;
+    }
+
+    /* --- UI SUPERIOR (HUD) --- */
+    .hud-top {
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(0,0,0,0.3);
+        backdrop-filter: blur(5px);
+    }
+    .location-tag { font-size: 12px; opacity: 0.8; display: flex; align-items: center; gap: 5px; }
+    
+    /* CORAZÓN (Monitor de Ansiedad) */
+    .heart-monitor {
+        display: flex; align-items: center; gap: 8px;
+        background: rgba(0,0,0,0.5); padding: 5px 12px; border-radius: 20px;
+    }
+    .heart-icon { width: 24px; fill: #ef4444; transition: 0.3s; }
+    .bpm-text { font-weight: bold; font-family: monospace; font-size: 16px; color: #ef4444; }
+
+    /* Animaciones de latido */
+    @keyframes heartbeat-slow { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+    @keyframes heartbeat-fast { 0% { transform: scale(1); } 15% { transform: scale(1.3); } 30% { transform: scale(1); } 45% { transform: scale(1.3); } 100% { transform: scale(1); } }
+    
+    .beat-normal { animation: heartbeat-slow 1.5s infinite; }
+    .beat-panic { animation: heartbeat-fast 0.8s infinite; }
+
+    /* --- ESCENA VISUAL (VISUALIZER) --- */
+    .scene-display {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        transition: background 1s ease;
+        position: relative;
+    }
+    /* Efecto viñeta de miedo */
+    .fear-vignette {
+        position: absolute; top:0; left:0; width:100%; height:100%;
+        box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
+        pointer-events: none;
+        transition: box-shadow 0.5s;
+    }
+    .fear-active { box-shadow: inset 0 0 150px rgba(255, 0, 0, 0.2); }
+
+    .scene-emoji { font-size: 80px; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); transition: transform 0.5s; }
+    .scene-text { font-size: 18px; line-height: 1.5; font-weight: 500; text-shadow: 0 2px 4px rgba(0,0,0,0.8); max-width: 90%; }
+    
+    /* Sonidos visuales */
+    .sound-fx {
+        font-size: 12px; color: #ffd700; font-style: italic;
+        margin-top: 10px; opacity: 0; transform: translateY(10px);
+        animation: fadeUp 1s forwards;
+    }
+
+    /* --- CONTROLES (DECISIONES) --- */
+    .controls-area {
+        background: #1a1a1a;
+        padding: 20px;
+        border-top: 1px solid #333;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .action-btn {
+        background: #333; color: white; border: 1px solid #444;
+        padding: 15px; border-radius: 10px; cursor: pointer;
+        text-align: left; font-size: 14px; transition: 0.2s;
+        display: flex; align-items: center; gap: 10px;
+    }
+    .action-btn:hover { background: #444; border-color: #666; }
+    .btn-icon { font-size: 18px; }
+
+    /* --- PANTALLAS EXTRA --- */
+    .overlay-screen {
+        position: absolute; top:0; left:0; width:100%; height:100%;
+        background: #111; z-index: 50;
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        padding: 30px; text-align: center; display: none;
+    }
+    .start-title { font-size: 24px; font-weight: bold; margin-bottom: 10px; color: #ffd700; }
+    .start-btn {
+        background: #ffd700; color: #000; border: none; padding: 12px 30px;
+        border-radius: 25px; font-weight: bold; margin-top: 30px; cursor: pointer;
+    }
+
+    /* Animaciones */
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    .shake-screen { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+    @keyframes shake { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
+
+</style>
+
+<div class="street-sim-wrapper" id="streetApp">
+
+    <!-- 1. PANTALLA INICIO -->
+    <div class="overlay-screen" id="startScreen" style="display:flex;">
+        <div style="font-size:60px; margin-bottom:20px;">🌃👟</div>
+        <div class="start-title">El Regreso a Casa</div>
+        <p style="color:#ccc; line-height:1.6; font-size:14px;">
+            Son las 8:30 PM. Acabas de bajar del transporte. Faltan 3 cuadras para llegar a tu casa.<br><br>
+            <b>Objetivo:</b> Llegar a salvo.<br>
+            <b>Advertencia:</b> Simulador de acoso callejero.
+        </p>
+        <button class="start-btn" onclick="startGame()">Comenzar Caminata</button>
+    </div>
+
+    <!-- 2. UI JUEGO -->
+    <div class="hud-top">
+        <div class="location-tag">📍 Calle 45 - Solitaria</div>
+        <div class="heart-monitor">
+            <svg class="heart-icon beat-normal" id="heartIcon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <span class="bpm-text" id="bpm">80 BPM</span>
+        </div>
+    </div>
+
+    <!-- ESCENA CENTRAL -->
+    <div class="scene-display" id="sceneBg">
+        <div class="fear-vignette" id="vignette"></div>
+        <div class="scene-emoji" id="s-emoji">🚶‍♀️</div>
+        <div class="scene-text" id="s-text">Caminas a paso normal. La calle está oscura y las luminarias parpadean.</div>
+        <div class="sound-fx" id="s-sound"></div>
+    </div>
+
+    <!-- CONTROLES -->
+    <div class="controls-area" id="optionsBox">
+        <!-- Botones generados por JS -->
+    </div>
+
+    <!-- 3. PANTALLA FINAL (REFLEXIÓN) -->
+    <div class="overlay-screen" id="endScreen">
+        <div style="font-size:50px; margin-bottom:15px;">🏠🔓</div>
+        <h2 style="color:white; margin-bottom:10px;">Llegaste a Casa</h2>
+        <div style="background:#222; padding:20px; border-radius:10px; text-align:left; font-size:14px; color:#ddd; border-left:4px solid #ffd700;">
+            <p>Lograste entrar y cerrar la puerta. Tu corazón sigue latiendo rápido.</p>
+            <p><b>Reflexión:</b> ¿Notaste cuántas decisiones tomaste solo para <i>caminar</i>?</p>
+            <ul style="padding-left:20px; margin-top:10px; color:#aaa;">
+                <li>Cambiar de acera</li>
+                <li>Fingir llamadas</li>
+                <li>Entrar a tiendas por miedo</li>
+            </ul>
+            <p style="margin-top:15px; color:#ffd700;">Esto es <b>Violencia Psicológica en el Espacio Público</b>. Limita tu libertad de movimiento y genera hipervigilancia constante.</p>
+        </div>
+        <button class="start-btn" onclick="location.reload()">Reiniciar</button>
+    </div>
+
+</div>
+
+<!-- LÓGICA (JS) -->
+<script>
+    // --- ESCENARIOS ---
+    const scenes = {
+        'start': {
+            emoji: "🚶‍♀️",
+            text: "El ambiente está muy silencioso. Escuchas un motor a lo lejos.",
+            sound: "[Sonido lejano de auto]",
+            bpm: 85,
+            panic: false,
+            opts: [
+                { txt: "Seguir caminando normal", next: 'car_slow' },
+                { txt: "Sacar las llaves (modo defensa)", next: 'car_slow_keys' }
+            ]
+        },
+        'car_slow': {
+            emoji: "🚗👀",
+            text: "Un auto gris disminuye la velocidad justo a tu lado. No ves bien al conductor por el polarizado.",
+            sound: "[Motor ronroneando lento]",
+            bpm: 110,
+            panic: true, // Activa vibración y efecto visual
+            opts: [
+                { txt: "Mirar fijamente al conductor", next: 'aggression' },
+                { txt: "Acelerar el paso sin mirar", next: 'chase_1' }
+            ]
+        },
+        'car_slow_keys': {
+            emoji: "🗝️🚗",
+            text: "Aprietas las llaves entre tus dedos. El auto gris se empareja a tu velocidad.",
+            sound: "[Ventana bajando...]",
+            bpm: 115,
+            panic: true,
+            opts: [
+                { txt: "Cruzar la calle corriendo", next: 'cross_street' },
+                { txt: "Ignorar y seguir", next: 'chase_1' }
+            ]
+        },
+        'aggression': {
+            emoji: "🗣️🤬",
+            text: "Bajan la ventana. Un hombre grita: '¡Oye, mona! ¿Para dónde vas tan solita?'.",
+            sound: "[Risas desde el auto]",
+            bpm: 140,
+            panic: true,
+            opts: [
+                { txt: "Responderle algo", next: 'danger_escalation' },
+                { txt: "Hacer una llamada falsa", next: 'fake_call' }
+            ]
+        },
+        'chase_1': {
+            emoji: "😰🚘",
+            text: "Aceleras. El auto también acelera un poco. Sientes que te están 'midiendo'.",
+            sound: "[Neumáticos rodando despacio]",
+            bpm: 135,
+            panic: true,
+            opts: [
+                { txt: "Entrar a la tienda de la esquina", next: 'store_safe' },
+                { txt: "Correr hacia tu casa (Faltan 2 cuadras)", next: 'run_home' }
+            ]
+        },
+        'cross_street': {
+            emoji: "🏃‍♀️💨",
+            text: "Cruzas rápido. El auto da la vuelta en U más adelante. Te están buscando.",
+            sound: "[Rechinido de llantas]",
+            bpm: 150,
+            panic: true,
+            opts: [
+                { txt: "Esconderse detrás de un árbol", next: 'hide' },
+                { txt: "Correr con todas tus fuerzas", next: 'run_home' }
+            ]
+        },
+        'fake_call': {
+            emoji: "📱📞",
+            text: "Te pones el celular al oído: '¡Sí papá, ya te veo, sal que estoy afuera!'. El auto duda.",
+            sound: "[Motor deteniéndose un segundo]",
+            bpm: 130,
+            panic: true,
+            opts: [
+                { txt: "Aprovechar para correr", next: 'run_home' }
+            ]
+        },
+        'danger_escalation': {
+            emoji: "🛑😱",
+            text: "El auto frena en seco. Abren la puerta. ¡Tienes que reaccionar YA!",
+            sound: "[Puerta abriéndose]",
+            bpm: 180,
+            panic: true,
+            opts: [
+                { txt: "¡CORRER Y GRITAR!", next: 'run_home_panic' }
+            ]
+        },
+        'store_safe': {
+            emoji: "🏪😰",
+            text: "Entras a la tienda. Hay gente. El auto pasa despacio, se detiene un momento y luego se va.",
+            sound: "[Campanita de la puerta]",
+            bpm: 100,
+            panic: false,
+            opts: [
+                { txt: "Esperar 5 minutos y salir", next: 'almost_home' }
+            ]
+        },
+        'hide': {
+            emoji: "🌳👀",
+            text: "Te agachas tras un arbusto. El auto pasa lento, buscándote con las luces altas. Se aleja.",
+            sound: "[Latidos de tu propio corazón]",
+            bpm: 145,
+            panic: true,
+            opts: [
+                { txt: "Salir y correr a casa", next: 'almost_home' }
+            ]
+        },
+        'run_home': {
+            emoji: "🏃‍♀️🏠",
+            text: "Corres como nunca. Sientes el motor detrás, pero logras ver tu puerta.",
+            bpm: 170,
+            panic: true,
+            opts: [
+                { txt: "¡Sacar llaves y entrar!", next: 'end' }
+            ]
+        },
+        'run_home_panic': {
+            emoji: "🏃‍♀️📢",
+            text: "Gritas 'FUEGO' (la gente reacciona más a eso). Un vecino prende la luz. El auto arranca a toda velocidad.",
+            bpm: 190,
+            panic: true,
+            opts: [
+                { txt: "Llegar a casa temblando", next: 'end' }
+            ]
+        },
+        'almost_home': {
+            emoji: "🏠😓",
+            text: "Ves tu casa. La calle vuelve a estar sola, pero no bajas la guardia.",
+            bpm: 120,
+            panic: false,
+            opts: [
+                { txt: "Entrar rápido", next: 'end' }
+            ]
+        },
+        'end': {
+            action: 'finish'
+        }
+    };
+
+    // --- VARIABLES DOM ---
+    const app = document.getElementById('streetApp');
+    const startScreen = document.getElementById('startScreen');
+    const endScreen = document.getElementById('endScreen');
+    
+    const sEmoji = document.getElementById('s-emoji');
+    const sText = document.getElementById('s-text');
+    const sSound = document.getElementById('s-sound');
+    const optsBox = document.getElementById('optionsBox');
+    
+    const bpmText = document.getElementById('bpm');
+    const heartIcon = document.getElementById('heartIcon');
+    const vignette = document.getElementById('vignette');
+
+    function startGame() {
+        startScreen.style.display = 'none';
+        loadScene('start');
+    }
+
+    function loadScene(id) {
+        if(scenes[id].action === 'finish') {
+            endScreen.style.display = 'flex';
+            return;
+        }
+
+        const data = scenes[id];
+
+        // 1. Actualizar Visuales
+        sEmoji.innerText = data.emoji;
+        sText.innerText = data.text;
+        sSound.innerText = data.sound || "";
+        
+        // Animación de texto
+        sSound.style.animation = 'none';
+        sSound.offsetHeight; /* trigger reflow */
+        sSound.style.animation = 'fadeUp 1s forwards';
+
+        // 2. Actualizar BPM (Ritmo Cardíaco)
+        updateHeart(data.bpm, data.panic);
+
+        // 3. Vibración y Efectos de Pánico
+        if(data.panic) {
+            triggerShake();
+            vignette.classList.add('fear-active'); // Bordes rojos
+            if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        } else {
+            vignette.classList.remove('fear-active');
+        }
+
+        // 4. Generar Botones
+        optsBox.innerHTML = '';
+        data.opts.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'action-btn';
+            btn.innerHTML = `<span class="btn-icon">⚡</span> ${opt.txt}`;
+            btn.onclick = () => loadScene(opt.next);
+            optsBox.appendChild(btn);
+        });
+    }
+
+    function updateHeart(bpm, isPanic) {
+        bpmText.innerText = bpm + " BPM";
+        
+        // Color
+        if(bpm > 120) bpmText.style.color = "#ff0000";
+        else bpmText.style.color = "#ef4444";
+
+        // Velocidad de animación
+        heartIcon.classList.remove('beat-normal', 'beat-panic');
+        if(isPanic) heartIcon.classList.add('beat-panic');
+        else heartIcon.classList.add('beat-normal');
+    }
+
+    function triggerShake() {
+        app.classList.add('shake-screen');
+        setTimeout(() => app.classList.remove('shake-screen'), 500);
+    }
+
+</script>

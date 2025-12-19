@@ -1,380 +1,168 @@
-<!-- ESTILOS CSS -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Centro de Control</title>
+
 <style>
-    /* --- ESTRUCTURA PRINCIPAL --- */
-    .sim-wrapper {
-        font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
-        max-width: 450px;
-        margin: 0 auto;
-        position: relative;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-        background: #f0f2f5;
-        height: 720px; /* Un poco más alto para móviles modernos */
-        border: 1px solid #ddd;
-    }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #1e1e2f, #0b0b12);
+    font-family: system-ui, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+  }
 
-    /* --- ANIMACIÓN DE VIBRACIÓN (SHAKE) --- */
-    @keyframes vibrate {
-        0% { transform: translate(0); }
-        20% { transform: translate(-2px, 2px); }
-        40% { transform: translate(-2px, -2px); }
-        60% { transform: translate(2px, 2px); }
-        80% { transform: translate(2px, -2px); }
-        100% { transform: translate(0); }
-    }
-    
-    .shake-active {
-        animation: vibrate 0.4s cubic-bezier(.36,.07,.19,.97) both;
-    }
+  .control-center {
+    width: 720px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(14px);
+    border-radius: 22px;
+    padding: 28px;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.45);
+  }
 
-    /* --- PANTALLA 1: ADVERTENCIA --- */
-    .screen-warning {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(20, 20, 20, 0.98); color: white;
-        z-index: 100; display: flex; flex-direction: column;
-        justify-content: center; align-items: center; padding: 30px;
-        text-align: center; box-sizing: border-box;
-    }
-    .warn-icon { font-size: 45px; margin-bottom: 15px; animation: pulse 2s infinite; }
-    .warn-title { font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #ffcc00; }
-    .warn-text { font-size: 14px; line-height: 1.6; margin-bottom: 30px; color: #ccc; }
-    .btn-start {
-        background: #ffcc00; color: #000; border: none; padding: 12px 30px;
-        border-radius: 25px; font-weight: bold; cursor: pointer; transition: 0.3s;
-        box-shadow: 0 4px 15px rgba(255, 204, 0, 0.3);
-    }
-    .btn-start:hover { transform: scale(1.05); background: #ffd633; }
+  .folder {
+    margin-bottom: 18px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.05);
+    overflow: hidden;
+  }
 
-    /* --- PANTALLA 2: CHAT --- */
-    .screen-chat {
-        display: none; flex-direction: column; height: 100%; position: relative;
-    }
-    .chat-header {
-        background: #008069; color: white; padding: 12px 15px;
-        display: flex; align-items: center; gap: 10px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.15); z-index: 10;
-    }
-    .avatar {
-        width: 42px; height: 42px; border-radius: 50%;
-        background: url('https://ui-avatars.com/api/?name=Alex&background=fff&color=008069&bold=true');
-        background-size: cover; border: 2px solid rgba(255,255,255,0.2);
-    }
-    .chat-body {
-        flex: 1; padding: 15px; overflow-y: auto;
-        display: flex; flex-direction: column; gap: 12px;
-        background-color: #e5ddd5;
-        background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-        background-size: 20px 20px;
-    }
+  .folder-header {
+    padding: 18px 22px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s;
+  }
 
-    /* Burbujas de Chat */
-    .bubble {
-        max-width: 80%; padding: 10px 14px; border-radius: 12px;
-        font-size: 14.5px; line-height: 1.4; position: relative;
-        animation: slideUp 0.3s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-    .inc { background: #fff; align-self: flex-start; border-top-left-radius: 0; }
-    .out { background: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
-    
-    /* Mensajes del Sistema (Educativos) */
-    .sys-msg {
-        align-self: center; text-align: center; background: #e3f2fd;
-        color: #0d47a1; border: 1px solid #bbdefb; padding: 8px 12px;
-        border-radius: 8px; font-size: 12px; margin: 5px 0; width: 90%;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-    .col-badge {
-        display: inline-block; background: #FFCD00; color: #003087;
-        font-weight: bold; font-size: 10px; padding: 2px 5px;
-        border-radius: 4px; margin-right: 5px; vertical-align: middle;
-    }
+  .folder-header:hover {
+    background: rgba(255,255,255,0.08);
+  }
 
-    /* Controles Inferiores */
-    .v-controls { background: #f0f2f5; padding: 0; border-top: 1px solid #ddd; }
-    .meter-box { padding: 10px 20px; background: #fff; }
-    .meter-title { font-size: 11px; font-weight: bold; color: #666; display: flex; justify-content: space-between; margin-bottom: 5px; }
-    .track { height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
-    .fill { height: 100%; width: 0%; transition: width 0.5s ease, background 0.5s ease; }
-    
-    .opts-box { padding: 10px 15px 20px; display: flex; flex-direction: column; gap: 8px; }
-    .opt-btn {
-        background: white; border: 1px solid #ccc; padding: 12px;
-        border-radius: 8px; cursor: pointer; text-align: left;
-        font-size: 14px; transition: 0.2s; color: #333; font-weight: 500;
-    }
-    .opt-btn:hover { border-color: #008069; color: #008069; background: #f5fcfb; }
+  .folder-title {
+    font-size: 17px;
+    font-weight: 600;
+  }
 
-    /* --- PANTALLA 3: REFLEXIÓN --- */
-    .screen-reflection {
-        display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: white; z-index: 50; padding: 30px; box-sizing: border-box; overflow-y: auto;
-    }
-    .ref-header { text-align: center; margin-bottom: 25px; }
-    .ref-title { color: #d32f2f; font-size: 22px; font-weight: bold; margin: 0; }
-    
-    .ref-card {
-        background: #f9f9f9; border-left: 4px solid #008069;
-        padding: 15px; margin-bottom: 15px; border-radius: 4px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-    .ref-q { font-weight: bold; color: #333; margin-bottom: 8px; font-size: 15px; }
-    .ref-a { font-size: 14px; color: #555; line-height: 1.5; }
-    
-    .alert-box {
-        background: #fff3e0; border: 1px solid #ffe0b2; padding: 15px;
-        border-radius: 8px; text-align: center; margin-top: 20px;
-    }
-    .help-lines { font-weight: bold; font-size: 16px; color: #333; margin: 5px 0; }
+  .folder-arrow {
+    transition: transform 0.3s ease;
+    opacity: 0.7;
+  }
 
-    /* Animaciones Generales */
-    @keyframes slideUp { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
-    @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
+  .folder.open .folder-arrow {
+    transform: rotate(90deg);
+  }
 
+  .folder-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    background: rgba(0,0,0,0.15);
+  }
+
+  .folder.open .folder-content {
+    max-height: 400px;
+  }
+
+  .page-link {
+    display: block;
+    padding: 14px 26px;
+    color: #cfcfcf;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.25s, color 0.25s;
+  }
+
+  .page-link:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+  }
+
+  .page-link.active {
+    background: rgba(74, 222, 128, 0.18);
+    color: #fff;
+  }
+
+  .page-indicator {
+    margin-top: 14px;
+    text-align: right;
+    font-size: 12px;
+    opacity: 0.6;
+  }
 </style>
+</head>
 
-<!-- ESTRUCTURA HTML -->
-<div class="sim-wrapper" id="app">
+<body>
 
-    <!-- 1. ADVERTENCIA -->
-    <div class="screen-warning" id="screen-warn">
-        <div class="warn-icon">⚠️</div>
-        <div class="warn-title">Advertencia de Contenido</div>
-        <div class="warn-text">
-            Esta simulación interactiva contiene representaciones de <b>violencia psicológica, control coercitivo y manipulación</b>.<br><br>
-            Está diseñada con fines pedagógicos bajo la <b>Ley 1257 de 2008 (Colombia)</b>. Si este contenido afecta tu sensibilidad, puedes detenerte en cualquier momento.
-        </div>
-        <button class="btn-start" onclick="irAlChat()">Entendido, Continuar</button>
+<div class="control-center">
+
+  <!-- 📁 OBJETIVOS -->
+  <div class="folder">
+    <div class="folder-header">
+      <span class="folder-title">📁 Objetivos por unidad</span>
+      <span class="folder-arrow">▶</span>
     </div>
-
-    <!-- 2. CHAT -->
-    <div class="screen-chat" id="screen-chat">
-        <div class="chat-header">
-            <div class="avatar"></div>
-            <div>
-                <div style="font-weight:700; font-size:15px;">Alex (Amor ❤️)</div>
-                <div style="font-size:12px; opacity:0.9;">En línea</div>
-            </div>
-        </div>
-
-        <div class="chat-body" id="chat-msgs">
-            <div style="text-align:center; font-size:11px; color:#888; margin-bottom:10px;">Hoy</div>
-            <!-- Aquí se inyectan los mensajes -->
-        </div>
-
-        <div class="v-controls">
-            <div class="meter-box">
-                <div class="meter-title">
-                    <span>Nivel de Riesgo (Violentómetro)</span>
-                    <span id="meter-txt" style="color:#4caf50">Normal</span>
-                </div>
-                <div class="track"><div class="fill" id="meter-bar" style="background:#4caf50"></div></div>
-            </div>
-            <div class="opts-box" id="chat-opts"></div>
-        </div>
+    <div class="folder-content">
+      <a href="objetivos/objetivos_u1.html" class="page-link">Unidad 1</a>
+      <a href="objetivos/objetivos_u2.html" class="page-link">Unidad 2</a>
+      <a href="objetivos/objetivos_u2.html  " class="page-link">Unidad 3</a>
     </div>
+  </div>
 
-    <!-- 3. REFLEXIÓN -->
-    <div class="screen-reflection" id="screen-ref">
-        <div class="ref-header">
-            <h2 class="ref-title">Análisis de la Situación</h2>
-            <p style="color:#666; font-size:14px;">¿Qué acaba de ocurrir?</p>
-        </div>
-
-        <div class="ref-card">
-            <div class="ref-q">1. El inicio sutil</div>
-            <div class="ref-a">
-                La violencia no empezó con amenazas. Empezó en la <b>Zona Amarilla</b> con comentarios sobre tu ropa y la exigencia de ubicación.
-                <br><i>En Colombia, esto se reconoce como mecanismos de control que limitan la libertad.</i>
-            </div>
-        </div>
-
-        <div class="ref-card">
-            <div class="ref-q">2. Señales de Alerta</div>
-            <div class="ref-a">
-                ❌ <b>Gaslighting:</b> "Estás loca", "te imaginas cosas".<br>
-                ❌ <b>Aislamiento:</b> Criticar a tus amigas para dejarte sola.<br>
-                ❌ <b>Invasión a la intimidad:</b> Exigir claves de redes sociales (Delito según Sentencia T-058/23).
-            </div>
-        </div>
-
-        <div class="alert-box">
-            <div style="color:#e65100; font-size:13px; font-weight:bold; margin-bottom:5px;">RECORDATORIO IMPORTANTE</div>
-            <div style="font-size:14px; margin-bottom:10px;">
-                Estas situaciones no ocurren por "culpa" de la víctima. Es un ciclo de abuso. No estás sola.
-            </div>
-            <hr style="border:0; border-top:1px solid #ffe0b2; margin:10px 0;">
-            <div style="font-size:14px; color:#333;">Líneas de Atención en Colombia:</div>
-            <div class="help-lines">📞 Marca 155 (Orientación Mujer)</div>
-            <div class="help-lines">📞 Marca 123 (Emergencias)</div>
-            <div class="help-lines">📞 Marca 122 (Fiscalía)</div>
-        </div>
-        
-        <div style="text-align:center; margin-top:20px;">
-            <button class="btn-start" style="background:#e0e0e0; color:#333; font-size:12px; box-shadow:none;" onclick="location.reload()">Reiniciar Simulación</button>
-        </div>
+  <!-- 📁 SIMULACIONES -->
+  <div class="folder">
+    <div class="folder-header">
+      <span class="folder-title">📁 Simulaciones</span>
+      <span class="folder-arrow">▶</span>
     </div>
+    <div class="folder-content">
+      <a href="simulacion-u1.html" class="page-link">Unidad 1</a>
+      <a href="simulacion-u2.html" class="page-link">Unidad 2</a>
+    </div>
+  </div>
 
+  <!-- 📁 CONTENIDO -->
+  <div class="folder">
+    <div class="folder-header">
+      <span class="folder-title">📁 Contenido por unidad</span>
+      <span class="folder-arrow">▶</span>
+    </div>
+    <div class="folder-content">
+      <a href="contenido-u1.html" class="page-link">Unidad 1</a>
+      <a href="contenido-u2.html" class="page-link">Unidad 2</a>
+      <a href="contenido-u3.html" class="page-link">Unidad 3</a>
+    </div>
+  </div>
+
+  <div class="page-indicator" id="pageIndicator"></div>
 </div>
 
-<!-- LÓGICA DE PROGRAMACIÓN (JS) -->
 <script>
-    // --- GUION ---
-    const historia = {
-        'inicio': {
-            msgs: ["Hola amor. ¿Ya vas saliendo?", "Vi que subiste una foto con esa blusa escotada..."],
-            opts: [
-                { txt: "Sí, ya salí. ¿No te gusta?", ir: 'control_ropa', val: 20 },
-                { txt: "Me siento linda hoy. ¿Cuál es el problema?", ir: 'gaslight_inicio', val: 30 }
-            ]
-        },
-        'control_ropa': {
-            msgs: ["No es que no me guste. Es que te ves muy 'ofrecida'.", "Sabes cómo son los hombres en la calle. Lo digo para que te respeten."],
-            sys: "⚠️ ZONA AMARILLA: Controlar tu vestimenta es violencia psicológica. Limita tu libre desarrollo de la personalidad.",
-            opts: [
-                { txt: "Tienes razón, perdón.", ir: 'fase_celos', val: 45 },
-                { txt: "Yo me visto como quiera.", ir: 'fase_agresiva', val: 50 }
-            ]
-        },
-        'gaslight_inicio': {
-            msgs: ["Uy, bájale a tu ego.", "Últimamente estás muy rara, seguro esas amigas tuyas te meten ideas."],
-            sys: "⚠️ ZONA AMARILLA: Aislarte de tus redes de apoyo (amigas/familia) es una estrategia clásica de control.",
-            opts: [
-                { txt: "Mis amigas no tienen nada que ver.", ir: 'fase_celos', val: 40 },
-                { txt: "(Ignorar mensaje)", ir: 'fase_agresiva', val: 60 }
-            ]
-        },
-        'fase_celos': {
-            msgs: ["Como sea. Mándame tu ubicación en tiempo real YA.", "Y quiero la clave de tu Instagram. Necesito ver algo."],
-            sys: "🛑 ZONA NARANJA (Delito): Exigir claves o revisar el celular viola tu Derecho Constitucional a la Intimidad.",
-            opts: [
-                { txt: "No te voy a dar mi clave.", ir: 'fase_amenaza', val: 75 },
-                { txt: "Está bien, toma, pero no te enojes.", ir: 'ciclo_luna_miel', val: 70 }
-            ]
-        },
-        'fase_agresiva': {
-            msgs: ["¿Ah sí? ¿Ahora eres muy valiente?", "Eres una malagradecida. Con todo lo que hago por ti.", "Estás loca, nena. Necesitas ayuda."],
-            sys: "⚠️ LUZ DE GAS (Gaslighting): Te hace dudar de tu cordura para invalidar tu defensa.",
-            opts: [
-                { txt: "No estoy loca, basta.", ir: 'fase_amenaza', val: 80 }
-            ]
-        },
-        'fase_amenaza': {
-            msgs: ["Cuidado con lo que haces.", "Si te veo con otro, no respondo de mis actos.", "Voy para allá y vamos a arreglar esto."],
-            sys: "🆘 ZONA ROJA: Amenazas directas. Tu integridad corre peligro. ¡Corta comunicación y llama al 123 o 155!",
-            opts: [
-                { txt: "🚫 FINALIZAR Y ANALIZAR", ir: 'fin_reflexion', val: 100 }
-            ]
-        },
-        'ciclo_luna_miel': {
-            msgs: ["Gracias bebé. Sabes que soy así porque te amo demasiado.", "Nadie te va a cuidar como yo."],
-            sys: "🔄 CICLO DE VIOLENCIA: La 'Reconciliación' es temporal. Si cediste al control, la violencia volverá.",
-            opts: [
-                { txt: "➡️ IR AL ANÁLISIS", ir: 'fin_reflexion', val: 60 }
-            ]
-        }
-    };
+  // abrir / cerrar carpetas
+  document.querySelectorAll(".folder-header").forEach(header => {
+    header.addEventListener("click", () => {
+      header.parentElement.classList.toggle("open");
+    });
+  });
 
-    // --- ELEMENTOS ---
-    const chatBody = document.getElementById('chat-msgs');
-    const optsDiv = document.getElementById('chat-opts');
-    const meterBar = document.getElementById('meter-bar');
-    const meterTxt = document.getElementById('meter-txt');
-    const appBox = document.getElementById('app');
+  // detectar página actual
+  const currentPage = window.location.pathname.split("/").pop();
 
-    // --- FUNCIONES ---
-
-    function irAlChat() {
-        document.getElementById('screen-warn').style.display = 'none';
-        document.getElementById('screen-chat').style.display = 'flex';
-        renderEscena('inicio');
+  document.querySelectorAll(".page-link").forEach(link => {
+    if (link.getAttribute("href") === currentPage) {
+      link.classList.add("active");
+      link.closest(".folder").classList.add("open");
+      document.getElementById("pageIndicator").textContent =
+        "Página actual: " + currentPage.replace(".html", "");
     }
-
-    function irAReflexion() {
-        document.getElementById('screen-chat').style.display = 'none';
-        document.getElementById('screen-ref').style.display = 'block';
-    }
-
-    function triggerVibration() {
-        // Añadir clase de vibración
-        appBox.classList.add('shake-active');
-        // Quitarla después de que termine la animación (0.4s)
-        setTimeout(() => {
-            appBox.classList.remove('shake-active');
-        }, 400);
-    }
-
-    function renderEscena(id) {
-        if(id === 'fin_reflexion') {
-            irAReflexion();
-            return;
-        }
-
-        optsDiv.innerHTML = '';
-        const escena = historia[id];
-        let delay = 0;
-
-        escena.msgs.forEach((txt, i) => {
-            delay += 1200 + (txt.length * 25);
-            
-            setTimeout(() => {
-                // Crear burbuja
-                const b = document.createElement('div');
-                b.className = 'bubble inc';
-                b.innerText = txt;
-                chatBody.appendChild(b);
-                chatBody.scrollTop = chatBody.scrollHeight;
-                
-                // >>> AQUÍ OCURRE LA MAGIA DE LA VIBRACIÓN <<<
-                triggerVibration(); 
-
-                // Si es el ultimo, ver si hay nota del sistema
-                if(i === escena.msgs.length - 1) {
-                    if(escena.sys) {
-                        setTimeout(() => {
-                            const s = document.createElement('div');
-                            s.className = 'sys-msg';
-                            s.innerHTML = `<span class="col-badge">COL</span> ${escena.sys}`;
-                            chatBody.appendChild(s);
-                            chatBody.scrollTop = chatBody.scrollHeight;
-                        }, 600);
-                    }
-                    setTimeout(() => mostrarOpciones(escena.opts), 800);
-                }
-            }, delay);
-        });
-    }
-
-    function mostrarOpciones(opts) {
-        opts.forEach(o => {
-            const btn = document.createElement('button');
-            btn.className = 'opt-btn';
-            btn.innerText = o.txt;
-            btn.onclick = () => {
-                const b = document.createElement('div');
-                b.className = 'bubble out';
-                b.innerText = o.txt;
-                chatBody.appendChild(b);
-                
-                actualizarViolentometro(o.val);
-                renderEscena(o.ir);
-            };
-            optsDiv.appendChild(btn);
-        });
-    }
-
-    function actualizarViolentometro(val) {
-        meterBar.style.width = val + '%';
-        
-        let color = '#4caf50';
-        let texto = 'Bajo / Normal';
-
-        if(val > 30) { color = '#ffeb3b'; texto = 'Amarillo: Cuidado'; }
-        if(val > 50) { color = '#ff9800'; texto = 'Naranja: Reacciona'; }
-        if(val > 75) { color = '#f44336'; texto = 'Rojo: ¡PELIGRO!'; }
-
-        meterBar.style.background = color;
-        meterTxt.innerText = texto;
-        meterTxt.style.color = (val > 30) ? '#d32f2f' : '#4caf50';
-    }
+  });
 </script>
+
+</body>
+</html>

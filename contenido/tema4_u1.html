@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auditoría Crítica: Violencia Institucional</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;500;700&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+
+<style>
+    /* =========================================
+       1. VARIABLES Y RESET
+       ========================================= */
+    * { box-sizing: border-box; }
+
+    :root {
+        --bg-dark: #121212;
+        --card-bg: #1e1e1e;
+        --text-light: #e0e0e0;
+        --accent-red: #d32f2f; /* Rojo Alerta */
+        --accent-yellow: #fbc02d; /* Amarillo Precaución */
+        --highlight: #ffffff;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Merriweather', serif; /* Fuente seria, tipo informe */
+        background-color: var(--bg-dark);
+        color: var(--text-light);
+        overflow-x: hidden;
+        min-height: 100vh;
+    }
+
+    h1, h2, h3, h4 {
+        font-family: 'Oswald', sans-serif; /* Títulos impactantes */
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* =========================================
+       2. FONDO ANIMADO (FLUJO DE TENSIÓN)
+       ========================================= */
+    .tension-bg {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: -1;
+        background: var(--bg-dark);
+        overflow: hidden;
+    }
+
+    /* Capa 1: Ruido sutil */
+    .bg-noise {
+        position: absolute;
+        width: 100%; height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        opacity: 0.1;
+    }
+
+    /* Capa 2: Líneas de tensión moviéndose */
+    .tension-lines {
+        position: absolute;
+        width: 200%; height: 200%;
+        top: -50%; left: -50%;
+        background: repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 40px,
+            rgba(211, 47, 47, 0.03) 40px,
+            rgba(211, 47, 47, 0.03) 80px
+        );
+        animation: scrollBg 20s linear infinite;
+    }
+
+    /* Capa 3: Pulsos rojos (Alertas) */
+    .pulse-overlay {
+        position: absolute;
+        width: 100%; height: 100%;
+        background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(211, 47, 47, 0.1) 100%);
+        animation: heartbeat 4s infinite ease-in-out;
+    }
+
+    @keyframes scrollBg {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(100px); }
+    }
+
+    @keyframes heartbeat {
+        0%, 100% { opacity: 0.5; transform: scale(1); }
+        50% { opacity: 0.8; transform: scale(1.02); }
+    }
+
+    /* =========================================
+       3. CONTENEDOR PRINCIPAL
+       ========================================= */
+    .audit-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* HEADER */
+    .audit-header {
+        border-bottom: 4px solid var(--accent-red);
+        padding-bottom: 20px;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+    .audit-header h1 {
+        font-size: clamp(2rem, 5vw, 3rem);
+        margin: 0;
+        color: var(--highlight);
+        text-shadow: 2px 2px 0px var(--accent-red);
+    }
+
+    .audit-header p {
+        color: #aaa;
+        font-style: italic;
+        margin-top: 10px;
+        font-size: 1.1rem;
+    }
+
+    /* =========================================
+       4. SECCIÓN 1: EL INTERRUPTOR DE REALIDAD
+          (Tensiones Jurídicas)
+       ========================================= */
+    .section-block {
+        background: rgba(30, 30, 30, 0.9);
+        border-left: 5px solid var(--accent-yellow);
+        padding: 25px;
+        margin-bottom: 50px;
+        border-radius: 4px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .section-title {
+        color: var(--accent-yellow);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    /* Toggle Switch Styles */
+    .reality-switch-container {
+        background: #121212;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #333;
+    }
+
+    .switch-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .switch-label { font-size: 0.9rem; font-weight: bold; color: #fff; }
+    
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    .switch input { opacity: 0; width: 0; height: 0; }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: #444;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider { background-color: var(--accent-red); }
+    input:checked + .slider:before { transform: translateX(26px); }
+
+    /* Content Transition */
+    .normative-view, .critical-view {
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .critical-view {
+        display: none;
+        color: #ffcccc;
+        border-left: 2px solid var(--accent-red);
+        padding-left: 15px;
+        margin-top: 15px;
+    }
+
+    .reality-active .normative-view { opacity: 0.3; text-decoration: line-through; }
+    .reality-active .critical-view { display: block; animation: slideIn 0.5s forwards; }
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateX(-10px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    .unp-box {
+        background: rgba(211, 47, 47, 0.1);
+        border: 1px dashed var(--accent-red);
+        padding: 15px;
+        margin-top: 20px;
+        font-size: 0.9rem;
+    }
+
+    .unp-title { font-weight: bold; color: var(--accent-red); display: block; margin-bottom: 5px; }
+
+    /* =========================================
+       5. SECCIÓN 2: EXPEDIENTE "REDACTED"
+          (Violencia Institucional)
+       ========================================= */
+    .section-block.red {
+        border-left-color: var(--accent-red);
+    }
+
+    .section-title.red { color: var(--accent-red); }
+
+    .evidence-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .redacted-card {
+        background: #000;
+        padding: 20px;
+        position: relative;
+        cursor: pointer;
+        overflow: hidden;
+        border: 1px solid #333;
+    }
+
+    .redacted-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #333,
+            #333 10px,
+            #222 10px,
+            #222 20px
+        );
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.4s ease;
+        z-index: 2;
+    }
+
+    .redacted-label {
+        background: var(--accent-red);
+        color: white;
+        padding: 5px 10px;
+        font-family: 'Oswald';
+        font-weight: bold;
+        transform: rotate(-5deg);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    }
+
+    .redacted-content {
+        opacity: 0.3;
+        transition: opacity 0.3s;
+        font-size: 0.95rem;
+    }
+
+    .redacted-card.revealed .redacted-overlay {
+        transform: translateY(100%);
+    }
+
+    .redacted-card.revealed .redacted-content {
+        opacity: 1;
+        color: white;
+    }
+
+    .redacted-card.revealed {
+        border-color: var(--accent-red);
+        box-shadow: 0 0 15px rgba(211, 47, 47, 0.2);
+    }
+
+    /* =========================================
+       6. SECCIÓN 3: CIRCUITO DE DEBIDA DILIGENCIA
+       ========================================= */
+    .chain-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        position: relative;
+    }
+
+    .chain-link {
+        background: #2a2a2a;
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+        border-left: 5px solid #555;
+    }
+
+    .chain-link:hover { background: #333; }
+
+    .chain-link.active {
+        background: #1b3a1b; /* Verde oscuro */
+        border-left-color: #2e7d32;
+    }
+
+    .chain-text { font-family: 'Oswald'; font-size: 1.1rem; }
+    
+    .chain-status {
+        width: 20px; height: 20px;
+        border-radius: 50%;
+        background: #555;
+        transition: 0.3s;
+        box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+    }
+
+    .chain-link.active .chain-status {
+        background: #00e676; /* Verde Neon */
+        box-shadow: 0 0 10px #00e676;
+    }
+
+    .final-verdict {
+        margin-top: 20px;
+        padding: 20px;
+        background: #000;
+        border: 1px solid #444;
+        display: none;
+        animation: fadeIn 1s;
+    }
+
+    .final-verdict.show { display: block; }
+    
+    .verdict-header { color: var(--accent-yellow); font-weight: bold; margin-bottom: 10px; display: block; }
+
+    /* =========================================
+       7. MEDIA QUERIES (RESPONSIVE OPTIMIZATION)
+       ========================================= */
+    @media (max-width: 600px) {
+        .audit-header h1 { font-size: 2rem; }
+        
+        .section-block { padding: 15px; margin-bottom: 30px; }
+        
+        .switch-header { flex-direction: column; gap: 10px; align-items: flex-start; }
+        
+        .evidence-grid { grid-template-columns: 1fr; } /* 1 Columna en móvil */
+
+        .chain-link { padding: 12px; }
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+</style>
+</head>
+<body>
+
+<!-- Fondo Animado Permanente -->
+<div class="tension-bg">
+    <div class="bg-noise"></div>
+    <div class="tension-lines"></div>
+    <div class="pulse-overlay"></div>
+</div>
+
+<div class="audit-wrapper">
+
+    <!-- HEADER -->
+    <header class="audit-header">
+        <h1>De lo Descriptivo a lo Crítico</h1>
+        <p>Auditoría de Tensiones Jurídicas e Impactos Reales</p>
+    </header>
+
+    <!-- 1. TENSIONES JURÍDICAS (SWITCH DE REALIDAD) -->
+    <section class="section-block">
+        <h2 class="section-title"><i class="fas fa-balance-scale-right"></i> 1. TENSIONES JURÍDICAS</h2>
+        <p style="margin-bottom: 20px;">El enfoque de normas y principios es insuficiente si no se cuestiona la implementación real.</p>
+        
+        <div class="reality-switch-container" id="tensionBox">
+            <div class="switch-header">
+                <span class="switch-label">MODO: <span id="modeText">NORMATIVO (TEÓRICO)</span></span>
+                <label class="switch">
+                    <input type="checkbox" onchange="toggleReality(this)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <!-- Visión Normativa -->
+            <div class="normative-view">
+                <ul>
+                    <li>Existe amplia producción normativa con enfoque de género.</li>
+                    <li>Las entidades tienen manuales y guías establecidas.</li>
+                    <li>Se aplican procedimientos estándar de evaluación.</li>
+                </ul>
+            </div>
+
+            <!-- Visión Crítica (Oculta) -->
+            <div class="critical-view">
+                <ul>
+                    <li><strong>FALLA:</strong> Normas sin presupuesto asignado.</li>
+                    <li><strong>FALLA:</strong> Implementación delegada a personal sin formación.</li>
+                    <li><strong>FALLA:</strong> Aplicación formalista sin enfoque territorial.</li>
+                </ul>
+                <div class="unp-box">
+                    <span class="unp-title"><i class="fas fa-siren-on"></i> ALERTA UNP:</span>
+                    Evaluaciones de riesgo que cumplen "el papel" pero ignoran riesgos específicos por género o etnia. Medidas desconectadas del contexto real.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. VIOLENCIA INSTITUCIONAL (REDACTED FILES) -->
+    <section class="section-block red">
+        <h2 class="section-title red"><i class="fas fa-file-contract"></i> 2. VIOLENCIA INSTITUCIONAL</h2>
+        <p>Toque los expedientes confidenciales para revelar las prácticas que el Estado intenta ocultar.</p>
+
+        <div class="evidence-grid">
+            <!-- Card 1 -->
+            <div class="redacted-card" onclick="revealCard(this)">
+                <div class="redacted-overlay">
+                    <span class="redacted-label">CONFIDENCIAL</span>
+                </div>
+                <div class="redacted-content">
+                    <h4>DEFINICIÓN OCULTA</h4>
+                    <p>Ocurre cuando agentes del Estado, por <strong>acción u omisión</strong>, reproducen discriminación, revictimizan o niegan derechos.</p>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="redacted-card" onclick="revealCard(this)">
+                <div class="redacted-overlay">
+                    <span class="redacted-label">PRÁCTICAS COMUNES</span>
+                </div>
+                <div class="redacted-content">
+                    <h4>EVIDENCIA DIARIA:</h4>
+                    <ul>
+                        <li>Trato irrespetuoso.</li>
+                        <li>Minimización de denuncias.</li>
+                        <li>Dilaciones injustificadas.</li>
+                        <li>Uso de estereotipos.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="redacted-card" onclick="revealCard(this)">
+                <div class="redacted-overlay">
+                    <span class="redacted-label">CASO UNP</span>
+                </div>
+                <div class="redacted-content">
+                    <h4>PROCESOS DISCIPLINARIOS</h4>
+                    <p>Falla crítica: Los procesos actuales <strong>no reconocen</strong> la violencia institucional como una falta sancionable.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. DEBIDA DILIGENCIA (ACTIVAR PROTOCOLO) -->
+    <section class="section-block">
+        <h2 class="section-title"><i class="fas fa-shield-alt"></i> 3. DEBIDA DILIGENCIA REFORZADA</h2>
+        <p>No basta con "atender". Active los 5 eslabones obligatorios del Estado para evitar la responsabilidad internacional.</p>
+
+        <div class="chain-container">
+            <div class="chain-link" onclick="activateLink(this, 1)">
+                <span class="chain-text">1. PREVENIR</span>
+                <div class="chain-status"></div>
+            </div>
+            <div class="chain-link" onclick="activateLink(this, 2)">
+                <span class="chain-text">2. INVESTIGAR</span>
+                <div class="chain-status"></div>
+            </div>
+            <div class="chain-link" onclick="activateLink(this, 3)">
+                <span class="chain-text">3. PROTEGER</span>
+                <div class="chain-status"></div>
+            </div>
+            <div class="chain-link" onclick="activateLink(this, 4)">
+                <span class="chain-text">4. SANCIONAR</span>
+                <div class="chain-status"></div>
+            </div>
+            <div class="chain-link" onclick="activateLink(this, 5)">
+                <span class="chain-text">5. REPARAR</span>
+                <div class="chain-status"></div>
+            </div>
+        </div>
+
+        <div id="finalVerdict" class="final-verdict">
+            <span class="verdict-header">⚠ DICTAMEN FINAL UNP:</span>
+            <p>En contextos de riesgo (lideresas, LGBTIQ+, racializadas), esta obligación es REFORZADA.</p>
+            <p><strong>Ejemplo:</strong> Si una amenaza contra una mujer trans defensora es subestimada, no es un error técnico, es una <strong>FALLA DE DEBIDA DILIGENCIA</strong> y genera responsabilidad estatal.</p>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    // Lógica Sección 1: Switch
+    function toggleReality(checkbox) {
+        const container = document.getElementById('tensionBox');
+        const label = document.getElementById('modeText');
+        
+        if (checkbox.checked) {
+            container.classList.add('reality-active');
+            label.innerText = "CRÍTICO (REALIDAD)";
+            label.style.color = "var(--accent-red)";
+        } else {
+            container.classList.remove('reality-active');
+            label.innerText = "NORMATIVO (TEÓRICO)";
+            label.style.color = "#fff";
+        }
+    }
+
+    // Lógica Sección 2: Redacted Reveal
+    function revealCard(card) {
+        // Vibración háptica si es móvil
+        if (navigator.vibrate) navigator.vibrate(50);
+        card.classList.toggle('revealed');
+    }
+
+    // Lógica Sección 3: Chain Activation
+    let chainProgress = 0;
+    const totalChain = 5;
+    const activeLinks = new Set();
+
+    function activateLink(el, id) {
+        if (el.classList.contains('active')) return;
+
+        // Efecto visual
+        el.classList.add('active');
+        if (navigator.vibrate) navigator.vibrate(30);
+
+        activeLinks.add(id);
+
+        // Verificar completitud
+        if (activeLinks.size === totalChain) {
+            setTimeout(() => {
+                document.getElementById('finalVerdict').classList.add('show');
+                // Scroll suave hacia el veredicto en móviles
+                document.getElementById('finalVerdict').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 500);
+        }
+    }
+</script>
+
+</body>
+</html>

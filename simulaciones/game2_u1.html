@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+    /* --- AMBIENTACIÓN Y ESTRUCTURA --- */
+    :root {
+        --bg-dark: #1e1b4b; /* Azul muy oscuro UNP */
+        --card-bg: rgba(15, 23, 42, 0.85);
+        --boss-color: #fca5a5; /* Tono rojizo para el jefe */
+        --player-color: #a5b4fc; /* Tono lavanda para la jugadora */
+        --tension-low: #34d399;
+        --tension-mid: #fbbf24;
+        --tension-high: #ef4444;
+        --text-color: #e2e8f0;
+    }
+
+    #game-role-wrapper {
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background: radial-gradient(circle at center, #312e81, #111827);
+        min-height: 650px;
+        color: var(--text-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    }
+
+    /* Efecto de "Oficina Tensa" - Sutil parpadeo de luz */
+    #game-role-wrapper::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.1);
+        animation: flicker 8s infinite;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    @keyframes flicker {
+        0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 0; }
+        20%, 24%, 55% { opacity: 0.1; }
+    }
+
+    .role-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        width: 100%;
+        max-width: 550px;
+        height: 550px; /* Altura fija para mantener layout */
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition: transform 0.1s;
+    }
+
+    /* --- BARRA DE TENSIÓN --- */
+    .tension-header {
+        padding: 15px 20px;
+        background: rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .tension-label { font-size: 0.8rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .tension-bar-bg {
+        flex-grow: 1;
+        height: 10px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .tension-fill {
+        height: 100%;
+        width: 0%;
+        background: var(--tension-low);
+        transition: width 0.3s, background 0.3s;
+    }
+
+    /* --- ÁREA DE DRAMATIZACIÓN (Chat) --- */
+    .drama-stage {
+        flex-grow: 1;
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        scrollbar-width: thin;
+        scrollbar-color: var(--player-color) rgba(0,0,0,0.3);
+    }
+
+    .msg-bubble {
+        padding: 12px 18px;
+        border-radius: 12px;
+        max-width: 85%;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+    }
+
+    @keyframes popIn {
+        from { opacity: 0; transform: scale(0.9) translateY(10px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Estilos de personajes */
+    .msg-boss {
+        background: rgba(127, 29, 29, 0.4); /* Rojo oscuro transparente */
+        border-left: 4px solid var(--boss-color);
+        align-self: flex-start;
+        color: #fecaca;
+    }
+    .msg-boss::before { content: 'Director General (Jefe)'; font-size: 0.7rem; color: var(--boss-color); display: block; margin-bottom: 5px; font-weight: bold; }
+
+    .msg-player {
+        background: rgba(49, 46, 129, 0.6); /* Azul oscuro transparente */
+        border-right: 4px solid var(--player-color);
+        align-self: flex-end;
+        color: #e0e7ff;
+        text-align: right;
+    }
+    .msg-player::before { content: 'TÚ (Especialista)'; font-size: 0.7rem; color: var(--player-color); display: block; margin-bottom: 5px; font-weight: bold; }
+
+    .msg-narrator {
+        text-align: center;
+        font-style: italic;
+        color: #94a3b8;
+        font-size: 0.85rem;
+        margin: 10px 0;
+        align-self: center;
+        background: rgba(0,0,0,0.2);
+        padding: 5px 15px;
+        border-radius: 20px;
+    }
+
+    /* --- ÁREA DE INTERACCIÓN --- */
+    .interaction-area {
+        padding: 20px;
+        background: rgba(15, 23, 42, 0.95);
+        border-top: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .choice-btn {
+        background: transparent;
+        border: 1px solid var(--player-color);
+        color: var(--player-color);
+        padding: 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: left;
+        font-size: 0.9rem;
+    }
+
+    .choice-btn:hover {
+        background: var(--player-color);
+        color: #0f172a;
+    }
+
+    /* Animación de Tensión (Sacudida) */
+    .shake { animation: shake 0.5s; }
+    @keyframes shake {
+        0% { transform: translate(1px, 1px) rotate(0deg); }
+        10% { transform: translate(-1px, -2px) rotate(-1deg); }
+        20% { transform: translate(-3px, 0px) rotate(1deg); }
+        30% { transform: translate(3px, 2px) rotate(0deg); }
+        40% { transform: translate(1px, -1px) rotate(1deg); }
+        50% { transform: translate(-1px, 2px) rotate(-1deg); }
+        60% { transform: translate(-3px, 1px) rotate(0deg); }
+        100% { transform: translate(0, 0) rotate(0); }
+    }
+
+    /* Pantalla Final */
+    /* Pantalla Final Corregida */
+    .end-screen {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(15, 23, 42, 0.98);
+        z-index: 50;
+        display: none; 
+        /* Cambiamos la lógica de flexbox para permitir scroll */
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start; /* Alinea al inicio para no cortar la parte superior */
+        overflow-y: auto; /* Habilita el scroll vertical */
+        scrollbar-width: thin; /* Estilo de scroll fino */
+        scrollbar-color: var(--player-color) var(--bg-dark);
+    }
+
+    /* Nuevo contenedor interno para agrupar el texto */
+    .end-content-wrapper {
+        margin: auto; /* Truco de Flexbox: esto centra verticalmente automáticamente */
+        padding: 40px 30px; /* Espacio interno generoso */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box; /* Asegura que el padding no desborde el ancho */
+    }
+    
+    .concept-tag {
+        background: #4c1d95;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        margin: 5px;
+        display: inline-block;
+    }
+
+    @media (max-width: 600px) {
+        .role-card { height: 100vh; border-radius: 0; border: none; }
+        .msg-bubble { max-width: 95%; }
+    }
+</style>
+</head>
+<body>
+
+<div id="game-role-wrapper">
+    <div class="role-card" id="game-card">
+        
+        <!-- Barra Superior -->
+        <div class="tension-header">
+            <span class="tension-label">Nivel de Tensión</span>
+            <div class="tension-bar-bg">
+                <div class="tension-fill" id="tension-fill"></div>
+            </div>
+            <span id="tension-emoji">😐</span>
+        </div>
+
+        <!-- Escenario de Chat -->
+        <div class="drama-stage" id="chat-box">
+            <div class="msg-narrator">
+                Estás en el Comité de Evaluación de Riesgo. Eres la especialista técnica con más experiencia en la sala. El resto son directivos hombres.
+            </div>
+            <div class="msg-boss">
+                Bien, señores. Como íbamos diciendo, el esquema del protegido X se mantiene igual. No veo razones para cambios drásticos.
+            </div>
+        </div>
+
+        <!-- Opciones -->
+        <div class="interaction-area" id="options-box">
+            <button class="choice-btn" onclick="makeChoice(1)">Levantar la mano: "Director, los datos de terreno muestran un riesgo inminente."</button>
+            <button class="choice-btn" onclick="makeChoice(2)">Quedarse callada y anotar en la libreta (Evitar conflicto).</button>
+        </div>
+
+        <!-- Pantalla Final -->
+        <div class="end-screen" id="end-screen">
+            <!-- Nuevo Wrapper comienza aquí -->
+            <div class="end-content-wrapper">
+                <h2 style="color: var(--boss-color); margin-top: 0;">ANÁLISIS DE LA SITUACIÓN</h2>
+                <p id="end-message" style="line-height: 1.6; font-size: 1rem;"></p>
+                <div id="concepts-revealed" style="margin: 25px 0;"></div>
+                <button class="choice-btn" style="text-align: center; background: var(--player-color); color:black; font-weight: bold; width: auto; padding: 10px 30px;" onclick="location.reload()">
+                    Reintentar Simulación
+                </button>
+            </div>
+            <!-- Nuevo Wrapper termina aquí -->
+        </div>
+
+    </div>
+</div>
+
+<script>
+    let tension = 20; // 0 a 100
+    let currentStep = 0;
+    
+    // Base de datos de la narrativa (Árbol de decisiones simple)
+    const story = {
+        1: { // Opción: Hablar
+            narrator: "El Director te mira por encima de sus gafas. Varios colegas revisan sus celulares.",
+            boss: "¿Riesgo inminente? Mire, doctora... no nos pongamos dramáticos. Aquí nos basamos en hechos, no en corazonadas.",
+            tensionImpact: 20,
+            options: [
+                { text: "Insistir: 'No es una corazonada. Es el informe técnico 4B.'", next: 3 },
+                { text: "Disculparse: 'Quizás me expresé mal, lo revisaré.'", next: 4 }
+            ]
+        },
+        2: { // Opción: Callar
+            narrator: "Decides no intervenir. La reunión continúa. Sientes una punzada en el estómago.",
+            boss: "Perfecto. Si no hay objeciones, cerramos el acta. Ah, y tráiganos café, por favor.",
+            tensionImpact: 10,
+            options: [
+                { text: "Hacerlo notar: 'Yo soy especialista, no asistente.'", next: 5 },
+                { text: "Ignorarlo y salir de la sala frustrada.", next: 6 }
+            ]
+        },
+        3: { // Opción: Insistir (Confrontación)
+            narrator: "El ambiente se corta con un cuchillo. Un colega te interrumpe.",
+            boss: "(Interrupción) A ver, niña, déjeme terminar. Ya sabemos leer informes. Lo que necesitamos es criterio político.",
+            tensionImpact: 30, // Tensión crítica
+            options: [
+                { text: "Finalizar Simulación", next: 99, outcome: "aggressive" }
+            ]
+        },
+        4: { // Opción: Sumisión (Gaslighting)
+            narrator: "Bajas la mirada. El director sonríe con condescendencia.",
+            boss: "Así me gusta. Hay que aprender a escuchar a los que llevan años en esto.",
+            tensionImpact: 5,
+            options: [
+                { text: "Finalizar Simulación", next: 99, outcome: "passive" }
+            ]
+        },
+        5: { // Opción: Defender rol (Jerarquía)
+            narrator: "Se hace un silencio incómodo.",
+            boss: "Vaya carácter. Aquí en la UNP somos una familia, colaboramos en todo. No sea conflictiva.",
+            tensionImpact: 40,
+            options: [
+                { text: "Finalizar Simulación", next: 99, outcome: "hierarchy" }
+            ]
+        },
+        6: { // Salir (Invisibilización)
+            narrator: "Sales de la sala. Nadie nota tu salida. Tu aporte técnico fue ignorado.",
+            boss: "",
+            tensionImpact: 0,
+            options: [
+                { text: "Finalizar Simulación", next: 99, outcome: "invisible" }
+            ]
+        }
+    };
+
+    function makeChoice(choiceIndex) {
+        // Lógica inicial para el primer paso
+        if (currentStep === 0) {
+            handleScene(choiceIndex); // 1 o 2
+        } else {
+            // Lógica para pasos siguientes basada en el objeto options
+            // Esto es simplificado para JS puro sin frameworks
+        }
+    }
+
+    // Función principal de renderizado de escena
+    function handleScene(sceneId, outcome = null) {
+        
+        if (sceneId === 99) {
+            showEnding(outcome);
+            return;
+        }
+
+        const sceneData = story[sceneId];
+        currentStep = sceneId;
+
+        // Actualizar Tensión
+        updateTension(sceneData.tensionImpact);
+
+        // Renderizar Narrador
+        if (sceneData.narrator) {
+            addMessage(sceneData.narrator, 'msg-narrator');
+        }
+
+        // Renderizar Jefe (con delay para realismo)
+        if (sceneData.boss) {
+            setTimeout(() => {
+                addMessage(sceneData.boss, 'msg-boss');
+                triggerShake(); // El jefe siempre genera tensión
+            }, 600);
+        }
+
+        // Renderizar botones
+        setTimeout(() => {
+            renderButtons(sceneData.options);
+        }, 1200);
+    }
+
+    function addMessage(text, className) {
+        const chatBox = document.getElementById('chat-box');
+        const bubble = document.createElement('div');
+        bubble.className = `msg-bubble ${className}`;
+        bubble.innerText = text;
+        chatBox.appendChild(bubble);
+        chatBox.scrollTop = chatBox.scrollHeight; // Auto scroll
+    }
+
+    function renderButtons(options) {
+        const optionsBox = document.getElementById('options-box');
+        optionsBox.innerHTML = ''; // Limpiar anteriores
+
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.innerText = opt.text;
+            
+            // Asignar evento
+            btn.onclick = function() {
+                // Agregar mensaje del jugador antes de cambiar escena
+                addMessage(opt.text.split(':')[0], 'msg-player'); // Solo muestra la parte antes de los dos puntos o resumen
+                
+                // Pequeña pausa
+                setTimeout(() => {
+                    if (opt.outcome) {
+                        handleScene(opt.next, opt.outcome);
+                    } else {
+                        handleScene(opt.next);
+                    }
+                }, 500);
+            };
+            
+            optionsBox.appendChild(btn);
+        });
+    }
+
+    function updateTension(amount) {
+        tension += amount;
+        if (tension > 100) tension = 100;
+        
+        const fill = document.getElementById('tension-fill');
+        const emoji = document.getElementById('tension-emoji');
+
+        fill.style.width = `${tension}%`;
+
+        // Colores y Emojis según nivel
+        if (tension < 40) {
+            fill.style.background = "var(--tension-low)";
+            emoji.innerText = "😐";
+        } else if (tension < 75) {
+            fill.style.background = "var(--tension-mid)";
+            emoji.innerText = "😓";
+        } else {
+            fill.style.background = "var(--tension-high)";
+            emoji.innerText = "🤬";
+        }
+    }
+
+    function triggerShake() {
+        const card = document.getElementById('game-card');
+        card.classList.remove('shake');
+        void card.offsetWidth; // Trigger reflow
+        card.classList.add('shake');
+    }
+
+    function showEnding(outcome) {
+        const screen = document.getElementById('end-screen');
+        const msg = document.getElementById('end-message');
+        const concepts = document.getElementById('concepts-revealed');
+        
+        screen.style.display = "flex";
+        
+        let analysis = "";
+        let tags = "";
+
+        switch(outcome) {
+            case 'aggressive':
+                analysis = "Intentaste imponer tu criterio técnico, pero fuiste silenciada. El jefe usó tu tono para etiquetarte de 'emocional' y desvalidar tu argumento profesional.";
+                tags = "<span class='concept-tag'>Tone Policing</span> <span class='concept-tag'>Gaslighting</span>";
+                break;
+            case 'passive':
+                analysis = "Decidiste ceder para evitar problemas. La armonía se mantuvo, pero el riesgo de seguridad persiste y tu rol fue reducido al de una subordinada sin voz.";
+                tags = "<span class='concept-tag'>Invisibilización</span> <span class='concept-tag'>Rol de Género</span>";
+                break;
+            case 'hierarchy':
+                analysis = "Al defender tu estatus, apelaron a la 'familia' (chantaje emocional) para mantenerte en tu lugar. La jerarquía se usó para frenar la competencia técnica femenina.";
+                tags = "<span class='concept-tag'>Abuso Jerárquico</span> <span class='concept-tag'>Techo de Cristal</span>";
+                break;
+            case 'invisible':
+                analysis = "Tu salida pasó desapercibida. En estructuras rígidas, la ausencia de las mujeres en la toma de decisiones se normaliza tanto que ni siquiera se nota su falta.";
+                tags = "<span class='concept-tag'>Exclusión Sistemática</span>";
+                break;
+        }
+
+        msg.innerHTML = `<strong>Resultado:</strong> ${analysis}<br><br>¿Notaste lo difícil que fue acertar? Las estructuras desiguales crean escenarios donde perder es la norma.`;
+        concepts.innerHTML = tags;
+    }
+</script>
+
+</body>
+</html>

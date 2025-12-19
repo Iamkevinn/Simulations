@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+    :root {
+        --bg-dark: #050505;
+        --text-main: #e0e0e0;
+        --accent-alert: #ff3333; /* Rojo para violencia/prejuicios */
+        --accent-safe: #00ffcc; /* Turquesa para soluciones/derechos */
+        --accent-unp: #4d79ff;  /* Azul institucional UNP */
+        --glass: rgba(20, 20, 30, 0.95);
+        --font-tech: 'Courier New', monospace;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-dark);
+        color: var(--text-main);
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* --- FONDO ANIMADO "SYSTEM SCAN" --- */
+    .system-bg {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: 
+            linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+            linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+        background-size: 100% 2px, 3px 100%;
+        z-index: 0; pointer-events: none;
+    }
+    .scanner-beam {
+        position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+        background: var(--accent-unp);
+        box-shadow: 0 0 15px var(--accent-unp);
+        opacity: 0.5;
+        animation: scan 8s linear infinite;
+        z-index: 1;
+    }
+    @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
+
+    /* --- HUD SUPERIOR --- */
+    .hud {
+        height: 70px; background: rgba(0,0,0,0.9);
+        border-bottom: 2px solid var(--accent-unp);
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 0 15px; z-index: 50; font-family: var(--font-tech);
+        gap: 15px;
+    }
+    .hud-title { 
+        color: var(--accent-unp); 
+        font-weight: bold; 
+        letter-spacing: 0.5px;
+        font-size: 0.85rem; 
+        text-transform: uppercase;
+        line-height: 1.2;
+        max-width: 65%;
+    }
+    .progress-wrapper {
+        display: flex; flex-direction: column; align-items: flex-end; width: 30%;
+    }
+    .progress-container { width: 100%; height: 6px; background: #333; border-radius: 4px; margin-top: 4px; }
+    .progress-fill { height: 100%; width: 0%; background: var(--accent-safe); transition: width 0.5s; box-shadow: 0 0 10px var(--accent-safe); }
+
+    /* --- ÁREA DE JUEGO --- */
+    .stage {
+        flex-grow: 1; position: relative; z-index: 10;
+        padding: 20px; overflow-y: auto;
+        display: flex; flex-direction: column; align-items: center;
+    }
+
+    /* FASE 1: GLITCH CARDS (Prejuicios) */
+    .grid-phase1 {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px; width: 100%; max-width: 1200px;
+    }
+    .glitch-card {
+        background: rgba(40, 10, 10, 0.8);
+        border: 1px solid var(--accent-alert);
+        padding: 20px; border-radius: 5px;
+        cursor: pointer; position: relative; overflow: hidden;
+        animation: glitchAnim 3s infinite;
+        transition: transform 0.2s;
+    }
+    .glitch-card:active { transform: scale(0.98); }
+    @keyframes glitchAnim {
+        0% { transform: translate(0); }
+        2% { transform: translate(-2px, 2px); }
+        4% { transform: translate(2px, -2px); }
+        6% { transform: translate(0); }
+    }
+    .glitch-card.repaired {
+        background: rgba(10, 40, 20, 0.8);
+        border-color: var(--accent-safe);
+        animation: none;
+    }
+    .card-header { font-weight: bold; color: var(--accent-alert); margin-bottom: 10px; text-transform: uppercase; display:flex; justify-content:space-between;}
+    .glitch-card.repaired .card-header { color: var(--accent-safe); }
+    .card-content { font-size: 0.9rem; line-height: 1.5; }
+    .hidden-content { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.2); }
+    
+    /* FASE 2: CONEXIONES (Política) */
+    .phase-container { display: none; width: 100%; max-width: 900px; flex-direction: column; gap: 20px; }
+    
+    .match-row {
+        display: flex; justify-content: space-between; align-items: center;
+        background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;
+        border-left: 4px solid var(--accent-unp); transition: 0.3s;
+    }
+    .match-row:hover { background: rgba(255,255,255,0.1); }
+    .match-title { font-weight: bold; color: var(--accent-unp); width: 40%; font-size: 0.9rem; }
+    .match-options { display: flex; gap: 8px; width: 60%; flex-wrap: wrap; }
+    .chip { 
+        font-size: 0.75rem; padding: 5px 10px; border: 1px solid #555; border-radius: 15px; 
+        cursor: pointer; transition: 0.3s; background: rgba(0,0,0,0.5);
+    }
+    .chip.correct { background: var(--accent-safe); color: black; border-color: var(--accent-safe); font-weight: bold; }
+
+    /* FASE 3: ESCÁNER DE CAPAS (Cuidado/Masculinidades) */
+    .layer-card {
+        background: var(--glass); border: 1px solid #444; margin-bottom: 15px;
+        border-radius: 8px; overflow: hidden; transition: 0.3s;
+    }
+    .layer-header {
+        padding: 15px; background: rgba(255,255,255,0.05); cursor: pointer;
+        display: flex; justify-content: space-between; align-items: center;
+        font-weight: bold; font-size: 0.9rem;
+    }
+    .layer-header:hover { background: rgba(77, 121, 255, 0.2); }
+    .layer-body {
+        padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out;
+        border-top: 1px solid transparent;
+    }
+    .layer-body.open { padding: 20px; max-height: 600px; border-top-color: var(--accent-unp); }
+    .unp-tag { display: inline-block; background: var(--accent-unp); color: white; padding: 2px 6px; font-size: 0.7rem; border-radius: 4px; margin-bottom: 5px; }
+
+    /* FASE 4: CÓDIGO JURÍDICO (Trans) */
+    .terminal-screen {
+        background: black; border: 2px solid var(--accent-safe); padding: 20px;
+        font-family: var(--font-tech); color: var(--accent-safe); width: 100%;
+        min-height: 150px; margin-bottom: 20px; text-shadow: 0 0 5px var(--accent-safe);
+        font-size: 0.9rem;
+    }
+    .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; }
+    .key-btn {
+        background: #111; border: 1px solid var(--accent-unp); color: var(--accent-unp);
+        padding: 15px; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 0.8rem;
+    }
+    .key-btn:hover { background: var(--accent-unp); color: white; }
+    .key-btn.active { background: var(--accent-safe); color: black; border-color: var(--accent-safe); }
+
+    /* CONTROLES */
+    .controls {
+        height: 70px; background: #111; display: flex; justify-content: center; align-items: center;
+        gap: 20px; z-index: 50; border-top: 1px solid #333; flex-shrink: 0;
+    }
+    .phase-dot { width: 14px; height: 14px; border-radius: 50%; background: #444; cursor: pointer; transition: 0.3s; position: relative; }
+    .phase-dot.active { background: var(--accent-unp); transform: scale(1.3); box-shadow: 0 0 10px var(--accent-unp); }
+    /* Tooltip simple para dots */
+    .phase-dot::after { content: attr(data-label); position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); background: #333; padding: 2px 5px; font-size: 0.6rem; border-radius: 3px; display: none; white-space: nowrap; }
+    .phase-dot:hover::after { display: block; }
+
+    /* MODAL */
+    .modal {
+        position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95);
+        z-index: 100; display: none; justify-content: center; align-items: center; padding: 20px;
+    }
+    .modal-content {
+        background: #0f172a; border: 2px solid var(--accent-safe); padding: 30px;
+        max-width: 600px; text-align: center; border-radius: 10px; animation: popUp 0.4s;
+    }
+    @keyframes popUp { from{transform:scale(0.8); opacity:0;} to{transform:scale(1); opacity:1;} }
+    
+    ul { padding-left: 20px; margin: 5px 0; }
+    li { margin-bottom: 5px; font-size: 0.9rem; }
+
+    @media (max-width: 768px) {
+        .hud-title { font-size: 0.7rem; }
+        .grid-phase1 { grid-template-columns: 1fr; }
+        .match-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+        .match-options { width: 100%; }
+        .keypad { grid-template-columns: 1fr 1fr; }
+        .match-title { width: 100%; border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 5px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="system-bg"></div>
+<div class="scanner-beam"></div>
+
+<!-- HUD -->
+<div class="hud">
+    <div class="hud-title" id="hud-title">UNP // SISTEMA DE GÉNERO</div>
+    <div class="progress-wrapper">
+        <div style="font-size:0.6rem; color:#888;">INTEGRIDAD SISTEMA</div>
+        <div class="progress-container"><div class="progress-fill" id="progress"></div></div>
+    </div>
+</div>
+
+<!-- ÁREA DE JUEGO -->
+<div class="stage">
+
+    <!-- FASE 1: PREJUICIOS -->
+    <div id="phase1" class="grid-phase1">
+        <div class="glitch-card" onclick="repairCard(this, 1)">
+            <div class="card-header"><span>⚠ ALERTA: VIOLENCIA RACIALIZADA</span> <span>[REPARAR]</span></div>
+            <div class="card-content">
+                Las guías deben incluir que la violencia no opera igual para todas las personas.
+                <div class="hidden-content">
+                    <strong>Personas LGBTIQ+ afro, indígenas o migrantes enfrentan:</strong>
+                    <ul>
+                        <li>Mayor estigmatización</li>
+                        <li>Menor credibilidad</li>
+                        <li>Mayor exposición a violencia armada</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="glitch-card" onclick="repairCard(this, 2)">
+            <div class="card-header"><span>⚠ ALERTA: PREJUICIOS INSTITUCIONALES</span> <span>[REPARAR]</span></div>
+            <div class="card-content">
+                Detectando sesgos en instituciones de seguridad...
+                <div class="hidden-content">
+                    <strong>Ejemplos frecuentes:</strong>
+                    <ul>
+                        <li>Sospecha automática hacia personas racializadas</li>
+                        <li>Asociación de mujeres trans con ilegalidad</li>
+                        <li>Infantilización de mujeres indígenas</li>
+                        <li>Desconfianza frente a liderazgos comunitarios</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="glitch-card" onclick="repairCard(this, 3)">
+            <div class="card-header"><span>⚠ ALERTA: IMPACTO EN LA UNP</span> <span>[REPARAR]</span></div>
+            <div class="card-content">
+                Consecuencias críticas detectadas en el sistema de protección.
+                <div class="hidden-content">
+                    <strong>👉 Impacto Directo:</strong>
+                    <ul>
+                        <li>Subestimación del riesgo</li>
+                        <li>Medidas inadecuadas</li>
+                        <li>Revictimización</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 2: POLÍTICA E IMPUNIDAD -->
+    <div id="phase2" class="phase-container">
+        
+        <div class="match-row">
+            <div class="match-title">7. POLÍTICA PÚBLICA FEMINISTA</div>
+            <div class="match-options">
+                <div class="chip" onclick="checkMatch(this)">Más que normas</div>
+                <div class="chip" onclick="checkMatch(this)">Análisis de poder</div>
+                <div class="chip" onclick="checkMatch(this)">Impactos territoriales</div>
+                <div class="chip" onclick="checkMatch(this)">Patriarcado institucional</div>
+            </div>
+        </div>
+
+        <div class="match-row">
+            <div class="match-title">LAS GUÍAS DEBEN EXPLICAR</div>
+            <div class="match-options">
+                <div class="chip" onclick="checkMatch(this)">Qué instrumentos existen</div>
+                <div class="chip" onclick="checkMatch(this)">Quién los implementa</div>
+                <div class="chip" onclick="checkMatch(this)">Con qué capacidades</div>
+                <div class="chip" onclick="checkMatch(this)">Con qué límites reales</div>
+            </div>
+        </div>
+
+        <div class="match-row">
+            <div class="match-title">8. IMPUNIDAD ESTRUCTURAL</div>
+            <div class="match-options">
+                <div class="chip" onclick="checkMatch(this)">Recomendaciones CEDAW</div>
+                <div class="chip" onclick="checkMatch(this)">Observaciones CIDH</div>
+                <div class="chip" onclick="checkMatch(this)">Falta de sanción</div>
+                <div class="chip" onclick="checkMatch(this)">Debida diligencia</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 3: ANÁLISIS DE PODER Y CUIDADO -->
+    <div id="phase3" class="phase-container">
+
+        <div class="layer-card">
+            <div class="layer-header" onclick="toggleLayer(this)">
+                9. CUIDADO Y ECONOMÍA FEMINISTA <span>[+]</span>
+            </div>
+            <div class="layer-body">
+                <p>Las guías deben incorporar:</p>
+                <ul>
+                    <li>Economía feminista (Federici, Pérez Orozco, Sassen)</li>
+                    <li>Crítica al capitalismo y extractivismo</li>
+                    <li>Colonialidad del trabajo de cuidados</li>
+                </ul>
+                <div style="margin-top:10px; border-left:3px solid var(--accent-unp); padding-left:10px;">
+                    <span class="unp-tag">APLICACIÓN UNP</span><br>
+                    Conectar el cuidado con: Jornadas extensas de escoltas, Salud mental del personal, Carga emocional, Derecho al descanso.
+                </div>
+            </div>
+        </div>
+
+        <div class="layer-card">
+            <div class="layer-header" onclick="toggleLayer(this)">
+                MASCULINIDADES INSTITUCIONALES <span>[+]</span>
+            </div>
+            <div class="layer-body">
+                <p>No solo diálogo, se requiere analizar:</p>
+                <ul>
+                    <li>Privilegio masculino institucional</li>
+                    <li>Pactos de silencio</li>
+                    <li>Resistencias al cambio</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="layer-card">
+            <div class="layer-header" onclick="toggleLayer(this)">
+                ANÁLISIS FEMINISTA DEL PODER (Protocolo EVG-DH-PT-003) <span>[+]</span>
+            </div>
+            <div class="layer-body">
+                <p>El protocolo debe abordarse como:</p>
+                <ul>
+                    <li>Herramienta de prevención</li>
+                    <li>Instrumento contra violencia institucional</li>
+                    <li>Mecanismo de acción sin daño</li>
+                </ul>
+                <p><strong>Fortalecimientos necesarios:</strong> Debida diligencia reforzada, Valoración de riesgo interseccional, Articulación disciplinaria, Visibilización de la Subcomisión de Transversalidad.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 4: DERECHOS TRANS (JURISPRUDENCIA) -->
+    <div id="phase4" class="phase-container" style="align-items:center;">
+        <div class="terminal-screen" id="terminal">
+            > SISTEMA CRÍTICO: VACÍO EN DERECHOS TRANS Y NO BINARIOS...<br>
+            > INGRESE CÓDIGOS DE JURISPRUDENCIA PARA ACTUALIZAR PROTOCOLOS...<br>
+            > ESTADO: BLOQUEADO
+        </div>
+        
+        <div class="keypad">
+            <div class="key-btn" onclick="enterCode(this, 'C-622')">C-622 (2017)</div>
+            <div class="key-btn" onclick="enterCode(this, 'T-447')">T-447 (2019)</div>
+            <div class="key-btn" onclick="enterCode(this, 'T-033')">T-033 (2022)</div>
+            <div class="key-btn" onclick="enterCode(this, 'T-527')">T-527 (2024)</div>
+        </div>
+        
+        <div style="margin-top:20px; font-size:0.9rem; color:#888; text-align:center;">
+            * Al desbloquear, se activará el reconocimiento de riesgo extraordinario por prejuicio en la UNP.
+        </div>
+    </div>
+
+</div>
+
+<!-- CONTROLES -->
+<div class="controls">
+    <div class="phase-dot active" onclick="goToPhase(1)" data-label="PREJUICIOS"></div>
+    <div class="phase-dot" onclick="goToPhase(2)" data-label="POLÍTICA"></div>
+    <div class="phase-dot" onclick="goToPhase(3)" data-label="CUIDADO"></div>
+    <div class="phase-dot" onclick="goToPhase(4)" data-label="TRANS"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="info-modal">
+    <div class="modal-content">
+        <h2 style="color:var(--accent-safe)">SISTEMA RESTAURADO</h2>
+        <p id="modal-text"></p>
+        <button onclick="closeModal()" style="background:var(--accent-safe); border:none; padding:10px 20px; font-weight:bold; cursor:pointer; margin-top:10px;">CONTINUAR</button>
+    </div>
+</div>
+
+<script>
+    let currentScore = 0;
+    
+    // Títulos dinámicos según fase
+    const phaseTitles = {
+        1: "UNP // Violencia y prejuicios institucionales",
+        2: "UNP // Política pública con enfoque feminista e Impunidad estructural",
+        3: "UNP // Cuidado, economía feminista y masculinidades",
+        4: "UNP // Derechos de personas trans y no binarias: vacío crítico"
+    };
+
+    // FASE 1: REPARACIÓN
+    function repairCard(card, id) {
+        if(card.classList.contains('repaired')) return;
+        
+        card.classList.add('repaired');
+        const hidden = card.querySelector('.hidden-content');
+        hidden.style.display = "block";
+        
+        updateProgress(10);
+        
+        // Verificar si completó fase 1
+        if(document.querySelectorAll('.glitch-card.repaired').length === 3) {
+            setTimeout(() => showModal("Prejuicios depurados. La UNP ahora reconoce que la violencia no es igual para todos."), 1000);
+        }
+    }
+
+    // FASE 2: CHIPS
+    function checkMatch(chip) {
+        if(chip.classList.contains('correct')) return;
+        chip.classList.add('correct');
+        updateProgress(2);
+    }
+
+    // FASE 3: ACORDEÓN
+    function toggleLayer(header) {
+        const body = header.nextElementSibling;
+        const isOpen = body.classList.contains('open');
+
+        if(!isOpen) {
+            body.classList.add('open');
+            header.style.background = "rgba(77, 121, 255, 0.4)";
+            header.querySelector('span').innerText = "[-]";
+            updateProgress(5);
+        } else {
+            body.classList.remove('open');
+            header.style.background = "rgba(255,255,255,0.05)";
+            header.querySelector('span').innerText = "[+]";
+        }
+    }
+
+    // FASE 4: CÓDIGOS
+    let codesEntered = 0;
+    function enterCode(btn, code) {
+        if(btn.classList.contains('active')) return;
+        
+        btn.classList.add('active');
+        const term = document.getElementById('terminal');
+        term.innerHTML += `<br>> JURISPRUDENCIA ${code} INTEGRADA.`;
+        
+        codesEntered++;
+        updateProgress(10);
+
+        if(codesEntered === 4) {
+            term.style.color = "var(--accent-safe)";
+            term.style.borderColor = "var(--accent-safe)";
+            term.innerHTML += "<br><br><strong>>> ACCESO CONCEDIDO:</strong><br>PRINCIPIO DE NO DISCRIMINACIÓN ACTIVO COMO OBLIGACIÓN.<br>UNP: Diseñar esquemas acordes a identidad de género y garantizar confidencialidad.";
+            
+            setTimeout(() => showModal("¡ACTUALIZACIÓN COMPLETA!<br>Has integrado el enfoque feminista, cuidado y derechos trans en la política pública de la UNP."), 2000);
+        }
+    }
+
+    function updateProgress(val) {
+        currentScore += val;
+        if(currentScore > 100) currentScore = 100;
+        document.getElementById('progress').style.width = currentScore + "%";
+    }
+
+    function goToPhase(phase) {
+        // Actualizar Título
+        document.getElementById('hud-title').innerText = phaseTitles[phase];
+
+        // Ocultar todas
+        document.getElementById('phase1').style.display = 'none';
+        document.getElementById('phase2').style.display = 'none';
+        document.getElementById('phase3').style.display = 'none';
+        document.getElementById('phase4').style.display = 'none';
+        
+        // Dots
+        document.querySelectorAll('.phase-dot').forEach((d, i) => {
+            d.classList.toggle('active', i+1 === phase);
+        });
+
+        // Mostrar actual
+        if(phase === 1) document.getElementById('phase1').style.display = 'grid';
+        if(phase === 2) document.getElementById('phase2').style.display = 'flex';
+        if(phase === 3) document.getElementById('phase3').style.display = 'block';
+        if(phase === 4) document.getElementById('phase4').style.display = 'flex';
+    }
+
+    function showModal(text) {
+        document.getElementById('modal-text').innerHTML = text;
+        document.getElementById('info-modal').style.display = 'flex';
+    }
+    
+    function closeModal() {
+        document.getElementById('info-modal').style.display = 'none';
+    }
+
+    // Init
+    goToPhase(1);
+
+</script>
+
+</body>
+</html>

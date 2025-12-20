@@ -1,0 +1,425 @@
+<!-- LIBRERÍAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+
+<style>
+/* --- 1. CONFIGURACIÓN VISUAL (SÓLIDA Y ACCESIBLE) --- */
+:root {
+    --sim-bg: #1a0b2e;       /* Fondo oscuro violeta */
+    --sim-panel: #2d1b4e;    /* Paneles sólidos */
+    --accent-purple: #9d4edd; /* Prevención VG */
+    --accent-orange: #ff9e00; /* Alerta/Atención */
+    --accent-green: #06d6a0;  /* Éxito */
+    --text-white: #ffffff;
+    --btn-normal: #432c7a;
+    --btn-hover: #5b3a9b;
+}
+
+#simulation-container {
+    width: 100%;
+    min-height: 850px; /* Altura para acomodar personaje y diálogo */
+    height: auto;
+    background-color: var(--sim-bg) !important;
+    font-family: 'Manrope', sans-serif;
+    color: var(--text-white);
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 2px solid #333;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+/* --- 2. AMBIENTACIÓN (ANIMACIONES CONSTANTES) --- */
+.ambient-light {
+    position: absolute; width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(157, 78, 221, 0.15) 0%, transparent 70%);
+    top: -20%; left: 50%; transform: translateX(-50%);
+    animation: pulseLight 8s infinite alternate; z-index: 0;
+}
+.dust-particle {
+    position: absolute; background: #fff; border-radius: 50%; opacity: 0.3;
+    animation: floatDust 10s infinite linear; pointer-events: none;
+}
+@keyframes pulseLight { 0% { opacity: 0.5; transform: translateX(-50%) scale(1); } 100% { opacity: 0.8; transform: translateX(-50%) scale(1.2); } }
+@keyframes floatDust { 0% { transform: translateY(0); opacity: 0; } 50% { opacity: 0.5; } 100% { transform: translateY(-100px); opacity: 0; } }
+
+/* --- 3. HUD (BARRA DE CONFIANZA) --- */
+.hud-bar {
+    z-index: 20; padding: 20px;
+    background: #000; border-bottom: 2px solid var(--accent-purple);
+    display: flex; justify-content: space-between; align-items: center;
+}
+.hud-title { font-weight: 800; text-transform: uppercase; color: var(--accent-purple); letter-spacing: 1px; }
+.trust-meter-container {
+    width: 200px; height: 10px; background: #333; border-radius: 5px; overflow: hidden; position: relative;
+}
+.trust-fill {
+    height: 100%; width: 50%; /* Inicio medio */
+    background: linear-gradient(90deg, #ff9e00, #06d6a0);
+    transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.trust-label { font-size: 0.8rem; margin-left: 10px; color: #ccc; }
+
+/* --- 4. AVATAR (CARLA - CSS PURO) --- */
+.character-stage {
+    flex: 1; position: relative; z-index: 5;
+    display: flex; justify-content: center; align-items: flex-end;
+    overflow: hidden; pointer-events: none;
+}
+
+/* Silueta estilizada para evitar fotos reales */
+.avatar-silhouette {
+    width: 280px; height: 400px;
+    background: linear-gradient(to bottom, #5e4b8b, #2d1b4e);
+    border-radius: 100px 100px 0 0;
+    position: relative; bottom: -20px;
+    box-shadow: 0 0 50px rgba(157, 78, 221, 0.3);
+    animation: breathe 4s infinite ease-in-out;
+}
+.avatar-head {
+    width: 140px; height: 160px;
+    background: #5e4b8b; border-radius: 70px;
+    position: absolute; top: -140px; left: 50%; transform: translateX(-50%);
+    box-shadow: inset -10px -10px 20px rgba(0,0,0,0.3);
+}
+.avatar-aura {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 350px; height: 500px; border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.05);
+    animation: rotateAura 20s infinite linear;
+}
+
+@keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes rotateAura { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+/* --- 5. INTERFAZ DE DIÁLOGO (SÓLIDA) --- */
+.dialogue-area {
+    background: #000000 !important; /* Negro sólido */
+    border-top: 3px solid var(--accent-purple);
+    padding: 30px; z-index: 20; min-height: 350px;
+    display: flex; flex-direction: column; gap: 20px;
+}
+
+.speaker-name {
+    color: var(--accent-orange); font-weight: bold; font-family: 'Roboto Mono', monospace;
+    font-size: 0.9rem; margin-bottom: 5px;
+}
+.dialogue-text {
+    font-size: 1.1rem; line-height: 1.6; color: #fff; min-height: 60px;
+}
+
+.options-grid {
+    display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px;
+}
+
+.choice-btn {
+    background-color: var(--btn-normal) !important;
+    color: white !important;
+    padding: 15px 20px;
+    border: 1px solid #666 !important;
+    border-radius: 8px;
+    cursor: pointer; text-align: left;
+    font-size: 1rem; transition: transform 0.2s;
+    opacity: 1 !important;
+    display: flex; align-items: center;
+}
+.choice-btn:hover {
+    background-color: var(--btn-hover) !important;
+    border-color: var(--accent-purple) !important;
+    transform: translateX(10px);
+}
+.choice-bullet {
+    width: 25px; height: 25px; background: #000; color: var(--accent-orange);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: bold; margin-right: 15px; flex-shrink: 0;
+}
+
+/* FEEDBACK OVERLAY */
+.feedback-overlay {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.95); z-index: 50;
+    display: none; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding: 40px; box-sizing: border-box;
+}
+.fb-icon { font-size: 4rem; margin-bottom: 20px; }
+.fb-title { font-size: 1.5rem; font-weight: bold; color: var(--accent-purple); margin-bottom: 15px; }
+.fb-text { font-size: 1.1rem; line-height: 1.5; color: #ddd; max-width: 700px; margin-bottom: 30px; }
+.continue-btn {
+    background: var(--accent-green); color: #000; padding: 12px 30px;
+    border: none; border-radius: 30px; font-weight: bold; cursor: pointer;
+    font-size: 1rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+    .hud-bar { padding: 15px; }
+    .dialogue-area { padding: 20px; }
+    .character-stage { height: 200px; flex: none; } /* Reducir avatar en móvil */
+    .avatar-silhouette { transform: scale(0.8); transform-origin: bottom center; }
+}
+
+</style>
+
+<div id="simulation-container">
+    
+    <!-- Efectos Ambientales -->
+    <div class="ambient-light"></div>
+    <!-- Partículas generadas por JS aquí -->
+
+    <!-- HUD SUPERIOR -->
+    <div class="hud-bar">
+        <div class="hud-title">Simulación: Atención Diferencial</div>
+        <div style="display:flex; align-items:center;">
+            <div class="trust-label">Nivel de Confianza:</div>
+            <div style="width:10px;"></div>
+            <div class="trust-meter-container">
+                <div class="trust-fill" id="trust-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ESCENARIO / PERSONAJE -->
+    <div class="character-stage">
+        <div class="avatar-silhouette">
+            <div class="avatar-head"></div>
+            <div class="avatar-aura"></div>
+        </div>
+    </div>
+
+    <!-- ÁREA DE DIÁLOGO E INTERACCIÓN -->
+    <div class="dialogue-area">
+        <div>
+            <div class="speaker-name" id="speaker-label">CARLA (USUARIA)</div>
+            <div class="dialogue-text" id="typewriter-text"></div>
+        </div>
+
+        <div class="options-grid" id="choices-box">
+            <!-- Botones generados por JS -->
+        </div>
+    </div>
+
+    <!-- FEEDBACK MODAL -->
+    <div class="feedback-overlay" id="fb-modal">
+        <div class="fb-icon" id="fb-icon">✨</div>
+        <div class="fb-title" id="fb-title">Análisis de la Interacción</div>
+        <div class="fb-text" id="fb-desc">...</div>
+        <button class="continue-btn" onclick="nextScene()">CONTINUAR</button>
+    </div>
+
+</div>
+
+<script>
+// --- 1. CONFIGURACIÓN DE ESCENA Y DATOS ---
+const scenes = [
+    {
+        // ESCENA 0: SALUDO / ACTITUD
+        speaker: "CARLA (USUARIA)",
+        text: "Buenos días... Vengo a solicitar protección. La verdad, no sabía si venir, en otras entidades me han tratado muy mal por... bueno, por ser quien soy.",
+        options: [
+            {
+                label: "A",
+                text: "Buenos días. Entiendo. Aquí seguimos un protocolo estricto, deme su cédula rápido para ver si aplica.",
+                type: "negative",
+                feedbackTitle: "ACTITUD BARRERA",
+                feedback: "⚠️ <strong>Error:</strong> Esta respuesta es fría y burocrática. Ignora el temor expresado por la usuaria y no genera un 'Espacio Seguro'. Las herramientas para transformar actitudes exigen empatía inicial.",
+                trustChange: -20
+            },
+            {
+                label: "B",
+                text: "Buenos días. Bienvenida a la UNP. Este es un espacio seguro y estamos aquí para escucharla y garantizar sus derechos. ¿En qué podemos apoyarla?",
+                type: "positive",
+                feedbackTitle: "TRANSFORMACIÓN DE ACTITUDES",
+                feedback: "✨ <strong>Correcto.</strong> Has aplicado una herramienta de actitud: validar el temor, ofrecer seguridad explícita y mostrar disposición de escucha activa.",
+                trustChange: +20
+            }
+        ]
+    },
+    {
+        // ESCENA 1: REGISTRO / IDENTIDAD
+        speaker: "CARLA (USUARIA)",
+        text: "Gracias... Mire, aquí está mi cédula. Todavía aparece mi nombre de nacimiento 'Carlos', y la foto es vieja, pero yo soy Carla.",
+        options: [
+            {
+                label: "A",
+                text: "Entiendo, Carla. En nuestro sistema registraremos su nombre identitario 'Carla' y su pronombre 'Ella', respetando su identidad de género.",
+                type: "positive",
+                feedbackTitle: "ESTÁNDAR DE REGISTRO",
+                feedback: "✨ <strong>Excelente.</strong> El estándar de registro e identificación exige respetar el nombre identitario sobre el legal en el trato y en los campos de 'Nombre Social' del formulario.",
+                trustChange: +20
+            },
+            {
+                label: "B",
+                text: "Ah, entonces tengo que registrarla como Carlos porque eso dice el documento legal. No puedo cambiar eso en el sistema.",
+                type: "negative",
+                feedbackTitle: "VIOLENCIA INSTITUCIONAL",
+                feedback: "⚠️ <strong>Error:</strong> Negar el nombre identitario es una forma de violencia. Existen protocolos para registrar el nombre identitario como principal en la interacción.",
+                trustChange: -30
+            }
+        ]
+    },
+    {
+        // ESCENA 2: RIESGO / ENFOQUE DE VIDA LIBRE DE VIOLENCIA
+        speaker: "CARLA (USUARIA)",
+        text: "La situación es que en mi barrio me amenazaron. Un grupo armado me dijo que no querían 'gente como yo' dando mal ejemplo a los niños. Tengo mucho miedo.",
+        options: [
+            {
+                label: "A",
+                text: "Eso suena a un problema de convivencia. Debería poner una queja en la policía por amenazas simples.",
+                type: "negative",
+                feedbackTitle: "FALTA DE ENFOQUE DIFERENCIAL",
+                feedback: "⚠️ <strong>Incorrecto.</strong> No es 'convivencia'. Es una amenaza motivada por prejuicio (Transfobia). Minimizar el riesgo viola el enfoque de vida libre de violencias.",
+                trustChange: -30
+            },
+            {
+                label: "B",
+                text: "Comprendo el riesgo, Carla. Esto es una amenaza por prejuicio contra su identidad de género. Activaremos la ruta de riesgo específico para población diversa.",
+                type: "positive",
+                feedbackTitle: "ENFOQUE DIFERENCIAL APLICADO",
+                feedback: "✨ <strong>Correcto.</strong> Identificaste que la amenaza está basada en su identidad (violencia por prejuicio) y activaste la ruta diferencial.",
+                trustChange: +20
+            }
+        ]
+    }
+];
+
+let currentSceneIndex = 0;
+let currentTrust = 50; // Inicia en 50%
+
+// --- 2. FUNCIONES DE SIMULACIÓN ---
+
+function renderScene() {
+    const scene = scenes[currentSceneIndex];
+    
+    // Actualizar Textos
+    document.getElementById('speaker-label').innerText = scene.speaker;
+    typeWriter(scene.text);
+    
+    // Generar Botones
+    const choicesBox = document.getElementById('choices-box');
+    choicesBox.innerHTML = ''; // Limpiar
+    
+    scene.options.forEach((opt, index) => {
+        const btn = document.createElement('div');
+        btn.className = 'choice-btn';
+        btn.innerHTML = `<div class="choice-bullet">${opt.label}</div><span>${opt.text}</span>`;
+        
+        // Animación de entrada
+        gsap.fromTo(btn, {x: -20, opacity: 0}, {x: 0, opacity: 1, duration: 0.5, delay: 0.5 + (index * 0.2)});
+        
+        btn.onclick = () => makeChoice(opt);
+        choicesBox.appendChild(btn);
+    });
+}
+
+function makeChoice(option) {
+    // Actualizar confianza
+    currentTrust += option.trustChange;
+    if(currentTrust > 100) currentTrust = 100;
+    if(currentTrust < 0) currentTrust = 0;
+    
+    updateTrustBar();
+
+    // Mostrar Feedback
+    const modal = document.getElementById('fb-modal');
+    const icon = document.getElementById('fb-icon');
+    const title = document.getElementById('fb-title');
+    const desc = document.getElementById('fb-desc');
+
+    if(option.type === 'positive') {
+        icon.innerText = "✨";
+        title.style.color = "#06d6a0"; // Verde
+    } else {
+        icon.innerText = "⚠️";
+        title.style.color = "#ff007f"; // Rojo
+    }
+
+    title.innerText = option.feedbackTitle;
+    desc.innerHTML = option.feedback; // Permite HTML para bold
+
+    modal.style.display = 'flex';
+    gsap.from(modal, {opacity: 0, duration: 0.3});
+}
+
+function nextScene() {
+    document.getElementById('fb-modal').style.display = 'none';
+    currentSceneIndex++;
+
+    if(currentSceneIndex < scenes.length) {
+        renderScene();
+    } else {
+        showFinalResult();
+    }
+}
+
+function showFinalResult() {
+    const dialogArea = document.querySelector('.dialogue-area');
+    let finalMsg = "";
+    let finalColor = "";
+
+    if(currentTrust >= 70) {
+        finalMsg = "¡PROCEDIMIENTO EXITOSO!<br>Has aplicado correctamente el enfoque diferencial, creando un espacio seguro y garantizando el registro adecuado.";
+        finalColor = "#06d6a0";
+        // Animación de éxito en avatar
+        gsap.to(".avatar-head", {backgroundColor: "#06d6a0", duration: 1});
+    } else {
+        finalMsg = "PROCEDIMIENTO FALLIDO.<br>La usuaria no se sintió segura. Es necesario reforzar las herramientas de transformación de actitudes y protocolos.";
+        finalColor = "#ff007f";
+        // Animación de fallo
+        gsap.to(".avatar-head", {backgroundColor: "#555", duration: 1});
+    }
+
+    dialogArea.innerHTML = `
+        <div style="text-align:center; padding:20px;">
+            <h2 style="color:${finalColor}; text-transform:uppercase; font-size:2rem;">${currentTrust}% DE CONFIANZA</h2>
+            <p style="font-size:1.2rem; margin-top:20px; color:#fff;">${finalMsg}</p>
+            <button class="choice-btn" style="margin:30px auto; justify-content:center;" onclick="location.reload()">REINICIAR SIMULACIÓN</button>
+        </div>
+    `;
+}
+
+// --- 3. UTILIDADES ---
+function updateTrustBar() {
+    const bar = document.getElementById('trust-bar');
+    bar.style.width = currentTrust + "%";
+    
+    // Cambiar color según nivel
+    if(currentTrust < 40) bar.style.background = "#ff007f";
+    else if(currentTrust < 70) bar.style.background = "#ff9e00";
+    else bar.style.background = "#06d6a0";
+}
+
+function typeWriter(text) {
+    const el = document.getElementById('typewriter-text');
+    el.innerHTML = "";
+    let i = 0;
+    
+    // Limpiar intervalo anterior si existe (por seguridad)
+    if(window.typeInterval) clearInterval(window.typeInterval);
+
+    window.typeInterval = setInterval(() => {
+        el.innerHTML += text.charAt(i);
+        i++;
+        if (i > text.length - 1) clearInterval(window.typeInterval);
+    }, 20); // Velocidad de tipeo
+}
+
+// GENERAR PARTÍCULAS
+const container = document.getElementById('simulation-container');
+for(let i=0; i<15; i++){
+    let p = document.createElement('div');
+    p.className = 'dust-particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.top = Math.random() * 100 + '%';
+    p.style.width = Math.random() * 4 + 'px';
+    p.style.height = p.style.width;
+    p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+    p.style.animationDelay = (Math.random() * 5) + 's';
+    container.appendChild(p);
+}
+
+// INICIAR
+renderScene();
+
+</script>

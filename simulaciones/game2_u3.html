@@ -1,0 +1,376 @@
+<!-- LIBRERÍAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@500&display=swap" rel="stylesheet">
+
+<style>
+/* --- ESTILOS DE FUERZA BRUTA (OVERRIDES) --- */
+
+/* 1. CONTENEDOR PRINCIPAL: Fondo negro sólido */
+#juris-final-container {
+    background-color: #020617 !important; /* Negro azulado sólido */
+    background-image: none !important;
+    width: 100%;
+    min-height: 800px;
+    height: auto;
+    font-family: 'Roboto', sans-serif;
+    color: white !important;
+    border: 2px solid #334155 !important;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+}
+
+/* 2. CABECERA */
+.final-header {
+    background-color: #0f172a !important; /* Sólido */
+    padding: 20px;
+    text-align: center;
+    border-bottom: 3px solid #06b6d4 !important;
+}
+.final-title {
+    color: #06b6d4 !important;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+/* 3. NAVEGACIÓN */
+.final-nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+    background-color: #1e293b !important; /* Gris oscuro sólido */
+    flex-wrap: wrap;
+}
+.final-btn {
+    background-color: #334155 !important; /* Gris medio sólido */
+    color: #ffffff !important;
+    border: 1px solid #94a3b8 !important;
+    padding: 15px 30px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    opacity: 1 !important; /* Forzar opacidad total */
+}
+.final-btn.active {
+    background-color: #06b6d4 !important; /* Cian sólido */
+    color: #000000 !important;
+    border-color: #fff !important;
+}
+
+/* 4. ÁREA DE CONTENIDO */
+.final-viewport {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+/* VISTA 1: TARJETAS DE TEORÍA */
+.theory-grid-final {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1100px;
+    display: none; /* Controlado por JS */
+}
+.theory-card-final {
+    background-color: #1e293b !important; /* Sólido */
+    color: #ffffff !important;
+    border: 1px solid #475569 !important;
+    border-top: 5px solid #d946ef !important; /* Magenta */
+    padding: 25px;
+    border-radius: 8px;
+    opacity: 1 !important;
+}
+
+/* VISTA 2: JUEGO */
+.game-container-final {
+    width: 100%;
+    max-width: 1200px;
+    display: none; /* Controlado por JS */
+    flex-direction: column;
+}
+
+.scenario-box {
+    background-color: #172554 !important; /* Azul oscuro sólido */
+    border-left: 5px solid #06b6d4 !important;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 5px;
+}
+.scenario-text {
+    color: #ffffff !important;
+    font-size: 1.1rem;
+    font-style: italic;
+    opacity: 1 !important;
+}
+
+/* COLUMNAS Y BOTONES DEL JUEGO */
+.columns-final {
+    display: flex;
+    gap: 30px;
+    width: 100%;
+    flex-wrap: wrap; /* RESPONSIVE */
+}
+.col-final {
+    flex: 1;
+    min-width: 300px; /* Evita que se aplasten */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.col-label-final {
+    background-color: #000000 !important;
+    color: #d946ef !important;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-family: 'Oswald', sans-serif;
+}
+
+/* BOTÓN DE OPCIÓN - BLINDADO CONTRA TRANSPARENCIA */
+.opt-btn-final {
+    background-color: #334155 !important; /* GRIS SÓLIDO */
+    background-image: none !important; /* Quitar gradientes del tema */
+    color: #ffffff !important;
+    padding: 20px;
+    border: 2px solid #64748b !important;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    opacity: 1 !important; /* OPACO SIEMPRE */
+    box-shadow: none !important;
+    position: relative;
+    z-index: 10;
+}
+
+/* ID CIRCULAR */
+.opt-id-final {
+    background-color: #000000 !important;
+    color: #06b6d4 !important;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border-radius: 50%;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+/* ESTADOS DEL BOTÓN */
+.opt-btn-final:hover {
+    background-color: #475569 !important;
+    border-color: #ffffff !important;
+}
+.opt-btn-final.selected {
+    background-color: #1e40af !important; /* Azul sólido */
+    border-color: #06b6d4 !important;
+    box-shadow: 0 0 0 3px #06b6d4 !important;
+}
+.opt-btn-final.matched {
+    background-color: #064e3b !important; /* Verde sólido */
+    border-color: #10b981 !important;
+    pointer-events: none;
+}
+
+/* FEEDBACK */
+.feedback-final {
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #000000 !important;
+    border: 1px solid #333;
+    text-align: center;
+    color: #06b6d4 !important;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+    .columns-final { flex-direction: column; }
+    .col-label-final { text-align: left; }
+}
+</style>
+
+<div id="juris-final-container">
+    
+    <div class="final-header">
+        <h2 class="final-title">Reconocimiento Jurídico (Unidad 3)</h2>
+    </div>
+
+    <div class="final-nav">
+        <button class="final-btn active" onclick="setViewFinal('theory')">📖 Ver Normativa</button>
+        <button class="final-btn" onclick="setViewFinal('game')">⚖️ Jugar Caso</button>
+    </div>
+
+    <div class="final-viewport">
+        
+        <!-- TEORÍA -->
+        <div id="view-theory-final" class="theory-grid-final" style="display: grid;">
+            <div class="theory-card-final">
+                <h3 style="color:#06b6d4; margin-top:0;">Sentencia T-033 de 2022</h3>
+                <p>Ordena incluir el marcador "No Binario" (NB) en documentos de identidad.</p>
+            </div>
+            <div class="theory-card-final">
+                <h3 style="color:#06b6d4; margin-top:0;">Sentencia T-527 de 2024</h3>
+                <p>Exige análisis de riesgo con enfoque diferencial estricto para personas trans.</p>
+            </div>
+            <div class="theory-card-final">
+                <h3 style="color:#06b6d4; margin-top:0;">No Discriminación</h3>
+                <p>Obligación activa del Estado de eliminar barreras administrativas.</p>
+            </div>
+            <div class="theory-card-final">
+                <h3 style="color:#06b6d4; margin-top:0;">Ajustes Institucionales</h3>
+                <p>Adaptar formularios y protocolos para respetar el nombre identitario.</p>
+            </div>
+        </div>
+
+        <!-- JUEGO -->
+        <div id="view-game-final" class="game-container-final">
+            
+            <div class="scenario-box">
+                <p class="scenario-text">
+                    "CASO #402: Alex (persona no binaria) solicita protección. El formulario solo tiene F/M. El funcionario exige usar el nombre antiguo porque 'el sistema no tiene otra opción'."
+                </p>
+            </div>
+
+            <p style="color:#fff !important; margin-bottom:15px; opacity:1 !important;">
+                INSTRUCCIÓN: Toca un <strong>HECHO</strong> (Izquierda) y su <strong>FUNDAMENTO</strong> (Derecha).
+            </p>
+
+            <div class="columns-final">
+                <!-- IZQUIERDA -->
+                <div class="col-final" id="col-left-final">
+                    <div class="col-label-final">OBSERVACIÓN DE HECHOS</div>
+                    
+                    <div class="opt-btn-final" onclick="gameClick('left', 0, this)">
+                        <div class="opt-id-final">1</div>
+                        <span>Formulario Binario (solo F/M)</span>
+                    </div>
+                    <div class="opt-btn-final" onclick="gameClick('left', 1, this)">
+                        <div class="opt-id-final">2</div>
+                        <span>Exigencia nombre antiguo</span>
+                    </div>
+                    <div class="opt-btn-final" onclick="gameClick('left', 2, this)">
+                        <div class="opt-id-final">3</div>
+                        <span>"El sistema no tiene opción"</span>
+                    </div>
+                </div>
+
+                <!-- DERECHA -->
+                <div class="col-final" id="col-right-final">
+                    <div class="col-label-final">FUNDAMENTO JURÍDICO</div>
+                    
+                    <div class="opt-btn-final" onclick="gameClick('right', 2, this)">
+                        <div class="opt-id-final">A</div>
+                        <span>Obligación Activa (Eliminar Barreras)</span>
+                    </div>
+                    <div class="opt-btn-final" onclick="gameClick('right', 0, this)">
+                        <div class="opt-id-final">B</div>
+                        <span>Sentencia T-033/22 (Marcador NB)</span>
+                    </div>
+                    <div class="opt-btn-final" onclick="gameClick('right', 1, this)">
+                        <div class="opt-id-final">C</div>
+                        <span>Derecho Identidad (Nombre Social)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feedback-final" id="feedback-msg-final">
+                ESPERANDO SELECCIÓN...
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// --- CONTROL DE VISTAS ---
+function setViewFinal(view) {
+    document.querySelectorAll('.final-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+
+    const theory = document.getElementById('view-theory-final');
+    const game = document.getElementById('view-game-final');
+
+    if(view === 'theory') {
+        game.style.display = 'none';
+        theory.style.display = 'grid';
+    } else {
+        theory.style.display = 'none';
+        game.style.display = 'flex';
+        // Pequeña animación de entrada
+        gsap.from(".opt-btn-final", {x: 20, opacity: 0, stagger: 0.1, clearProps:"all"});
+    }
+}
+
+// --- JUEGO ---
+let leftSelF = null;
+let rightSelF = null;
+let pairsF = 0;
+
+function gameClick(side, id, el) {
+    if(el.classList.contains('matched')) return;
+
+    const fb = document.getElementById('feedback-msg-final');
+
+    // Reset de la columna actual
+    const parentId = side === 'left' ? 'col-left-final' : 'col-right-final';
+    document.getElementById(parentId).querySelectorAll('.opt-btn-final').forEach(b => b.classList.remove('selected'));
+    
+    el.classList.add('selected');
+
+    if(side === 'left') leftSelF = {id, el};
+    else rightSelF = {id, el};
+
+    // Validar
+    if(leftSelF && rightSelF) {
+        if(leftSelF.id === rightSelF.id) {
+            // Correcto
+            fb.innerText = ">> ¡CONEXIÓN CORRECTA!";
+            fb.style.color = "#10b981"; // Verde brillante
+
+            leftSelF.el.classList.add('matched');
+            rightSelF.el.classList.add('matched');
+            leftSelF.el.classList.remove('selected');
+            rightSelF.el.classList.remove('selected');
+
+            leftSelF = null;
+            rightSelF = null;
+            pairsF++;
+
+            if(pairsF === 3) {
+                fb.innerText = ">> CASO COMPLETADO: AJUSTES REQUERIDOS.";
+                fb.style.color = "#d946ef";
+            }
+        } else {
+            // Incorrecto
+            fb.innerText = ">> ERROR: NO CORRESPONDE.";
+            fb.style.color = "#ef4444"; // Rojo
+
+            gsap.to([leftSelF.el, rightSelF.el], {x: 5, duration: 0.1, yoyo: true, repeat: 3});
+
+            setTimeout(() => {
+                leftSelF.el.classList.remove('selected');
+                rightSelF.el.classList.remove('selected');
+                leftSelF = null;
+                rightSelF = null;
+                fb.innerText = "INTENTA DE NUEVO...";
+                fb.style.color = "#06b6d4";
+            }, 1000);
+        }
+    }
+}
+</script>

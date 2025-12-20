@@ -1,0 +1,306 @@
+<!-- LIBRERÍAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* --- VARIABLES SÓLIDAS (ALTO CONTRASTE) --- */
+:root {
+    --sys-bg: #0b0c15;       /* Fondo Negro/Azul */
+    --sys-panel: #151621;    /* Panel Gris Oscuro */
+    --alert-red: #ef4444;    /* Falla */
+    --success-green: #22c55e; /* Reparado */
+    --tech-cyan: #06b6d4;    /* Texto/Bordes */
+    --text-main: #ffffff;
+}
+
+#policy-repair-station {
+    width: 100%;
+    min-height: 850px;
+    height: auto;
+    background-color: var(--sys-bg) !important;
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-main) !important;
+    border: 2px solid #333 !important;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- HEADER INSTRUCTIVO --- */
+.station-header {
+    text-align: center;
+    border-bottom: 2px solid var(--tech-cyan);
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+.station-title {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    color: var(--tech-cyan) !important;
+    margin: 0;
+    text-transform: uppercase;
+}
+.station-desc {
+    color: #ccc !important; margin-top: 10px; font-size: 1rem;
+    background: rgba(255,255,255,0.1); display: inline-block; padding: 10px 20px; border-radius: 5px;
+}
+
+/* --- ZONA DE FALLAS (ALERTAS) --- */
+.failures-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.failure-card {
+    background-color: var(--sys-panel) !important;
+    border: 2px solid var(--alert-red) !important;
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    position: relative;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    opacity: 1 !important;
+}
+.failure-card:hover { transform: translateY(-5px); background-color: #2a1b1b !important; }
+
+/* Estado Reparado */
+.failure-card.repaired {
+    border-color: var(--success-green) !important;
+    background-color: #0f2e1b !important;
+    cursor: default; pointer-events: none;
+}
+
+.icon-status { font-size: 3rem; margin-bottom: 10px; }
+.card-title { font-family: 'Chakra Petch', sans-serif; font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; color: white !important;}
+.card-desc { font-size: 0.9rem; color: #bbb !important; }
+.action-hint { 
+    margin-top: 15px; background: var(--alert-red); color: white; padding: 5px 10px; 
+    font-size: 0.8rem; font-weight: bold; border-radius: 4px; text-transform: uppercase;
+}
+.repaired .action-hint { background: var(--success-green); content: "SISTEMA OPERATIVO"; }
+
+/* --- PANEL DE REPARACIÓN (HERRAMIENTAS) --- */
+/* Este panel aparece solo cuando seleccionas una falla */
+.repair-console {
+    background-color: #1a1c29 !important;
+    border: 1px solid var(--tech-cyan);
+    padding: 30px;
+    border-radius: 10px;
+    display: none; /* Oculto inicialmente */
+    animation: slideUp 0.5s ease-out;
+}
+
+.console-title {
+    color: var(--tech-cyan); font-family: 'Chakra Petch', sans-serif; font-size: 1.5rem; margin-top: 0;
+    border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 20px;
+}
+
+.tools-grid {
+    display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;
+}
+
+.tool-btn {
+    background-color: #2d3748 !important;
+    color: white !important;
+    border: 1px solid #4a5568 !important;
+    padding: 15px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    flex: 1 1 200px;
+    display: flex; align-items: center; gap: 10px;
+    transition: 0.2s;
+    font-weight: bold;
+}
+.tool-btn:hover { background-color: #4a5568 !important; border-color: white !important; }
+.tool-icon { font-size: 1.5rem; }
+
+/* --- MODAL DE INFORMACIÓN (SUCCESS) --- */
+.info-modal {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    background-color: rgba(11, 12, 21, 0.98) !important; /* Fondo casi sólido */
+    z-index: 100;
+    display: none; flex-direction: column; justify-content: center; align-items: center;
+    padding: 20px; box-sizing: border-box; text-align: center;
+}
+.modal-content { max-width: 600px; animation: popIn 0.3s; }
+.modal-check { font-size: 4rem; color: var(--success-green); margin-bottom: 20px; display: block; }
+.modal-h { font-family: 'Chakra Petch', sans-serif; font-size: 2rem; color: var(--success-green); margin: 0 0 20px 0; }
+.modal-p { font-size: 1.1rem; line-height: 1.6; color: white; margin-bottom: 30px; }
+.modal-btn {
+    background: var(--tech-cyan); color: #000; border: none; padding: 12px 30px;
+    font-size: 1rem; font-weight: bold; cursor: pointer; border-radius: 5px;
+}
+
+/* ANIMACIONES */
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+
+.failure-card:not(.repaired) { animation: pulseRed 2s infinite; }
+
+</style>
+
+<div id="policy-repair-station">
+    
+    <div class="station-header">
+        <h2 class="station-title">Misión 1: Tablero de Control</h2>
+        <div class="station-desc">INSTRUCCIONES: Haz clic en las FALLAS ROJAS para repararlas con la herramienta correcta.</div>
+    </div>
+
+    <!-- 1. GRILLA DE PROBLEMAS (Siempre visibles hasta reparar) -->
+    <div class="failures-grid">
+        
+        <!-- Falla 1 -->
+        <div class="failure-card" id="fail-1" onclick="openRepair(1)">
+            <div class="icon-status" id="icon-1">⚠️</div>
+            <div class="card-title">VACÍO NORMATIVO</div>
+            <div class="card-desc">No hay sanciones claras para violencias ni licencias de maternidad definidas.</div>
+            <div class="action-hint" id="hint-1">¡CLIC PARA REPARAR!</div>
+        </div>
+
+        <!-- Falla 2 -->
+        <div class="failure-card" id="fail-2" onclick="openRepair(2)">
+            <div class="icon-status" id="icon-2">⚠️</div>
+            <div class="card-title">FALTA DE RUMBO</div>
+            <div class="card-desc">La institución no tiene una hoja de ruta clara para la equidad a largo plazo.</div>
+            <div class="action-hint" id="hint-2">¡CLIC PARA REPARAR!</div>
+        </div>
+
+        <!-- Falla 3 -->
+        <div class="failure-card" id="fail-3" onclick="openRepair(3)">
+            <div class="icon-status" id="icon-3">⚠️</div>
+            <div class="card-title">SIN RECURSOS</div>
+            <div class="card-desc">Hay buenas intenciones, pero no hay dinero asignado específicamente para género.</div>
+            <div class="action-hint" id="hint-3">¡CLIC PARA REPARAR!</div>
+        </div>
+
+    </div>
+
+    <!-- 2. CONSOLA DE REPARACIÓN (Aparece abajo al hacer clic) -->
+    <div class="repair-console" id="console">
+        <div class="console-title" id="console-title">SELECCIONA LA HERRAMIENTA CORRECTA:</div>
+        
+        <div class="tools-grid">
+            <!-- Herramienta A -->
+            <div class="tool-btn" onclick="tryFix('norma')">
+                <span class="tool-icon">⚖️</span>
+                <span>Leyes 1257 y 1822</span>
+            </div>
+            <!-- Herramienta B -->
+            <div class="tool-btn" onclick="tryFix('plan')">
+                <span class="tool-icon">🗺️</span>
+                <span>CONPES Social 161</span>
+            </div>
+            <!-- Herramienta C -->
+            <div class="tool-btn" onclick="tryFix('presupuesto')">
+                <span class="tool-icon">💰</span>
+                <span>Presupuestos Sensibles (PSG)</span>
+            </div>
+        </div>
+        <div id="console-error" style="color:#ef4444; margin-top:15px; font-weight:bold; display:none;">❌ HERRAMIENTA INCORRECTA. INTENTA OTRA.</div>
+    </div>
+
+    <!-- 3. MODAL DE ÉXITO (EXPLICACIÓN) -->
+    <div class="info-modal" id="success-modal">
+        <div class="modal-content">
+            <span class="modal-check">✅</span>
+            <h3 class="modal-h">¡SISTEMA REPARADO!</h3>
+            <p class="modal-p" id="modal-text">...</p>
+            <button class="modal-btn" onclick="closeModal()">ENTENDIDO, CONTINUAR</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// --- ESTADO ---
+let activeProblem = 0; // 1, 2 o 3
+let repairsCompleted = 0;
+
+// DATOS EDUCATIVOS
+const feedbackData = {
+    1: "<strong>Has instalado el Marco Normativo.</strong><br>La Ley 1257 de 2008 y la Ley 1822 de 2017 cubren los vacíos legales, proporcionando sanciones y protección laboral.",
+    2: "<strong>Has instalado la Planificación.</strong><br>El CONPES Social 161 define la política pública nacional de equidad. Ahora la institución sabe hacia dónde va.",
+    3: "<strong>Has instalado el Presupuesto (PSG).</strong><br>Los Presupuestos Sensibles al Género garantizan que el dinero llegue a los programas de prevención. Sin dinero, no hay política."
+};
+
+// 1. ABRIR CONSOLA
+function openRepair(id) {
+    // Si ya está reparado, no hacer nada
+    if(document.getElementById(`fail-${id}`).classList.contains('repaired')) return;
+
+    activeProblem = id;
+    
+    // UI Updates
+    document.getElementById('console').style.display = 'block';
+    document.getElementById('console-error').style.display = 'none';
+    
+    // Scroll suave hacia la consola para móviles
+    document.getElementById('console').scrollIntoView({behavior: "smooth"});
+
+    // Actualizar título consola
+    let problemName = "";
+    if(id===1) problemName = "VACÍO NORMATIVO";
+    if(id===2) problemName = "FALTA DE RUMBO";
+    if(id===3) problemName = "SIN RECURSOS";
+    
+    document.getElementById('console-title').innerText = `REPARANDO: ${problemName} - SELECCIONA HERRAMIENTA:`;
+}
+
+// 2. INTENTAR REPARAR
+function tryFix(toolType) {
+    let success = false;
+
+    // Lógica simple de coincidencia
+    if (activeProblem === 1 && toolType === 'norma') success = true;
+    if (activeProblem === 2 && toolType === 'plan') success = true;
+    if (activeProblem === 3 && toolType === 'presupuesto') success = true;
+
+    if (success) {
+        // ÉXITO
+        document.getElementById('console').style.display = 'none';
+        
+        // Actualizar Tarjeta visualmente
+        const card = document.getElementById(`fail-${activeProblem}`);
+        card.classList.add('repaired');
+        document.getElementById(`icon-${activeProblem}`).innerText = "🛡️";
+        document.getElementById(`hint-${activeProblem}`).innerText = "SISTEMA SEGURO";
+        document.getElementById(`hint-${activeProblem}`).style.background = "#22c55e";
+
+        // Mostrar Modal Educativo
+        const modal = document.getElementById('success-modal');
+        document.getElementById('modal-text').innerHTML = feedbackData[activeProblem];
+        modal.style.display = 'flex';
+        
+        repairsCompleted++;
+        activeProblem = 0;
+
+    } else {
+        // ERROR
+        const err = document.getElementById('console-error');
+        err.style.display = 'block';
+        // Pequeña vibración
+        gsap.from(err, {x:10, duration:0.1, repeat:3, yoyo:true});
+    }
+}
+
+// 3. CERRAR MODAL
+function closeModal() {
+    document.getElementById('success-modal').style.display = 'none';
+    
+    if(repairsCompleted === 3) {
+        // Mensaje Final en el Header
+        document.querySelector('.station-title').innerText = "¡SISTEMA COMPLETAMENTE OPERATIVO!";
+        document.querySelector('.station-title').style.color = "#22c55e";
+        document.querySelector('.station-desc').innerText = "Has desmontado el patriarcado institucional aplicando las herramientas correctas.";
+    }
+}
+
+</script>

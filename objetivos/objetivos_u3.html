@@ -1,0 +1,372 @@
+<!-- LIBRERÍAS: GSAP + Fuentes Modernas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* --- 1. ESTÉTICA "AURORA FLUIDA" --- */
+:root {
+    --fluid-bg: #0f172a;
+    --glass: rgba(255, 255, 255, 0.1);
+    --border: rgba(255, 255, 255, 0.2);
+    --accent-pink: #d946ef;
+    --accent-cyan: #06b6d4;
+    --accent-purple: #8b5cf6;
+    --text-white: #f8fafc;
+}
+
+#prism-container {
+    width: 100%;
+    min-height: 750px; /* Altura adaptable */
+    height: auto;
+    background-color: var(--fluid-bg);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-white);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+/* Fondo Aurora Animado */
+.aurora-blob {
+    position: absolute;
+    filter: blur(80px);
+    opacity: 0.6;
+    border-radius: 50%;
+    animation: floatAurora 10s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 0;
+}
+.blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--accent-purple); }
+.blob-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: var(--accent-cyan); animation-delay: -5s; }
+.blob-3 { top: 40%; left: 40%; width: 30vw; height: 30vw; background: var(--accent-pink); animation-duration: 15s; }
+
+@keyframes floatAurora {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(30px, -30px) scale(1.1); }
+}
+
+/* Grid de Ruido (Textura) */
+.noise-overlay {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+    z-index: 1; pointer-events: none;
+}
+
+/* --- 2. INTERFAZ --- */
+.prism-header {
+    position: relative; z-index: 10;
+    padding: 20px 30px;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+}
+
+.prism-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    background: linear-gradient(to right, #fff, #cbd5e1);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin: 0;
+}
+
+.prism-nav { display: flex; gap: 10px; }
+.nav-pill {
+    padding: 8px 16px; border-radius: 20px;
+    background: var(--glass); border: 1px solid var(--border);
+    font-size: 0.8rem; cursor: pointer; transition: 0.3s;
+}
+.nav-pill:hover, .nav-pill.active { background: white; color: black; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+
+/* --- CONTENIDO --- */
+.prism-content {
+    flex: 1; position: relative; z-index: 5;
+    padding: 30px; display: flex; flex-direction: column; align-items: center;
+    overflow-y: auto;
+}
+
+/* SECCIÓN 1: CONCEPTOS (Tarjetas Holográficas) */
+.concept-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px; width: 100%; max-width: 1000px;
+    display: none; /* Controlado por JS */
+}
+.holo-card {
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+    border-radius: 15px; padding: 25px;
+    backdrop-filter: blur(5px); transition: 0.3s;
+    position: relative; overflow: hidden;
+}
+.holo-card::before {
+    content:''; position: absolute; top:0; left:-100%; width:100%; height:100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: 0.5s;
+}
+.holo-card:hover::before { left: 100%; }
+.holo-card:hover { transform: translateY(-5px); border-color: var(--accent-cyan); box-shadow: 0 10px 30px rgba(6, 182, 212, 0.2); }
+.holo-card h3 { color: var(--accent-cyan); margin-top:0; font-family: 'Space Grotesk', sans-serif; }
+
+/* SECCIÓN 2: SIMULADOR (CHAT) */
+.sim-container {
+    width: 100%; max-width: 600px;
+    background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+    border-radius: 20px; overflow: hidden;
+    display: flex; flex-direction: column;
+    height: 500px; /* Altura fija para el chat */
+    display: none; /* Controlado por JS */
+}
+
+.chat-window {
+    flex: 1; padding: 20px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 15px;
+}
+.chat-bubble {
+    padding: 15px; border-radius: 15px; max-width: 80%;
+    font-size: 0.95rem; line-height: 1.5; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.bot {
+    background: rgba(255,255,255,0.1); border-top-left-radius: 2px; align-self: flex-start;
+    border-left: 3px solid var(--accent-pink);
+}
+.user-choice {
+    background: rgba(6, 182, 212, 0.2); border-bottom-right-radius: 2px; align-self: flex-end;
+    border-right: 3px solid var(--accent-cyan); text-align: right;
+}
+
+.controls-area {
+    padding: 20px; background: rgba(0,0,0,0.4);
+    border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 10px;
+}
+.option-btn {
+    padding: 12px; border-radius: 10px; border: 1px solid var(--border);
+    background: rgba(255,255,255,0.05); color: white; cursor: pointer;
+    transition: 0.2s; text-align: left; font-size: 0.9rem;
+}
+.option-btn:hover { background: rgba(255,255,255,0.15); border-color: var(--accent-purple); }
+
+/* SECCIÓN 3: OBJETIVOS (INFO) */
+.info-section {
+    width: 100%; max-width: 800px; display: none;
+    background: rgba(0,0,0,0.4); padding: 30px; border-radius: 20px; border: 1px solid var(--border);
+}
+
+/* ANIMACIONES */
+@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+    #prism-container { border-radius: 0; min-height: 100vh; }
+    .prism-header { flex-direction: column; align-items: flex-start; }
+    .sim-container { height: 60vh; border: none; background: transparent; }
+    .chat-bubble { max-width: 90%; font-size: 0.9rem; }
+}
+
+</style>
+
+<div id="prism-container">
+    <div class="noise-overlay"></div>
+    <div class="aurora-blob blob-1"></div>
+    <div class="aurora-blob blob-2"></div>
+    <div class="aurora-blob blob-3"></div>
+
+    <div class="prism-header">
+        <h2 class="prism-title">Unidad 3: Identidades Diversas</h2>
+        <div class="prism-nav">
+            <div class="nav-pill" onclick="showSection('info', this)">🎯 Objetivos</div>
+            <div class="nav-pill active" onclick="showSection('concepts', this)">🧠 Conceptos</div>
+            <div class="nav-pill" onclick="showSection('sim', this)">💬 Simulador</div>
+        </div>
+    </div>
+
+    <div class="prism-content">
+        
+        <!-- SECCIÓN 1: OBJETIVOS & JUSTIFICACIÓN -->
+        <div id="sec-info" class="info-section">
+            <h3 style="color:var(--accent-pink)">OBJETIVOS DE APRENDIZAJE</h3>
+            <ul style="line-height:1.6; padding-left:20px;">
+                <li>Analizar críticamente el sistema sexo-género y tensiones transfeministas.</li>
+                <li>Reconocer el marco jurídico para identidades no binarias y trans.</li>
+                <li>Identificar violencias específicas y proponer estrategias.</li>
+                <li>Aplicar enfoque diferencial y comunicación inclusiva.</li>
+            </ul>
+            <div style="margin-top:20px; padding:15px; background:rgba(255,255,255,0.05); border-left:3px solid var(--accent-cyan);">
+                <strong>JUSTIFICACIÓN:</strong> Esta unidad es clave para comprender la diversidad y los retos institucionales, fortaleciendo la capacidad para garantizar la no discriminación.
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: CONCEPTOS CLAVE (TARJETAS) -->
+        <div id="sec-concepts" class="concept-grid" style="display:grid;">
+            <div class="holo-card">
+                <h3>Sistema Sexo-Género</h3>
+                <p>Construcción social que asigna roles binarios. Las perspectivas transfeministas cuestionan esta rigidez, proponiendo un espectro fluido.</p>
+            </div>
+            <div class="holo-card">
+                <h3>Marco Jurídico</h3>
+                <p>Jurisprudencia que protege el libre desarrollo de la personalidad. Incluye el reconocimiento de identidades Trans y No Binarias en documentos oficiales.</p>
+            </div>
+            <div class="holo-card">
+                <h3>Enfoque Diferencial</h3>
+                <p>Reconoce que las violencias afectan de forma distinta según la orientación sexual e identidad de género. Exige respuestas institucionales adaptadas.</p>
+            </div>
+            <div class="holo-card">
+                <h3>Lenguaje Inclusivo</h3>
+                <p>Prácticas comunicativas que evitan el sexismo y la asunción de la cisnormatividad en la atención al ciudadano.</p>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: SIMULADOR (CHAT) -->
+        <div id="sec-sim" class="sim-container">
+            <div class="chat-window" id="chat-feed">
+                <div class="chat-bubble bot">
+                    👋 <strong>Sistema de Práctica:</strong><br>
+                    Bienvenido/a. Estás en la ventanilla de atención. Llega una persona con expresión de género femenina, pero su documento de identidad tiene nombre masculino ("Juan").<br><br>
+                    ¿Cómo procedes?
+                </div>
+            </div>
+            
+            <div class="controls-area" id="sim-controls">
+                <button class="option-btn" onclick="playTurn(1)">A. "Señor Juan, siga por aquí." (Usar dato del documento)</button>
+                <button class="option-btn" onclick="playTurn(2)">B. "Buenos días, ¿cómo le gustaría ser llamada/o?" (Preguntar pronombre)</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// --- LÓGICA DE NAVEGACIÓN ---
+function showSection(id, btn) {
+    // Ocultar todo
+    document.getElementById('sec-info').style.display = 'none';
+    document.getElementById('sec-concepts').style.display = 'none';
+    document.getElementById('sec-sim').style.display = 'none';
+    
+    // Quitar active
+    document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+
+    // Mostrar selección (con animación GSAP)
+    const target = document.getElementById('sec-' + id);
+    if(id === 'concepts') target.style.display = 'grid';
+    else if(id === 'sim') target.style.display = 'flex';
+    else target.style.display = 'block';
+
+    btn.classList.add('active');
+    
+    gsap.fromTo(target, {opacity: 0, y: 10}, {opacity: 1, y: 0, duration: 0.4});
+}
+
+// --- LÓGICA DEL SIMULADOR (JUEGO DE ROLES) ---
+let simStep = 0;
+
+const simData = [
+    {
+        // PASO 0 (INICIO - YA RENDERIZADO EN HTML)
+    },
+    {
+        // PASO 1: RESPUESTA AL NOMBRE
+        options: [
+            {
+                text: "A. Usar el nombre del documento sin preguntar.",
+                correct: false,
+                feedback: "⚠️ <strong>Error de Enfoque Diferencial:</strong> Llamar a una persona trans por su 'nombre muerto' (deadname) es revictimizante y viola el reconocimiento de su identidad.",
+                nextStep: 2
+            },
+            {
+                text: "B. Preguntar nombre identitario o pronombre.",
+                correct: true,
+                feedback: "✨ <strong>¡Correcto!</strong> Siempre se debe preguntar cómo prefiere ser tratada la persona, independientemente del documento. Esto garantiza el reconocimiento.",
+                nextStep: 2
+            }
+        ]
+    },
+    {
+        // PASO 2: VIOLENCIA ESPECÍFICA
+        question: "La persona menciona que ha recibido amenazas por su identidad de género en su barrio. ¿Qué acción tomas?",
+        options: [
+            {
+                text: "A. Registrarlo como 'problemas entre vecinos' (Generalizar).",
+                correct: false,
+                feedback: "⚠️ <strong>Incorrecto.</strong> Esto invisibiliza la violencia por prejuicio. Se debe identificar la violencia específica hacia identidades diversas.",
+                nextStep: 3
+            },
+            {
+                text: "B. Activar ruta de riesgo por discriminación/prejuicio.",
+                correct: true,
+                feedback: "✨ <strong>¡Muy bien!</strong> Identificar la violencia específica (crímenes por prejuicio) permite activar las medidas de protección adecuadas.",
+                nextStep: 3
+            }
+        ]
+    },
+    {
+        // PASO 3: FINAL
+        question: "🎉 <strong>Simulación Finalizada.</strong><br>Has aplicado el reconocimiento institucional y el enfoque diferencial.",
+        options: [] // Fin del juego
+    }
+];
+
+function playTurn(optionIndex) {
+    const chatFeed = document.getElementById('chat-feed');
+    const controls = document.getElementById('sim-controls');
+    
+    // 1. Mostrar elección del usuario
+    const userBubble = document.createElement('div');
+    userBubble.className = 'chat-bubble user-choice';
+    // Obtener texto de la opción seleccionada (lógica simplificada para el ejemplo)
+    let selectedText = "";
+    if(simStep === 0) selectedText = optionIndex === 1 ? simData[1].options[0].text : simData[1].options[1].text;
+    else selectedText = optionIndex === 1 ? simData[simStep + 1].options[0].text : simData[simStep + 1].options[1].text;
+    
+    userBubble.innerHTML = "Tú: " + selectedText;
+    chatFeed.appendChild(userBubble);
+
+    // 2. Procesar lógica (Feedback)
+    let currentStepData = simStep === 0 ? simData[1] : simData[simStep+1];
+    let choiceData = optionIndex === 1 ? currentStepData.options[0] : currentStepData.options[1];
+    
+    setTimeout(() => {
+        const botBubble = document.createElement('div');
+        botBubble.className = 'chat-bubble bot';
+        botBubble.innerHTML = choiceData.feedback;
+        if(choiceData.correct) botBubble.style.borderLeftColor = 'var(--accent-cyan)';
+        else botBubble.style.borderLeftColor = '#ef4444'; // Rojo error
+        chatFeed.appendChild(botBubble);
+        
+        // Scroll al fondo
+        chatFeed.scrollTop = chatFeed.scrollHeight;
+
+        // 3. Siguiente Pregunta (Si existe)
+        simStep++;
+        if(simStep < simData.length - 1 && simStep < 2) { // Limite de ejemplo
+             setTimeout(() => {
+                 const nextQ = document.createElement('div');
+                 nextQ.className = 'chat-bubble bot';
+                 nextQ.innerHTML = simData[simStep+1].question;
+                 chatFeed.appendChild(nextQ);
+                 chatFeed.scrollTop = chatFeed.scrollHeight;
+                 
+                 // Actualizar botones
+                 let nextOpts = simData[simStep+1].options;
+                 controls.innerHTML = `
+                    <button class="option-btn" onclick="playTurn(1)">${nextOpts[0].text}</button>
+                    <button class="option-btn" onclick="playTurn(2)">${nextOpts[1].text}</button>
+                 `;
+             }, 1500);
+        } else if (simStep >= 2) {
+             // Fin
+             setTimeout(() => {
+                 const endMsg = document.createElement('div');
+                 endMsg.className = 'chat-bubble bot';
+                 endMsg.innerHTML = "Has completado la práctica de atención inclusiva.";
+                 chatFeed.appendChild(endMsg);
+                 chatFeed.scrollTop = chatFeed.scrollHeight;
+                 controls.innerHTML = `<button class="option-btn" onclick="location.reload()">Reiniciar Simulación</button>`;
+             }, 1500);
+        }
+
+    }, 600);
+}
+
+</script>

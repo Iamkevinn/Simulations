@@ -1,0 +1,380 @@
+<!-- LIBRERÍAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* --- VARIABLES DE ALTO CONTRASTE (SÓLIDOS) --- */
+:root {
+    --mz-bg: #000000;
+    --mz-panel: #111111;
+    --mz-active: #ff0055; /* Rojo Neón para lo actual/bloqueo */
+    --mz-future: #333333; /* Gris para lo pendiente */
+    --mz-done: #00e5ff;   /* Cian para lo resuelto */
+    --mz-text: #ffffff;
+}
+
+#justice-visible-container {
+    width: 100%;
+    min-height: 900px;
+    height: auto;
+    background-color: var(--mz-bg) !important;
+    font-family: 'Roboto', sans-serif;
+    color: var(--mz-text);
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+/* DECORACIÓN DE FONDO */
+.grid-lines {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    background-image: 
+        linear-gradient(#222 1px, transparent 1px),
+        linear-gradient(90deg, #222 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0; pointer-events: none;
+}
+
+/* HEADER */
+.vis-header {
+    text-align: center; margin-bottom: 40px; z-index: 10;
+    border-bottom: 2px solid var(--mz-done); padding-bottom: 20px;
+}
+.vis-title {
+    font-family: 'Orbitron', sans-serif; color: var(--mz-done);
+    font-size: clamp(1.5rem, 4vw, 2.5rem); margin: 0; text-transform: uppercase;
+}
+.vis-desc { color: #ccc; margin-top: 10px; }
+
+/* --- CONEXIÓN VERTICAL --- */
+.timeline-track {
+    position: absolute; top: 120px; bottom: 100px; left: 50%; width: 6px;
+    background: #222; transform: translateX(-50%); z-index: 1;
+}
+.timeline-fill {
+    position: absolute; top: 120px; left: 50%; width: 6px;
+    background: var(--mz-done); transform: translateX(-50%);
+    height: 0%; /* JS lo controla */
+    transition: height 0.5s ease; z-index: 1;
+    box-shadow: 0 0 15px var(--mz-done);
+}
+
+/* --- NODOS (ETAPAS) --- */
+.nodes-container {
+    display: flex; flex-direction: column; gap: 40px; z-index: 5;
+    position: relative;
+}
+
+.node-box {
+    background: var(--mz-panel);
+    border: 2px solid #444;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s;
+    opacity: 1 !important; /* FORZAR VISIBILIDAD SIEMPRE */
+    position: relative;
+}
+
+/* ESTADO: FUTURO (Gris) */
+.node-box.future {
+    border-color: #333;
+    color: #666;
+    pointer-events: none; /* No clicable */
+}
+.node-box.future .node-icon { background: #222; color: #444; border-color: #333; }
+
+/* ESTADO: ACTIVO (Rojo - Clicable) */
+.node-box.active {
+    border-color: var(--mz-active);
+    box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
+    cursor: pointer;
+    transform: scale(1.02);
+}
+.node-box.active .node-icon {
+    background: #000; color: var(--mz-active); border-color: var(--mz-active);
+    animation: pulseIcon 1.5s infinite;
+}
+.node-box.active::after {
+    content: 'CLICK PARA INVESTIGAR';
+    position: absolute; top: -12px; right: 20px;
+    background: var(--mz-active); color: white;
+    font-size: 0.7rem; font-weight: bold; padding: 2px 8px; border-radius: 4px;
+}
+
+/* ESTADO: RESUELTO (Azul) */
+.node-box.solved {
+    border-color: var(--mz-done);
+    color: white;
+}
+.node-box.solved .node-icon {
+    background: var(--mz-done); color: #000; border-color: var(--mz-done);
+}
+
+/* ICONO CIRCULAR */
+.node-icon {
+    width: 60px; height: 60px; border-radius: 50%;
+    border: 3px solid #444;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; font-weight: bold;
+    flex-shrink: 0; background: #000; z-index: 2;
+}
+
+/* TEXTOS */
+.node-content { flex: 1; }
+.nc-head { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 5px; }
+.nc-body { font-size: 0.95rem; line-height: 1.4; }
+
+/* --- HUD HERRAMIENTAS (ABAJO) --- */
+.tools-dock {
+    position: sticky; bottom: 0; left: 0; width: 100%;
+    background: #080808; border-top: 3px solid var(--mz-done);
+    padding: 20px; z-index: 50; margin-top: auto;
+}
+.dock-title { text-align: center; color: var(--mz-done); font-weight: bold; margin-bottom: 15px; letter-spacing: 1px; }
+
+.dock-grid {
+    display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
+}
+.tool-btn {
+    background: #222; color: white; border: 1px solid #555;
+    padding: 12px 20px; cursor: pointer; font-weight: bold; font-family: 'Roboto', sans-serif;
+    border-radius: 5px; flex: 1 1 150px; text-align: center;
+    transition: 0.2s;
+}
+.tool-btn:hover { background: #333; border-color: white; }
+.tool-btn:active { background: var(--mz-done); color: black; }
+
+/* --- MODALES IN-GAME --- */
+.game-modal {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.95); z-index: 100;
+    display: none; flex-direction: column; justify-content: center; align-items: center;
+    padding: 20px; text-align: center;
+}
+.gm-box {
+    border: 2px solid var(--mz-active); padding: 30px; background: #111;
+    max-width: 500px; border-radius: 10px;
+}
+.gm-icon { font-size: 3rem; margin-bottom: 15px; }
+.gm-title { color: var(--mz-active); font-family: 'Orbitron', sans-serif; font-size: 1.5rem; margin-bottom: 15px; }
+.gm-text { color: #ddd; font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px; }
+.gm-close { 
+    background: #333; color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold;
+}
+
+/* Toast Notification */
+.toast-msg {
+    position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+    padding: 15px 30px; border-radius: 50px; font-weight: bold; color: white;
+    z-index: 200; display: none; box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+}
+
+@keyframes pulseIcon { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 0, 85, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0); } }
+
+</style>
+
+<div id="justice-visible-container">
+    <div class="grid-lines"></div>
+    
+    <div id="toast" class="toast-msg"></div>
+
+    <div class="vis-header">
+        <h2 class="vis-title">El Laberinto de la Justicia</h2>
+        <div class="vis-desc">Misión 5: Identifica y repara las barreras de acceso.</div>
+    </div>
+
+    <!-- LINEAS DE TIEMPO -->
+    <div class="timeline-track"></div>
+    <div class="timeline-fill" id="fill-line"></div>
+
+    <!-- NODOS VISIBLES -->
+    <div class="nodes-container">
+        
+        <!-- NODO 1 -->
+        <div class="node-box active" id="n1" onclick="openNode(1)">
+            <div class="node-icon">!</div>
+            <div class="node-content">
+                <div class="nc-head">ETAPA 1: RECEPCIÓN</div>
+                <div class="nc-body" id="txt-1">BARRERA DETECTADA. Clic para inspeccionar.</div>
+            </div>
+        </div>
+
+        <!-- NODO 2 (VISIBLE PERO GRIS) -->
+        <div class="node-box future" id="n2" onclick="openNode(2)">
+            <div class="node-icon">2</div>
+            <div class="node-content">
+                <div class="nc-head">ETAPA 2: INVESTIGACIÓN</div>
+                <div class="nc-body" id="txt-2">Pendiente de desbloqueo anterior...</div>
+            </div>
+        </div>
+
+        <!-- NODO 3 (VISIBLE PERO GRIS) -->
+        <div class="node-box future" id="n3" onclick="openNode(3)">
+            <div class="node-icon">3</div>
+            <div class="node-content">
+                <div class="nc-head">ETAPA 3: REPARACIÓN</div>
+                <div class="nc-body" id="txt-3">Pendiente de desbloqueo anterior...</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- HERRAMIENTAS -->
+    <div class="tools-dock">
+        <div class="dock-title">PROTOCOLO DE ACCIÓN:</div>
+        <div class="dock-grid">
+            <button class="tool-btn" onclick="useTool('diligencia')">⚡ DEBIDA DILIGENCIA</button>
+            <button class="tool-btn" onclick="useTool('prevencion')">🛡️ NO REVICTIMIZACIÓN</button>
+            <button class="tool-btn" onclick="useTool('reparacion')">⚖️ REPARACIÓN INTEGRAL</button>
+        </div>
+    </div>
+
+    <!-- MODAL DE PROBLEMA -->
+    <div class="game-modal" id="problem-modal">
+        <div class="gm-box">
+            <div class="gm-icon">🚧</div>
+            <h3 class="gm-title" id="p-title">...</h3>
+            <p class="gm-text" id="p-desc">...</p>
+            <div style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">▼ CIERRA Y ELIGE UNA HERRAMIENTA ABAJO ▼</div>
+            <button class="gm-close" onclick="closePModal()">CERRAR VENTANA</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// --- DATOS ---
+const steps = [
+    {
+        id: 1,
+        title: "OMISIÓN Y PREJUICIO",
+        problem: "El funcionario rechazó la denuncia diciendo: 'Seguro es un lío de faldas'. Se negó el contexto de violencia de género.",
+        solution: "diligencia",
+        fix: "¡CORRECTO! La DEBIDA DILIGENCIA obliga a investigar sin prejuicios."
+    },
+    {
+        id: 2,
+        title: "REVICTIMIZACIÓN",
+        problem: "La víctima fue obligada a contar su historia 5 veces a diferentes personas, causándole daño psicológico.",
+        solution: "prevencion",
+        fix: "¡CORRECTO! Evitar la repetición es PREVENCIÓN DE REVICTIMIZACIÓN."
+    },
+    {
+        id: 3,
+        title: "ABANDONO ESTATAL",
+        problem: "El caso se cerró sin medidas de apoyo psicosocial ni garantías de no repetición.",
+        solution: "reparacion",
+        fix: "¡CORRECTO! Se requiere REPARACIÓN INTEGRAL (apoyo y garantías)."
+    }
+];
+
+let level = 1;
+let isInspecting = false;
+
+// 1. ABRIR INSPECCIÓN
+function openNode(id) {
+    if (id !== level) return; // Solo el actual funciona
+
+    isInspecting = true;
+    const data = steps[id - 1];
+
+    document.getElementById('p-title').innerText = data.title;
+    document.getElementById('p-desc').innerText = data.problem;
+    
+    // Animación simple de entrada
+    const modal = document.getElementById('problem-modal');
+    modal.style.display = 'flex';
+    gsap.from(".gm-box", {scale: 0.9, opacity: 0, duration: 0.2});
+}
+
+function closePModal() {
+    document.getElementById('problem-modal').style.display = 'none';
+}
+
+// 2. USAR HERRAMIENTA
+function useTool(key) {
+    if (!isInspecting) {
+        showToast("⚠️ Primero haz clic en la CAJA ROJA para ver el problema.", "orange");
+        return;
+    }
+
+    const data = steps[level - 1];
+
+    if (key === data.solution) {
+        // EXITO
+        closePModal();
+        showToast("✅ HERRAMIENTA CORRECTA", "#00e5ff");
+        
+        // Transformar Nodo Actual
+        const node = document.getElementById(`n${level}`);
+        node.classList.remove('active');
+        node.classList.add('solved');
+        node.querySelector('.node-icon').innerText = "✓";
+        document.getElementById(`txt-${level}`).innerHTML = `<span style='color:#00e5ff'>${data.fix}</span>`;
+
+        // Avanzar Línea
+        let h = 33 * level;
+        if(level===3) h = 100;
+        document.getElementById('fill-line').style.height = h + "%";
+
+        // Preparar Siguiente
+        level++;
+        isInspecting = false;
+
+        if (level <= 3) {
+            // Desbloquear siguiente
+            setTimeout(() => {
+                const next = document.getElementById(`n${level}`);
+                next.classList.remove('future');
+                next.classList.add('active');
+                next.querySelector('.node-icon').innerText = "!";
+                document.getElementById(`txt-${level}`).innerText = "BLOQUEO DETECTADO. Clic para inspeccionar.";
+                
+                // Scroll
+                next.scrollIntoView({behavior: "smooth", block: "center"});
+            }, 800);
+        } else {
+            // FIN
+            setTimeout(() => {
+                showToast("🎉 ¡JUSTICIA RESTAURADA!", "#00e5ff");
+                document.querySelector('.vis-title').style.color = "#00e5ff";
+            }, 1000);
+        }
+
+    } else {
+        // ERROR
+        showToast("❌ HERRAMIENTA INCORRECTA", "#ff0055");
+        // Shake modal si está abierto
+        if(document.getElementById('problem-modal').style.display === 'flex'){
+            gsap.to(".gm-box", {x:10, duration:0.1, yoyo:true, repeat:3});
+        }
+    }
+}
+
+// TOAST MSG
+function showToast(text, color) {
+    const t = document.getElementById('toast');
+    t.innerText = text;
+    t.style.background = color === 'orange' ? '#ff9900' : (color.includes('#') ? color : '#333');
+    t.style.color = color === '#00e5ff' ? '#000' : '#fff'; // Contraste
+    
+    t.style.display = 'block';
+    gsap.fromTo(t, {y:-20, opacity:0}, {y:0, opacity:1, duration:0.3});
+    
+    setTimeout(() => {
+        gsap.to(t, {y:-20, opacity:0, duration:0.3, onComplete:()=>t.style.display='none'});
+    }, 3000);
+}
+
+</script>

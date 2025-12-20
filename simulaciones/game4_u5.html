@@ -1,0 +1,288 @@
+<!-- LIBRERÍAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Dosis:wght@600;800&display=swap" rel="stylesheet">
+
+<style>
+/* --- ESTILO TICKET DE COMPRA (MONOSPACE & HIGH CONTRAST) --- */
+:root {
+    --r-bg: #2d3436;        /* Mesa Oscura */
+    --r-paper: #fdfdfd;     /* Papel Blanco */
+    --r-ink: #2d3436;       /* Tinta Negra */
+    --r-accent: #6c5ce7;    /* Botones */
+    --r-highlight: #00b894; /* Dinero */
+    --r-red: #d63031;       /* Carga Mental */
+}
+
+#receipt-game {
+    width: 100%;
+    min-height: 900px;
+    height: auto;
+    background-color: var(--r-bg) !important;
+    font-family: 'Dosis', sans-serif;
+    color: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    border: 4px solid #444;
+}
+
+/* --- HEADER --- */
+.r-header { text-align: center; margin-bottom: 20px; z-index: 10; }
+.r-title { 
+    font-size: clamp(2rem, 5vw, 3rem); text-transform: uppercase; margin: 0;
+    color: #fff; text-shadow: 2px 2px 0 #000; letter-spacing: 2px;
+}
+.r-desc { color: #ccc; margin-top: 5px; }
+
+/* --- CONTENEDOR DIVIDIDO (Productos vs Factura) --- */
+.checkout-area {
+    display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; align-items: flex-start;
+    flex: 1; z-index: 10;
+}
+
+/* 1. PANEL DE TAREAS (IZQUIERDA/ARRIBA) */
+.tasks-panel {
+    flex: 1; min-width: 300px; max-width: 500px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+}
+
+.task-btn {
+    background: #444; border: 2px solid #555; border-radius: 10px;
+    padding: 15px; cursor: pointer; text-align: center;
+    transition: transform 0.1s, background 0.2s;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 120px;
+}
+.task-btn:hover { background: #555; border-color: var(--r-accent); }
+.task-btn:active { transform: scale(0.95); background: var(--r-accent); }
+
+.t-icon { font-size: 2.5rem; margin-bottom: 10px; }
+.t-name { font-weight: bold; font-size: 1rem; line-height: 1.2; }
+.t-price { font-size: 0.8rem; color: var(--r-highlight); margin-top: 5px; font-family: 'Courier Prime', monospace; }
+
+/* 2. EL TICKET (DERECHA/ABAJO) */
+.receipt-wrapper {
+    width: 320px;
+    background: var(--r-paper);
+    color: var(--r-ink);
+    font-family: 'Courier Prime', monospace;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    position: relative;
+    transform-origin: top center;
+    /* Efecto zig-zag abajo */
+    mask-image: radial-gradient(circle at bottom, transparent 6px, black 7px);
+    mask-size: 20px 100%;
+    mask-position: bottom;
+    mask-repeat: repeat-x;
+    padding-bottom: 40px;
+    min-height: 400px;
+    display: flex; flex-direction: column;
+}
+
+.rec-head { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 15px; margin-bottom: 15px; }
+.rec-logo { font-weight: bold; font-size: 1.5rem; display: block; margin-bottom: 5px; }
+.rec-meta { font-size: 0.8rem; }
+
+.rec-items {
+    flex: 1; display: flex; flex-direction: column; gap: 8px;
+    font-size: 0.9rem; margin-bottom: 20px;
+}
+.rec-row { display: flex; justify-content: space-between; }
+.rec-name { text-transform: uppercase; }
+
+.rec-total-line {
+    border-top: 2px solid #000; padding-top: 10px; margin-top: auto;
+    display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem;
+}
+
+/* 3. BOTÓN FINALIZAR */
+.checkout-btn {
+    background: var(--r-accent); color: white; border: none;
+    padding: 15px 30px; font-size: 1.2rem; font-weight: bold; font-family: 'Dosis', sans-serif;
+    border-radius: 50px; cursor: pointer; margin-top: 20px; width: 100%;
+    box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4); text-transform: uppercase;
+    display: none; /* Se activa al añadir items */
+}
+.checkout-btn:hover { transform: scale(1.02); background: #5649c0; }
+
+/* MODAL FINAL */
+.invoice-modal {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.95); z-index: 50;
+    display: none; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding: 20px;
+}
+.im-box {
+    border: 2px solid var(--r-highlight); padding: 30px; background: #111;
+    border-radius: 10px; max-width: 600px;
+}
+.im-title { color: var(--r-highlight); font-size: 2rem; margin-bottom: 15px; font-family: 'Dosis', sans-serif; text-transform: uppercase;}
+.im-text { font-family: 'Courier Prime', monospace; font-size: 1rem; line-height: 1.5; color: #ddd; margin-bottom: 20px; }
+
+/* ANIMACIONES */
+@keyframes print { 0% { transform: translateY(-20px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+.print-item { animation: print 0.3s ease-out; }
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+    .tasks-panel { grid-template-columns: 1fr 1fr; }
+    .receipt-wrapper { width: 100%; }
+}
+</style>
+
+<div id="receipt-game">
+    
+    <div class="r-header">
+        <h1 class="r-title">Lo que no se ve...</h1>
+        <p class="r-desc">Juego 4: Cálculo Simbólico del Trabajo Doméstico. Haz clic para "facturar".</p>
+    </div>
+
+    <div class="checkout-area">
+        
+        <!-- PANEL DE PRODUCTOS (TAREAS) -->
+        <div class="tasks-panel">
+            <div class="task-btn" onclick="addItem('Preparar Alimentos', 40000)">
+                <span class="t-icon">🍳</span>
+                <span class="t-name">Cocinar (3 comidas)</span>
+                <span class="t-price">$40.000 / día</span>
+            </div>
+            <div class="task-btn" onclick="addItem('Limpieza General', 35000)">
+                <span class="t-icon">🧹</span>
+                <span class="t-name">Aseo y Lavado</span>
+                <span class="t-price">$35.000 / día</span>
+            </div>
+            <div class="task-btn" onclick="addItem('Cuidado Niños/Adultos', 60000)">
+                <span class="t-icon">👵</span>
+                <span class="t-name">Cuidado de Personas</span>
+                <span class="t-price">$60.000 / día</span>
+            </div>
+            <div class="task-btn" onclick="addItem('Gerencia del Hogar', 50000)">
+                <span class="t-icon">🧠</span>
+                <span class="t-name">Gestión Mental</span>
+                <span class="t-price">$50.000 / día</span>
+            </div>
+            <div class="task-btn" onclick="addItem('Apoyo Emocional', 30000)">
+                <span class="t-icon">❤️</span>
+                <span class="t-name">Soporte Emocional</span>
+                <span class="t-price">$30.000 / día</span>
+            </div>
+            <div class="task-btn" onclick="addItem('Logística y Compras', 25000)">
+                <span class="t-icon">🛒</span>
+                <span class="t-name">Logística</span>
+                <span class="t-price">$25.000 / día</span>
+            </div>
+        </div>
+
+        <!-- EL TICKET -->
+        <div class="receipt-wrapper" id="receipt">
+            <div class="rec-head">
+                <span class="rec-logo">FACTURA DE CUIDADO</span>
+                <div class="rec-meta">NIT: 800.xxx.xxx-1</div>
+                <div class="rec-meta">FECHA: HOY</div>
+                <div class="rec-meta">CLIENTE: SOCIEDAD</div>
+            </div>
+            
+            <div class="rec-items" id="items-list">
+                <!-- Items JS -->
+            </div>
+
+            <div class="rec-total-line">
+                <span>TOTAL:</span>
+                <span id="total-price">$0</span>
+            </div>
+
+            <button class="checkout-btn" id="btn-pay" onclick="finishGame()">PAGAR CUENTA</button>
+        </div>
+
+    </div>
+
+    <!-- MODAL FINAL -->
+    <div class="invoice-modal" id="final-modal">
+        <div class="im-box">
+            <div class="im-title">NO SE VALORA</div>
+            <p class="im-text">
+                El total calculado es de <span id="final-amount" style="color:var(--r-highlight); font-weight:bold;">$0</span> diarios.
+                <br><br>
+                Este trabajo sostiene la economía, pero al no ser remunerado, genera dependencia económica y limita la autonomía de las mujeres.
+                <br><br>
+                <strong>LA UNP RECONOCE ESTE VALOR.</strong>
+            </p>
+            <button onclick="location.reload()" style="background:var(--r-accent); color:white; border:none; padding:10px 20px; font-weight:bold; cursor:pointer;">REINICIAR</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// --- LÓGICA DE CAJA REGISTRADORA ---
+let totalAmount = 0;
+let itemsCount = 0;
+
+function addItem(name, price) {
+    // 1. Añadir al DOM
+    const list = document.getElementById('items-list');
+    const row = document.createElement('div');
+    row.className = "rec-row print-item";
+    row.innerHTML = `
+        <span class="rec-name">${name}</span>
+        <span>$${price.toLocaleString()}</span>
+    `;
+    list.appendChild(row);
+
+    // 2. Calcular
+    totalAmount += price;
+    document.getElementById('total-price').innerText = "$" + totalAmount.toLocaleString();
+
+    // 3. Efecto visual (El ticket crece o hace scroll)
+    gsap.from(row, {height: 0, opacity: 0, duration: 0.2});
+    
+    // Activar botón de pago si hay items
+    itemsCount++;
+    if(itemsCount > 0) {
+        document.getElementById('btn-pay').style.display = 'block';
+    }
+}
+
+function finishGame() {
+    // 1. Añadir el impuesto sorpresa
+    const list = document.getElementById('items-list');
+    const taxRow = document.createElement('div');
+    taxRow.className = "rec-row print-item";
+    taxRow.style.color = "var(--r-red)";
+    taxRow.style.fontWeight = "bold";
+    taxRow.style.marginTop = "10px";
+    taxRow.style.borderTop = "1px dashed #ccc";
+    taxRow.style.paddingTop = "5px";
+    
+    const taxValue = totalAmount * 0.20; // 20% de carga invisible
+    taxRow.innerHTML = `
+        <span class="rec-name">CARGA MENTAL (IVA)</span>
+        <span>$${taxValue.toLocaleString()}</span>
+    `;
+    list.appendChild(taxRow);
+    
+    totalAmount += taxValue;
+    document.getElementById('total-price').innerText = "$" + totalAmount.toLocaleString();
+    document.getElementById('total-price').style.color = "var(--r-red)"; // Cambio dramático
+
+    // 2. Mostrar Modal
+    setTimeout(() => {
+        document.getElementById('final-amount').innerText = "$" + totalAmount.toLocaleString();
+        
+        const modal = document.getElementById('final-modal');
+        modal.style.display = 'flex';
+        gsap.from(".im-box", {scale: 0.8, opacity: 0, duration: 0.5, ease: "back.out"});
+    }, 1500);
+}
+
+// Animación de entrada
+gsap.from(".task-btn", {y: 20, opacity: 0, stagger: 0.1, duration: 0.5});
+gsap.from(".receipt-wrapper", {y: -50, opacity: 0, duration: 0.8, delay: 0.5});
+
+</script>

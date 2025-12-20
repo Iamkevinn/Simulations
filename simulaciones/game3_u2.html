@@ -1,0 +1,396 @@
+<!-- Carga de librerías y fuentes -->
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<style>
+/* --- VARIABLES --- */
+:root {
+    --bg-dark: #050a10;
+    --cyan-ops: #06b6d4;
+    --amber-ops: #f59e0b;
+    --red-ops: #ef4444;
+    --text-main: #cbd5e1;
+    --font-ui: 'Chakra Petch', sans-serif;
+    --font-code: 'JetBrains Mono', monospace;
+    --grid-color: rgba(6, 182, 212, 0.1);
+}
+
+/* --- CONTENEDOR PRINCIPAL RESPONSIVE --- */
+#tactical-terminal {
+    font-family: var(--font-ui);
+    color: var(--text-main);
+    background-color: var(--bg-dark);
+    position: relative;
+    width: 100%;
+    /* Altura dinámica: Mínimo 600px, pero se ajusta al contenido en móviles */
+    min-height: 600px;
+    height: auto; 
+    border: 1px solid #334155;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Fondo Animado */
+.ops-grid-bg {
+    position: absolute; width: 200%; height: 200%;
+    background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+    background-size: 40px 40px;
+    transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+    animation: gridMove 20s linear infinite;
+    z-index: 1; pointer-events: none;
+}
+.ops-vignette {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    background: radial-gradient(circle, transparent 40%, #050a10 100%);
+    z-index: 2; pointer-events: none;
+}
+@keyframes gridMove { 0% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); } 100% { transform: perspective(500px) rotateX(60deg) translateY(50px) translateZ(-200px); } }
+
+/* --- HEADER --- */
+.ops-header {
+    min-height: 60px;
+    background: rgba(15, 22, 35, 0.95);
+    border-bottom: 2px solid var(--cyan-ops);
+    display: flex;
+    flex-wrap: wrap; /* Permite que el contenido baje si no cabe */
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    z-index: 10;
+    gap: 10px;
+}
+
+.ops-title {
+    font-family: var(--font-code);
+    color: var(--cyan-ops);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 1rem;
+    display: flex; align-items: center; gap: 10px;
+    white-space: nowrap;
+}
+.ops-title::before { content: ''; display: block; width: 8px; height: 8px; background: var(--cyan-ops); box-shadow: 0 0 10px var(--cyan-ops); animation: blinkOps 2s infinite; }
+
+.ops-tabs { display: flex; gap: 5px; flex-wrap: wrap; }
+.ops-btn {
+    background: transparent; border: 1px solid #334155; color: #64748b;
+    padding: 6px 12px; cursor: pointer; font-family: var(--font-code); font-size: 0.75rem;
+    transition: 0.3s; flex-grow: 1; /* Botones crecen en móvil */
+    text-align: center;
+}
+.ops-btn.active { background: var(--cyan-ops); color: #000; font-weight: bold; border-color: var(--cyan-ops); }
+
+/* --- VIEWPORT --- */
+.ops-viewport {
+    flex: 1; position: relative; z-index: 5;
+    padding: 15px;
+    display: flex; justify-content: center; 
+    overflow-y: auto; /* Scroll interno si es necesario */
+}
+
+.mission-panel {
+    display: none; width: 100%; height: 100%; flex-direction: column;
+    animation: fadeInPanel 0.5s ease-out;
+}
+.mission-panel.active { display: flex; }
+@keyframes fadeInPanel { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- PANEL 1: TEXTO (Responsive) --- */
+.analysis-terminal {
+    background: rgba(15, 22, 35, 0.9);
+    border: 1px solid var(--grid-color);
+    padding: 20px;
+    border-left: 4px solid var(--amber-ops);
+    flex: 1;
+    display: flex; flex-direction: column;
+}
+
+.terminal-text {
+    font-size: 1rem; line-height: 1.6; color: #a3a3a3; font-family: var(--font-code);
+}
+/* Ajuste para móviles */
+@media (max-width: 600px) {
+    .terminal-text { font-size: 0.9rem; }
+    .analysis-terminal { padding: 15px; }
+}
+
+.data-fragment {
+    color: var(--text-main); border-bottom: 2px dashed #555; cursor: pointer; padding: 2px 0;
+}
+.data-fragment.scanned { background: var(--amber-ops); color: black; border: none; font-weight: bold; }
+
+.ops-feedback-box {
+    margin-top: auto; /* Empuja al fondo */
+    padding: 15px; background: #000; border: 1px solid #333;
+    font-family: var(--font-code); font-size: 0.8rem;
+    color: var(--cyan-ops); min-height: 50px;
+}
+
+/* --- PANEL 2: MAPA (Responsive Complejo) --- */
+#panel-2 { height: 100%; display: none; flex-direction: column; }
+#panel-2.active { display: flex; }
+
+.map-container {
+    flex: 1; position: relative;
+    background: #0b111a; border: 2px solid #334155;
+    background-image: radial-gradient(#1e293b 1px, transparent 1px);
+    background-size: 20px 20px;
+    min-height: 300px; /* Altura mínima para ver el mapa en móvil */
+    overflow: hidden;
+}
+
+.map-zone {
+    position: absolute; 
+    border: 2px dashed rgba(255,255,255,0.15);
+    display: flex; justify-content: center; align-items: center;
+    color: rgba(255,255,255,0.3); font-weight: bold; 
+    font-size: 0.8rem; text-align: center;
+    transition: 0.3s; cursor: crosshair; padding: 5px;
+}
+.map-zone:hover { background: rgba(6, 182, 212, 0.1); border-color: var(--cyan-ops); color: var(--cyan-ops); }
+.map-zone.risk-high { animation: pulseRed 2s infinite; background: rgba(239, 68, 68, 0.2); border-color: var(--red-ops); color: white; border-style: solid;}
+
+.ops-toolbar {
+    background: rgba(0,0,0,0.8); border-top: 1px solid var(--grid-color);
+    padding: 10px;
+    display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+}
+
+.tool-chip {
+    flex: 1 1 120px; /* Flexible: base 120px, crece si puede */
+    max-width: 200px;
+    padding: 10px;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid #475569;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    cursor: pointer; transition: 0.3s;
+    font-size: 0.7rem; text-align: center; color: #94a3b8;
+}
+.tool-chip span { font-size: 1.5rem; margin-bottom: 5px; display: block; }
+.tool-chip.selected { border-color: var(--red-ops); background: rgba(239, 68, 68, 0.1); color: var(--red-ops); }
+
+/* Feedback flotante sobre el mapa */
+#map-feedback {
+    position: absolute; bottom: 0; left: 0; width: 100%;
+    background: rgba(0,0,0,0.9); border-top: 1px solid var(--red-ops);
+    color: var(--text-main); padding: 10px; font-size: 0.8rem; 
+    display: none; box-sizing: border-box; z-index: 20;
+}
+
+/* --- PANEL 3: DATOS --- */
+.info-grid {
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Grid responsive automático */
+    gap: 15px;
+}
+@media (max-width: 500px) {
+    .info-grid { grid-template-columns: 1fr; } /* 1 columna en móviles */
+}
+
+.info-card {
+    background: rgba(6, 182, 212, 0.05); border: 1px solid rgba(6, 182, 212, 0.2);
+    padding: 15px;
+}
+.info-card h4 { color: var(--cyan-ops); margin: 0 0 5px 0; font-size: 0.9rem;}
+.info-card p { font-size: 0.8rem; margin: 0; color: #94a3b8; }
+
+/* ANIMACIONES */
+@keyframes blinkOps { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+@keyframes pulseRed { 0% { box-shadow: inset 0 0 0 rgba(239,68,68,0); } 50% { box-shadow: inset 0 0 30px rgba(239,68,68,0.5); } 100% { box-shadow: inset 0 0 0 rgba(239,68,68,0); } }
+
+</style>
+
+<div id="tactical-terminal">
+    <div class="ops-grid-bg"></div>
+    <div class="ops-vignette"></div>
+    
+    <!-- Header -->
+    <div class="ops-header">
+        <div class="ops-title">SISTEMA PREVENCIÓN v4.0</div>
+        <div class="ops-tabs">
+            <button class="ops-btn active" onclick="setMode(1)">1. SEÑALES</button>
+            <button class="ops-btn" onclick="setMode(3)">2. DATOS</button>
+        </div>
+    </div>
+
+    <div class="ops-viewport">
+        
+        <!-- PANEL 1: TEXTO DETECTIVE -->
+        <div id="panel-1" class="mission-panel active">
+            <div style="margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom:5px;">
+                <h2 style="color:white; margin:0; font-size:1.2rem;">🕵️ MÓDULO INTELIGENCIA</h2>
+            </div>
+
+            <div class="analysis-terminal">
+                <div style="font-size:0.7rem; color:var(--amber-ops); margin-bottom:10px;">EXPEDIENTE #404 // CLASIFICADO</div>
+                
+                <p class="terminal-text">
+                    "INFORME: Se han reportado <span class="data-fragment" onclick="scanData(this, 'alerta')">Cambios bruscos en el comportamiento</span> recientemente. La víctima reporta <span class="data-fragment" onclick="scanData(this, 'violencia')">Control excesivo, celos, aislamiento</span>. Existen registros de <span class="data-fragment" onclick="scanData(this, 'riesgo')">Amenazas o intimidaciones</span> si intenta salir, así como <span class="data-fragment" onclick="scanData(this, 'economica')">Restricciones económicas</span>."
+                </p>
+
+                <div class="ops-feedback-box">
+                    <span id="typewriter-output">> SISTEMA LISTO. TOQUE LOS TEXTOS SOSPECHOSOS.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 2: MAPA INTERACTIVO -->
+        <div id="panel-2" class="mission-panel">
+            <h2 style="color:white; margin:0 0 10px 0; font-size:1.2rem;">🗺️ ESCÁNER TERRITORIAL</h2>
+            
+            <div class="map-container">
+                <!-- Zonas (Posicionamiento % para ser responsive) -->
+                <div class="map-zone" id="zone-1" style="top:5%; left:5%; width:40%; height:30%;" onclick="deployRisk(this)">
+                    SECTOR RURAL
+                </div>
+                <div class="map-zone" id="zone-2" style="bottom:15%; left:10%; width:50%; height:40%;" onclick="deployRisk(this)">
+                    CASCO URBANO
+                </div>
+                <div class="map-zone" id="zone-3" style="top:10%; right:5%; width:30%; height:50%;" onclick="deployRisk(this)">
+                    FRONTERA
+                </div>
+                
+                <div id="map-feedback"></div>
+            </div>
+
+            <div class="ops-toolbar">
+                <div class="tool-chip" onclick="selectTool('armados', this)">
+                    <span>🔫</span> GRUPOS ARMADOS
+                </div>
+                <div class="tool-chip" onclick="selectTool('institucion', this)">
+                    <span>🏛️</span> INST. AUSENTE
+                </div>
+                <div class="tool-chip" onclick="selectTool('estructural', this)">
+                    <span>⚖️</span> DISCRIMINACIÓN
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 3: DATOS -->
+        <div id="panel-3" class="mission-panel">
+             <h2 style="color:white; margin:0 0 15px 0; font-size:1.2rem;">📁 CLASIFICACIÓN</h2>
+             <div class="info-grid">
+                 <div class="info-card">
+                     <h4>VIOLENCIA FÍSICA</h4>
+                     <p>Agresiones que generan daño corporal.</p>
+                 </div>
+                 <div class="info-card">
+                     <h4>VIOLENCIA PSICOLÓGICA</h4>
+                     <p>Intimidación, amenazas, control y aislamiento.</p>
+                 </div>
+                 <div class="info-card">
+                     <h4>VIOLENCIA ECONÓMICA</h4>
+                     <p>Control o limitación de recursos.</p>
+                 </div>
+                 <div class="info-card">
+                     <h4>VIOLENCIA SIMBÓLICA</h4>
+                     <p>Estereotipos y prácticas que reproducen desigualdad.</p>
+                 </div>
+                 <div class="info-card">
+                     <h4>VIOLENCIA SEXUAL</h4>
+                     <p>Actos sexuales sin consentimiento.</p>
+                 </div>
+             </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// --- LÓGICA DE NAVEGACIÓN ---
+function setMode(modeIndex) {
+    document.querySelectorAll('.ops-btn').forEach((btn, index) => {
+        btn.classList.toggle('active', index + 1 === modeIndex);
+    });
+    document.querySelectorAll('.mission-panel').forEach((panel, index) => {
+        panel.classList.toggle('active', index + 1 === modeIndex);
+    });
+}
+
+// --- JUEGO 1: TEXTO ---
+function typeWriter(text) {
+    const output = document.getElementById('typewriter-output');
+    output.innerText = "";
+    let i = 0;
+    function type() {
+        if (i < text.length) {
+            output.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(type, 15);
+        }
+    }
+    type();
+}
+
+function scanData(element, type) {
+    if(element.classList.contains('scanned')) return;
+    element.classList.add('scanned');
+    
+    let msg = "";
+    if(type === 'alerta') msg = "> DETECTADO: Cambio brusco. CLASIFICACIÓN: Señal de Alerta Temprana.";
+    if(type === 'violencia') msg = "> DETECTADO: Control y aislamiento. CLASIFICACIÓN: Violencia Psicológica.";
+    if(type === 'riesgo') msg = "> DETECTADO: Amenazas. CLASIFICACIÓN: Nivel de Riesgo Alto.";
+    if(type === 'economica') msg = "> DETECTADO: Restricción de dinero. CLASIFICACIÓN: Violencia Económica.";
+    
+    gsap.fromTo(".analysis-terminal", {borderColor: "#ef4444"}, {borderColor: "rgba(6, 182, 212, 0.1)", duration: 1});
+    typeWriter(msg);
+}
+
+// --- JUEGO 2: MAPA ---
+let currentTool = null;
+
+function selectTool(toolName, btnElement) {
+    currentTool = toolName;
+    document.querySelectorAll('.tool-chip').forEach(t => t.classList.remove('selected'));
+    btnElement.classList.add('selected');
+    
+    const feedback = document.getElementById('map-feedback');
+    feedback.style.display = 'block';
+    feedback.innerText = "> SISTEMA ARMADO: Toque una zona en el mapa.";
+    feedback.style.color = "var(--cyan-ops)";
+}
+
+function deployRisk(zoneElement) {
+    if (!currentTool) {
+        alert("⚠️ Seleccione una herramienta primero.");
+        return;
+    }
+
+    const marker = document.createElement('div');
+    marker.style.position = 'absolute';
+    marker.style.fontSize = '1.5rem';
+    marker.style.zIndex = '10';
+    
+    let info = "";
+    if (currentTool === 'armados') {
+        marker.innerText = '🔫';
+        info = "PRESENCIA DE GRUPOS ARMADOS: Factor estructural crítico. Limita respuesta institucional.";
+    } else if (currentTool === 'institucion') {
+        marker.innerText = '🏛️';
+        info = "INSTITUCIÓN AUSENTE: Factor de riesgo alto. La víctima está desprotegida.";
+    } else if (currentTool === 'estructural') {
+        marker.innerText = '⚖️';
+        info = "DISCRIMINACIÓN ESTRUCTURAL: Racismo/Clasismo profundos en el territorio.";
+    }
+
+    // Posición aleatoria dentro de la zona
+    marker.style.left = (Math.random() * 60 + 20) + "%";
+    marker.style.top = (Math.random() * 60 + 20) + "%";
+    
+    zoneElement.appendChild(marker);
+    zoneElement.classList.add('risk-high');
+    
+    gsap.from(marker, {scale: 0, opacity: 0, duration: 0.5, ease: "back.out(1.7)"});
+
+    const feedback = document.getElementById('map-feedback');
+    feedback.innerHTML = `<span style="color:var(--red-ops); font-weight:bold;">> AMENAZA CONFIRMADA:</span> ${info}`;
+    
+    // Reset
+    currentTool = null;
+    document.querySelectorAll('.tool-chip').forEach(t => t.classList.remove('selected'));
+}
+</script>

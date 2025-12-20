@@ -1,0 +1,373 @@
+<!-- LIBRERÍAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Public+Sans:wght@500;800&display=swap" rel="stylesheet">
+
+<style>
+/* --- ESTILO NEO-BRUTALISMO (SÓLIDO Y ATREVIDO) --- */
+:root {
+    --nb-bg: #f4f4f0;       /* Blanco hueso */
+    --nb-black: #121212;    /* Negro tinta */
+    --nb-purple: #a855f7;   /* Género */
+    --nb-yellow: #fbbf24;   /* Alerta */
+    --nb-green: #4ade80;    /* Correcto */
+    --nb-red: #f87171;      /* Error */
+    --nb-white: #ffffff;
+    --shadow-hard: 5px 5px 0px var(--nb-black);
+    --border-thick: 3px solid var(--nb-black);
+}
+
+#c190-workspace {
+    width: 100%;
+    min-height: 850px;
+    height: auto;
+    background-color: var(--nb-bg) !important;
+    font-family: 'Public Sans', sans-serif;
+    color: var(--nb-black) !important;
+    border: var(--border-thick) !important;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+/* --- MARQUESINA ANIMADA (CINTA DE PRECAUCIÓN) --- */
+.marquee-container {
+    background: var(--nb-yellow);
+    border-bottom: var(--border-thick);
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 10px 0;
+    position: relative;
+    z-index: 10;
+}
+.marquee-content {
+    display: inline-block;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    animation: marquee 15s linear infinite;
+    color: var(--nb-black);
+}
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* --- HEADER --- */
+.nb-header {
+    padding: 30px 20px;
+    text-align: center;
+    background-color: var(--nb-purple);
+    border-bottom: var(--border-thick);
+    position: relative;
+    z-index: 5;
+}
+.nb-tag {
+    background: var(--nb-white);
+    border: 2px solid var(--nb-black);
+    padding: 5px 15px;
+    font-weight: 800;
+    display: inline-block;
+    margin-bottom: 10px;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+    transform: rotate(-2deg);
+}
+.nb-title {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin: 0;
+    color: var(--nb-white);
+    text-shadow: 4px 4px 0 var(--nb-black);
+    -webkit-text-stroke: 1px var(--nb-black); /* Borde al texto */
+}
+
+/* --- ZONA DE JUEGO --- */
+.game-stage {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    background-image: radial-gradient(var(--nb-black) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 1;
+}
+
+/* TARJETA DE ROL (EL EXPEDIENTE) */
+.role-card {
+    background: var(--nb-white);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard);
+    width: 100%;
+    max-width: 700px;
+    padding: 0;
+    border-radius: 0; /* Bordes rectos brutalistas */
+    position: relative;
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Encabezado de la Tarjeta */
+.card-top {
+    background: var(--nb-black);
+    color: var(--nb-white);
+    padding: 15px;
+    font-family: 'Archivo Black', sans-serif;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.case-number { color: var(--nb-yellow); }
+
+/* Cuerpo de la Tarjeta */
+.card-body { padding: 30px; }
+.scenario-text {
+    font-size: 1.1rem; line-height: 1.6; font-weight: 500;
+    margin-bottom: 30px; background: #eee; padding: 20px;
+    border: 2px solid #ccc;
+}
+
+/* Opciones de Decisión */
+.options-stack {
+    display: flex; flex-direction: column; gap: 15px;
+}
+
+.action-btn {
+    background: var(--nb-white);
+    border: var(--border-thick);
+    padding: 15px 20px;
+    font-weight: 800; font-family: 'Public Sans', sans-serif;
+    font-size: 1rem; cursor: pointer;
+    text-align: left;
+    transition: all 0.1s;
+    position: relative;
+    top: 0; left: 0;
+    box-shadow: 4px 4px 0 var(--nb-black); /* Sombra sólida */
+}
+
+.action-btn:hover {
+    background: var(--nb-yellow);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--nb-black);
+}
+
+.action-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0 var(--nb-black);
+}
+
+/* --- FEEDBACK (RESULTADOS) --- */
+.analysis-sheet {
+    display: none; /* Controlado por JS */
+    background: var(--nb-white);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard);
+    width: 100%; max-width: 700px;
+    padding: 30px; text-align: center;
+    position: absolute; z-index: 20;
+}
+
+.sheet-stamp {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 2rem; color: var(--nb-green);
+    border: 4px solid var(--nb-green);
+    padding: 10px; display: inline-block;
+    transform: rotate(-5deg); margin-bottom: 20px;
+}
+.error-stamp { color: var(--nb-red); border-color: var(--nb-red); transform: rotate(5deg); }
+
+.sheet-title { font-weight: 800; font-size: 1.2rem; margin-bottom: 10px; text-transform: uppercase; }
+.sheet-text { font-size: 1rem; line-height: 1.5; margin-bottom: 20px; text-align: left; }
+
+.next-btn {
+    background: var(--nb-black); color: var(--nb-white);
+    border: none; padding: 15px 30px; font-weight: bold; font-size: 1.1rem;
+    cursor: pointer; box-shadow: 4px 4px 0 #666;
+}
+.next-btn:hover { background: #333; }
+
+/* RESPONSIVE */
+@media (max-width:1200px) {
+    .nb-title { font-size: 2rem; -webkit-text-stroke: 0; text-shadow: 2px 2px 0 var(--nb-black); }
+    .card-body { padding: 20px; }
+    .action-btn { font-size: 0.9rem; padding: 12px; }
+}
+
+</style>
+
+<div id="c190-workspace">
+    
+    <!-- CINTA SUPERIOR -->
+    <div class="marquee-container">
+        <div class="marquee-content">
+            ⚠ MISION 4: TRABAJO LIBRE DE VIOLENCIA • CUMPLIMIENTO CONVENIO 190 OIT • TOLERANCIA CERO AL ACOSO • ESPACIOS SEGUROS UNP • ⚠ MISION 4: TRABAJO LIBRE DE VIOLENCIA •
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <div class="nb-header">
+        <div class="nb-tag">ROLE PLAYING LABORAL</div>
+        <h1 class="nb-title">EL INSPECTOR C190</h1>
+    </div>
+
+    <!-- ZONA DE JUEGO -->
+    <div class="game-stage">
+        
+        <!-- TARJETA DEL CASO -->
+        <div class="role-card" id="card-container">
+            <div class="card-top">
+                <span>EXPEDIENTE ACTIVO</span>
+                <span class="case-number" id="case-id">#01</span>
+            </div>
+            
+            <div class="card-body">
+                <div class="scenario-text" id="scenario-text">
+                    CARGANDO CASO...
+                </div>
+
+                <div class="options-stack" id="options-box">
+                    <!-- Botones generados por JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- HOJA DE RESULTADOS (OCULTA) -->
+        <div class="analysis-sheet" id="feedback-sheet">
+            <div id="stamp-box" class="sheet-stamp">CORRECTO</div>
+            <div class="sheet-title">ANÁLISIS COLECTIVO</div>
+            <div class="sheet-text" id="feedback-text">...</div>
+            
+            <div style="background:#eee; padding:10px; border-left:4px solid var(--nb-black); text-align:left; margin-bottom:20px;">
+                <strong>OBLIGACIÓN DEL ESTADO:</strong><br>
+                <span id="obligation-text">...</span>
+            </div>
+
+            <button class="next-btn" onclick="nextCase()">SIGUIENTE CASO >></button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// --- DATOS SENSIBLES DEL CURSO ---
+const roleplayData = [
+    {
+        id: "#01",
+        type: "ACOSO LABORAL",
+        scenario: "<strong>SITUACIÓN:</strong> En una reunión de equipo, el coordinador interrumpe constantemente a una compañera, ridiculiza sus propuestas frente a todos y le asigna tareas que no corresponden a su cargo (servir café).",
+        options: [
+            {
+                text: "Es solo el estilo del jefe. Mejor no decir nada para evitar problemas.",
+                correct: false,
+                feedback: "❌ <strong>FALLA INSTITUCIONAL:</strong> La normalización ('es su estilo') perpetúa el acoso. El silencio institucional es complicidad.",
+                obligation: "Prevenir y sancionar el acoso. Garantizar un ambiente libre de violencia."
+            },
+            {
+                text: "Intervenir en la reunión o reportar el caso aplicando el Protocolo de Acoso.",
+                correct: true,
+                feedback: "✅ <strong>ACCIÓN CORRECTIVA:</strong> Intervenir rompe la complicidad. Activar el protocolo documenta la falla y protege a la víctima.",
+                obligation: "El Convenio 190 exige mecanismos de queja y protección contra represalias."
+            }
+        ]
+    },
+    {
+        id: "#02",
+        type: "VIOLENCIA DE GÉNERO",
+        scenario: "<strong>SITUACIÓN:</strong> Un compañero de trabajo hace comentarios constantes sobre el cuerpo de una escolta mujer y envía mensajes 'amistosos' fuera del horario laboral que la hacen sentir incómoda.",
+        options: [
+            {
+                text: "Rechazar el comportamiento y activar la ruta de Violencia de Género.",
+                correct: true,
+                feedback: "✅ <strong>ACCIÓN CORRECTA:</strong> No es 'amistad', es acoso sexual y violencia de género. La incomodidad de la víctima es el indicador clave.",
+                obligation: "Adoptar un enfoque inclusivo e integrado que tenga en cuenta las consideraciones de género."
+            },
+            {
+                text: "Aconsejarle a ella que 'no le preste atención' para no dañar el ambiente laboral.",
+                correct: false,
+                feedback: "❌ <strong>REVICTIMIZACIÓN:</strong> Pedirle a la víctima que tolere el acoso pone la carga sobre ella y protege al agresor.",
+                obligation: "El Estado debe proteger a las víctimas y garantizar que no sean revictimizadas por la institución."
+            }
+        ]
+    },
+    {
+        id: "#03",
+        type: "CIERRE",
+        scenario: "¡Excelente trabajo! Has completado el ciclo de inspección.",
+        options: [] // Fin
+    }
+];
+
+let currentIndex = 0;
+
+// INICIALIZAR
+function loadCase() {
+    const data = roleplayData[currentIndex];
+    
+    // Si es el final
+    if (data.type === "CIERRE") {
+        showFinalScreen();
+        return;
+    }
+
+    // Actualizar UI
+    document.getElementById('case-id').innerText = data.id;
+    document.getElementById('scenario-text').innerHTML = data.scenario;
+    const optsBox = document.getElementById('options-box');
+    optsBox.innerHTML = '';
+
+    // Crear Botones
+    data.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'action-btn';
+        btn.innerText = opt.text;
+        btn.onclick = () => evaluate(opt);
+        optsBox.appendChild(btn);
+    });
+
+    // Animación de entrada
+    gsap.from("#card-container", {y: 50, opacity: 0, duration: 0.5, ease: "back.out(1.7)"});
+}
+
+function evaluate(option) {
+    const feedbackSheet = document.getElementById('feedback-sheet');
+    const stamp = document.getElementById('stamp-box');
+    
+    // Configurar Feedback
+    document.getElementById('feedback-text').innerHTML = option.feedback;
+    document.getElementById('obligation-text').innerText = option.obligation;
+
+    if (option.correct) {
+        stamp.innerText = "¡CORRECTO!";
+        stamp.className = "sheet-stamp"; // Verde
+    } else {
+        stamp.innerText = "ALERTA";
+        stamp.className = "sheet-stamp error-stamp"; // Rojo
+    }
+
+    // Mostrar Hoja
+    feedbackSheet.style.display = 'block';
+    gsap.from(feedbackSheet, {scale: 0.8, opacity: 0, rotation: -5, duration: 0.4, ease: "back.out(1.5)"});
+}
+
+function nextCase() {
+    document.getElementById('feedback-sheet').style.display = 'none';
+    currentIndex++;
+    loadCase();
+}
+
+function showFinalScreen() {
+    const container = document.getElementById('card-container');
+    container.innerHTML = `
+        <div style="padding:40px; text-align:center;">
+            <div style="font-size:4rem; margin-bottom:20px;">🛡️</div>
+            <h2 style="font-family:'Archivo Black'; text-transform:uppercase;">¡Misión Cumplida!</h2>
+            <p>Has identificado correctamente las fallas y aplicado las obligaciones del Convenio 190.</p>
+            <p><strong>Recuerda:</strong> Un trabajo libre de violencia es un derecho.</p>
+        </div>
+    `;
+    gsap.to(container, {borderColor: "var(--nb-green)", boxShadow: "10px 10px 0 var(--nb-green)", duration: 0.5});
+}
+
+// ARRANQUE
+loadCase();
+
+</script>

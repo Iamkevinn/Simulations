@@ -1,0 +1,353 @@
+<!-- LIBRERÍAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+/* --- ESTILO NEUMORFISMO (LIMPIO Y CLARO) --- */
+:root {
+    --neu-bg: #e0e5ec;
+    --neu-shadow-light: #ffffff;
+    --neu-shadow-dark: #a3b1c6;
+    
+    /* Colores Sólidos para el Gráfico */
+    --c-work: #2980b9;    /* Azul Fuerte */
+    --c-care: #c0392b;    /* Rojo Intenso */
+    --c-rest: #27ae60;    /* Verde Descanso */
+    
+    --text-main: #2c3e50;
+    --text-muted: #7f8c8d;
+}
+
+#clock-game-v2 {
+    width: 100%;
+    min-height: 900px;
+    height: auto;
+    background-color: var(--neu-bg) !important;
+    font-family: 'Quicksand', sans-serif;
+    color: var(--text-main);
+    border-radius: 20px;
+    padding: 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.1);
+}
+
+/* --- HEADER --- */
+.game-header { text-align: center; margin-bottom: 40px; z-index: 10; }
+.gh-title { 
+    font-family: 'Nunito', sans-serif; font-weight: 900; 
+    font-size: clamp(2rem, 5vw, 3rem); margin: 0; color: var(--text-main); 
+}
+.gh-subtitle { font-size: 1.1rem; color: var(--text-muted); margin-top: 5px; }
+
+/* --- CONTENEDOR FLEXIBLE (Reloj Izq - Controles Der) --- */
+.game-flex {
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start;
+    gap: 50px; z-index: 5;
+}
+
+/* 1. EL RELOJ (GRÁFICO) */
+.clock-container {
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: var(--neu-bg);
+    box-shadow: 20px 20px 60px var(--neu-shadow-dark), -20px -20px 60px var(--neu-shadow-light);
+    display: flex; justify-content: center; align-items: center;
+    position: relative;
+    flex-shrink: 0; /* No encoger */
+}
+
+/* El Pastel (Conic Gradient) */
+.pie-chart {
+    width: 280px; height: 280px; border-radius: 50%;
+    /* Inicialmente todo Verde (Descanso) */
+    background: conic-gradient(
+        var(--c-work) 0deg 0deg, 
+        var(--c-care) 0deg 0deg, 
+        var(--c-rest) 0deg 360deg
+    );
+    transition: background 0.8s ease-in-out; /* Animación suave del cambio */
+    box-shadow: inset 5px 5px 10px rgba(0,0,0,0.1);
+}
+
+/* Centro con Datos */
+.clock-center {
+    position: absolute; width: 160px; height: 160px; border-radius: 50%;
+    background: var(--neu-bg);
+    box-shadow: 5px 5px 10px var(--neu-shadow-dark), -5px -5px 10px var(--neu-shadow-light);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    z-index: 10;
+}
+.hours-big { font-size: 3.5rem; font-weight: 900; line-height: 1; color: var(--text-main); }
+.label-small { font-size: 0.8rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase; }
+
+/* Leyenda del Reloj */
+.chart-legend {
+    margin-top: 20px; display: flex; gap: 15px; justify-content: center; font-size: 0.8rem; font-weight: bold;
+}
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; }
+
+/* 2. CONTROLES (BOTONES) */
+.controls-panel {
+    flex: 1; min-width: 300px; max-width: 500px;
+    display: flex; flex-direction: column; gap: 20px;
+}
+
+/* Tarjeta de Resumen Numérico */
+.stats-summary {
+    background: var(--neu-bg); padding: 20px; border-radius: 15px;
+    box-shadow: inset 5px 5px 10px var(--neu-shadow-dark), inset -5px -5px 10px var(--neu-shadow-light);
+    display: flex; justify-content: space-between;
+}
+.stat-item { text-align: center; }
+.stat-num { font-size: 1.5rem; font-weight: bold; display: block; }
+.stat-lbl { font-size: 0.8rem; color: var(--text-muted); }
+
+/* Botones */
+.btn-group { display: flex; flex-direction: column; gap: 15px; }
+
+.game-btn {
+    border: none; padding: 15px 20px; border-radius: 12px;
+    background: var(--neu-bg); color: var(--text-main);
+    box-shadow: 6px 6px 12px var(--neu-shadow-dark), -6px -6px 12px var(--neu-shadow-light);
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1rem;
+    cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.game-btn:active {
+    box-shadow: inset 4px 4px 8px var(--neu-shadow-dark), inset -4px -4px 8px var(--neu-shadow-light);
+    transform: scale(0.98);
+}
+.btn-badge {
+    background: #333; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;
+}
+
+/* Botón UNP (Especial) */
+.btn-unp {
+    margin-top: 20px; background: #e3f2fd; color: #0277bd; border: 1px solid #0277bd;
+    display: none; justify-content: center;
+}
+
+/* ALERTAS */
+.alert-box {
+    margin-top: 20px; padding: 15px; border-radius: 10px; text-align: center;
+    font-weight: bold; display: none; animation: popIn 0.3s;
+}
+.alert-crisis { background: #ffcccc; color: #c0392b; border: 2px solid #c0392b; }
+.alert-success { background: #d4edda; color: #155724; border: 2px solid #155724; }
+
+@keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+    .game-flex { flex-direction: column; align-items: center; gap: 30px; }
+    .controls-panel { width: 100%; }
+}
+</style>
+
+<div id="clock-game-v2">
+    
+    <div class="game-header">
+        <h1 class="gh-title">El Reloj del Cuidado</h1>
+        <p class="gh-subtitle">Administra 24 horas. Evita la "Pobreza de Tiempo".</p>
+    </div>
+
+    <div class="game-flex">
+        
+        <!-- IZQUIERDA: EL RELOJ -->
+        <div style="display:flex; flex-direction:column; align-items:center;">
+            <div class="clock-container">
+                <div class="pie-chart" id="chart"></div>
+                <div class="clock-center">
+                    <div class="hours-big" id="disp-rest">24</div>
+                    <div class="label-small">HORAS LIBRES</div>
+                </div>
+            </div>
+            
+            <div class="chart-legend">
+                <div class="legend-item"><div class="dot" style="background:var(--c-work)"></div> Trabajo</div>
+                <div class="legend-item"><div class="dot" style="background:var(--c-care)"></div> Cuidado</div>
+                <div class="legend-item"><div class="dot" style="background:var(--c-rest)"></div> Descanso</div>
+            </div>
+        </div>
+
+        <!-- DERECHA: CONTROLES -->
+        <div class="controls-panel">
+            
+            <!-- Resumen Numérico -->
+            <div class="stats-summary">
+                <div class="stat-item">
+                    <span class="stat-num" id="stat-work" style="color:var(--c-work)">0h</span>
+                    <span class="stat-lbl">Trabajo</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num" id="stat-care" style="color:var(--c-care)">0h</span>
+                    <span class="stat-lbl">Cuidado</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num" id="stat-rest" style="color:var(--c-rest)">24h</span>
+                    <span class="stat-lbl">Salud/Sueño</span>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="btn-group">
+                <button class="game-btn" onclick="addHours('work', 8)">
+                    <span>💼 Agregar Jornada Laboral</span>
+                    <span class="btn-badge" style="background:var(--c-work)">-8h</span>
+                </button>
+                <button class="game-btn" onclick="addHours('care', 4)">
+                    <span>🏠 Tareas del Hogar</span>
+                    <span class="btn-badge" style="background:var(--c-care)">-4h</span>
+                </button>
+                <button class="game-btn" onclick="addHours('care', 2)">
+                    <span>🍼 Cuidado de Personas</span>
+                    <span class="btn-badge" style="background:var(--c-care)">-2h</span>
+                </button>
+                <button class="game-btn" onclick="addHours('work', 2)">
+                    <span>🚌 Transporte</span>
+                    <span class="btn-badge" style="background:var(--c-work)">-2h</span>
+                </button>
+            </div>
+
+            <!-- Botón UNP -->
+            <button id="btn-unp" class="game-btn btn-unp" onclick="applyReform()">
+                🏛️ APLICAR POLÍTICA DE BIENESTAR UNP
+            </button>
+
+            <!-- Caja de Mensajes -->
+            <div id="msg-box" class="alert-box"></div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+// --- ESTADO INICIAL ---
+let timeData = {
+    work: 0,
+    care: 0,
+    rest: 24
+};
+let isCrisis = false;
+
+// 1. ACTUALIZAR EL GRÁFICO (Lógica de Grados)
+function updateChart() {
+    const total = 24;
+    
+    // Convertir horas a grados (360 grados / 24 horas = 15 grados por hora)
+    const degWork = (timeData.work / total) * 360;
+    const degCare = (timeData.care / total) * 360;
+    
+    // Puntos de corte para el gradiente
+    const endWork = degWork;
+    const endCare = degWork + degCare;
+    
+    // CSS Conic Gradient
+    const gradient = `conic-gradient(
+        var(--c-work) 0deg ${endWork}deg,
+        var(--c-care) ${endWork}deg ${endCare}deg,
+        var(--c-rest) ${endCare}deg 360deg
+    )`;
+    
+    document.getElementById('chart').style.background = gradient;
+    
+    // Actualizar Textos
+    document.getElementById('disp-rest').innerText = timeData.rest;
+    
+    // Actualizar Panel Estadístico
+    document.getElementById('stat-work').innerText = timeData.work + 'h';
+    document.getElementById('stat-care').innerText = timeData.care + 'h';
+    document.getElementById('stat-rest').innerText = timeData.rest + 'h';
+    
+    // Color de Alerta en el reloj si queda poco tiempo
+    if(timeData.rest < 6) {
+        document.getElementById('disp-rest').style.color = "#c0392b";
+    } else {
+        document.getElementById('disp-rest').style.color = "#2c3e50";
+    }
+}
+
+// 2. AÑADIR HORAS
+function addHours(type, amount) {
+    if(isCrisis) return; // Bloqueado si ya terminó
+
+    if (timeData.rest - amount < 0) {
+        showMessage("⚠️ No hay suficientes horas en el día.", "alert");
+        return;
+    }
+
+    // Lógica matemática simple
+    timeData[type] += amount;
+    timeData.rest -= amount;
+
+    updateChart();
+    checkHealth();
+}
+
+// 3. VERIFICAR SALUD
+function checkHealth() {
+    const msgBox = document.getElementById('msg-box');
+    
+    if (timeData.rest <= 6) {
+        isCrisis = true;
+        showMessage("⚠️ ALERTA: SOBRECARGA. Tienes menos de 6h para dormir. Esto es violencia económica y afecta tu salud.", "alert");
+        
+        // Mostrar Botón UNP
+        const btnUnp = document.getElementById('btn-unp');
+        btnUnp.style.display = 'flex';
+        gsap.from(btnUnp, {y: 20, opacity: 0, duration: 0.5});
+    } else {
+        msgBox.style.display = 'none';
+    }
+}
+
+// 4. APLICAR REFORMA
+function applyReform() {
+    // La UNP aplica flexibilidad y apoyo
+    // Efecto: Reduce horas de transporte (Teletrabajo) y carga de cuidado (Apoyo institucional)
+    
+    // Reducir valores (Simulación)
+    const workReduction = 2; // Ahorro transporte
+    const careReduction = 2; // Apoyo cuidado
+    
+    // Validar que no queden negativos
+    if(timeData.work >= workReduction) timeData.work -= workReduction;
+    if(timeData.care >= careReduction) timeData.care -= careReduction;
+    
+    // Recalcular descanso
+    timeData.rest = 24 - timeData.work - timeData.care;
+    
+    isCrisis = false; // Salimos de crisis
+    
+    updateChart();
+    
+    // Mensaje de Éxito
+    showMessage("✅ REFORMA APLICADA: Teletrabajo (-2h Transporte) y Apoyo Psicosocial (-2h Carga). ¡Has recuperado 4 horas de vida!", "success");
+    
+    document.getElementById('btn-unp').style.display = 'none';
+    
+    // Animación de celebración en el reloj
+    gsap.from("#chart", {scale: 1.1, duration: 0.5, yoyo: true, repeat: 1});
+}
+
+function showMessage(text, type) {
+    const box = document.getElementById('msg-box');
+    box.innerHTML = text;
+    box.style.display = 'block';
+    
+    if(type === 'alert') {
+        box.className = "alert-box alert-crisis";
+    } else {
+        box.className = "alert-box alert-success";
+    }
+}
+
+// Iniciar gráfico
+updateChart();
+
+</script>

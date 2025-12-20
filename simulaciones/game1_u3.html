@@ -1,0 +1,350 @@
+<!-- LIBRERÍAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+/* --- ESTÉTICA --- */
+:root {
+    --tf-purple: #7B2CBF;
+    --tf-pink: #FF006E;
+    --tf-cyan: #3A86FF;
+    --tf-dark: #10002B;
+    --tf-white: #F8F9FA;
+    --glass: rgba(255, 255, 255, 0.1);
+}
+
+#debate-slider-container {
+    width: 100%;
+    min-height: 650px;
+    height: auto;
+    background: linear-gradient(135deg, #240046 0%, #10002B 100%);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    color: var(--tf-white);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    box-sizing: border-box;
+}
+
+/* Fondo Animado */
+.geo-shape { position: absolute; opacity: 0.2; pointer-events: none; }
+.shape-1 { 
+    top: -10%; left: -10%; width: 300px; height: 300px; 
+    background: var(--tf-purple); filter: blur(80px); border-radius: 50%; 
+    animation: float 10s infinite alternate; 
+}
+.shape-2 { 
+    bottom: -10%; right: -10%; width: 250px; height: 250px; 
+    background: var(--tf-cyan); filter: blur(60px); border-radius: 50%; 
+    animation: float 15s infinite alternate-reverse; 
+}
+@keyframes float { from {transform: translate(0,0);} to {transform: translate(30px, -30px);} }
+
+/* --- TARJETA PRINCIPAL --- */
+.debate-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    padding: 40px;
+    width: 100%;
+    max-width: 800px;
+    min-height: 400px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.card-label {
+    background: var(--tf-cyan);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+.card-title {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 20px 0;
+    background: linear-gradient(to right, #fff, #bce0fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.card-context {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #ddd;
+    margin-bottom: 30px;
+    max-width: 90%;
+}
+
+/* --- SECCIÓN DESPLEGABLE (ARGUMENTOS) --- */
+.arguments-panel {
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    border-radius: 15px;
+    overflow: hidden;
+    height: 0; /* Oculto por defecto */
+    opacity: 0;
+    transition: all 0.5s ease;
+}
+
+.arguments-content {
+    padding: 25px;
+    text-align: left;
+    border-left: 4px solid var(--tf-pink);
+}
+
+.arg-title { color: var(--tf-pink); font-weight: bold; margin-bottom: 10px; font-family: 'Sora', sans-serif; }
+.arg-list { margin: 0; padding-left: 20px; }
+.arg-list li { margin-bottom: 8px; font-size: 0.95rem; }
+
+/* BOTÓN DE REVELAR */
+.reveal-btn {
+    background: transparent;
+    border: 2px solid var(--tf-purple);
+    color: var(--tf-white);
+    padding: 12px 30px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+.reveal-btn:hover { background: var(--tf-purple); box-shadow: 0 0 20px rgba(123, 44, 191, 0.4); }
+
+/* --- NAVEGACIÓN (FLECHAS) --- */
+.nav-controls {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 900px;
+    margin-top: 30px;
+    align-items: center;
+}
+
+.nav-arrow {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.nav-arrow:hover { background: var(--tf-cyan); transform: scale(1.1); }
+.nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+
+.slide-indicator {
+    font-family: 'Sora', sans-serif;
+    font-weight: bold;
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+    color: var(--tf-cyan);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+    .debate-card { padding: 25px; min-height: 300px; }
+    .nav-controls { padding: 0 10px; }
+}
+</style>
+
+<div id="debate-slider-container">
+    <div class="geo-shape shape-1"></div>
+    <div class="geo-shape shape-2"></div>
+
+    <!-- TARJETA CENTRAL -->
+    <div class="debate-card" id="main-card">
+        <div class="card-label" id="slide-label">INTRODUCCIÓN</div>
+        <h2 class="card-title" id="slide-title">Juego 1: El Debate Transfeminista</h2>
+        <p class="card-context" id="slide-context">
+            Este es un espacio de reflexión crítica. Analizaremos las tensiones del sistema sexo-género. <br><br>
+            <strong>Dinámica:</strong> Discutan la pregunta en grupo. Luego, usen el botón para revelar los puntos clave desde una perspectiva transfeminista.
+        </p>
+        
+        <!-- Panel Oculto -->
+        <div class="arguments-panel" id="arg-panel">
+            <div class="arguments-content">
+                <div class="arg-title">💡 Puntos Clave para el Debate:</div>
+                <ul class="arg-list" id="arg-list">
+                    <!-- JS rellena esto -->
+                </ul>
+            </div>
+        </div>
+
+        <button class="reveal-btn" id="toggle-btn" onclick="toggleArguments()" style="display:none;">
+            <span>👁️ Ver Perspectiva Transfeminista</span>
+        </button>
+    </div>
+
+    <!-- CONTROLES -->
+    <div class="nav-controls">
+        <button class="nav-arrow" id="prev-btn" onclick="changeSlide(-1)">❮</button>
+        <div class="slide-indicator">1 / 5</div>
+        <button class="nav-arrow" id="next-btn" onclick="changeSlide(1)">❯</button>
+    </div>
+</div>
+
+<script>
+// --- DATOS DEL DEBATE ---
+const slides = [
+    {
+        label: "INICIO",
+        title: "Juego 1: El Debate Transfeminista",
+        context: "Objetivo: Fomentar la reflexión crítica sobre el sistema sexo-género.<br><br>Preparen sus argumentos.",
+        hasArguments: false
+    },
+    {
+        label: "TEMA 1",
+        title: "¿Qué es ser mujer?",
+        context: "Existe una tensión histórica entre las definiciones biológicas y las identidades políticas. ¿Cómo definimos 'mujer' en un contexto institucional inclusivo?",
+        hasArguments: true,
+        points: [
+            "Criticar el determinismo biológico: La genitalidad no define el género.",
+            "Reconocer la identidad de género como un derecho humano fundamental.",
+            "Analizar cómo la exclusión de mujeres trans reproduce violencias patriarcales.",
+            "La categoría 'mujer' es diversa (cis, trans, racializada, diversa) y no monolítica."
+        ]
+    },
+    {
+        label: "TEMA 2",
+        title: "¿Inclusión sin violencias?",
+        context: "¿Cómo garantizamos espacios seguros para mujeres trans sin reproducir otras violencias o segregación?",
+        hasArguments: true,
+        points: [
+            "Cuestionar la idea de que las mujeres trans son un 'peligro' para las mujeres cis (discurso de odio).",
+            "Promover la integración en lugar de la segregación (espacios separados).",
+            "El enfoque diferencial no significa trato desigual, sino protección específica ante riesgos específicos.",
+            "Escuchar las voces de las personas trans en el diseño de los protocolos."
+        ]
+    },
+    {
+        label: "TEMA 3",
+        title: "Protección Institucional",
+        context: "¿Qué acciones concretas puede tomar la UNP para proteger eficazmente a personas trans?",
+        hasArguments: true,
+        points: [
+            "Implementar evaluaciones de riesgo que entiendan el prejuicio y el odio como móviles de violencia.",
+            "Capacitación obligatoria para evitar la revictimización y el malgenerizar en la atención.",
+            "Reconocer el nombre identitario en todos los trámites, independientemente del documento legal.",
+            "Rutas de emergencia específicas para crímenes de odio."
+        ]
+    },
+    {
+        label: "CONCLUSIÓN",
+        title: "Resultados Esperados",
+        context: "Hemos analizado cómo el sistema sexo-género influye en la institucionalidad. La reflexión profunda es el primer paso para una protección efectiva.",
+        hasArguments: true,
+        points: [
+            "El sistema binario rígido genera exclusión.",
+            "La institución debe adaptarse a la realidad de las personas, no al revés.",
+            "Garantizar derechos trans es garantizar derechos humanos."
+        ]
+    }
+];
+
+let currentIndex = 0;
+
+function updateUI() {
+    const data = slides[currentIndex];
+    
+    // Elementos
+    const card = document.getElementById('main-card');
+    const label = document.getElementById('slide-label');
+    const title = document.getElementById('slide-title');
+    const context = document.getElementById('slide-context');
+    const btn = document.getElementById('toggle-btn');
+    const indicator = document.querySelector('.slide-indicator');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+
+    // Animación de Salida
+    gsap.to(card, {opacity: 0, y: -20, duration: 0.3, onComplete: () => {
+        // Actualizar Textos
+        label.innerText = data.label;
+        title.innerHTML = data.title;
+        context.innerHTML = data.context;
+        indicator.innerText = `${currentIndex + 1} / ${slides.length}`;
+
+        // Resetear Panel de Argumentos
+        closeArguments();
+        
+        // Configurar Botón de Revelar
+        if(data.hasArguments) {
+            btn.style.display = 'flex';
+            const list = document.getElementById('arg-list');
+            list.innerHTML = data.points.map(p => `<li>${p}</li>`).join('');
+        } else {
+            btn.style.display = 'none';
+        }
+
+        // Estado de Flechas
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex === slides.length - 1;
+
+        // Animación de Entrada
+        gsap.to(card, {opacity: 1, y: 0, duration: 0.5});
+    }});
+}
+
+function changeSlide(direction) {
+    currentIndex += direction;
+    updateUI();
+}
+
+// Lógica de Acordeón para los Argumentos
+function toggleArguments() {
+    const panel = document.getElementById('arg-panel');
+    const btnText = document.querySelector('#toggle-btn span');
+    
+    if (panel.style.height && panel.style.height !== '0px') {
+        // Cerrar
+        gsap.to(panel, {height: 0, opacity: 0, duration: 0.5});
+        btnText.innerText = "👁️ Ver Perspectiva Transfeminista";
+    } else {
+        // Abrir
+        gsap.to(panel, {height: "auto", opacity: 1, duration: 0.5});
+        btnText.innerText = "❌ Ocultar Argumentos";
+    }
+}
+
+function closeArguments() {
+    const panel = document.getElementById('arg-panel');
+    const btnText = document.querySelector('#toggle-btn span');
+    panel.style.height = '0px';
+    panel.style.opacity = '0';
+    if(btnText) btnText.innerText = "👁️ Ver Perspectiva Transfeminista";
+}
+
+// Iniciar
+updateUI();
+
+</script>

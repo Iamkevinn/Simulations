@@ -1,0 +1,210 @@
+<!-- LIBRERÍAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* --- 1. ESTILO "COMMAND CENTER" (ALTO CONTRASTE) --- */
+:root {
+    --cmd-bg: #0b1120;       /* Azul muy oscuro (casi negro) */
+    --cmd-card: #1e293b;     /* Gris azulado oscuro */
+    --cmd-accent: #38bdf8;   /* Cian brillante */
+    --cmd-border: #334155;   /* Borde gris */
+    --cmd-text: #ffffff;     /* Blanco puro */
+    --cmd-highlight: #facc15; /* Amarillo alerta */
+}
+
+#protocol-secure-container {
+    width: 100%;
+    height: auto; /* Altura automática obligatoria */
+    background-color: var(--cmd-bg) !important;
+    font-family: 'Roboto', sans-serif;
+    color: var(--cmd-text) !important;
+    border: 2px solid var(--cmd-accent) !important;
+    border-radius: 10px;
+    padding: 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- HEADER --- */
+.secure-header {
+    text-align: center;
+    border-bottom: 2px solid var(--cmd-border);
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+    z-index: 10;
+}
+.secure-badge {
+    background: var(--cmd-accent) !important;
+    color: #000 !important;
+    font-family: 'Chakra Petch', sans-serif;
+    font-weight: 700;
+    padding: 5px 15px;
+    display: inline-block;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+.secure-title {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    color: var(--cmd-text) !important;
+    margin: 0;
+    text-transform: uppercase;
+}
+.secure-subtitle {
+    color: #94a3b8 !important;
+    margin-top: 10px;
+    font-size: 1rem;
+}
+
+/* --- LISTA DE OBJETIVOS (BLOQUES GRANDES) --- */
+.objectives-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 10;
+}
+
+.obj-block {
+    background-color: var(--cmd-card) !important;
+    border-left: 5px solid var(--cmd-accent) !important;
+    border: 1px solid var(--cmd-border);
+    padding: 25px;
+    border-radius: 0 10px 10px 0;
+    display: flex;
+    flex-direction: column; /* Vertical siempre para asegurar espacio */
+    transition: transform 0.3s;
+    /* Asegurar visibilidad */
+    opacity: 1 !important; 
+    visibility: visible !important;
+}
+
+.obj-block:hover {
+    background-color: #26344a !important;
+    transform: translateX(10px);
+    border-left-color: var(--cmd-highlight) !important;
+}
+
+.obj-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: var(--cmd-accent) !important;
+}
+
+.obj-content {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--cmd-text) !important;
+}
+
+/* --- JUSTIFICACIÓN (TERMINAL STYLE) --- */
+.terminal-box {
+    margin-top: 40px;
+    background-color: #000000 !important;
+    border: 1px solid var(--cmd-highlight) !important;
+    padding: 25px;
+    font-family: 'Courier New', monospace;
+    border-radius: 8px;
+    position: relative;
+    z-index: 10;
+}
+.terminal-head {
+    color: var(--cmd-highlight) !important;
+    font-weight: bold;
+    border-bottom: 1px dashed #555;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    display: block;
+}
+.terminal-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #ccc !important;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    #protocol-secure-container { padding: 15px; }
+    .obj-block { padding: 20px; }
+    .obj-content { font-size: 1rem; }
+}
+
+</style>
+
+<div id="protocol-secure-container">
+    
+    <!-- HEADER -->
+    <div class="secure-header">
+        <span class="secure-badge">UNIDAD 6</span>
+        <h1 class="secure-title">Protocolos Institucionales</h1>
+        <p class="secure-subtitle">Prevención y Atención en la UNP</p>
+    </div>
+
+    <!-- OBJETIVOS (LISTA VERTICAL) -->
+    <div class="objectives-stack">
+        
+        <!-- Obj 1 -->
+        <div class="obj-block">
+            <div class="obj-icon">📋 LINEAMIENTOS CLAVE</div>
+            <div class="obj-content">
+                Comprender los lineamientos del protocolo <strong>EVG-DH-PT-003</strong> y sus componentes clave para la atención de VBG en la UNP.
+            </div>
+        </div>
+
+        <!-- Obj 2 -->
+        <div class="obj-block">
+            <div class="obj-icon">🚨 RUTA DE RESPUESTA</div>
+            <div class="obj-content">
+                Aplicar la ruta institucional de respuesta mediante <strong>simulaciones prácticas</strong> que fortalezcan la toma de decisiones en escenarios reales.
+            </div>
+        </div>
+
+        <!-- Obj 3 -->
+        <div class="obj-block">
+            <div class="obj-icon">⚖️ ESTÁNDARES INTERNACIONALES</div>
+            <div class="obj-content">
+                Analizar los principios orientadores para garantizar la confidencialidad, el enfoque de derechos y la <strong>no revictimización</strong>.
+            </div>
+        </div>
+
+        <!-- Obj 4 -->
+        <div class="obj-block">
+            <div class="obj-icon">🛠️ MEJORA CONTINUA</div>
+            <div class="obj-content">
+                Diseñar estrategias para activar redes de apoyo y mejorar continuamente los mecanismos de atención institucional.
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JUSTIFICACIÓN -->
+    <div class="terminal-box">
+        <span class="terminal-head">> SYSTEM_LOG: JUSTIFICACIÓN_DEL_MÓDULO</span>
+        <div class="terminal-text">
+            Esta unidad es esencial para garantizar la correcta implementación de los protocolos institucionales frente a la violencia basada en género. Integra el análisis feminista del poder institucional, la debida diligencia reforzada y los estándares internacionales, además de fortalecer competencias prácticas mediante simulaciones y diseño de estrategias de mejora. Con ello, se busca asegurar respuestas efectivas, articuladas y respetuosas de los derechos humanos en la UNP.
+        </div>
+    </div>
+
+</div>
+
+<script>
+// Animación simple de movimiento (NO OPACIDAD)
+// Esto asegura que si el JS falla, los elementos ya son visibles.
+gsap.from(".obj-block", {
+    x: -50, 
+    duration: 0.8, 
+    stagger: 0.2, 
+    ease: "power2.out",
+    clearProps: "all" // Limpia estilos inline después de animar para evitar conflictos
+});
+
+gsap.from(".terminal-box", {
+    y: 50,
+    duration: 1,
+    delay: 0.5,
+    ease: "power2.out"
+});
+</script>

@@ -1,0 +1,348 @@
+<!-- LIBRERÍAS (GSAP) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:ital,wght@1,500&display=swap" rel="stylesheet">
+
+<style>
+/* --- 1. SISTEMA DE DISEÑO (GLASS & VIBRANT) --- */
+:root {
+    --bg-deep: #2e0249;
+    --bg-light: #570a57;
+    --accent: #a91079;
+    --glass: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --text: #ffffff;
+    --success: #00d4ff;
+    --danger: #ff2e63;
+    --warning: #fcdab7;
+}
+
+#reform-sim-container {
+    width: 100%;
+    min-height: 850px;
+    height: auto;
+    background: radial-gradient(circle at top left, var(--bg-light), var(--bg-deep));
+    position: relative;
+    overflow: hidden;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+/* --- 2. FONDO VIVO (LÁMPARA DE LAVA DIGITAL) --- */
+.orb {
+    position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.6;
+    animation: orbFloat 10s infinite alternate ease-in-out; z-index: 0;
+}
+.orb-1 { width: 300px; height: 300px; background: #ff005c; top: -50px; left: -50px; }
+.orb-2 { width: 400px; height: 400px; background: #6a00ff; bottom: -100px; right: -100px; animation-duration: 15s; }
+.orb-3 { width: 200px; height: 200px; background: #00d4ff; top: 40%; left: 40%; animation-duration: 12s; opacity: 0.4; }
+
+@keyframes orbFloat { from { transform: translate(0,0); } to { transform: translate(30px, 30px); } }
+
+/* --- 3. DASHBOARD (MÉTRICAS) --- */
+.dashboard-header {
+    position: relative; z-index: 10; padding: 20px;
+    background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
+    display: flex; flex-direction: column; gap: 15px;
+}
+
+.title-area h2 { margin: 0; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 1px; }
+.title-area span { font-size: 0.8rem; opacity: 0.8; }
+
+.metrics-row {
+    display: flex; justify-content: space-around; gap: 10px; width: 100%;
+}
+
+.metric-card {
+    flex: 1; background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: 10px; padding: 10px; text-align: center;
+    display: flex; flex-direction: column; align-items: center;
+}
+.metric-label { font-size: 0.7rem; text-transform: uppercase; margin-bottom: 5px; opacity: 0.8; }
+.metric-bar-bg { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; overflow: hidden; }
+.metric-fill { height: 100%; width: 50%; transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+/* Colores de métricas */
+#m-rights .metric-fill { background: var(--success); }
+#m-risk .metric-fill { background: var(--danger); } /* Lleno es malo */
+#m-legit .metric-fill { background: var(--warning); }
+
+/* --- 4. ESCENARIO CENTRAL --- */
+.scenario-stage {
+    flex: 1; padding: 30px 20px; position: relative; z-index: 10;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+
+.card-stack {
+    position: relative; width: 100%; max-width: 700px; min-height: 400px;
+}
+
+/* TARJETA DE SITUACIÓN */
+.situation-card {
+    background: rgba(255, 255, 255, 0.95);
+    color: #1a1a1a;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    position: absolute; top: 0; left: 0; width: 100%; height: auto;
+    transform-style: preserve-3d;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    box-sizing: border-box;
+    display: flex; flex-direction: column;
+}
+
+.card-tag {
+    background: var(--bg-deep); color: white; padding: 5px 12px;
+    border-radius: 20px; font-size: 0.75rem; font-weight: bold;
+    align-self: flex-start; margin-bottom: 15px; text-transform: uppercase;
+}
+
+.card-content h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin: 0 0 15px 0; line-height: 1.2; color: var(--bg-deep); }
+.card-content p { font-size: 1rem; line-height: 1.6; color: #444; margin-bottom: 25px; }
+
+/* BOTONES DE DECISIÓN */
+.decision-row {
+    margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+}
+
+.btn-reform {
+    background: var(--bg-deep); color: white; border: none; padding: 15px;
+    border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 0.9rem;
+    transition: transform 0.2s; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+.btn-reproduce {
+    background: #e2e2e2; color: #333; border: 1px solid #ccc; padding: 15px;
+    border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 0.9rem;
+    transition: transform 0.2s;
+}
+
+.btn-reform:hover, .btn-reproduce:hover { transform: scale(1.03); }
+
+/* --- 5. RESULTADOS / FORO --- */
+.results-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(10, 10, 10, 0.95); z-index: 50;
+    display: none; flex-direction: column; justify-content: center; align-items: center;
+    padding: 30px; text-align: center; box-sizing: border-box;
+}
+.forum-title { font-size: 2rem; color: var(--warning); font-family: 'Playfair Display', serif; margin-bottom: 20px; }
+.forum-list { text-align: left; max-width: 600px; color: #ddd; line-height: 1.8; }
+.forum-list li { margin-bottom: 10px; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .metrics-row { gap: 5px; }
+    .metric-label { font-size: 0.6rem; }
+    .decision-row { grid-template-columns: 1fr; } /* Botones apilados en móvil */
+    .card-content h3 { font-size: 1.4rem; }
+}
+
+/* ANIMACIONES */
+.fade-out-left { transform: translateX(-120%) rotate(-10deg); opacity: 0; }
+.fade-out-right { transform: translateX(120%) rotate(10deg); opacity: 0; }
+
+</style>
+
+<div id="reform-sim-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard-header">
+        <div class="title-area">
+            <h2>Misión 2: Reformar</h2>
+            <span>Simulador de Estrategia Institucional</span>
+        </div>
+        
+        <div class="metrics-row">
+            <div class="metric-card" id="m-rights">
+                <span class="metric-label">Impacto en Derechos</span>
+                <div class="metric-bar-bg"><div class="metric-fill" style="width: 50%;"></div></div>
+            </div>
+            <div class="metric-card" id="m-risk">
+                <span class="metric-label">Riesgo Institucional</span>
+                <div class="metric-bar-bg"><div class="metric-fill" style="width: 30%;"></div></div>
+            </div>
+            <div class="metric-card" id="m-legit">
+                <span class="metric-label">Legitimidad</span>
+                <div class="metric-bar-bg"><div class="metric-fill" style="width: 50%;"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JUEGO -->
+    <div class="scenario-stage">
+        <div class="card-stack" id="card-container">
+            <!-- Las tarjetas se inyectan con JS -->
+        </div>
+    </div>
+
+    <!-- PANTALLA FINAL (FORO) -->
+    <div class="results-overlay" id="final-screen">
+        <h2 class="forum-title">Análisis de Resultados</h2>
+        <div style="font-size:3rem; margin-bottom:20px;">🏛️</div>
+        <p style="margin-bottom:20px;">Has completado la simulación. Reflexiona sobre lo sucedido:</p>
+        <ul class="forum-list">
+            <li>¿Qué ocurre si la UNP no se reforma?</li>
+            <li>¿Qué riesgos asume la institución al ignorar la violencia digital?</li>
+            <li>¿Qué responsabilidades constitucionales se activaron con tus decisiones?</li>
+        </ul>
+        <button class="btn-reform" style="margin-top:20px; background:var(--accent);" onclick="location.reload()">REINICIAR SIMULACIÓN</button>
+    </div>
+
+</div>
+
+<script>
+// --- DATOS SENSIBLES DEL CURSO ---
+const scenarios = [
+    {
+        tag: "REDISEÑO DEL RIESGO",
+        title: "Violencia en Redes",
+        desc: "Una lideresa reporta acoso masivo y estigmatización en Twitter (X). El protocolo actual solo mide el riesgo físico (hombres armados). ¿Qué reforma aplicas?",
+        reform: {
+            text: "REFORMAR: Incluir la Violencia Digital y Estigmatización como indicadores de riesgo.",
+            rights: 20, risk: -10, legit: 20,
+            feedback: "Excelente. Reconocer la violencia digital protege la integridad psicológica y política."
+        },
+        repro: {
+            text: "MANTENER: Ignorar lo digital. Solo proteger si hay amenaza física inminente.",
+            rights: -20, risk: 30, legit: -20,
+            feedback: "Peligroso. Al ignorar lo digital, el riesgo escala y la institución falla en su deber."
+        }
+    },
+    {
+        tag: "ECONOMÍA FEMINISTA",
+        title: "Reforma Laboral y del Cuidado",
+        desc: "Las escoltas mujeres solicitan ajustes de turno para labores de cuidado. El reglamento actual es rígido.",
+        reform: {
+            text: "REFORMAR: Ajustar turnos reconociendo la economía del cuidado y cargas desiguales.",
+            rights: 20, risk: -5, legit: 15,
+            feedback: "Bien. La economía feminista exige que las instituciones adapten sus estructuras a la realidad del cuidado."
+        },
+        repro: {
+            text: "MANTENER: 'Igualdad es igualdad'. Los turnos son iguales para todos sin excepción.",
+            rights: -15, risk: 10, legit: -10,
+            feedback: "Error. Esa 'igualdad' formal reproduce la desigualdad material y sobrecarga a las mujeres."
+        }
+    },
+    {
+        tag: "VIOLENCIA SEXUAL",
+        title: "Protocolo de Riesgo",
+        desc: "Se debate incluir preguntas específicas sobre violencia sexual en la matriz de riesgo. Algunos dicen que 'invade la privacidad'.",
+        reform: {
+            text: "REFORMAR: Incluir indicadores de Violencia Sexual para prevenirla.",
+            rights: 25, risk: -20, legit: 25,
+            feedback: "Crucial. Si no se pregunta y mide, no se previene. Es una reforma estructural necesaria."
+        }
+    } // El caso "repro" se genera dinámicamente si solo hay 1 opcion, pero aqui asumimos estructura completa
+];
+
+// Completar datos estructura (JS Hack para simplicidad)
+scenarios[2].repro = {
+    text: "MANTENER: No preguntar. Esperar a que la víctima denuncie voluntariamente.",
+    rights: -30, risk: 40, legit: -30,
+    feedback: "Grave. El silencio institucional ante la violencia sexual genera responsabilidad del Estado."
+};
+
+// ESTADO
+let currentCard = 0;
+let metrics = { rights: 50, risk: 30, legit: 50 };
+
+// INICIAR
+renderCard();
+
+function renderCard() {
+    const container = document.getElementById('card-container');
+    const data = scenarios[currentCard];
+
+    // Crear tarjeta HTML
+    const cardHTML = `
+        <div class="situation-card" id="active-card">
+            <div class="card-tag">${data.tag}</div>
+            <div class="card-content">
+                <h3>${data.title}</h3>
+                <p>${data.desc}</p>
+            </div>
+            <div class="decision-row">
+                <button class="btn-reform" onclick="makeDecision('reform')">🚀 ${data.reform.text}</button>
+                <button class="btn-reproduce" onclick="makeDecision('repro')">🛑 ${data.repro.text}</button>
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = cardHTML;
+    
+    // Animación de entrada
+    gsap.from("#active-card", {y: 50, opacity: 0, duration: 0.5, ease: "power2.out"});
+}
+
+function makeDecision(type) {
+    const data = scenarios[currentCard];
+    const outcome = data[type];
+    const card = document.getElementById('active-card');
+
+    // 1. Actualizar Métricas
+    updateMetrics(outcome.rights, outcome.risk, outcome.legit);
+
+    // 2. Feedback Visual en Tarjeta
+    const color = type === 'reform' ? 'var(--success)' : 'var(--danger)';
+    card.style.border = `2px solid ${color}`;
+    
+    // Reemplazar contenido con feedback breve antes de pasar
+    card.querySelector('.card-content').innerHTML = `
+        <h3 style="color:${color}">${type === 'reform' ? '¡REFORMA APLICADA!' : 'DESIGUALDAD REPRODUCIDA'}</h3>
+        <p>${outcome.feedback}</p>
+    `;
+    card.querySelector('.decision-row').style.display = 'none';
+
+    // 3. Pasar a siguiente (Delay)
+    setTimeout(() => {
+        // Animación de salida (Swipe)
+        const direction = type === 'reform' ? 100 : -100;
+        gsap.to(card, {
+            x: direction, rotation: direction/10, opacity: 0, duration: 0.4,
+            onComplete: () => {
+                currentCard++;
+                if(currentCard < scenarios.length) {
+                    renderCard();
+                } else {
+                    showFinal();
+                }
+            }
+        });
+    }, 2500); // 2.5 seg para leer el feedback
+}
+
+function updateMetrics(dRights, dRisk, dLegit) {
+    // Calcular
+    metrics.rights = clamp(metrics.rights + dRights);
+    metrics.risk = clamp(metrics.risk + dRisk);
+    metrics.legit = clamp(metrics.legit + dLegit);
+
+    // Animar Barras
+    gsap.to("#m-rights .metric-fill", {width: metrics.rights + "%"});
+    gsap.to("#m-risk .metric-fill", {width: metrics.risk + "%"});
+    gsap.to("#m-legit .metric-fill", {width: metrics.legit + "%"});
+
+    // Colores de estado crítico
+    if(metrics.risk > 70) document.querySelector("#m-risk .metric-fill").style.background = "red";
+    else document.querySelector("#m-risk .metric-fill").style.background = "var(--danger)";
+}
+
+function clamp(val) {
+    return Math.max(0, Math.min(100, val));
+}
+
+function showFinal() {
+    const screen = document.getElementById('final-screen');
+    screen.style.display = 'flex';
+    gsap.from(screen, {opacity: 0, duration: 0.5});
+}
+
+</script>

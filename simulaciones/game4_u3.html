@@ -5,15 +5,28 @@
 <style>
 /* --- 1. CONFIGURACIÓN VISUAL (SÓLIDA Y ACCESIBLE) --- */
 :root {
-    --sim-bg: #1a0b2e;       /* Fondo oscuro violeta */
-    --sim-panel: #2d1b4e;    /* Paneles sólidos */
-    --accent-purple: #9d4edd; /* Prevención VG */
-    --accent-orange: #ff9e00; /* Alerta/Atención */
-    --accent-green: #06d6a0;  /* Éxito */
-    --text-white: #ffffff;
-    --btn-normal: #432c7a;
-    --btn-hover: #5b3a9b;
+    /* Fondo */
+    --sim-bg: #170047;          /* Fondo principal oscuro */
+    --sim-panel: #480241;       /* Panel sólido legible */
+
+    /* Texto */
+    --text-main: #ffffff;
+    --text-muted: rgba(255,255,255,0.75);
+
+    /* Acentos (cliente) */
+    --accent-attention: #FEC82F; /* Atención / prevención */
+    --accent-danger: #E44700;    /* Riesgo / error */
+    --accent-warning: #EE7D4F;   /* Advertencia */
+    --accent-action: #D23B78;    /* Acción crítica */
+
+    /* Botones */
+    --btn-normal: #480241;
+    --btn-hover: #D23B78;
+
+    /* Bordes */
+    --border-soft: rgba(255,255,255,0.15);
 }
+
 
 #simulation-container {
     width: 100%;
@@ -170,7 +183,7 @@
 
     <!-- HUD SUPERIOR -->
     <div class="hud-bar">
-        <div class="hud-title">Simulación: Atención Diferencial</div>
+        <div class="hud-title" style="color: white;">Simulación: Atención Diferencial</div>
         <div style="display:flex; align-items:center;">
             <div class="trust-label">Nivel de Confianza:</div>
             <div style="width:10px;"></div>
@@ -205,7 +218,7 @@
         <div class="fb-icon" id="fb-icon">✨</div>
         <div class="fb-title" id="fb-title">Análisis de la Interacción</div>
         <div class="fb-text" id="fb-desc">...</div>
-        <button class="continue-btn" onclick="nextScene()">CONTINUAR</button>
+        <button class="continue-btn" style="color: white;" onclick="nextScene()">CONTINUAR</button>
     </div>
 
 </div>

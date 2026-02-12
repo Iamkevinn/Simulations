@@ -64,6 +64,9 @@
         background: rgba(72, 2, 65, 0.05);
         padding: 8px 15px;
         border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         border: 1px solid rgba(72, 2, 65, 0.1);
     }
 
@@ -193,6 +196,35 @@
         h2 { font-size: 1.4rem; }
         .btn-game { font-size: 0.95rem; padding: 15px; }
     }
+
+.logos-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.logos-container img {
+    max-height: 100px;   /* controla tamaño real */
+    width: auto;        /* mantiene proporción */
+    height: auto;
+    object-fit: contain;
+}
+
+@media (max-width: 600px) {
+
+    .logos-container {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .logos-container img {
+        max-height: 58px;
+    }
+
+}
+
+
 </style>
 </head>
 <body>
@@ -202,8 +234,15 @@
         
         <div class="hud">
             <span class="score-box" id="level-display">FASE: INICIACIÓN</span>
+
+            <div class="logos-container">
+                <img src="../Styles/UNP I.svg" alt="Logo UNP">
+                <img src="../Styles/logo.png" alt="Logo Comisión">
+            </div>
+
             <span class="score-box" id="score-display">🛡️ INTEGRIDAD: 0%</span>
         </div>
+
         <div class="progress-container"><div class="progress-fill" id="progress-bar"></div></div>
 
         <!-- ESCENA 0: INTRODUCCIÓN -->

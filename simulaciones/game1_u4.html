@@ -1,21 +1,19 @@
 <!-- LIBRERÍAS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<!-- Cambiamos a fuentes más institucionales/modernas como en el ejemplo anterior -->
+<!-- Fuentes institucionales -->
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-/* --- VARIABLES DE IDENTIDAD (CLARAS) --- */
+/* --- VARIABLES DE IDENTIDAD --- */
 :root {
     /* Paleta Imagen */
-    --tf-purple: #4B1E7A;          /* Identidad principal */
-    --tf-orange: #E35205;          /* Alertas / Acción */
-    --tf-yellow: #FDB913;          /* Detalles / Foco */
-    --tf-success: #00A499;         /* Verde azulado para éxito (más armónico) */
+    --tf-purple: #4B1E7A;          
+    --tf-orange: #E35205;          
+    --tf-yellow: #FDB913;          
+    --tf-success: #00A499;         
     
-    --bg-main: #FFFFFF;            /* Fondo blanco limpio */
-    --bg-panel: #F9F9F9;           /* Fondo paneles suave */
-    --text-main: #333333;          /* Texto lectura */
-    --text-light: #ffffff;         /* Texto botones/títulos */
+    --bg-main: #FFFFFF;            
+    --text-main: #333333;          
     
     --card-shadow: 0 8px 20px rgba(75, 30, 122, 0.1);
     --border-radius: 16px;
@@ -25,7 +23,7 @@
     width: 100%;
     min-height: 850px;
     height: auto;
-    background: linear-gradient(180deg, #FFFFFF 0%, #F3E5F5 100%) !important; /* Degradado suave */
+    background: linear-gradient(180deg, #FFFFFF 0%, #F3E5F5 100%) !important;
     font-family: 'Inter', sans-serif;
     color: var(--text-main) !important;
     border: 1px solid #e0e0e0 !important;
@@ -38,7 +36,7 @@
     overflow: hidden;
 }
 
-/* --- LOGOS DEL CLIENTE --- */
+/* --- LOGOS --- */
 .header-logos {
     display: flex;
     justify-content: space-between;
@@ -50,7 +48,7 @@
 }
 
 .header-logos img {
-    height: 55px; /* Tamaño controlado */
+    height: 55px; 
     width: auto;
     object-fit: contain;
     transition: transform 0.3s ease;
@@ -69,7 +67,7 @@
     color: var(--tf-purple) !important;
     font-weight: 800;
     margin: 0 0 10px 0;
-    text-transform: none; /* Quitamos mayúsculas agresivas */
+    text-transform: none;
     line-height: 1.2;
 }
 .station-desc {
@@ -94,7 +92,7 @@
 
 .failure-card {
     background-color: white !important;
-    border: 2px solid var(--tf-orange) !important; /* Borde Naranja de Alerta */
+    border: 2px solid var(--tf-orange) !important; 
     border-radius: var(--border-radius);
     padding: 25px;
     cursor: pointer;
@@ -109,10 +107,10 @@
     box-shadow: 0 15px 30px rgba(227, 82, 5, 0.2);
 }
 
-/* Estado Reparado */
+/* Estado Resuelto */
 .failure-card.repaired {
     border-color: var(--tf-success) !important;
-    background-color: #F0FDFA !important; /* Fondo verde muy pálido */
+    background-color: #F0FDFA !important; 
     cursor: default; pointer-events: none;
     box-shadow: none;
 }
@@ -138,7 +136,8 @@
     text-transform: uppercase;
     letter-spacing: 1px;
 }
-.repaired .action-hint { background: var(--tf-success); content: "SISTEMA SEGURO"; }
+/* CAMBIO: Texto de éxito alineado a redefinición */
+.repaired .action-hint { background: var(--tf-success); content: "TRANSFORMADO"; }
 
 /* --- PANEL DE REPARACIÓN (HERRAMIENTAS) --- */
 .repair-console {
@@ -190,7 +189,7 @@
 /* --- MODAL DE INFORMACIÓN (SUCCESS) --- */
 .info-modal {
     position: absolute; top:0; left:0; width:100%; height:100%;
-    background-color: rgba(255, 255, 255, 0.95) !important; /* Blanco translúcido */
+    background-color: rgba(255, 255, 255, 0.95) !important; 
     z-index: 100;
     display: none; flex-direction: column; justify-content: center; align-items: center;
     padding: 20px; box-sizing: border-box; text-align: center;
@@ -230,7 +229,6 @@
 /* ANIMACIONES */
 @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-/* Pulso naranja en lugar de rojo */
 @keyframes pulseAlert { 
     0% { box-shadow: 0 0 0 0 rgba(227, 82, 5, 0.4); } 
     70% { box-shadow: 0 0 0 10px rgba(227, 82, 5, 0); } 
@@ -239,12 +237,10 @@
 
 .failure-card:not(.repaired) { animation: pulseAlert 2s infinite; }
 
-/* RESPONSIVE LOGOS */
 @media (max-width: 768px) {
     .header-logos img { height: 40px; }
     .station-title { font-size: 1.5rem; }
 }
-
 </style>
 
 <div id="policy-repair-station">
@@ -257,7 +253,8 @@
 
     <div class="station-header">
         <h2 class="station-title">Misión 1: Tablero de Control</h2>
-        <div class="station-desc">INSTRUCCIONES: Haz clic en las FALLAS para activar la herramienta de reparación.</div>
+        <!-- CAMBIO: "herramienta de reparación" por "herramienta de transformación" -->
+        <div class="station-desc">INSTRUCCIONES: Haz clic en los ALERTAS para activar la herramienta de transformación.</div>
     </div>
 
     <!-- 1. GRILLA DE PROBLEMAS -->
@@ -268,7 +265,8 @@
             <div class="icon-status" id="icon-1">⚠️</div>
             <div class="card-title">VACÍO NORMATIVO</div>
             <div class="card-desc">No hay sanciones claras para violencias ni licencias de maternidad definidas.</div>
-            <div class="action-hint" id="hint-1">¡CLIC PARA REPARAR!</div>
+            <!-- CAMBIO: CLIC PARA REDEFINIR -->
+            <div class="action-hint" id="hint-1">¡CLIC PARA REDEFINIR!</div>
         </div>
 
         <!-- Falla 2 -->
@@ -276,7 +274,8 @@
             <div class="icon-status" id="icon-2">⚠️</div>
             <div class="card-title">FALTA DE RUMBO</div>
             <div class="card-desc">La institución no tiene una hoja de ruta clara para la equidad a largo plazo.</div>
-            <div class="action-hint" id="hint-2">¡CLIC PARA REPARAR!</div>
+            <!-- CAMBIO: CLIC PARA REDEFINIR -->
+            <div class="action-hint" id="hint-2">¡CLIC PARA REDEFINIR!</div>
         </div>
 
         <!-- Falla 3 -->
@@ -284,12 +283,13 @@
             <div class="icon-status" id="icon-3">⚠️</div>
             <div class="card-title">SIN RECURSOS</div>
             <div class="card-desc">Hay buenas intenciones, pero no hay dinero asignado específicamente para género.</div>
-            <div class="action-hint" id="hint-3">¡CLIC PARA REPARAR!</div>
+            <!-- CAMBIO: CLIC PARA REDEFINIR -->
+            <div class="action-hint" id="hint-3">¡CLIC PARA REDEFINIR!</div>
         </div>
 
     </div>
 
-    <!-- 2. CONSOLA DE REPARACIÓN -->
+    <!-- 2. CONSOLA DE TRANSFORMACIÓN -->
     <div class="repair-console" id="console">
         <div class="console-title" id="console-title">SELECCIONA LA HERRAMIENTA CORRECTA:</div>
         
@@ -317,7 +317,8 @@
     <div class="info-modal" id="success-modal">
         <div class="modal-content">
             <span class="modal-check">✅</span>
-            <h3 class="modal-h">¡SISTEMA REPARADO!</h3>
+            <!-- CAMBIO: SISTEMA REDEFINIDO en lugar de REPARADO -->
+            <h3 class="modal-h">¡SISTEMA REDEFINIDO!</h3>
             <p class="modal-p" id="modal-text">...</p>
             <button class="modal-btn" onclick="closeModal()">ENTENDIDO, CONTINUAR</button>
         </div>
@@ -327,14 +328,18 @@
 
 <script>
 // --- ESTADO ---
-let activeProblem = 0; // 1, 2 o 3
+let activeProblem = 0; 
 let repairsCompleted = 0;
 
-// DATOS EDUCATIVOS
+// DATOS EDUCATIVOS - ACTUALIZADOS CON LAS CORRECCIONES
 const feedbackData = {
-    1: "<strong>Has instalado el Marco Normativo.</strong><br>La Ley 1257 de 2008 y la Ley 1822 de 2017 cubren los vacíos legales, proporcionando sanciones y protección laboral.",
-    2: "<strong>Has instalado la Planificación.</strong><br>El CONPES Social 161 define la política pública nacional de equidad. Ahora la institución sabe hacia dónde va.",
-    3: "<strong>Has instalado el Presupuesto (PSG).</strong><br>Los Presupuestos Sensibles al Género garantizan que el dinero llegue a los programas de prevención. Sin dinero, no hay política."
+    1: "<strong>Has integrado el Marco Normativo.</strong><br>La Ley 1257 de 2008 y la Ley 1822 de 2017 cubren los vacíos legales, proporcionando sanciones y protección laboral.",
+    
+    // CORRECCIÓN 1: Enfoque epistémico aplicado a la Política/Rumbo
+    2: "<strong>Has definido la Hoja de Ruta.</strong><br>El CONPES Social 161 define la política pública nacional de equidad.<br><br>Ahora la institución sabe hacia dónde va.",
+    
+    // CORRECCIÓN 2: Presupuesto y Cuidado enfático
+    3: "<strong>Has asignado Presupuesto (PSG).</strong><br>Los Presupuestos Sensibles al Género no pueden limitarse a una etiqueta técnica. Deben traducirse en apropiaciones concretas: salas de lactancia dotadas, flexibilización de turnos con respaldo administrativo, rutas de transporte seguras financiadas. Sin asignaciones específicas para estas medidas, la política de género se reduce a una declaración formal sin capacidad transformadora."
 };
 
 // 1. ABRIR CONSOLA
@@ -347,19 +352,19 @@ function openRepair(id) {
     document.getElementById('console').style.display = 'block';
     document.getElementById('console-error').style.display = 'none';
     
-    // Scroll suave hacia la consola para móviles
+    // Scroll suave
     document.getElementById('console').scrollIntoView({behavior: "smooth"});
 
-    // Actualizar título consola
+    // Actualizar título consola - CAMBIO TERMINOLOGÍA
     let problemName = "";
     if(id===1) problemName = "VACÍO NORMATIVO";
     if(id===2) problemName = "FALTA DE RUMBO";
     if(id===3) problemName = "SIN RECURSOS";
     
-    document.getElementById('console-title').innerText = `REPARANDO: ${problemName} - SELECCIONA HERRAMIENTA:`;
+    document.getElementById('console-title').innerText = `REDEFINIENDO: ${problemName} - SELECCIONA HERRAMIENTA:`;
 }
 
-// 2. INTENTAR REPARAR
+// 2. INTENTAR REDEFINIR/TRANSFORMAR
 function tryFix(toolType) {
     let success = false;
 
@@ -375,10 +380,12 @@ function tryFix(toolType) {
         const card = document.getElementById(`fail-${activeProblem}`);
         card.classList.add('repaired');
         document.getElementById(`icon-${activeProblem}`).innerText = "🛡️";
-        document.getElementById(`hint-${activeProblem}`).innerText = "SISTEMA SEGURO";
-        document.getElementById(`hint-${activeProblem}`).style.background = "#00A499"; // Verde Success
+        
+        // CAMBIO VISUAL: "SISTEMA INTEGRAL" en lugar de SEGURO/REPARADO
+        document.getElementById(`hint-${activeProblem}`).innerText = "TRANSFORMADO";
+        document.getElementById(`hint-${activeProblem}`).style.background = "#00A499"; 
 
-        // Mostrar Modal Educativo
+        // Mostrar Modal Educativo con los Textos Corregidos
         const modal = document.getElementById('success-modal');
         document.getElementById('modal-text').innerHTML = feedbackData[activeProblem];
         modal.style.display = 'flex';
@@ -399,9 +406,10 @@ function closeModal() {
     document.getElementById('success-modal').style.display = 'none';
     
     if(repairsCompleted === 3) {
-        document.querySelector('.station-title').innerText = "¡SISTEMA INSTITUCIONAL OPERATIVO!";
+        // CAMBIO: Título final alineado
+        document.querySelector('.station-title').innerText = "¡INSTITUCIÓN TRANSFORMADA!";
         document.querySelector('.station-title').style.color = "#00A499";
-        document.querySelector('.station-desc').innerText = "Has establecido las bases para una institución segura e inclusiva.";
+        document.querySelector('.station-desc').innerText = "Has establecido las bases para una protección redefinida desde la seguridad humana.";
     }
 }
 </script>

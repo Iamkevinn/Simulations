@@ -6,15 +6,14 @@
 <style>
     :root {
     --bg-core: #F5F5F5;            /* Fondo claro */
-    --bad: #E85D9A;                /* Rosa para problemas */
-    --good: #9B59B6;               /* Morado para soluciones */
+    --bad: #E85D9A;                /* Rosa para Retos/Desarmonías */
+    --good: #9B59B6;               /* Morado para Saberes/Diálogos */
     --epist: #FF6B35;              /* Naranja para epistemología */
-    --gold: #FFB84D;               /* Dorado para logros */
+    --gold: #FFB84D;               /* Dorado para Transformación */
     --glass: rgba(255, 255, 255, 0.98); /* Vidrio institucional */
     --text: #2C2C2C;               /* Texto principal */
     --border: #E85D9A;             /* Bordes */
 }
-
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
 
@@ -38,7 +37,7 @@
     }
     .grid-lines {
         position: absolute; width: 200%; height: 200%;
-        background-image: radial-gradient(rgba(232, 93, 154, 0.15) 1px, transparent 1px);
+        background-image: radial-gradient(rgba(155, 89, 182, 0.1) 1px, transparent 1px); /* Morado muy sutil */
         background-size: 30px 30px;
         opacity: 0.5;
         animation: rotateBg 120s linear infinite;
@@ -72,16 +71,14 @@
         transition: transform 0.3s ease;
     }
     
-    .logos-container img:hover {
-        transform: scale(1.05);
-    }
+    .logos-container img:hover { transform: scale(1.05); }
     
     .header-title {
         flex-grow: 1;
         text-align: center;
         font-weight: bold;
         font-size: 1.1rem;
-        color: var(--bad);
+        color: var(--good); /* Cambio sutil a morado para indicar propósito */
         text-transform: uppercase;
         letter-spacing: 1px;
     }
@@ -89,7 +86,7 @@
     .score-display {
         flex-shrink: 0;
         font-weight: bold;
-        color: var(--good);
+        color: var(--epist);
         font-size: 0.9rem;
     }
 
@@ -112,59 +109,61 @@
     
     .energy-path {
         fill: none;
-        stroke: var(--gold);
+        stroke: var(--good); /* Morado para indicar tejido social */
         stroke-width: 4;
         stroke-linecap: round;
         stroke-linejoin: round;
         stroke-dasharray: 1000;
         stroke-dashoffset: 1000;
-        animation: drawFlow 1.5s forwards ease-in-out;
-        filter: drop-shadow(0 0 10px var(--gold));
+        animation: drawFlow 2s forwards ease-in-out;
+        filter: drop-shadow(0 0 5px var(--good));
+        opacity: 0.8;
     }
     @keyframes drawFlow { to { stroke-dashoffset: 0; } }
 
     /* NÚCLEO CENTRAL */
     .core-system {
         position: absolute;
-        width: 110px; height: 110px;
+        width: 130px; height: 130px; /* Ligeramente más grande para el texto */
         background: white;
-        border: 3px solid var(--border);
+        border: 3px solid var(--bad); /* Comienza como "problemático/hegemónico" */
         border-radius: 50%;
         display: flex; justify-content: center; align-items: center;
-        text-align: center; font-weight: bold; font-size: 0.8rem;
-        box-shadow: 0 5px 25px rgba(232, 93, 154, 0.2);
+        text-align: center; font-weight: bold; font-size: 0.75rem;
+        box-shadow: 0 5px 25px rgba(0,0,0, 0.1);
         z-index: 20;
-        transition: all 0.5s;
+        transition: all 0.8s ease;
         color: var(--text);
+        padding: 10px;
+        text-transform: uppercase;
     }
     .core-system::before {
-        content: ''; position: absolute; width: 140%; height: 140%;
-        border: 2px dashed rgba(232, 93, 154, 0.3); border-radius: 50%;
-        animation: spin 30s linear infinite;
+        content: ''; position: absolute; width: 130%; height: 130%;
+        border: 1px dashed rgba(155, 89, 182, 0.3); border-radius: 50%;
+        animation: spin 40s linear infinite;
     }
     @keyframes spin { 100% { transform: rotate(360deg); } }
     
     .core-system.active {
         border-color: var(--gold);
-        box-shadow: 0 0 60px rgba(255, 184, 77, 0.5);
-        background: rgba(255, 184, 77, 0.2);
-        animation: pulseCore 0.6s 2;
+        box-shadow: 0 0 40px rgba(255, 184, 77, 0.4);
+        background: #fffbf0;
+        animation: pulseCore 0.8s 1;
     }
-    @keyframes pulseCore { 50% { transform: scale(1.1); } }
+    @keyframes pulseCore { 50% { transform: scale(1.05); } }
 
     /* --- NODOS FLOTANTES --- */
     .node {
         position: absolute;
-        width: 55px; height: 55px;
+        width: 60px; height: 60px;
         border-radius: 50%;
         display: flex; justify-content: center; align-items: center;
-        font-size: 1.4rem; cursor: pointer;
+        font-size: 1.5rem; cursor: pointer;
         background: white;
-        border: 3px solid rgba(232, 93, 154, 0.3);
-        box-shadow: 0 3px 15px rgba(0,0,0,0.15);
-        transition: transform 0.3s, background 0.3s, border-color 0.3s;
+        border: 2px solid #ddd;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.27), background 0.3s, border-color 0.3s;
         z-index: 10;
-        
         animation-name: floatOrbit;
         animation-timing-function: ease-in-out;
         animation-iteration-count: infinite;
@@ -172,181 +171,145 @@
 
     @keyframes floatOrbit {
         0% { transform: translateY(0px); }
-        50% { transform: translateY(-15px); }
+        50% { transform: translateY(-12px); }
         100% { transform: translateY(0px); }
     }
     
     .node:hover { 
         animation-play-state: paused;
-        transform: scale(1.2) translateY(-5px); 
+        transform: scale(1.15) translateY(-5px); 
         z-index: 50; 
-        background: rgba(232, 93, 154, 0.1);
-        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     }
 
     .node.active { 
-        background: var(--gold); 
-        color: white; 
-        transform: scale(1.2); 
-        z-index: 50; 
-        box-shadow: 0 0 25px var(--gold);
+        transform: scale(1.25); 
+        z-index: 60; 
+        box-shadow: 0 0 20px rgba(0,0,0,0.2);
         animation: none;
-        border-color: var(--gold);
     }
 
-    .node-bad { border-color: var(--bad); }
-    .node-good { border-color: var(--good); }
+    /* Colores Específicos */
+    .node-bad { border-color: var(--bad); color: var(--bad); }
+    .node-bad.active { background: var(--bad); color: white; }
+
+    .node-good { border-color: var(--good); color: var(--good); }
+    .node-good.active { background: var(--good); color: white; }
     
     /* EPISTEMOLOGÍA */
     .node-epist {
         width: auto; height: auto;
-        padding: 8px 15px; border-radius: 20px;
+        padding: 10px 20px; border-radius: 30px;
         background: white;
         border: 2px solid var(--epist); 
         color: var(--epist);
-        font-size: 0.9rem; font-weight: bold;
+        font-size: 0.9rem; font-weight: 800;
+        box-shadow: 0 5px 15px rgba(255, 107, 53, 0.2);
     }
     
     .node-epist:hover {
-        background: rgba(255, 107, 53, 0.1);
+        background: var(--epist); color: white;
     }
 
-    /* ESTADO RESUELTO */
+    /* ESTADO RESUELTO (INTEGRADO) */
     .node.resolved {
         background: var(--gold); 
         color: white; 
         border-color: var(--gold);
-        box-shadow: 0 0 30px var(--gold);
-        animation: pop 0.5s;
+        box-shadow: 0 0 20px var(--gold);
+        animation: pop 0.6s;
     }
-    @keyframes pop { 50% { transform: scale(1.4); } }
+    @keyframes pop { 50% { transform: scale(1.3); } }
 
     /* --- HUD INFERIOR --- */
     .hud-panel {
         background: var(--glass);
-        border-top: 3px solid var(--border);
+        border-top: 4px solid var(--good); /* Morado para enfatizar solución */
         padding: 20px; z-index: 100;
-        min-height: 180px;
+        min-height: 190px;
         display: flex; flex-direction: column;
-        box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+        box-shadow: 0 -5px 25px rgba(0,0,0,0.05);
     }
     .hud-header { 
         display: flex; 
         justify-content: space-between; 
-        color: var(--bad); 
-        font-weight: bold; 
-        font-size: 0.8rem; 
-        margin-bottom: 8px; 
+        color: var(--text); 
+        font-weight: 800; 
+        font-size: 0.85rem; 
+        margin-bottom: 10px; 
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
     }
     .hud-content { 
-        font-size: 0.9rem; 
+        font-size: 0.95rem; 
         line-height: 1.5; 
-        color: var(--text); 
+        color: #444; 
         flex-grow: 1; 
         max-height: 150px; 
         overflow-y: auto; 
     }
     
     .action-btn {
-        margin-top: 10px;
-        background: linear-gradient(90deg, var(--gold), #FFB84D);
-        border: none; padding: 12px; width: 100%;
-        color: white; font-weight: bold; border-radius: 6px;
+        margin-top: 12px;
+        background: linear-gradient(135deg, var(--good), #8E44AD);
+        border: none; padding: 14px; width: 100%;
+        color: white; font-weight: bold; border-radius: 8px;
         cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
-        display: none; animation: slideUp 0.3s;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        display: none; animation: slideUp 0.4s;
+        box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
+        font-size: 0.9rem;
     }
     
     .action-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        filter: brightness(1.1);
     }
     
-    @keyframes slideUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
     /* MODAL VICTORIA */
     .modal { 
         display: none; 
-        position: fixed; 
-        top:0; 
-        left:0; 
-        width:100%; 
-        height:100%; 
-        background: rgba(0,0,0,0.85); 
+        position: fixed; top:0; left:0; 
+        width:100%; height:100%; 
+        background: rgba(44, 44, 44, 0.9); 
         z-index: 200; 
-        justify-content: center; 
-        align-items: center; 
+        justify-content: center; align-items: center; 
         padding: 20px; 
+        backdrop-filter: blur(5px);
     }
     .modal-box { 
         background: white; 
-        border: 3px solid var(--gold); 
-        padding: 30px; 
+        border-left: 6px solid var(--gold); 
+        padding: 40px 30px; 
         text-align: center; 
-        border-radius: 15px; 
-        max-width: 500px; 
-        animation: pop 0.5s;
-        box-shadow: 0 0 50px rgba(255, 184, 77, 0.4);
+        border-radius: 12px; 
+        max-width: 550px; 
+        animation: pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.27);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     }
     
     .modal-box h2 {
-        color: var(--gold);
-        margin-bottom: 15px;
+        color: var(--text);
+        margin-top: 0;
+        font-size: 1.8rem;
     }
     
     .modal-box p {
-        color: var(--text);
-        line-height: 1.6;
+        color: #555;
+        line-height: 1.7;
+        font-size: 1rem;
+        margin-bottom: 25px;
     }
 
     /* Responsive */
     @media (max-width: 768px) {
-        .logos-container img {
-            height: 35px;
-        }
-        
-        .top-header {
-            padding: 0 10px;
-        }
-        
-        .logos-container {
-            gap: 8px;
-        }
-        
-        .header-title {
-            font-size: 0.9rem;
-        }
-        
-        .score-display {
-            font-size: 0.8rem;
-        }
-    }
-    
-    @media (max-width: 480px) {
-        .logos-container img {
-            height: 30px;
-        }
-        
-        .header-title {
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-        }
-        
-        .score-display {
-            font-size: 0.75rem;
-        }
-        
-        .node {
-            width: 45px;
-            height: 45px;
-            font-size: 1.2rem;
-        }
-        
-        .core-system {
-            width: 90px;
-            height: 90px;
-            font-size: 0.7rem;
-        }
+        .logos-container img { height: 35px; }
+        .top-header { padding: 0 10px; }
+        .logos-container { gap: 8px; }
+        .header-title { font-size: 0.8rem; }
+        .node { width: 50px; height: 50px; font-size: 1.3rem; }
+        .core-system { width: 100px; height: 100px; font-size: 0.65rem; }
     }
 
 </style>
@@ -361,26 +324,27 @@
             <img src="../Styles/UNP I.svg" alt="Logo UNP">
             <img src="../Styles/logo.png" alt="Logo Comisión">
         </div>
-        <div class="header-title">SISTEMA DE TRANSFORMACIÓN UNP</div>
-        <div class="score-display" id="score">TRANSFORMACIÓN: 0%</div>
+        <div class="header-title">INTERSECCIONALIDAD PROPOSITIVA</div>
+        <div class="score-display" id="score">TEJIDO: 0%</div>
     </div>
 
     <div class="game-arena" id="arena">
         <svg class="svg-layer" id="svg-layer"></svg>
 
-        <!-- NÚCLEO (Fijo) -->
-        <div class="core-system" id="core">UNP<br>SYSTEM</div>
+        <!-- NÚCLEO (Fijo - Cambia de nombre al ganar) -->
+        <div class="core-system" id="core">MODELO<br>HEGEMÓNICO</div>
 
-        <!-- NODOS (Flotantes via CSS + JS Random) -->
+        <!-- NODOS (Flotantes) -->
+        <!-- Epistemología (Arriba) -->
         <div class="node node-epist" id="epist" onclick="showEpist()">🧠 EPISTEMOLOGÍAS</div>
 
-        <!-- RETOS (Izquierda) -->
+        <!-- RETOS (Izquierda - Rosa) -->
         <div class="node node-bad" id="bad1" onclick="selectNode('bad1')">⚠️</div>
         <div class="node node-bad" id="bad2" onclick="selectNode('bad2')">🔫</div>
         <div class="node node-bad" id="bad3" onclick="selectNode('bad3')">📉</div>
         <div class="node node-bad" id="bad4" onclick="selectNode('bad4')">👤</div>
 
-        <!-- SOLUCIONES (Derecha) -->
+        <!-- SOLUCIONES (Derecha - Morado) -->
         <div class="node node-good" id="good1" onclick="selectNode('good1')">🤝</div>
         <div class="node node-good" id="good2" onclick="selectNode('good2')">🛡️</div>
         <div class="node node-good" id="good3" onclick="selectNode('good3')">👂</div>
@@ -390,46 +354,48 @@
     <!-- HUD -->
     <div class="hud-panel">
         <div class="hud-header">
-            <span>SISTEMA DE MANDO</span>
-            <span style="color: var(--good);">ANÁLISIS EN CURSO</span>
+            <span>PANEL DE DIÁLOGO INTERCULTURAL</span>
+            <span style="color: var(--epist);">ESTADO: ESPERANDO CONEXIÓN</span>
         </div>
         <div class="hud-content" id="hud-desc">
-            <strong>Misión:</strong> El sistema tiene bloqueos <b style="color: var(--bad);">(Rosa)</b>.<br>
-            Toca un Problema y luego su Solución Comunitaria <b style="color: var(--good);">(Morado)</b> para generar la conexión.
+            <strong>Desafío Epistémico:</strong> La UNP no necesita "reparaciones" superficiales.<br>
+            Tu misión es <b>tejer un nuevo sentido</b> conectando las brechas institucionales <span style="color:var(--bad)">(Rosa)</span> con los Saberes Comunitarios <span style="color:var(--good)">(Morado)</span> para redefinir la seguridad.
         </div>
-        <button class="action-btn" id="btn-action">VINCULAR Y TRANSFORMAR</button>
+        <button class="action-btn" id="btn-action">TEJER SABERES</button>
     </div>
 
-    <!-- MODAL -->
+    <!-- MODAL VICTORIA -->
     <div class="modal" id="win-modal">
         <div class="modal-box">
-            <h2>¡SISTEMA TRANSFORMADO!</h2>
-            <p>Has integrado la protección colectiva y los saberes locales en la UNP.</p>
-            <button onclick="location.reload()" style="background:var(--gold); border:none; padding:10px 20px; font-weight:bold; cursor:pointer; margin-top:15px; border-radius:5px; color:white;">REINICIAR</button>
+            <h2 style="color:var(--gold)">¡REDEFINICIÓN COMPLETADA!</h2>
+            <p>
+                Has evitado el extractivismo epistémico. Los saberes comunitarios no han servido como simples accesorios para "desbloquear" el sistema, sino que han transformado su núcleo. <br><br>
+                Ahora la protección se entiende desde la <strong>Seguridad Humana</strong> y el cuidado colectivo.
+            </p>
+            <button onclick="location.reload()" style="background:var(--text); border:none; padding:12px 25px; font-weight:bold; cursor:pointer; margin-top:10px; border-radius:6px; color:white; text-transform:uppercase;">Reiniciar Experiencia</button>
         </div>
     </div>
 
 <script>
-    // --- 1. CONFIGURACIÓN Y POSICIONAMIENTO ORBITAL ---
+    // --- 1. CONFIGURACIÓN Y POSICIONAMIENTO ---
     function positionElements() {
         const arena = document.getElementById('arena');
         const centerX = arena.offsetWidth / 2;
         const centerY = arena.offsetHeight / 2;
         
-        // Radio dinámico
         const minDim = Math.min(arena.offsetWidth, arena.offsetHeight);
-        const radius = minDim < 600 ? minDim * 0.38 : 220; 
+        const radius = minDim < 600 ? minDim * 0.38 : 230; 
 
-        // Epistemología (Top)
+        // Epistemología
         const epist = document.getElementById('epist');
         epist.style.left = (centerX - epist.offsetWidth/2) + 'px';
-        epist.style.top = (centerY - radius - 50) + 'px';
+        epist.style.top = (centerY - radius - 55) + 'px';
 
-        // Izquierda (Rojos): 135° a 225°
-        distributeArc(['bad1', 'bad2', 'bad3', 'bad4'], 135, 225, centerX, centerY, radius);
+        // Izquierda (Retos)
+        distributeArc(['bad1', 'bad2', 'bad3', 'bad4'], 140, 220, centerX, centerY, radius);
 
-        // Derecha (Verdes): -45° a 45°
-        distributeArc(['good1', 'good2', 'good3', 'good4'], -45, 45, centerX, centerY, radius);
+        // Derecha (Saberes)
+        distributeArc(['good1', 'good2', 'good3', 'good4'], -40, 40, centerX, centerY, radius);
     }
 
     function distributeArc(ids, startAngle, endAngle, cx, cy, r) {
@@ -437,48 +403,44 @@
         ids.forEach((id, index) => {
             const angleDeg = startAngle + (step * index);
             const angleRad = (angleDeg - 90) * (Math.PI / 180);
-            
             const el = document.getElementById(id);
             const x = cx + r * Math.cos(angleRad);
             const y = cy + r * Math.sin(angleRad);
-            
             el.style.left = (x - el.offsetWidth/2) + 'px';
             el.style.top = (y - el.offsetHeight/2) + 'px';
         });
     }
 
-    // --- ALEATORIEDAD DE ANIMACIÓN ---
     function randomizeFloat() {
         const nodes = document.querySelectorAll('.node');
         nodes.forEach(node => {
-            const duration = 3 + Math.random() * 3;
+            const duration = 3 + Math.random() * 4;
             const delay = Math.random() * 2;
-            
             node.style.animationDuration = `${duration}s`;
             node.style.animationDelay = `${delay}s`;
         });
     }
 
-    window.addEventListener('load', () => {
-        positionElements();
-        randomizeFloat();
-    });
+    window.addEventListener('load', () => { positionElements(); randomizeFloat(); });
     window.addEventListener('resize', positionElements);
 
 
-    // --- 2. LÓGICA DEL JUEGO ---
+    // --- 2. LÓGICA SEMÁNTICA (Data ajustada al enfoque) ---
     const db = {
-        epist: { title: "3. EPISTEMOLOGÍAS FEMINISTAS", text: "Cuestionan quién produce conocimiento. Visibilizan experiencias de mujeres indígenas, afro y disidentes como fuentes legítimas de saber." },
+        epist: { 
+            title: "3. EPISTEMOLOGÍAS FEMINISTAS", 
+            text: "No se trata de incluir mujeres en un sistema patriarcal, sino de valorar sus experiencias y saberes como fuentes legítimas para <b>redefinir</b> qué significa estar seguros." 
+        },
         
-        bad1: { title: "RETO: RIGIDEZ BUROCRÁTICA", text: "Exigencia de pruebas descontextualizadas. No se reconocen amenazas informales.", pair: "good3" }, 
-        bad2: { title: "RETO: MODELOS MILITARIZADOS", text: "Dependencia de armas que ignoran la autonomía territorial y generan desconfianza.", pair: "good4" }, 
-        bad3: { title: "RETO: FALTA DE CAPACITACIÓN", text: "Dificultad para reconocer autoridades comunitarias y falta de enfoque étnico.", pair: "good1" }, 
-        bad4: { title: "RETO: ENFOQUE INDIVIDUAL", text: "Se protege al individuo aislado, ignorando la dimensión colectiva.", pair: "good2" }, 
+        bad1: { title: "BRECHA: RIGIDEZ NORMATIVA", text: "El sistema exige pruebas que no existen en la oralidad y desconoce las dinámicas informales del riesgo.", pair: "good3" }, 
+        bad2: { title: "BRECHA: MODELO MILITARIZADO", text: "La protección centrada en armas ignora la autonomía territorial y rompe el tejido de confianza.", pair: "good4" }, 
+        bad3: { title: "BRECHA: DESCONOCIMIENTO", text: "Falta de reconocimiento a las autoridades propias, imponiendo lógicas externas sobre las comunidades.", pair: "good1" }, 
+        bad4: { title: "BRECHA: ENFOQUE INDIVIDUAL", text: "Proteger al individuo aislado rompe su rol dentro de la comunidad y lo deja vulnerable.", pair: "good2" }, 
 
-        good1: { title: "SOLUCIÓN: ARTICULACIÓN AUTORIDADES", text: "Participación de cabildos/consejos. Capacitación a escoltas en enfoque diferencial." },
-        good2: { title: "SOLUCIÓN: PROTECCIÓN COLECTIVA", text: "Diseñar esquemas con la comunidad. Análisis de riesgo comunitario." },
-        good3: { title: "SOLUCIÓN: ESCUCHA DE SABERES", text: "No revictimizar. Construir seguridad desde marcos conceptuales locales." },
-        good4: { title: "SOLUCIÓN: PROTOCOLOS CULTURALES", text: "Respeto a autonomía territorial. Reconocimiento de guardias indígenas/cimarronas." }
+        good1: { title: "SABER: GOBERNANZA PROPIA", text: "Articulación horizontal con autoridades étnicas (Cabildos/Consejos). Validación de sus mandatos de protección." },
+        good2: { title: "SABER: PROTECCIÓN COLECTIVA", text: "El sujeto de protección es el tejido social. Análisis de riesgo comunitario y medidas para el colectivo." },
+        good3: { title: "SABER: ESCUCHA PROFUNDA", text: "Validación de la palabra y marcos conceptuales locales. No revictimizar con burocracia ajena." },
+        good4: { title: "SABER: GUARDIA Y TERRITORIO", text: "Respeto a la autonomía territorial. Fortalecimiento de Guardias Indígenas y Cimarronas como actores legítimos." }
     };
 
     let activeBad = null;
@@ -501,10 +463,10 @@
             document.querySelectorAll('.node-good').forEach(n => n.classList.remove('active'));
             btn.style.display = 'none';
 
-            updateHud(db[id].title, db[id].text + "<br><br><span style='color:var(--bad); font-weight: bold;'>Selecciona la solución correspondiente.</span>");
+            updateHud(db[id].title, db[id].text + "<br><br><span style='color:var(--good); font-weight:bold;'>Busca el Saber Comunitario que dialoga con esta brecha.</span>");
         } else {
             if(!activeBad) {
-                updateHud("ACCIÓN REQUERIDA", "Primero selecciona un problema (Rosa) del lado izquierdo.");
+                updateHud("ORDEN DEL DIÁLOGO", "Primero identifica una <b style='color:var(--bad)'>Brecha Institucional (Rosa)</b> que necesite ser redefinida.");
                 return;
             }
             document.querySelectorAll('.node-good').forEach(n => n.classList.remove('active'));
@@ -513,6 +475,7 @@
             updateHud(db[id].title, db[id].text);
             
             btn.style.display = 'block';
+            btn.innerText = "TEJER SENTIDOS"; // Cambio de texto en botón
             btn.onclick = tryMatch;
         }
     }
@@ -521,7 +484,7 @@
         if(db[activeBad].pair === activeGood) {
             success(activeBad, activeGood);
         } else {
-            updateHud("ERROR DE VINCULACIÓN", "<strong style='color:var(--epist)'>Esta solución no encaja con el problema.</strong> Intenta otra.");
+            updateHud("NO HAY DIÁLOGO FLUIDO", "Este saber es valioso, pero no responde directamente a la naturaleza estructural de la brecha seleccionada. Intenta otra conexión.");
             document.getElementById(activeGood).classList.remove('active');
             activeGood = null;
             btn.style.display = 'none';
@@ -538,18 +501,25 @@
         
         drawCurvedLine(b, c, g);
 
+        // Efecto visual en el centro
         c.classList.add('active');
-        setTimeout(() => c.classList.remove('active'), 1000);
+        setTimeout(() => c.classList.remove('active'), 1200);
 
         solved++;
-        document.getElementById('score').innerText = `TRANSFORMACIÓN: ${(solved/4)*100}%`;
+        document.getElementById('score').innerText = `TEJIDO: ${(solved/4)*100}%`;
         
         activeBad = null; activeGood = null; btn.style.display = 'none';
-        updateHud("¡CONEXIÓN EXITOSA!", "Protocolo integrado correctamente.");
+        updateHud("DIÁLOGO ESTABLECIDO", "La interseccionalidad ha transformado este aspecto del protocolo.");
 
+        // CONDICIÓN DE VICTORIA
         if(solved === 4) {
             setTimeout(() => {
-                c.innerText = "UNP\n2.0"; c.style.color = "var(--gold)";
+                // AQUÍ OCURRE LA REDEFINICIÓN VISUAL DEL NÚCLEO
+                c.innerHTML = "SEGURIDAD<br>HUMANA"; 
+                c.style.borderColor = "var(--gold)";
+                c.style.color = "var(--good)";
+                c.style.fontSize = "0.85rem";
+                
                 document.getElementById('win-modal').style.display = 'flex';
             }, 1500);
         }
@@ -571,6 +541,7 @@
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
         path.setAttribute("class", "energy-path");
         
+        // Curva cuadrática doble para simular tejido pasando por el centro
         const d = `M ${p1.x},${p1.y} Q ${p1.x},${pc.y} ${pc.x},${pc.y} Q ${p2.x},${pc.y} ${p2.x},${p2.y}`;
 
         path.setAttribute("d", d);
@@ -578,7 +549,7 @@
     }
 
     function showEpist() { updateHud(db.epist.title, db.epist.text); }
-    function updateHud(t, txt) { document.getElementById('hud-desc').innerHTML = `<strong style="color:var(--bad)">${t}</strong><br>${txt}`; }
+    function updateHud(t, txt) { document.getElementById('hud-desc').innerHTML = `<strong style="color:var(--text); text-transform:uppercase;">${t}</strong><br>${txt}`; }
 
 </script>
 

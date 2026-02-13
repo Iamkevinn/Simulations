@@ -383,149 +383,148 @@
 
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 </style>
+
 </head>
 <body>
 
 <div class="audit-wrapper">
 
-    <!-- HEADER -->
-    <header class="audit-header">
-        <!-- LOGOS AÑADIDOS AQUÍ -->
-        <div class="logo-bar">
-            <img src="../Styles/UNP I.svg" alt="Logo UNP" class="header-logo">
-            <img src="../Styles/logo.png" alt="Logo Comisión" class="header-logo">
+<!-- HEADER -->
+<header class="audit-header">
+    <div class="logo-bar">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="header-logo">
+        <img src="../Styles/logo.png" alt="Logo Comisión" class="header-logo">
+    </div>
+
+    <h1>Violencia Institucional</h1>
+    <p>Unidad de Análisis de Riesgo y Prácticas Administrativas</p>
+</header>
+
+<!-- 1. TENSIONES JURÍDICAS -->
+<section class="section-block">
+    <h2 class="section-title"><i class="fas fa-balance-scale"></i> 1. TENSIONES JURÍDICAS</h2>
+    <p style="margin-bottom: 20px; line-height: 1.6;">A menudo existe una brecha entre lo que dice el manual y lo que sucede en el territorio. Utilice el control para comparar.</p>
+    
+    <div class="reality-switch-container" id="tensionBox">
+        <div class="switch-header">
+            <span class="switch-label">VISIÓN ACTUAL: <span id="modeText">NORMATIVA (TEÓRICA)</span></span>
+            <label class="switch">
+                <input type="checkbox" onchange="toggleReality(this)">
+                <span class="slider"></span>
+            </label>
         </div>
 
-        <h1>Violencia Institucional</h1>
-        <p>Unidad de Análisis de Riesgo y Prácticas Administrativas</p>
-    </header>
-
-    <!-- 1. TENSIONES JURÍDICAS -->
-    <section class="section-block">
-        <h2 class="section-title"><i class="fas fa-balance-scale"></i> 1. TENSIONES JURÍDICAS</h2>
-        <p style="margin-bottom: 20px; line-height: 1.6;">A menudo existe una brecha entre lo que dice el manual y lo que sucede en el territorio. Utilice el control para comparar.</p>
-        
-        <div class="reality-switch-container" id="tensionBox">
-            <div class="switch-header">
-                <span class="switch-label">VISIÓN ACTUAL: <span id="modeText">NORMATIVA (TEÓRICA)</span></span>
-                <label class="switch">
-                    <input type="checkbox" onchange="toggleReality(this)">
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <!-- Visión Normativa -->
-            <div class="normative-view">
-                <ul>
-                    <li><i class="fas fa-check-circle" style="color:var(--brand-purple)"></i> Existe normativa con enfoque de género.</li>
-                    <li><i class="fas fa-check-circle" style="color:var(--brand-purple)"></i> Las entidades tienen manuales establecidos.</li>
-                    <li><i class="fas fa-check-circle" style="color:var(--brand-purple)"></i> Se aplican procedimientos estándar.</li>
-                </ul>
-            </div>
-
-            <!-- Visión Crítica -->
-            <div class="critical-view">
-                <h4 style="margin:0 0 10px 0; color:var(--danger)">REALIDAD MATERIAL:</h4>
-                <ul>
-                    <li><strong>FALLA:</strong> Normas sin presupuesto real para implementarse.</li>
-                    <li><strong>FALLA:</strong> Personal en territorio sin formación en género.</li>
-                    <li><strong>FALLA:</strong> Evaluaciones "de escritorio" que ignoran el contexto local.</li>
-                </ul>
-            </div>
+        <!-- Visión Normativa -->
+        <div class="normative-view">
+            <ul>
+                <li><i class="fas fa-check-circle" style="color:var(--brand-purple)"></i> Existe normativa con enfoque de género.</li>
+                <li><i class="fas fa-check-circle" style="color:var(--brand-purple)"></i> Las entidades tienen manuales establecidos.</li>
+                <li><i class="fas fa-check-circle" style="color:var(--brand-purple)"></i> Se aplican procedimientos estándar.</li>
+            </ul>
         </div>
-    </section>
 
-    <!-- 2. ANÁLISIS DE CONSECUENCIAS (CORREGIDO: NO ES UN JUEGO) -->
-    <section class="section-block alert-mode">
-        <h2 class="section-title alert-mode"><i class="fas fa-exclamation-triangle"></i> 2. LA GRAVEDAD DE LA OMISIÓN</h2>
-        <p>La violencia institucional no es abstracta. Seleccione cada práctica administrativa para <strong>confrontar su impacto real</strong> en la vida de la protegida.</p>
-
-        <div class="evidence-grid">
-            <!-- Card 1 -->
-            <div class="impact-card" onclick="revealCard(this)">
-                <div class="card-front">
-                    <i class="card-icon fas fa-file-signature"></i>
-                    <span class="card-label">Acción Administrativa</span>
-                    <div class="card-title">Minimizar la denuncia verbal</div>
-                    <p style="font-size:0.9rem; color:#666; margin-top:10px;">"Si no trae pruebas físicas, no podemos elevar el riesgo."</p>
-                </div>
-                <div class="card-back">
-                    <i class="warning-icon fas fa-skull-crossbones"></i>
-                    <span class="card-label" style="color:rgba(255,255,255,0.8)">CONSECUENCIA LETAL</span>
-                    <div class="card-title" style="color:white; font-size:1.2rem;">Desprotección ante Feminicidio</div>
-                    <p style="font-size:0.95rem; margin-top:10px;">La exigencia excesiva de pruebas en contextos de amenaza inminente facilita la consumación del crimen.</p>
-                </div>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="impact-card" onclick="revealCard(this)">
-                <div class="card-front">
-                    <i class="card-icon fas fa-clock"></i>
-                    <span class="card-label">Acción Administrativa</span>
-                    <div class="card-title">Dilación Injustificada</div>
-                    <p style="font-size:0.9rem; color:#666; margin-top:10px;">"El trámite toma 30 días hábiles por reglamentación."</p>
-                </div>
-                <div class="card-back">
-                    <i class="warning-icon fas fa-user-injured"></i>
-                    <span class="card-label" style="color:rgba(255,255,255,0.8)">IMPACTO PSICOSOCIAL</span>
-                    <div class="card-title" style="color:white; font-size:1.2rem;">Revictimización Institucional</div>
-                    <p style="font-size:0.95rem; margin-top:10px;">La espera genera terror psicológico y desplazamiento forzado ante la ausencia del Estado.</p>
-                </div>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="impact-card" onclick="revealCard(this)">
-                <div class="card-front">
-                    <i class="card-icon fas fa-comments"></i>
-                    <span class="card-label">Acción Administrativa</span>
-                    <div class="card-title">Uso de Estereotipos</div>
-                    <p style="font-size:0.9rem; color:#666; margin-top:10px;">"Seguro es un problema pasional, no político."</p>
-                </div>
-                <div class="card-back">
-                    <i class="warning-icon fas fa-balance-scale-left"></i>
-                    <span class="card-label" style="color:rgba(255,255,255,0.8)">FALLA DEL SERVICIO</span>
-                    <div class="card-title" style="color:white; font-size:1.2rem;">Responsabilidad del Estado</div>
-                    <p style="font-size:0.95rem; margin-top:10px;">Desestimar el riesgo por prejuicios de género constituye una violación directa de DD.HH.</p>
-                </div>
-            </div>
+        <!-- Visión Crítica -->
+        <div class="critical-view">
+            <h4 style="margin:0 0 10px 0; color:var(--danger)">REALIDAD MATERIAL:</h4>
+            <ul>
+                <li><strong>FALLA:</strong> Normas sin presupuesto real para implementarse.</li>
+                <li><strong>FALLA:</strong> Personal en territorio sin formación en género.</li>
+                <li><strong>FALLA:</strong> Evaluaciones "de escritorio" que ignoran el contexto local.</li>
+            </ul>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- 3. RUTA DE DEBIDA DILIGENCIA -->
-    <section class="section-block">
-        <h2 class="section-title"><i class="fas fa-shield-alt"></i> 3. OBLIGACIÓN REFORZADA</h2>
-        <p>Para evitar la responsabilidad internacional, el Estado debe activar estos 5 eslabones de forma simultánea e integral.</p>
+<!-- 2. ANÁLISIS DE CONSECUENCIAS -->
+<section class="section-block alert-mode">
+    <h2 class="section-title alert-mode"><i class="fas fa-exclamation-triangle"></i> 2. LA GRAVEDAD DE LA OMISIÓN</h2>
+    <p>La violencia institucional no es abstracta. Seleccione cada práctica administrativa para <strong>confrontar su impacto real</strong> en la vida de la protegida.</p>
 
-        <div class="chain-container">
-            <div class="chain-link" onclick="activateLink(this, 1)">
-                <span class="chain-text">1. PREVENIR EL RIESGO</span>
-                <div class="chain-status"></div>
+    <div class="evidence-grid">
+        <!-- Card 1 -->
+        <div class="impact-card" onclick="revealCard(this)">
+            <div class="card-front">
+                <i class="card-icon fas fa-file-signature"></i>
+                <span class="card-label">Acción Administrativa</span>
+                <div class="card-title">Minimizar la denuncia verbal</div>
+                <p style="font-size:0.9rem; color:#666; margin-top:10px;">"Si no trae pruebas físicas, no podemos elevar el riesgo."</p>
             </div>
-            <div class="chain-link" onclick="activateLink(this, 2)">
-                <span class="chain-text">2. INVESTIGAR LOS HECHOS</span>
-                <div class="chain-status"></div>
-            </div>
-            <div class="chain-link" onclick="activateLink(this, 3)">
-                <span class="chain-text">3. SANCIONAR A RESPONSABLES</span>
-                <div class="chain-status"></div>
-            </div>
-            <div class="chain-link" onclick="activateLink(this, 4)">
-                <span class="chain-text">4. REPARAR EL DAÑO</span>
-                <div class="chain-status"></div>
-            </div>
-            <div class="chain-link" onclick="activateLink(this, 5)">
-                <span class="chain-text">5. GARANTIZAR NO REPETICIÓN</span>
-                <div class="chain-status"></div>
+            <div class="card-back">
+                <i class="warning-icon fas fa-skull-crossbones"></i>
+                <span class="card-label" style="color:rgba(255,255,255,0.8)">CONSECUENCIA LETAL</span>
+                <div class="card-title" style="color:white; font-size:1.2rem;">Desprotección ante Feminicidio</div>
+                <p style="font-size:0.95rem; margin-top:10px;">La exigencia excesiva de pruebas en contextos de amenaza inminente facilita la consumación del crimen.</p>
             </div>
         </div>
 
-        <div id="finalVerdict" class="final-verdict">
-            <span class="verdict-header"><i class="fas fa-gavel"></i> DICTAMEN FINAL:</span>
-            <p><strong>La Debida Diligencia no es opcional.</strong></p>
-            <p>En la UNP, tratar una amenaza contra una mujer defensora o persona LGBTIQ+ como un "trámite más" no es un error administrativo, es una falla sistémica que activa la responsabilidad del Estado ante organismos internacionales.</p>
+        <!-- Card 2 -->
+        <div class="impact-card" onclick="revealCard(this)">
+            <div class="card-front">
+                <i class="card-icon fas fa-clock"></i>
+                <span class="card-label">Acción Administrativa</span>
+                <div class="card-title">Dilación Injustificada</div>
+                <p style="font-size:0.9rem; color:#666; margin-top:10px;">"El trámite toma 30 días hábiles por reglamentación."</p>
+            </div>
+            <div class="card-back">
+                <i class="warning-icon fas fa-user-injured"></i>
+                <span class="card-label" style="color:rgba(255,255,255,0.8)">IMPACTO PSICOSOCIAL</span>
+                <div class="card-title" style="color:white; font-size:1.2rem;">Revictimización Institucional</div>
+                <p style="font-size:0.95rem; margin-top:10px;">La espera genera terror psicológico y desplazamiento forzado ante la ausencia del Estado.</p>
+            </div>
         </div>
-    </section>
 
+        <!-- Card 3 -->
+        <div class="impact-card" onclick="revealCard(this)">
+            <div class="card-front">
+                <i class="card-icon fas fa-comments"></i>
+                <span class="card-label">Acción Administrativa</span>
+                <div class="card-title">Uso de Estereotipos</div>
+                <p style="font-size:0.9rem; color:#666; margin-top:10px;">"Seguro es un problema pasional, no político."</p>
+            </div>
+            <div class="card-back">
+                <i class="warning-icon fas fa-balance-scale-left"></i>
+                <span class="card-label" style="color:rgba(255,255,255,0.8)">FALLA DEL SERVICIO</span>
+                <div class="card-title" style="color:white; font-size:1.2rem;">Responsabilidad del Estado</div>
+                <p style="font-size:0.95rem; margin-top:10px;">Desestimar el riesgo por prejuicios de género constituye una violación directa de DD.HH.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 3. RUTA DE DEBIDA DILIGENCIA REFORZADA (CORREGIDO) -->
+<section class="section-block">
+    <h2 class="section-title"><i class="fas fa-shield-alt"></i> 3. DEBIDA DILIGENCIA REFORZADA</h2>
+    <p>Según la jurisprudencia colombiana y los estándares interamericanos, la <strong>UNP tiene una responsabilidad agravada</strong> cuando la víctima es una lideresa social. No es solo un "paso" en un circuito, es un <strong>imperativo de derechos humanos</strong> que exige activar estos 5 eslabones:</p>
+
+    <div class="chain-container">
+        <div class="chain-link" onclick="activateLink(this, 1)">
+            <span class="chain-text">1. PREVENIR EL RIESGO</span>
+            <div class="chain-status"></div>
+        </div>
+        <div class="chain-link" onclick="activateLink(this, 2)">
+            <span class="chain-text">2. INVESTIGAR LOS HECHOS</span>
+            <div class="chain-status"></div>
+        </div>
+        <div class="chain-link" onclick="activateLink(this, 3)">
+            <span class="chain-text">3. SANCIONAR A RESPONSABLES</span>
+            <div class="chain-status"></div>
+        </div>
+        <div class="chain-link" onclick="activateLink(this, 4)">
+            <span class="chain-text">4. REPARAR EL DAÑO</span>
+            <div class="chain-status"></div>
+        </div>
+        <div class="chain-link" onclick="activateLink(this, 5)">
+            <span class="chain-text">5. GARANTIZAR NO REPETICIÓN</span>
+            <div class="chain-status"></div>
+        </div>
+    </div>
+
+    <div id="finalVerdict" class="final-verdict">
+        <span class="verdict-header"><i class="fas fa-gavel"></i> DICTAMEN FINAL:</span>
+        <p><strong>La Debida Diligencia no es opcional.</strong></p>
+        <p>En la UNP, tratar una amenaza contra una mujer defensora o persona LGBTIQ+ como un "trámite más" no es un error administrativo, es una falla sistémica que activa la responsabilidad del Estado ante organismos internacionales.</p>
+    </div>
+</section>
 </div>
 
 <script>
@@ -545,7 +544,7 @@
         }
     }
 
-    // Lógica Sección 2: Card Reveal (Sin gamificación excesiva)
+    // Lógica Sección 2: Card Reveal
     function revealCard(card) {
         if(!card.classList.contains('revealed')){
             card.classList.add('revealed');

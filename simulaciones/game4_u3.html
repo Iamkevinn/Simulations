@@ -3,124 +3,127 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
 
 <style>
-/* --- 1. CONFIGURACIÓN VISUAL (SÓLIDA Y ACCESIBLE) --- */
+/* --- 1. CONFIGURACIÓN VISUAL (ESTILO 25N - CLARO) --- */
 :root {
-    /* Fondo */
-    --sim-bg: #170047;          /* Fondo principal oscuro */
-    --sim-panel: #480241;       /* Panel sólido legible */
+    /* Fondo y Estructura */
+    --bg-main: #F4F6F9;          /* Gris muy claro / Blanco */
+    --panel-bg: #FFFFFF;         /* Tarjetas blancas */
+    --panel-shadow: 0 10px 30px rgba(72, 2, 65, 0.1);
 
-    /* Texto */
-    --text-main: #ffffff;
-    --text-muted: rgba(255,255,255,0.75);
-
-    /* Acentos (cliente) */
-    --accent-attention: #FEC82F; /* Atención / prevención */
-    --accent-danger: #E44700;    /* Riesgo / error */
-    --accent-warning: #EE7D4F;   /* Advertencia */
-    --accent-action: #D23B78;    /* Acción crítica */
-
-    /* Botones */
-    --btn-normal: #480241;
-    --btn-hover: #D23B78;
-
-    /* Bordes */
-    --border-soft: rgba(255,255,255,0.15);
+    /* Paleta Institucional (Imagen Referencia) */
+    --brand-purple: #480241;     /* Morado oscuro (Texto/Botones) */
+    --brand-violet: #7B1FA2;     /* Violeta medio */
+    --brand-orange: #FF9800;     /* Naranja (Acentos) */
+    --brand-yellow: #FEC82F;     /* Amarillo (Fondos decorativos) */
+    
+    /* Textos */
+    --text-main: #2D2D2D;        /* Gris oscuro para lectura */
+    --text-light: #555555;
+    
+    /* Estados Semánticos (Cualitativos) */
+    --state-safe: #06d6a0;       /* Verde - Espacio Seguro */
+    --state-risk: #FF9800;       /* Naranja - Riesgo Latente */
+    --state-danger: #D32F2F;     /* Rojo - Revictimización */
 }
-
 
 #simulation-container {
     width: 100%;
-    min-height: 850px; /* Altura para acomodar personaje y diálogo */
+    min-height: 850px;
     height: auto;
-    background-color: var(--sim-bg) !important;
+    background: linear-gradient(135deg, #ffffff 0%, #f3e5f5 100%); /* Degradado sutil morado claro */
     font-family: 'Manrope', sans-serif;
-    color: var(--text-white);
+    color: var(--text-main);
     position: relative;
     overflow: hidden;
     border-radius: 12px;
-    border: 2px solid #333;
+    border: 1px solid #e0e0e0;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
 }
 
-/* --- 2. AMBIENTACIÓN (ANIMACIONES CONSTANTES) --- */
-.ambient-light {
-    position: absolute; width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(157, 78, 221, 0.15) 0%, transparent 70%);
-    top: -20%; left: 50%; transform: translateX(-50%);
-    animation: pulseLight 8s infinite alternate; z-index: 0;
+/* --- 2. DECORACIÓN (HOJAS Y FORMAS ABSTRACTAS) --- */
+.deco-circle {
+    position: absolute; border-radius: 50%; opacity: 0.1; z-index: 0;
 }
-.dust-particle {
-    position: absolute; background: #fff; border-radius: 50%; opacity: 0.3;
-    animation: floatDust 10s infinite linear; pointer-events: none;
-}
-@keyframes pulseLight { 0% { opacity: 0.5; transform: translateX(-50%) scale(1); } 100% { opacity: 0.8; transform: translateX(-50%) scale(1.2); } }
-@keyframes floatDust { 0% { transform: translateY(0); opacity: 0; } 50% { opacity: 0.5; } 100% { transform: translateY(-100px); opacity: 0; } }
+.deco-1 { width: 400px; height: 400px; background: var(--brand-orange); top: -100px; right: -100px; }
+.deco-2 { width: 300px; height: 300px; background: var(--brand-violet); bottom: 100px; left: -50px; }
 
-/* --- 3. HUD (BARRA DE CONFIANZA) --- */
+/* --- 3. HUD (INDICADOR DE IMPACTO - NO PORCENTAJE) --- */
 .hud-bar {
-    z-index: 20; padding: 20px;
-    background: #000; border-bottom: 2px solid var(--accent-purple);
+    z-index: 20; padding: 20px 30px;
+    background: #fff; 
+    border-bottom: 4px solid var(--brand-yellow);
     display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
-.hud-title { font-weight: 800; text-transform: uppercase; color: var(--accent-purple); letter-spacing: 1px; }
-.trust-meter-container {
-    width: 200px; height: 10px; background: #333; border-radius: 5px; overflow: hidden; position: relative;
+.hud-title { 
+    font-weight: 800; text-transform: uppercase; 
+    color: var(--brand-purple); letter-spacing: 0.5px; 
 }
-.trust-fill {
-    height: 100%; width: 50%; /* Inicio medio */
-    background: linear-gradient(90deg, #ff9e00, #06d6a0);
-    transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-}
-.trust-label { font-size: 0.8rem; margin-left: 10px; color: #ccc; }
 
-/* --- 4. AVATAR (CARLA - CSS PURO) --- */
+/* Monitor de Estado (Reemplaza barra de porcentaje) */
+.impact-monitor {
+    display: flex; align-items: center; gap: 10px;
+    background: #f5f5f5; padding: 8px 15px; border-radius: 30px;
+}
+.impact-label { font-size: 0.85rem; font-weight: 600; color: #666; }
+.impact-badge {
+    padding: 5px 15px; border-radius: 20px;
+    font-size: 0.8rem; font-weight: 800; color: #fff;
+    text-transform: uppercase; transition: all 0.5s ease;
+}
+
+/* --- 4. AVATAR (CARLA - ESTILO LUMINOSO) --- */
 .character-stage {
     flex: 1; position: relative; z-index: 5;
     display: flex; justify-content: center; align-items: flex-end;
     overflow: hidden; pointer-events: none;
+    margin-bottom: -20px; /* Fusionar con el panel de texto */
 }
 
-/* Silueta estilizada para evitar fotos reales */
+/* Silueta en tonos morados/lila para contrastar con fondo claro */
 .avatar-silhouette {
-    width: 280px; height: 400px;
-    background: linear-gradient(to bottom, #5e4b8b, #2d1b4e);
+    width: 260px; height: 380px;
+    background: linear-gradient(to bottom, #7B1FA2, #480241);
     border-radius: 100px 100px 0 0;
-    position: relative; bottom: -20px;
-    box-shadow: 0 0 50px rgba(157, 78, 221, 0.3);
+    position: relative; bottom: 0px;
+    box-shadow: 0 -10px 40px rgba(123, 31, 162, 0.2);
     animation: breathe 4s infinite ease-in-out;
 }
 .avatar-head {
-    width: 140px; height: 160px;
-    background: #5e4b8b; border-radius: 70px;
-    position: absolute; top: -140px; left: 50%; transform: translateX(-50%);
-    box-shadow: inset -10px -10px 20px rgba(0,0,0,0.3);
+    width: 130px; height: 150px;
+    background: #7B1FA2; border-radius: 65px;
+    position: absolute; top: -130px; left: 50%; transform: translateX(-50%);
 }
-.avatar-aura {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 350px; height: 500px; border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.05);
-    animation: rotateAura 20s infinite linear;
+/* Pañuelo simbólico (Detalle 25N) */
+.scarf {
+    position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+    width: 160px; height: 60px; background: var(--brand-orange);
+    border-radius: 50px; z-index: 2;
 }
 
-@keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-@keyframes rotateAura { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+@keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
 
-/* --- 5. INTERFAZ DE DIÁLOGO (SÓLIDA) --- */
+/* --- 5. INTERFAZ DE DIÁLOGO (TARJETA BLANCA) --- */
 .dialogue-area {
-    background: #000000 !important; /* Negro sólido */
-    border-top: 3px solid var(--accent-purple);
-    padding: 30px; z-index: 20; min-height: 350px;
+    background: #FFFFFF !important;
+    border-top: 1px solid #eee;
+    padding: 40px; z-index: 20; min-height: 380px;
     display: flex; flex-direction: column; gap: 20px;
+    border-radius: 30px 30px 0 0; /* Aspecto moderno */
+    box-shadow: 0 -5px 30px rgba(0,0,0,0.05);
 }
 
 .speaker-name {
-    color: var(--accent-orange); font-weight: bold; font-family: 'Roboto Mono', monospace;
-    font-size: 0.9rem; margin-bottom: 5px;
+    color: var(--brand-violet); font-weight: 800; font-family: 'Manrope', sans-serif;
+    font-size: 1rem; margin-bottom: 5px; text-transform: uppercase;
+    background: #F3E5F5; display: inline-block; padding: 4px 12px; border-radius: 4px;
 }
 .dialogue-text {
-    font-size: 1.1rem; line-height: 1.6; color: #fff; min-height: 60px;
+    font-size: 1.15rem; line-height: 1.6; color: var(--text-main); min-height: 60px;
+    font-weight: 500;
 }
 
 .options-grid {
@@ -128,68 +131,67 @@
 }
 
 .choice-btn {
-    background-color: var(--btn-normal) !important;
-    color: white !important;
-    padding: 15px 20px;
-    border: 1px solid #666 !important;
-    border-radius: 8px;
+    background-color: #fff !important;
+    color: var(--text-main) !important;
+    padding: 18px 25px;
+    border: 2px solid #E0E0E0 !important;
+    border-left: 5px solid var(--brand-purple) !important;
+    border-radius: 12px;
     cursor: pointer; text-align: left;
-    font-size: 1rem; transition: transform 0.2s;
-    opacity: 1 !important;
+    font-size: 1rem; transition: all 0.2s ease;
     display: flex; align-items: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
 }
 .choice-btn:hover {
-    background-color: var(--btn-hover) !important;
-    border-color: var(--accent-purple) !important;
-    transform: translateX(10px);
+    background-color: #FFF8E1 !important; /* Fondo crema suave */
+    border-color: var(--brand-orange) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 152, 0, 0.15);
 }
 .choice-bullet {
-    width: 25px; height: 25px; background: #000; color: var(--accent-orange);
+    width: 30px; height: 30px; 
+    background: var(--brand-purple); color: #fff;
     border-radius: 50%; display: flex; align-items: center; justify-content: center;
     font-weight: bold; margin-right: 15px; flex-shrink: 0;
 }
 
-/* FEEDBACK OVERLAY */
+/* FEEDBACK OVERLAY (MODAL) */
 .feedback-overlay {
     position: absolute; top:0; left:0; width:100%; height:100%;
-    background: rgba(0,0,0,0.95); z-index: 50;
+    background: rgba(255,255,255,0.98); z-index: 50;
     display: none; flex-direction: column; justify-content: center; align-items: center;
     text-align: center; padding: 40px; box-sizing: border-box;
 }
 .fb-icon { font-size: 4rem; margin-bottom: 20px; }
-.fb-title { font-size: 1.5rem; font-weight: bold; color: var(--accent-purple); margin-bottom: 15px; }
-.fb-text { font-size: 1.1rem; line-height: 1.5; color: #ddd; max-width: 700px; margin-bottom: 30px; }
+.fb-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 15px; }
+.fb-text { font-size: 1.1rem; line-height: 1.6; color: #444; max-width: 650px; margin-bottom: 30px; }
 .continue-btn {
-    background: var(--accent-green); color: #000; padding: 12px 30px;
-    border: none; border-radius: 30px; font-weight: bold; cursor: pointer;
-    font-size: 1rem;
+    background: var(--brand-purple); color: #fff; padding: 14px 40px;
+    border: none; border-radius: 50px; font-weight: bold; cursor: pointer;
+    font-size: 1rem; transition: background 0.3s;
+    box-shadow: 0 5px 15px rgba(72, 2, 65, 0.2);
 }
+.continue-btn:hover { background: var(--brand-violet); transform: scale(1.05); }
 
-/* RESPONSIVE */
-@media (max-width: 1200px) {
-    .hud-bar { padding: 15px; }
-    .dialogue-area { padding: 20px; }
-    .character-stage { height: 200px; flex: none; } /* Reducir avatar en móvil */
-    .avatar-silhouette { transform: scale(0.8); transform-origin: bottom center; }
-}
+/* CLASES DE RESULTADO PARA TEXTO */
+.res-positive { color: var(--state-safe); }
+.res-negative { color: var(--state-danger); }
 
 </style>
 
 <div id="simulation-container">
-    
-    <!-- Efectos Ambientales -->
-    <div class="ambient-light"></div>
-    <!-- Partículas generadas por JS aquí -->
+    <!-- Fondos Decorativos -->
+    <div class="deco-circle deco-1"></div>
+    <div class="deco-circle deco-2"></div>
 
     <!-- HUD SUPERIOR -->
     <div class="hud-bar">
-        <div class="hud-title" style="color: white;">Simulación: Atención Diferencial</div>
-        <div style="display:flex; align-items:center;">
-            <div class="trust-label">Nivel de Confianza:</div>
-            <div style="width:10px;"></div>
-            <div class="trust-meter-container">
-                <div class="trust-fill" id="trust-bar"></div>
-            </div>
+        <div class="hud-title">Simulación: Enfoque de Género</div>
+        
+        <!-- NUEVO INDICADOR CUALITATIVO -->
+        <div class="impact-monitor">
+            <div class="impact-label">Impacto en la Usuaria:</div>
+            <div id="impact-badge" class="impact-badge" style="background: #999;">NEUTRAL</div>
         </div>
     </div>
 
@@ -197,7 +199,7 @@
     <div class="character-stage">
         <div class="avatar-silhouette">
             <div class="avatar-head"></div>
-            <div class="avatar-aura"></div>
+            <div class="scarf"></div> <!-- Detalle visual feminista -->
         </div>
     </div>
 
@@ -215,16 +217,15 @@
 
     <!-- FEEDBACK MODAL -->
     <div class="feedback-overlay" id="fb-modal">
-        <div class="fb-icon" id="fb-icon">✨</div>
-        <div class="fb-title" id="fb-title">Análisis de la Interacción</div>
-        <div class="fb-text" id="fb-desc">...</div>
-        <button class="continue-btn" style="color: white;" onclick="nextScene()">CONTINUAR</button>
+        <div class="fb-icon" id="fb-icon"></div>
+        <div class="fb-title" id="fb-title"></div>
+        <div class="fb-text" id="fb-desc"></div>
+        <button class="continue-btn" onclick="nextScene()">CONTINUAR</button>
     </div>
-
 </div>
 
 <script>
-// --- 1. CONFIGURACIÓN DE ESCENA Y DATOS ---
+// --- 1. CONFIGURACIÓN DE ESCENA Y DATOS (CONTENIDO EXACTO) ---
 const scenes = [
     {
         // ESCENA 0: SALUDO / ACTITUD
@@ -236,16 +237,16 @@ const scenes = [
                 text: "Buenos días. Entiendo. Aquí seguimos un protocolo estricto, deme su cédula rápido para ver si aplica.",
                 type: "negative",
                 feedbackTitle: "ACTITUD BARRERA",
-                feedback: "⚠️ <strong>Error:</strong> Esta respuesta es fría y burocrática. Ignora el temor expresado por la usuaria y no genera un 'Espacio Seguro'. Las herramientas para transformar actitudes exigen empatía inicial.",
-                trustChange: -20
+                feedback: "⚠️ <strong>Impacto Negativo:</strong> Esta respuesta es fría y burocrática. Ignora el temor expresado por la usuaria y no genera un 'Espacio Seguro'. Las herramientas para transformar actitudes exigen empatía inicial.",
+                scoreVal: -1
             },
             {
                 label: "B",
                 text: "Buenos días. Bienvenida a la UNP. Este es un espacio seguro y estamos aquí para escucharla y garantizar sus derechos. ¿En qué podemos apoyarla?",
                 type: "positive",
                 feedbackTitle: "TRANSFORMACIÓN DE ACTITUDES",
-                feedback: "✨ <strong>Correcto.</strong> Has aplicado una herramienta de actitud: validar el temor, ofrecer seguridad explícita y mostrar disposición de escucha activa.",
-                trustChange: +20
+                feedback: "✨ <strong>Impacto Positivo:</strong> Has aplicado una herramienta de actitud: validar el temor, ofrecer seguridad explícita y mostrar disposición de escucha activa.",
+                scoreVal: 1
             }
         ]
     },
@@ -259,16 +260,16 @@ const scenes = [
                 text: "Entiendo, Carla. En nuestro sistema registraremos su nombre identitario 'Carla' y su pronombre 'Ella', respetando su identidad de género.",
                 type: "positive",
                 feedbackTitle: "ESTÁNDAR DE REGISTRO",
-                feedback: "✨ <strong>Excelente.</strong> El estándar de registro e identificación exige respetar el nombre identitario sobre el legal en el trato y en los campos de 'Nombre Social' del formulario.",
-                trustChange: +20
+                feedback: "✨ <strong>Impacto Positivo:</strong> El estándar de registro e identificación exige respetar el nombre identitario sobre el legal en el trato y en los campos de 'Nombre Social' del formulario.",
+                scoreVal: 1
             },
             {
                 label: "B",
                 text: "Ah, entonces tengo que registrarla como Carlos porque eso dice el documento legal. No puedo cambiar eso en el sistema.",
                 type: "negative",
                 feedbackTitle: "VIOLENCIA INSTITUCIONAL",
-                feedback: "⚠️ <strong>Error:</strong> Negar el nombre identitario es una forma de violencia. Existen protocolos para registrar el nombre identitario como principal en la interacción.",
-                trustChange: -30
+                feedback: "⚠️ <strong>Impacto Negativo:</strong> Negar el nombre identitario es una forma de violencia. Existen protocolos para registrar el nombre identitario como principal en la interacción.",
+                scoreVal: -1
             }
         ]
     },
@@ -282,23 +283,24 @@ const scenes = [
                 text: "Eso suena a un problema de convivencia. Debería poner una queja en la policía por amenazas simples.",
                 type: "negative",
                 feedbackTitle: "FALTA DE ENFOQUE DIFERENCIAL",
-                feedback: "⚠️ <strong>Incorrecto.</strong> No es 'convivencia'. Es una amenaza motivada por prejuicio (Transfobia). Minimizar el riesgo viola el enfoque de vida libre de violencias.",
-                trustChange: -30
+                feedback: "⚠️ <strong>Impacto Negativo:</strong> No es 'convivencia'. Es una amenaza motivada por prejuicio (Transfobia). Minimizar el riesgo viola el enfoque de vida libre de violencias.",
+                scoreVal: -1
             },
             {
                 label: "B",
                 text: "Comprendo el riesgo, Carla. Esto es una amenaza por prejuicio contra su identidad de género. Activaremos la ruta de riesgo específico para población diversa.",
                 type: "positive",
                 feedbackTitle: "ENFOQUE DIFERENCIAL APLICADO",
-                feedback: "✨ <strong>Correcto.</strong> Identificaste que la amenaza está basada en su identidad (violencia por prejuicio) y activaste la ruta diferencial.",
-                trustChange: +20
+                feedback: "✨ <strong>Impacto Positivo:</strong> Identificaste que la amenaza está basada en su identidad (violencia por prejuicio) y activaste la ruta diferencial.",
+                scoreVal: 1
             }
         ]
     }
 ];
 
 let currentSceneIndex = 0;
-let currentTrust = 50; // Inicia en 50%
+// Puntuación interna: Empezamos en 0. Rango posible: -3 a +3
+let internalScore = 0; 
 
 // --- 2. FUNCIONES DE SIMULACIÓN ---
 
@@ -311,46 +313,59 @@ function renderScene() {
     
     // Generar Botones
     const choicesBox = document.getElementById('choices-box');
-    choicesBox.innerHTML = ''; // Limpiar
+    choicesBox.innerHTML = ''; 
     
     scene.options.forEach((opt, index) => {
         const btn = document.createElement('div');
         btn.className = 'choice-btn';
         btn.innerHTML = `<div class="choice-bullet">${opt.label}</div><span>${opt.text}</span>`;
         
-        // Animación de entrada
-        gsap.fromTo(btn, {x: -20, opacity: 0}, {x: 0, opacity: 1, duration: 0.5, delay: 0.5 + (index * 0.2)});
+        gsap.fromTo(btn, {y: 20, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, delay: 0.3 + (index * 0.15)});
         
         btn.onclick = () => makeChoice(opt);
         choicesBox.appendChild(btn);
     });
+
+    updateIndicator();
+}
+
+// LÓGICA DEL INDICADOR DE IMPACTO (No porcentaje)
+function updateIndicator() {
+    const badge = document.getElementById('impact-badge');
+    
+    // Definir estados cualitativos basados en el score acumulado
+    if(internalScore === 0 && currentSceneIndex === 0) {
+        badge.innerText = "ESPERANDO ACCIÓN";
+        badge.style.background = "#999";
+    } else if (internalScore > 0) {
+        badge.innerText = "ESPACIO SEGURO";
+        badge.style.background = "var(--state-safe)";
+    } else {
+        badge.innerText = "RIESGO DE REVICTIMIZACIÓN";
+        badge.style.background = "var(--state-danger)";
+    }
 }
 
 function makeChoice(option) {
-    // Actualizar confianza
-    currentTrust += option.trustChange;
-    if(currentTrust > 100) currentTrust = 100;
-    if(currentTrust < 0) currentTrust = 0;
+    internalScore += option.scoreVal;
     
-    updateTrustBar();
-
-    // Mostrar Feedback
+    // Mostrar Feedback Modal
     const modal = document.getElementById('fb-modal');
     const icon = document.getElementById('fb-icon');
     const title = document.getElementById('fb-title');
     const desc = document.getElementById('fb-desc');
 
     if(option.type === 'positive') {
-        icon.innerText = "✨";
-        title.style.color = "#06d6a0"; // Verde
+        icon.innerText = "💜"; // Corazón violeta
+        title.style.color = "var(--brand-violet)";
+        title.innerText = option.feedbackTitle;
     } else {
-        icon.innerText = "⚠️";
-        title.style.color = "#ff007f"; // Rojo
+        icon.innerText = "✋"; 
+        title.style.color = "var(--state-danger)";
+        title.innerText = option.feedbackTitle;
     }
 
-    title.innerText = option.feedbackTitle;
-    desc.innerHTML = option.feedback; // Permite HTML para bold
-
+    desc.innerHTML = option.feedback; 
     modal.style.display = 'flex';
     gsap.from(modal, {opacity: 0, duration: 0.3});
 }
@@ -366,70 +381,66 @@ function nextScene() {
     }
 }
 
+// RESULTADO FINAL CUALITATIVO
 function showFinalResult() {
     const dialogArea = document.querySelector('.dialogue-area');
-    let finalMsg = "";
-    let finalColor = "";
+    const badge = document.getElementById('impact-badge');
+    
+    let resultTitle = "";
+    let resultDesc = "";
+    let colorClass = "";
 
-    if(currentTrust >= 70) {
-        finalMsg = "¡PROCEDIMIENTO EXITOSO!<br>Has aplicado correctamente el enfoque diferencial, creando un espacio seguro y garantizando el registro adecuado.";
-        finalColor = "#06d6a0";
-        // Animación de éxito en avatar
-        gsap.to(".avatar-head", {backgroundColor: "#06d6a0", duration: 1});
+    // Evaluación basada en la "Ética del Cuidado" y "Debida Diligencia"
+    if(internalScore >= 2) {
+        // Mayoría de aciertos
+        badge.innerText = "GARANTÍA DE DERECHOS";
+        badge.style.background = "var(--state-safe)";
+        
+        resultTitle = "ESPACIO SEGURO CONSOLIDADO";
+        colorClass = "var(--state-safe)";
+        resultDesc = "Tus decisiones han permitido activar la ruta con <strong>Debida Diligencia</strong>. Al validar la identidad de Carla y reconocer el riesgo por prejuicio, has mitigado la vulnerabilidad y fortalecido la confianza institucional.";
+        
+        gsap.to(".avatar-head", {backgroundColor: "#06d6a0", duration: 1}); // Avatar se ilumina
     } else {
-        finalMsg = "PROCEDIMIENTO FALLIDO.<br>La usuaria no se sintió segura. Es necesario reforzar las herramientas de transformación de actitudes y protocolos.";
-        finalColor = "#ff007f";
-        // Animación de fallo
-        gsap.to(".avatar-head", {backgroundColor: "#555", duration: 1});
+        // Fallos críticos o mixtos
+        badge.innerText = "VULNERACIÓN DE DERECHOS";
+        badge.style.background = "var(--state-danger)";
+        
+        resultTitle = "RIESGO ESCALADO / REVICTIMIZACIÓN";
+        colorClass = "var(--state-danger)";
+        resultDesc = "Las decisiones tomadas han levantado barreras de acceso. Al no aplicar el enfoque diferencial, <strong>el riesgo para Carla ha aumentado</strong> y la institución ha fallado en su deber de protección y cuidado.";
+        
+        gsap.to(".avatar-head", {backgroundColor: "#555", duration: 1}); // Avatar se apaga
     }
 
     dialogArea.innerHTML = `
-        <div style="text-align:center; padding:20px;">
-            <h2 style="color:${finalColor}; text-transform:uppercase; font-size:2rem;">${currentTrust}% DE CONFIANZA</h2>
-            <p style="font-size:1.2rem; margin-top:20px; color:#fff;">${finalMsg}</p>
-            <button class="choice-btn" style="margin:30px auto; justify-content:center;" onclick="location.reload()">REINICIAR SIMULACIÓN</button>
+        <div style="text-align:center; padding:10px;">
+            <h2 style="color:${colorClass}; text-transform:uppercase; font-size:1.8rem; margin-bottom:20px;">${resultTitle}</h2>
+            <p style="font-size:1.2rem; margin-bottom:30px; color:#444; max-width:600px; margin-left:auto; margin-right:auto;">
+                ${resultDesc}
+            </p>
+            <div style="background:#f9f9f9; padding:15px; border-radius:10px; border:1px solid #eee; display:inline-block; margin-bottom:20px;">
+                <small style="color:#666; font-weight:bold;">ENFOQUE APLICADO:</small><br>
+                Ética del Cuidado & Acción sin Daño
+            </div>
+            <br>
+            <button class="choice-btn" style="margin:20px auto; justify-content:center; background:var(--brand-purple)!important; color:white!important; border:none!important;" onclick="location.reload()">
+                REINICIAR EJERCICIO
+            </button>
         </div>
     `;
-}
-
-// --- 3. UTILIDADES ---
-function updateTrustBar() {
-    const bar = document.getElementById('trust-bar');
-    bar.style.width = currentTrust + "%";
-    
-    // Cambiar color según nivel
-    if(currentTrust < 40) bar.style.background = "#ff007f";
-    else if(currentTrust < 70) bar.style.background = "#ff9e00";
-    else bar.style.background = "#06d6a0";
 }
 
 function typeWriter(text) {
     const el = document.getElementById('typewriter-text');
     el.innerHTML = "";
     let i = 0;
-    
-    // Limpiar intervalo anterior si existe (por seguridad)
     if(window.typeInterval) clearInterval(window.typeInterval);
-
     window.typeInterval = setInterval(() => {
         el.innerHTML += text.charAt(i);
         i++;
         if (i > text.length - 1) clearInterval(window.typeInterval);
-    }, 20); // Velocidad de tipeo
-}
-
-// GENERAR PARTÍCULAS
-const container = document.getElementById('simulation-container');
-for(let i=0; i<15; i++){
-    let p = document.createElement('div');
-    p.className = 'dust-particle';
-    p.style.left = Math.random() * 100 + '%';
-    p.style.top = Math.random() * 100 + '%';
-    p.style.width = Math.random() * 4 + 'px';
-    p.style.height = p.style.width;
-    p.style.animationDuration = (Math.random() * 10 + 10) + 's';
-    p.style.animationDelay = (Math.random() * 5) + 's';
-    container.appendChild(p);
+    }, 15);
 }
 
 // INICIAR

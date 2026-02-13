@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-    /* --- ESTILOS GENERALES (MANTENIDOS) --- */
+    /* --- ESTILOS GENERALES --- */
     :root {
         --bg-body: #f4f6f9;
         --card-bg: #ffffff;
@@ -16,6 +16,7 @@
         --text-light: #666666;
         --success: #2E7D32;
         --error: #D32F2F;
+        --warning: #F57C00;
     }
 
     body {
@@ -43,20 +44,15 @@
         border-radius: 15px;
         padding: 40px;
         width: 100%;
-        max-width: 800px; /* Aumenté un poco el ancho máximo para dar aire a los logos */
+        max-width: 800px;
         position: relative;
         box-shadow: 0 10px 40px rgba(72, 2, 65, 0.15);
         transition: transform 0.3s ease;
     }
 
-    /* --- NUEVO LAYOUT DEL HUD (LOGOS CENTRADOS + PÍLDORAS ADAPTABLES) --- */
+    /* --- HUD Modificado (Cualitativo) --- */
     .hud {
         display: grid;
-        /* Tres columnas: 
-           1. Izquierda (flexible)
-           2. Centro (se ajusta al contenido/logos)
-           3. Derecha (flexible) 
-        */
         grid-template-columns: 1fr auto 1fr; 
         align-items: center;
         gap: 15px;
@@ -64,7 +60,6 @@
         width: 100%;
     }
 
-    /* Contenedor de Logos (El Protagonista) */
     .logos-container {
         display: flex;
         align-items: center;
@@ -74,197 +69,111 @@
     }
 
     .logos-container img {
-        height: 85px;       /* Altura fija grande para enfatizar */
-        width: auto;        /* Mantiene proporción */
+        height: 85px;
+        width: auto;
         object-fit: contain;
-        transition: height 0.3s ease; /* Transición suave si cambia tamaño */
+        transition: height 0.3s ease;
     }
 
-    /* Píldoras (Se adaptan) */
     .score-box {
         background: rgba(72, 2, 65, 0.05);
-        padding: 10px 5px; /* Padding reducido a los lados para evitar desbordes */
+        padding: 10px 5px;
         border-radius: 30px;
         border: 1px solid rgba(72, 2, 65, 0.1);
-        
-        /* Tipografía */
         font-size: 0.75rem; 
         font-weight: 800;
         text-transform: uppercase;
         color: var(--brand-purple);
         letter-spacing: 0.5px;
-        
-        /* Comportamiento flexible */
         display: flex;
         justify-content: center;
         align-items: center;
         text-align: center;
-        width: 100%;       /* Ocupa el ancho de su columna grid */
-        min-width: 0;      /* Permite que se encoja si es necesario */
-        white-space: nowrap; /* Intenta mantener texto en una línea */
-        overflow: hidden;    /* Oculta si se desborda */
+        width: 100%;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
         text-overflow: ellipsis; 
     }
 
-    /* Ajuste de alineación visual para las píldoras */
-    .hud > :first-child { justify-self: start; width: auto; min-width: 120px; } /* Píldora Izq */
-    .hud > :last-child { justify-self: end; width: auto; min-width: 120px; }   /* Píldora Der */
+    /* Estilos dinámicos para el estado de protección */
+    .status-safe { background: #E8F5E9; color: var(--success); border-color: var(--success); }
+    .status-risk { background: #FFEBEE; color: var(--error); border-color: var(--error); }
+    .status-neutral { background: #FFF3E0; color: var(--warning); border-color: var(--warning); }
 
+    .hud > :first-child { justify-self: start; width: auto; min-width: 120px; } 
+    .hud > :last-child { justify-self: end; width: auto; min-width: 120px; }
 
-    /* --- RESPONSIVE PARA MÓVILES --- */
     @media (max-width: 768px) {
-        .hud {
-            /* Cambiamos a Flex vertical: Logos arriba, píldoras abajo */
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .logos-container img {
-            height: 70px; /* Un poco más pequeños en móvil pero siguen siendo grandes */
-        }
-
-        /* Contenedor para poner las píldoras en una fila abajo */
-        .mobile-pills-row {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            gap: 10px;
-        }
-
-        /* Como cambiamos la estructura en HTML para móvil, ajustamos CSS */
-        .hud > .score-box {
-            width: 48%; /* Cada píldora ocupa casi la mitad */
-            font-size: 0.7rem;
-            min-width: auto;
-        }
+        .hud { display: flex; flex-direction: column; gap: 15px; }
+        .logos-container img { height: 70px; }
+        .hud > .score-box { width: 48%; font-size: 0.7rem; min-width: auto; }
     }
 
-    /* --- RESTO DE ESTILOS (Progreso, Textos, Botones) --- */
+    /* --- ELEMENTOS DE JUEGO --- */
     .progress-container {
-        width: 100%;
-        height: 8px;
-        background: #e0e0e0;
-        border-radius: 4px;
-        margin-bottom: 30px;
-        overflow: hidden;
+        width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; margin-bottom: 30px; overflow: hidden;
     }
 
     .progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, var(--brand-orange), var(--brand-yellow));
-        width: 0%;
-        transition: width 0.5s ease;
+        height: 100%; background: linear-gradient(90deg, var(--brand-orange), var(--brand-yellow)); width: 0%; transition: width 0.5s ease;
     }
 
     h2 {
-        color: var(--brand-purple);
-        margin-top: 0;
-        font-size: 1.6rem;
-        margin-bottom: 15px;
-        border-bottom: 2px solid rgba(254, 200, 47, 0.5);
-        padding-bottom: 10px;
-        display: inline-block;
+        color: var(--brand-purple); margin-top: 0; font-size: 1.6rem; margin-bottom: 15px;
+        border-bottom: 2px solid rgba(254, 200, 47, 0.5); padding-bottom: 10px; display: inline-block;
     }
 
-    p {
-        color: var(--text-main);
-        line-height: 1.6;
-        font-size: 1.05rem;
-        margin-bottom: 25px;
-    }
-
+    p { color: var(--text-main); line-height: 1.6; font-size: 1.05rem; margin-bottom: 25px; }
     strong { color: var(--brand-purple); }
 
     .btn-game {
         background: linear-gradient(135deg, var(--brand-orange) 0%, #F57C00 100%);
-        border: none;
-        padding: 18px 25px;
-        color: white;
-        font-size: 1.05rem;
-        font-weight: bold;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: all 0.2s;
-        display: block;
-        width: 100%;
-        margin: 15px 0;
-        text-align: center;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border: none; padding: 18px 25px; color: white; font-size: 1.05rem; font-weight: bold;
+        border-radius: 10px; cursor: pointer; transition: all 0.2s; display: block; width: 100%;
+        margin: 15px 0; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
-    .btn-game:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(255, 140, 0, 0.3);
-    }
+    .btn-game:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(255, 140, 0, 0.3); }
 
     .option-btn {
-        background: white;
-        color: var(--text-main);
-        text-align: left;
-        border: 2px solid #e0e0e0;
-        text-transform: none;
-        font-weight: normal;
-        position: relative;
-        padding-left: 25px;
-        transition: all 0.2s ease;
+        background: white; color: var(--text-main); text-align: left; border: 2px solid #e0e0e0;
+        text-transform: none; font-weight: normal; position: relative; padding-left: 25px; transition: all 0.2s ease;
     }
     
     .option-btn:hover {
-        border-color: var(--brand-purple);
-        background: rgba(72, 2, 65, 0.03);
-        color: var(--brand-purple);
-        font-weight: 500;
-        transform: translateX(5px);
+        border-color: var(--brand-purple); background: rgba(72, 2, 65, 0.03);
+        color: var(--brand-purple); font-weight: 500; transform: translateX(5px);
     }
 
     .scene { display: none; animation: fadeIn 0.5s ease-out; }
     .scene.active { display: block; }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* Modal de Feedback (Ajustado) */
     .feedback-overlay {
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(5px);
-        z-index: 50;
-        display: none;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 30px;
-        text-align: center;
-        border-radius: 15px;
+        position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px); z-index: 50;
+        display: none; flex-direction: column; justify-content: center; align-items: center;
+        padding: 30px; text-align: center; border-radius: 15px;
     }
 
     .feedback-content {
-        background: white;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        max-width: 90%;
-        border: 1px solid #eee;
+        background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        max-width: 90%; border: 1px solid #eee;
     }
 
     .feedback-icon { font-size: 3.5rem; margin-bottom: 10px; display: block; }
     
-    .state-success { border-color: var(--success); }
-    .state-fail { border-color: var(--error); }
+    /* Estados finales sin bordes de color duro, más sutiles */
+    .state-success { border-top-color: var(--success); }
+    .state-fail { border-top-color: var(--error); }
     
     .final-score-display {
-        font-size: 3rem;
-        font-weight: bold;
-        margin: 20px 0;
-        color: var(--brand-purple);
-    }
-
-    @media (max-width: 600px) {
-        .game-card { padding: 20px; }
-        h2 { font-size: 1.3rem; }
+        font-size: 1.4rem; font-weight: bold; margin: 20px 0; padding: 15px;
+        background: #f8f8f8; border-radius: 10px; color: var(--brand-purple);
+        border-left: 4px solid var(--brand-purple);
     }
 </style>
 </head>
@@ -273,28 +182,18 @@
 <div id="game-wrapper">
     <div class="game-card" id="card-container">
         
-        <!-- HUD Superior Modificado -->
+        <!-- HUD Superior Modificado: Sin porcentajes -->
         <div class="hud" id="hud-container">
-            
-            <!-- Estructura condicional para layout Desktop/Mobile se maneja con CSS Grid, 
-                 pero el orden HTML importa para el lector de pantalla y flujo -->
-            
-            <!-- 1. Píldora Izquierda (En móvil será movida o reorganizada visualmente) -->
             <span class="score-box" id="level-display">FASE: INICIACIÓN</span>
 
-            <!-- 2. Logos Centrales (Siempre protagonistas) -->
             <div class="logos-container">
-                <!-- Asegúrate de que estas rutas sean correctas en tu proyecto -->
                 <img src="../Styles/UNP I.svg" alt="Logo UNP">
                 <img src="../Styles/logo.png" alt="Logo Comisión">
             </div>
 
-            <!-- 3. Píldora Derecha -->
-            <span class="score-box" id="score-display">🛡️ INTEGRIDAD: 0%</span>
+            <!-- CAMBIO: Indicador Cualitativo -->
+            <span class="score-box status-neutral" id="protection-display">🛡️ NIVEL DE PROTECCIÓN: INICIAL</span>
         </div>
-
-        <!-- Script simple para reorganizar el DOM en móvil si es necesario para el diseño estricto, 
-             pero con CSS Grid y Flex wrap lo controlamos mejor visualmente -->
         
         <div class="progress-container"><div class="progress-fill" id="progress-bar"></div></div>
 
@@ -303,18 +202,21 @@
             <div style="text-align:center; margin-bottom:20px;">
                 <span style="font-size:3rem;">🎗️</span>
             </div>
-            <h2>Protocolo: Ruta Convenio 190 y Ley 2365</h2>
-            <p>Bienvenida(o). Este módulo valida tu capacidad para aplicar la <strong>normativa vigente</strong> con enfoque de género y derechos humanos en la UNP.</p>
-            <p style="color: var(--brand-magenta); font-size: 0.9rem; background: rgba(194,24,91,0.1); padding: 10px; border-radius: 8px;">
-                ⚠️ <strong>Nota:</strong> Necesitas un 75% de integridad para aprobar el módulo.
+           <h2>Ruta de Derechos: Convenio 190 y Ley 2365</h2>
+            <p>Bienvenida(o). Este no es un examen de memoria, es un ejercicio de <strong>Ética del Cuidado</strong>.</p>
+            <p>Tus decisiones en los siguientes casos determinarán si se construye un <strong>entorno seguro</strong> o si se permite que el riesgo escale.</p>
+            <p style="color: var(--brand-purple); font-size: 0.9rem; background: rgba(88,44,131,0.05); padding: 15px; border-radius: 8px; border-left: 4px solid var(--brand-purple);">
+                👁️ <strong>Enfoque:</strong> El objetivo no es "ganar puntos", sino garantizar la no repetición y la protección integral.
             </p>
             <button class="btn-game" onclick="startGame()">Comenzar Evaluación</button>
         </div>
 
+        <!-- =========== CONTENIDO INTACTO (SITUACIONES Y OPCIONES) =========== -->
+
         <!-- ESCENA 1: PREGUNTA 1 -->
         <div class="scene" id="scene-1">
-            <h2>Caso 1: El Pasillo</h2>
-            <p>Detectas burlas sistemáticas hacia una compañera. El jefe de área dice: "Son cosas de la cultura de oficina". La agresión ocurrió en un <span style="color: var(--success); font-weight: 800;">grupo de WhatsApp laboral</span> fuera del horario.</p>
+            <h2>Caso 1: Las burlas</h2>
+            <p>Detectas burlas sistemáticas hacia una compañera. El jefe de área dice: "Son cosas de la cultura de oficina". La agresión ocurrió en un <span style="color: var(--success); font-weight: 800;">grupo de WhatsApp</span> laboral y en diferentes pasillos, fuera del horario.</p>
             <p>Según el <strong>Convenio 190 de la OIT</strong>, ¿cuál es el análisis correcto?</p>
             <button class="btn-game option-btn" onclick="handleAnswer(1, false)">Es un problema de convivencia leve al ser fuera de la oficina.</button>
             <button class="btn-game option-btn" onclick="handleAnswer(1, true)">Constituye un <strong>entorno laboral hostil</strong>. El C190 protege el "mundo del trabajo", incluyendo comunicaciones digitales y trayectos.</button>
@@ -348,16 +250,21 @@
             <button class="btn-game option-btn" onclick="handleAnswer(4, true)"><strong>Ley 2453 (Violencia Política)</strong>. Se busca excluirla estructuralmente del poder, no es un conflicto doméstico.</button>
         </div>
 
+        <!-- =========== FIN CONTENIDO INTACTO =========== -->
+
         <!-- ESCENA FINAL -->
         <div class="scene" id="scene-final">
             <h2 id="final-title">Resultados</h2>
             <div id="final-icon" class="feedback-icon"></div>
+            
+            <!-- Resultado Cualitativo -->
+            <div class="final-score-display" id="final-score"></div>
+
             <p id="final-message"></p>
-            <div class="final-score-display" id="final-score">0%</div>
             <button class="btn-game" id="final-btn" onclick="resetGame()">Reiniciar</button>
         </div>
 
-        <!-- FEEDBACK POP-UP -->
+        <!-- FEEDBACK POP-UP (Cualitativo) -->
         <div id="feedback-modal" class="feedback-overlay">
             <div class="feedback-content">
                 <div id="fb-icon" class="feedback-icon"></div>
@@ -371,40 +278,61 @@
 </div>
 
 <script>
-    // --- LÓGICA DE RESPONSIVE AVANZADO PARA HUD ---
-    // (Opcional: Si quieres mover las píldoras físicamente en el DOM al cambiar tamaño)
-    // Pero con el CSS actual ya se logra el efecto visual deseado:
-    // En Desktop: Píldora - Logos - Píldora
-    // En Móvil: Logos (arriba) -> Píldoras (abajo)
+    // --- LÓGICA REAJUSTADA: CUALITATIVA ---
+    
+    // Variables de Estado (Sin score numérico visible)
+    let gameState = { 
+        correctAnswers: 0, 
+        currentScene: 0 
+    };
 
-    // Configuración
-    let gameState = { score: 0, currentScene: 0 };
-    const maxScorePerQuestion = 25; 
-    const passingScore = 75; 
-
-    // BASE DE DATOS DE FEEDBACK
+    // BASE DE DATOS DE FEEDBACK (Enfoque: Impacto)
     const feedbackDB = {
         1: {
-            correct: "¡Exacto! El Convenio 190 y la Recomendación 206 aclaran que la violencia no requiere un espacio físico específico. El 'mundo del trabajo' incluye las comunicaciones y trayectos, y estas conductas crean un entorno hostil inaceptable.",
-            incorrect: "Cuidado. Bajo el estándar OIT, las burlas no son 'cultura'. Constituyen un entorno laboral hostil. Además, la protección legal se extiende a los medios digitales y trayectos."
+            correct: {
+                title: "🛡️ Entorno Protegido",
+                text: "Correcto. Al reconocer que la violencia no requiere un espacio físico, proteges a la víctima. El 'mundo del trabajo' (C190) incluye lo digital."
+            },
+            incorrect: {
+                title: "⚠️ Riesgo de Escalada",
+                text: "Cuidado. Considerar esto 'cultura' normaliza la violencia. El C190 protege contra entornos hostiles, incluso en medios digitales."
+            }
         },
         2: {
-            correct: "¡Muy bien! La Ley 2365 obliga a la PREVENCIÓN. Las entidades son responsables de crear entornos seguros para todos, incluyendo contratistas y aprendices.",
-            incorrect: "Incorrecto. La Ley 2365 cierra esa brecha: la entidad tiene el deber de prevención y sanción sobre cualquier persona que preste servicios."
+            correct: {
+                title: "🤝 Garantía de Derechos",
+                text: "Muy bien. La Ley 2365 obliga a proteger a todas las personas en la entidad. La dignidad no depende del tipo de contrato."
+            },
+            incorrect: {
+                title: "🚫 Desprotección",
+                text: "Incorrecto. Usar el tipo de contrato como excusa deja a la víctima vulnerable. La ley exige PREVENCIÓN universal en la entidad."
+            }
         },
         3: {
-            correct: "¡Correcto! El registro en el SIVIGE es vital para la trazabilidad estatal y la formulación de políticas públicas.",
-            incorrect: "Incorrecto. Sin reporte al SIVIGE, el caso se vuelve invisible para las estadísticas nacionales."
+            correct: {
+                title: "📊 Visibilidad",
+                text: "Exacto. El SIVIGE garantiza que el caso no se pierda y permite al Estado formular políticas públicas reales."
+            },
+            incorrect: {
+                title: "😶 Invisibilización",
+                text: "Riesgo. Los archivos aislados generan impunidad. Sin registro centralizado (SIVIGE), la violencia estructural permanece oculta."
+            }
         },
         4: {
-            correct: "¡Crucial distinción! La Ley 2453 sanciona la violencia que busca impedir el ejercicio de derechos políticos. Tratar esto como 'celos' o 'temas personales' invisibiliza la exclusión estructural de las mujeres.",
-            incorrect: "Error grave. Reducir la violencia política a 'líos personales' o 'domésticos' revictimiza y oculta el objetivo real del agresor: excluir a la mujer del espacio de poder (Ley 2453)."
+            correct: {
+                title: "🏛️ Defensa Democrática",
+                text: "Crucial. Identificaste la Violencia Política. Al no reducirlo a 'líos personales', proteges el derecho de las mujeres al poder."
+            },
+            incorrect: {
+                title: "📉 Estereotipo Dañino",
+                text: "Error grave. Calificarlo de 'lío de faldas' es una estrategia para deslegitimar a las mujeres y aumenta su riesgo físico."
+            }
         }
     };
 
     function startGame() {
-        gameState.score = 0;
-        updateUI();
+        gameState.correctAnswers = 0;
+        updateStatusUI();
         showScene(1);
     }
 
@@ -421,26 +349,29 @@
         document.getElementById('level-display').innerText = `FASE: ${levels[lvlIdx]}`;
     }
 
+    // Maneja la respuesta manteniendo los parámetros originales (index, true/false)
     function handleAnswer(qIndex, isCorrect) {
         const modal = document.getElementById('feedback-modal');
         const icon = document.getElementById('fb-icon');
         const title = document.getElementById('fb-title');
         const text = document.getElementById('fb-text');
 
+        // Mapeamos el true/false a la nueva lógica de Feedback de Impacto
+        const content = isCorrect ? feedbackDB[qIndex].correct : feedbackDB[qIndex].incorrect;
+
         if (isCorrect) {
-            gameState.score += maxScorePerQuestion;
+            gameState.correctAnswers++;
             icon.innerText = "✅";
-            title.innerText = "Respuesta Correcta";
             title.style.color = "var(--success)";
-            text.innerText = feedbackDB[qIndex].correct;
         } else {
             icon.innerText = "⚠️";
-            title.innerText = "Concepto a Reforzar";
             title.style.color = "var(--error)";
-            text.innerText = feedbackDB[qIndex].incorrect;
         }
+
+        title.innerText = content.title;
+        text.innerText = content.text;
         
-        updateUI();
+        updateStatusUI(); // Actualiza la píldora superior
         modal.style.display = "flex";
         modal.dataset.nextScene = (qIndex < 4) ? qIndex + 1 : 'final';
     }
@@ -452,6 +383,22 @@
         else showScene(parseInt(next));
     }
 
+    function updateStatusUI() {
+        const display = document.getElementById('protection-display');
+        
+        // Lógica simple para mostrar estado cualitativo
+        if (gameState.correctAnswers >= 3) {
+            display.innerText = "🛡️ NIVEL: ENTORNO SEGURO";
+            display.className = "score-box status-safe";
+        } else if (gameState.correctAnswers > 0) {
+            display.innerText = "⚠️ NIVEL: ALERTA PREVENTIVA";
+            display.className = "score-box status-neutral";
+        } else {
+            display.innerText = "🚩 NIVEL: RIESGO ACTIVO";
+            display.className = "score-box status-risk";
+        }
+    }
+
     function evaluateGame() {
         showScene('final');
         const card = document.getElementById('card-container');
@@ -461,36 +408,40 @@
         const btn = document.getElementById('final-btn');
         const icon = document.getElementById('final-icon');
 
-        scoreDisplay.innerText = `${gameState.score}%`;
-
-        if (gameState.score >= passingScore) {
+        // Evaluación Cualitativa Final (Sin números)
+        if (gameState.correctAnswers === 4) {
             card.classList.add('state-success');
             card.classList.remove('state-fail');
             icon.innerText = "💜";
-            title.innerText = "¡COMPROMISO CERTIFICADO!";
+            title.innerText = "COMPROMISO ÉTICO";
             title.style.color = "var(--brand-purple)";
-            msg.innerHTML = "Has demostrado comprender los matices del Convenio 190 y la Ley 2453.<br>Identificar la violencia estructural es el primer paso para erradicarla.";
+            scoreDisplay.innerText = "RESULTADO: GARANTÍA DE DERECHOS";
+            msg.innerHTML = "Has tomado decisiones que protegen la vida y la dignidad. <br>Comprendes que la normativa es una herramienta de cuidado, no solo un trámite.";
             btn.innerText = "Finalizar Módulo";
             btn.style.background = "var(--success)";
+        } else if (gameState.correctAnswers >= 2) {
+            card.classList.add('state-fail');
+            card.classList.remove('state-success');
+            icon.innerText = "⚠️";
+            title.innerText = "REFUERZO NECESARIO";
+            title.style.color = "var(--warning)";
+            scoreDisplay.innerText = "RESULTADO: BRECHAS DE PROTECCIÓN";
+            msg.innerHTML = "Algunas decisiones fueron correctas, pero otras dejaron vulnerables a las víctimas. <br>En protección, una omisión puede escalar el riesgo.";
+            btn.innerText = "Repasar Conceptos";
+            btn.style.background = "var(--brand-orange)";
+            btn.onclick = resetGame;
         } else {
             card.classList.add('state-fail');
             card.classList.remove('state-success');
             icon.innerText = "😓";
-            title.innerText = "REFUERZO NECESARIO";
+            title.innerText = "ALERTA CRÍTICA";
             title.style.color = "var(--error)";
-            msg.innerHTML = "Debemos afianzar la diferencia entre conflicto personal y violencia política, así como el alcance del 'mundo del trabajo'.";
-            btn.innerText = "Repasar Conceptos";
-            btn.style.background = "var(--brand-orange)";
+            scoreDisplay.innerText = "RESULTADO: REVICTIMIZACIÓN";
+            msg.innerHTML = "Las decisiones tomadas normalizan la violencia o desprotegen a las mujeres. <br>Es urgente revisar los protocolos de la Ley 2365.";
+            btn.innerText = "Reiniciar Módulo";
+            btn.style.background = "var(--error)";
             btn.onclick = resetGame;
         }
-    }
-
-    function updateUI() {
-        const scoreBox = document.getElementById('score-display');
-        scoreBox.innerText = `🛡️ INTEGRIDAD: ${gameState.score}%`;
-        if (gameState.score < 50) scoreBox.style.color = "var(--text-main)";
-        else if (gameState.score < 75) scoreBox.style.color = "var(--brand-orange)";
-        else scoreBox.style.color = "var(--success)";
     }
 
     function resetGame() {

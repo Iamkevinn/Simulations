@@ -1,8 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+
+:root {
+    --eco-green: #9B59B6;                /* Morado para acción */
+    --eco-gold: #FFB84D;                 /* Naranja para valor */
+    --deep-earth: #F5F5F5;               /* Fondo claro */
+    --glass-eco: rgba(255, 255, 255, 0.95);/* Capa eco suave */
+    --border-eco: rgba(232, 93, 154, 0.3);/* Borde temático rosa */
+    --text-dark: #2C2C2C;                /* Texto oscuro */
+    --accent-pink: #E85D9A;              /* Rosa vibrante */
+}
+
+
+.case-three-wrapper {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--deep-earth);
+    color: var(--text-dark);
+    min-height: 900px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    padding: 80px 20px;
+    border-radius: 40px;
+}
+
+#particleCanvas {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Header con Logos */
+.top-logo-bar {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    background: var(--glass-eco);
+    backdrop-filter: blur(10px);
+    padding: 15px 25px;
+    border-radius: 20px;
+    border: 2px solid var(--border-eco);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.logos-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+.logos-container img {
+    height: 45px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.logos-container img:hover {
+    transform: scale(1.05);
+}
+
+.header-title-bar {
+    flex-grow: 1;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--accent-pink);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.case-content {
+    position: relative;
+    z-index: 1;
+    max-width: 850px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 80px;
+}
+
+/* Territory Badge */
+.territory-badge {
+    background: rgba(155, 89, 182, 0.1);
+    border: 2px solid var(--eco-green);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    color: var(--eco-green);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Header */
+.case-header { text-align: center; margin-bottom: 60px; }
+.case-header h1 { 
+    font-size: clamp(2rem, 5vw, 3rem); 
+    font-weight: 800; 
+    margin-bottom: 15px;
+    color: var(--text-dark);
+}
+.eco-text { 
+    color: var(--eco-green); 
+    text-shadow: 0 0 20px rgba(155, 89, 182, 0.2); 
+}
+.header-line { 
+    width: 100px; 
+    height: 3px; 
+    background: var(--eco-gold); 
+    margin: 0 auto; 
+    border-radius: 10px; 
+}
+
+/* Insight Card */
+.main-insight-card {
+    position: relative;
+    width: 100%;
+    background: white;
+    border-radius: 30px;
+    padding: 40px;
+    backdrop-filter: blur(10px);
+    border: 3px solid var(--border-eco);
+    margin-bottom: 80px;
+    transition: 0.5s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.main-insight-card:hover {
+    transform: scale(1.02);
+    border-color: var(--eco-green);
+    box-shadow: 0 20px 50px rgba(155, 89, 182, 0.2);
+}
+
+.insight-inner {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.leader-icon {
+    width: 80px; height: 80px;
+    background: var(--eco-green);
+    color: white;
+    border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem;
+}
+
+.insight-text p { 
+    font-size: 1.25rem; 
+    line-height: 1.6; 
+    color: var(--text-dark); 
+}
+
+/* Question Grid */
+.questions-zone { width: 100%; }
+.section-title { 
+    text-align: center; 
+    margin-bottom: 40px; 
+    font-size: 1.8rem; 
+    color: var(--eco-gold); 
+}
+
+.challenge-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.challenge-item {
+    background: white;
+    border: 2px solid var(--border-eco);
+    border-radius: 24px;
+    padding: 30px;
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    transition: 0.4s;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.challenge-item:hover {
+    background: rgba(155, 89, 182, 0.05);
+    border-color: var(--eco-green);
+    transform: translateX(15px);
+    box-shadow: 0 8px 25px rgba(155, 89, 182, 0.15);
+}
+
+.c-index {
+    font-size: 0.8rem; font-weight: 800; color: var(--eco-green);
+    position: absolute; top: 15px; left: 15px; opacity: 0.5;
+}
+
+.c-header { font-size: 2rem; color: var(--eco-gold); }
+.icons { color: var(--eco-gold); }
+
+.c-body p { 
+    font-size: 1.1rem; 
+    margin: 0; 
+    line-height: 1.5;
+    color: var(--text-dark);
+}
+
+.hover-reveal {
+    position: absolute;
+    right: -100px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--eco-green);
+    font-weight: 700;
+    transition: 0.4s;
+    opacity: 0;
+}
+
+.challenge-item:hover .hover-reveal {
+    right: 30px;
+    opacity: 1;
+}
+
+.highlight-unp {
+    border-left: 5px solid var(--eco-gold);
+}
+
+/* Canvas Animation Styles */
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* Mobile */
+@media (max-width: 1200px) {
+    .insight-inner { flex-direction: column; text-align: center; }
+    .challenge-item { grid-template-columns: 1fr; text-align: center; gap: 15px; }
+    .c-body {width: 99%;}
+    
+    .top-logo-bar {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+    }
+    
+    .logos-container img {
+        height: 35px;
+    }
+    
+    .header-title-bar {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .logos-container img {
+        height: 30px;
+    }
+    
+    .header-title-bar {
+        font-size: 0.75rem;
+    }
+    
+    .case-content {
+        margin-top: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logos-container {
+        gap: 8px;
+    }
+    
+    .logos-container img {
+        height: 28px;
+    }
+    
+    .top-logo-bar {
+        padding: 10px;
+    }
+}
+</style>
+</head>
+<body>
 
 <div class="case-three-wrapper">
     <!-- Fondo de Partículas Constante (Canvas) -->
     <canvas id="particleCanvas"></canvas>
+
+    <!-- Header con Logos -->
+    <div class="top-logo-bar">
+        <div class="logos-container">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP">
+            <img src="../Styles/logo.png" alt="Logo Comisión">
+        </div>
+        <div class="header-title-bar">Feminismos Comunitarios y Defensa del Territorio</div>
+        <div style="width: 150px; flex-shrink: 0;"></div> <!-- Spacer para balance -->
+    </div>
 
     <div class="case-content">
         <!-- Badge de Ubicación/Contexto -->
@@ -12,13 +323,12 @@
         </div>
 
         <header class="case-header">
-            <h1 style="color:white;">Caso 3: Feminismos Comunitarios y <span class="eco-text">Defensa del Territorio</span></h1>
+            <h1>Caso 3: Feminismos Comunitarios y <span class="eco-text">Defensa del Territorio</span></h1>
             <div class="header-line"></div>
         </header>
 
         <!-- Bloque Central de Análisis -->
         <div class="main-insight-card">
-            <div class="card-glow-border"></div>
             <div class="insight-inner">
                 <div class="leader-icon">
                     <i class="fas fa-hands-holding-child"></i>
@@ -27,8 +337,6 @@
                     <p>Se analiza el rol de <strong>mujeres lideresas</strong> quienes enfrentan violencias múltiples por su liderazgo social y territorial.</p>
                 </div>
             </div>
-            <!-- Decoración de "Raíces" -->
-            <div class="root-decoration"></div>
         </div>
 
         <!-- Sección de Desafíos (Preguntas) -->
@@ -76,178 +384,6 @@
     </div>
 </div>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-
-:root {
-    --eco-green: #EE7D4F;                /* Vida / acción */
-    --eco-gold: #FEC82F;                 /* Valor / beneficio */
-    --deep-earth: #170047;               /* Tierra profunda */
-    --glass-eco: rgba(238, 125, 79, 0.05);/* Capa eco suave */
-    --border-eco: rgba(238, 125, 79, 0.2);/* Borde temático */
-}
-
-
-.case-three-wrapper {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background-color: var(--deep-earth);
-    color: #ecfdf5;
-    min-height: 900px;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    padding: 80px 20px;
-    border-radius: 40px;
-}
-
-#particleCanvas {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 0;
-    pointer-events: none;
-}
-
-.case-content {
-    position: relative;
-    z-index: 1;
-    max-width: 850px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* Territory Badge */
-.territory-badge {
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid var(--eco-green);
-    padding: 8px 20px;
-    border-radius: 50px;
-    font-size: 0.8rem;
-    color: var(--eco-green);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-weight: 700;
-    margin-bottom: 30px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* Header */
-.case-header { text-align: center; margin-bottom: 60px; }
-.case-header h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 15px; }
-.eco-text { color: var(--eco-green); text-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
-.header-line { width: 100px; height: 3px; background: var(--eco-gold); margin: 0 auto; border-radius: 10px; }
-
-/* Insight Card */
-.main-insight-card {
-    position: relative;
-    width: 100%;
-    background: var(--glass-eco);
-    border-radius: 30px;
-    padding: 40px;
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--border-eco);
-    margin-bottom: 80px;
-    transition: 0.5s;
-}
-
-.main-insight-card:hover {
-    transform: scale(1.02);
-    border-color: var(--eco-green);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-}
-
-.insight-inner {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-}
-
-.leader-icon {
-    width: 80px; height: 80px;
-    background: var(--eco-green);
-    color: var(--deep-earth);
-    border-radius: 20px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 2.5rem;
-}
-
-.insight-text p { font-size: 1.25rem; line-height: 1.6; color: #d1fae5; }
-
-/* Question Grid */
-.questions-zone { width: 100%; }
-.section-title { text-align: center; margin-bottom: 40px; font-size: 1.8rem; color: var(--eco-gold); }
-
-.challenge-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.challenge-item {
-    background: rgba(255,255,255,0.02);
-    border: 1px solid var(--border-eco);
-    border-radius: 24px;
-    padding: 30px;
-    display: grid;
-    grid-template-columns: 50px 1fr;
-    align-items: center;
-    position: relative;
-    cursor: pointer;
-    transition: 0.4s;
-    overflow: hidden;
-}
-
-.challenge-item:hover {
-    background: rgba(16, 185, 129, 0.08);
-    border-color: var(--eco-green);
-    transform: translateX(15px);
-}
-
-.c-index {
-    font-size: 0.8rem; font-weight: 800; color: var(--eco-green);
-    position: absolute; top: 15px; left: 15px; opacity: 0.5;
-}
-
-.c-header { font-size: 2rem; color: var(--eco-gold); }
-
-.c-body p { font-size: 1.1rem; margin: 0; line-height: 1.5; }
-
-.hover-reveal {
-    position: absolute;
-    right: -100px;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--eco-green);
-    font-weight: 700;
-    transition: 0.4s;
-    opacity: 0;
-}
-
-.challenge-item:hover .hover-reveal {
-    right: 30px;
-    opacity: 1;
-}
-
-.highlight-unp {
-    border-left: 5px solid var(--eco-gold);
-}
-
-/* Canvas Animation Styles */
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-/* Mobile */
-@media (max-width: 1200px) {
-    .insight-inner { flex-direction: column; text-align: center; }
-    .challenge-item { grid-template-columns: 1fr; text-align: center; gap: 15px; }
-    .c-body {width: 99%;}
-}
-</style>
-
 <script>
 /**
  * SISTEMA DE PARTÍCULAS BIO-LUMINISCENTES
@@ -269,7 +405,7 @@ class Particle {
         this.size = Math.random() * 3 + 1;
         this.speedX = Math.random() * 0.5 - 0.25;
         this.speedY = Math.random() * 0.5 - 0.25;
-        this.opacity = Math.random() * 0.5 + 0.1;
+        this.opacity = Math.random() * 0.3 + 0.05;
     }
     update() {
         this.x += this.speedX;
@@ -280,7 +416,7 @@ class Particle {
         if (this.y < 0) this.y = canvas.height;
     }
     draw() {
-        ctx.fillStyle = `rgba(16, 185, 129, ${this.opacity})`;
+        ctx.fillStyle = `rgba(155, 89, 182, ${this.opacity})`;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
@@ -330,3 +466,6 @@ document.querySelectorAll('.challenge-item, .main-insight-card').forEach(el => {
     obs.observe(el);
 });
 </script>
+
+</body>
+</html>

@@ -7,6 +7,15 @@
 
     <div class="board-container">
         
+            <!-- BARRA DE LOGOS PROMINENTE -->
+    <div class="logos-banner">
+        <div class="logos-wrapper">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP" class="logo-unp">
+            <img src="../Styles/logo.png" alt="Logo Comisión" class="logo-comision">
+        </div>
+        <div class="logos-divider"></div>
+    </div>
+
         <!-- HEADER -->
         <header class="board-header">
             <div class="header-content">
@@ -370,6 +379,93 @@
     .board-header { flex-direction: column; text-align: center; }
     .compliance-tracker { width: 100%; text-align: center; margin-top: 10px; }
     .protocol-grid { grid-template-columns: 1fr; }
+}
+/* =========================================
+   BARRA DE LOGOS PROMINENTE
+   ========================================= */
+.logos-banner {
+    position: relative;
+    z-index: 10;
+    background: var(--cb-white);
+    padding: 30px 40px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px -8px rgba(23, 0, 71, 0.15);
+    margin-bottom: 40px;
+    border: 2px solid rgba(23, 0, 71, 0.08);
+}
+
+.logos-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px; /* Más separación para darles protagonismo */
+}
+
+.logos-wrapper img {
+    height: 70px; /* Más grandes que en otros módulos */
+    width: auto;
+    object-fit: contain;
+    transition: all 0.4s ease;
+    filter: drop-shadow(0 3px 10px rgba(23, 0, 71, 0.12));
+}
+
+.logos-wrapper img:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 5px 15px rgba(23, 0, 71, 0.25));
+}
+
+.logos-divider {
+    margin-top: 20px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--cb-gold), transparent);
+    border-radius: 10px;
+    opacity: 0.5;
+}
+
+/* Efecto de brillo sutil en hover del contenedor */
+.logos-banner:hover {
+    box-shadow: 0 12px 40px -10px rgba(23, 0, 71, 0.2);
+    border-color: rgba(254, 200, 47, 0.3);
+}
+
+.logos-banner:hover .logos-divider {
+    opacity: 1;
+}
+
+/* Responsive para logos prominentes */
+@media (max-width: 768px) {
+    .logos-banner {
+        padding: 25px 30px;
+    }
+    
+    .logos-wrapper {
+        gap: 35px;
+    }
+    
+    .logos-wrapper img {
+        height: 60px;
+    }
+}
+
+@media (max-width: 576px) {
+    .logos-banner {
+        padding: 20px;
+    }
+    
+    .logos-wrapper {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .logos-wrapper img {
+        height: 55px;
+    }
+}
+
+@media (max-width: 400px) {
+    .logos-wrapper img {
+        height: 50px;
+    }
 }
 </style>
 

@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
     :root {
-    --c-red: #E44700;                    /* Error / negativo */
-    --c-yellow: #FEC82F;                 /* Advertencia */
-    --c-green: #EE7D4F;                  /* Correcto / éxito */
-    --c-text: #170047;                   /* Texto principal */
-    --c-glass: rgba(254, 200, 47, 0.25);  /* Glass claro */
-    --c-glass-border: rgba(254, 200, 47, 0.5); /* Borde glass */
-    --bg-dark: #170047;                  /* Fondo oscuro */
+    --c-red: #E85D9A;                    /* Rosa para violencia */
+    --c-yellow: #FFB84D;                 /* Naranja para advertencia */
+    --c-green: #9B59B6;                  /* Morado para correcto */
+    --c-text: #2C2C2C;                   /* Texto principal */
+    --c-glass: rgba(255, 255, 255, 0.95); /* Glass claro */
+    --c-glass-border: rgba(232, 93, 154, 0.3); /* Borde glass */
+    --bg-light: #F5F5F5;                 /* Fondo claro */
 }
 
 
@@ -20,8 +20,8 @@
     body {
         margin: 0;
         font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        background: var(--bg-dark);
-        color: white;
+        background: var(--bg-light);
+        color: var(--c-text);
         height: 100vh;
         width: 100vw;
         overflow: hidden;
@@ -33,13 +33,13 @@
     .aurora-bg {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         z-index: 0; overflow: hidden;
-        background: radial-gradient(circle at 50% 50%, #2f3542 0%, #000000 100%);
+        background: radial-gradient(circle at 50% 50%, #FFFFFF 0%, #F0F0F0 100%);
         transition: background 0.5s;
     }
     
     .blob {
         position: absolute; border-radius: 50%;
-        filter: blur(60px); opacity: 0.6;
+        filter: blur(80px); opacity: 0.15;
         animation: floatBlob 20s infinite alternate;
     }
     .b1 { width: 400px; height: 400px; background: var(--c-green); top: -100px; left: -100px; animation-delay: 0s; }
@@ -52,22 +52,76 @@
         100% { transform: translate(-20px, 40px) scale(0.9); }
     }
 
-    /* --- 2. NAVEGACIÓN --- */
+    /* --- 2. HEADER CON LOGOS --- */
+    .top-header {
+        position: relative;
+        z-index: 50;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        background: var(--c-glass);
+        backdrop-filter: blur(10px);
+        border-bottom: 3px solid var(--c-red);
+        box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    }
+    
+    .logos-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-shrink: 0;
+    }
+    
+    .logos-container img {
+        height: 45px;
+        width: auto;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+    
+    .logos-container img:hover {
+        transform: scale(1.05);
+    }
+    
+    .header-title {
+        flex-grow: 1;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.1rem;
+        color: var(--c-red);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .header-spacer {
+        width: 150px;
+        flex-shrink: 0;
+    }
+
+    /* --- 3. NAVEGACIÓN --- */
     .nav-tabs {
         position: relative; z-index: 50;
         display: flex; justify-content: center; gap: 10px;
         padding: 20px;
-        background: rgba(0,0,0,0.2); backdrop-filter: blur(10px);
+        background: rgba(255,255,255,0.7); 
+        backdrop-filter: blur(10px);
     }
     .tab {
         padding: 8px 16px; border-radius: 20px;
-        background: rgba(255,255,255,0.1); cursor: pointer;
+        background: white; cursor: pointer;
         font-size: 0.9rem; font-weight: bold; transition: 0.3s;
-        border: 1px solid transparent;
+        border: 2px solid var(--c-glass-border);
+        color: var(--c-text);
     }
-    .tab.active { background: white; color: var(--c-text); transform: scale(1.05); }
+    .tab.active { 
+        background: var(--c-red); 
+        color: white; 
+        transform: scale(1.05);
+        border-color: var(--c-red);
+    }
 
-    /* --- 3. CONTENEDOR CENTRAL --- */
+    /* --- 4. CONTENEDOR CENTRAL --- */
     .stage {
         flex-grow: 1; position: relative; z-index: 10;
         display: flex; justify-content: center; align-items: center;
@@ -85,27 +139,39 @@
 
     .info-card {
         position: absolute; width: 100%; height: 100%;
-        background: rgba(255, 255, 255, 0.1);
+        background: white;
         backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-        border: 1px solid var(--c-glass-border);
+        border: 3px solid var(--c-red);
         border-radius: 20px; padding: 25px;
         display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         transition: all 0.5s; cursor: pointer;
     }
     
-    .info-card h3 { color: #fff; font-size: 1.5rem; margin-bottom: 15px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-    .info-card p { font-size: 1rem; line-height: 1.6; color: #eee; }
-    .card-icon { font-size: 3rem; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)); }
+    .info-card h3 { color: var(--c-red); font-size: 1.5rem; margin-bottom: 15px; }
+    .info-card p { font-size: 1rem; line-height: 1.6; color: var(--c-text); }
+    .card-icon { font-size: 3rem; margin-bottom: 20px; filter: drop-shadow(0 2px 8px rgba(232, 93, 154, 0.3)); }
 
     /* Controladores del carrusel */
     .carousel-controls {
         position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: space-between; padding: 0 40px; z-index: 20; pointer-events: none;
     }
     .arrow-btn {
-        pointer-events: auto; background: white; color: black; width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        pointer-events: auto; 
+        background: var(--c-red); 
+        color: white; 
+        width: 50px; 
+        height: 50px; 
+        border-radius: 50%; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        font-weight: bold; 
+        cursor: pointer; 
+        transition: 0.3s; 
+        box-shadow: 0 5px 15px rgba(232, 93, 154, 0.3);
     }
-    .arrow-btn:hover { transform: scale(1.1); }
+    .arrow-btn:hover { transform: scale(1.1); background: var(--c-yellow); }
 
     /* --- FASE 2: EL SEMÁFORO (SWIPE GAME) --- */
     #phase2 { display: none; width: 100%; height: 100%; align-items: center; justify-content: center; flex-direction: column; }
@@ -121,8 +187,9 @@
         display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
         box-shadow: 0 20px 50px rgba(0,0,0,0.2);
         transform-origin: 50% 100%;
-        transition: transform 0.1s linear; /* Rápido para drag */
+        transition: transform 0.1s linear;
         cursor: grab;
+        border: 3px solid var(--c-glass-border);
     }
     .swipe-card.flying { transition: transform 0.5s ease-out, opacity 0.5s; }
 
@@ -131,27 +198,27 @@
     /* Indicadores de Zona */
     .zone-indicator {
         position: absolute; font-weight: bold; font-size: 2rem; opacity: 0; transition: 0.3s;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.5); pointer-events: none;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3); pointer-events: none;
     }
     .zone-left { left: 20px; top: 50%; color: var(--c-red); transform: translateY(-50%) rotate(-15deg); }
     .zone-right { right: 20px; top: 50%; color: var(--c-green); transform: translateY(-50%) rotate(15deg); }
     .zone-top { top: 40px; left: 50%; color: var(--c-yellow); transform: translateX(-50%); }
 
-    /* Botones de control manual (para accesibilidad/PC) */
+    /* Botones de control manual */
     .game-controls {
         margin-top: 30px; display: flex; gap: 20px; z-index: 20;
     }
     .btn-game {
         width: 60px; height: 60px; border-radius: 50%; border: none; font-size: 1.5rem;
         cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3); background: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15); background: white;
     }
-    .btn-red { color: var(--c-red); border: 2px solid var(--c-red); }
-    .btn-yellow { color: var(--c-yellow); border: 2px solid var(--c-yellow); }
-    .btn-green { color: var(--c-green); border: 2px solid var(--c-green); }
+    .btn-red { color: var(--c-red); border: 3px solid var(--c-red); }
+    .btn-yellow { color: var(--c-yellow); border: 3px solid var(--c-yellow); }
+    .btn-green { color: var(--c-green); border: 3px solid var(--c-green); }
     .btn-game:hover { transform: scale(1.1); background: currentColor; color: white; }
 
-    /* --- MODAL DE FEEDBACK (Discusión Guiada) --- */
+    /* --- MODAL DE FEEDBACK --- */
     .feedback-overlay {
         position: absolute; top:0; left:0; width:100%; height:100%;
         background: rgba(0,0,0,0.85); z-index: 100;
@@ -160,10 +227,11 @@
     }
     
     .feedback-card {
-        background: white; color: #333; padding: 30px; border-radius: 15px;
+        background: white; color: var(--c-text); padding: 30px; border-radius: 15px;
         max-width: 500px; width: 100%; text-align: center;
         animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        border-top: 8px solid #333;
+        border-top: 8px solid var(--c-red);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
     }
     @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
@@ -175,16 +243,60 @@
     .bg-yellow { background: var(--c-yellow); }
     .bg-green { background: var(--c-green); }
 
-    .discussion-list { text-align: left; background: #f1f2f6; padding: 15px; border-radius: 10px; margin: 15px 0; font-size: 0.9rem; }
-    .discussion-list li { margin-bottom: 8px; list-style: none; padding-left: 10px; border-left: 3px solid #ccc; }
+    .discussion-list { 
+        text-align: left; 
+        background: #F8F9FA; 
+        padding: 15px; 
+        border-radius: 10px; 
+        margin: 15px 0; 
+        font-size: 0.9rem;
+        border: 2px solid var(--c-glass-border);
+    }
+    .discussion-list li { 
+        margin-bottom: 8px; 
+        list-style: none; 
+        padding-left: 10px; 
+        border-left: 3px solid var(--c-red); 
+    }
 
     /* --- RESPONSIVE --- */
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
         .carousel-container { width: 85%; height: 400px; }
         .game-zone { width: 90%; height: 420px; }
         .swipe-card { padding: 20px; }
         .scenario-text { font-size: 1rem; }
         .btn-game { width: 50px; height: 50px; }
+        
+        .logos-container img {
+            height: 35px;
+        }
+        
+        .top-header {
+            padding: 10px 15px;
+        }
+        
+        .logos-container {
+            gap: 8px;
+        }
+        
+        .header-title {
+            font-size: 0.9rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .logos-container img {
+            height: 30px;
+        }
+        
+        .header-title {
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .header-spacer {
+            width: 80px;
+        }
     }
 
 </style>
@@ -196,6 +308,16 @@
         <div class="blob b1"></div>
         <div class="blob b2"></div>
         <div class="blob b3"></div>
+    </div>
+
+    <!-- HEADER CON LOGOS -->
+    <div class="top-header">
+        <div class="logos-container">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP">
+            <img src="../Styles/logo.png" alt="Logo Comisión">
+        </div>
+        <div class="header-title">TIPOLOGÍAS Y CLASIFICACIÓN DE VIOLENCIAS</div>
+        <div class="header-spacer"></div>
     </div>
 
     <!-- NAVEGACIÓN -->
@@ -220,23 +342,23 @@
             </div>
             
             <div style="position: absolute; bottom: 100px; width: 100%; text-align: center; pointer-events: none;">
-                <p style="font-size: 0.9rem; opacity: 0.8;">Desliza o usa las flechas para explorar las tipologías.</p>
+                <p style="font-size: 0.9rem; opacity: 0.7; color: var(--c-text);">Desliza o usa las flechas para explorar las tipologías.</p>
             </div>
         </div>
 
         <!-- FASE 2: JUEGO SEMÁFORO -->
         <div id="phase2">
             
-            <div class="zone-indicator zone-left" id="ind-left">VIOLENCIA (ROJO)</div>
-            <div class="zone-indicator zone-top" id="ind-top">RIESGO (AMARILLO)</div>
-            <div class="zone-indicator zone-right" id="ind-right">SANO (VERDE)</div>
+            <div class="zone-indicator zone-left" id="ind-left">VIOLENCIA (ROSA)</div>
+            <div class="zone-indicator zone-top" id="ind-top">RIESGO (NARANJA)</div>
+            <div class="zone-indicator zone-right" id="ind-right">SANO (MORADO)</div>
 
             <div class="game-zone" id="card-stack">
                 <!-- Tarjeta del juego aquí -->
                 <div class="swipe-card" id="active-card">
                     <div style="font-size:3rem; margin-bottom:20px;">🃏</div>
                     <div class="scenario-text" id="card-text">Cargando situación...</div>
-                    <div style="color:#aaa; font-size:0.8rem; margin-top:20px;">Arrastra la tarjeta: <br>⬅ Rojo | ⬆ Amarillo | ➡ Verde</div>
+                    <div style="color:#999; font-size:0.8rem; margin-top:20px;">Arrastra la tarjeta: <br>⬅ Rosa | ⬆ Naranja | ➡ Morado</div>
                 </div>
             </div>
 
@@ -254,7 +376,7 @@
     <div class="feedback-overlay" id="feedback-modal">
         <div class="feedback-card">
             <div id="fb-badge" class="feedback-badge">CLASIFICACIÓN</div>
-            <h3 id="fb-title">TÍTULO</h3>
+            <h3 id="fb-title" style="color: var(--c-red);">TÍTULO</h3>
             <div class="discussion-list">
                 <ul>
                     <li><strong>Tipo de Violencia:</strong> <span id="fb-type">...</span></li>
@@ -263,7 +385,7 @@
                 </ul>
             </div>
             <p id="fb-msg"></p>
-            <button onclick="closeModal()" style="background:#2f3542; color:white; border:none; padding:12px 30px; border-radius:20px; font-weight:bold; cursor:pointer; margin-top:10px;">CONTINUAR</button>
+            <button onclick="closeModal()" style="background:var(--c-red); color:white; border:none; padding:12px 30px; border-radius:20px; font-weight:bold; cursor:pointer; margin-top:10px;">CONTINUAR</button>
         </div>
     </div>
 
@@ -277,18 +399,18 @@
         { icon: "🚫", title: "VIOLENCIA SEXUAL", text: "Actos sexuales sin consentimiento." }
     ];
 
-    // Situaciones para el juego (Basadas en las tipologías para el ejercicio)
+    // Situaciones para el juego
     const situations = [
         {
             text: "Tu pareja controla cuánto dinero gastas y te pide recibos de todo.",
-            correct: "red", // O yellow, depende de la gravedad, pondremos red por control
+            correct: "red",
             type: "Violencia Económica",
             context: "Ámbito doméstico / Relación de pareja",
             action: "Activar ruta de atención, fortalecer autonomía económica."
         },
         {
             text: "Un compañero hace chistes sexistas sobre las mujeres en la oficina.",
-            correct: "yellow", // Alerta, simbólica
+            correct: "yellow",
             type: "Violencia Simbólica",
             context: "Entorno Laboral / Institucional",
             action: "Sanción social, pedagogía, revisión de códigos de conducta."
@@ -317,7 +439,6 @@
         typologies.forEach((item, index) => {
             const card = document.createElement('div');
             card.className = 'info-card';
-            // Posicionamiento inicial apilado
             card.innerHTML = `<div class="card-icon">${item.icon}</div><h3>${item.title}</h3><p>${item.text}</p>`;
             card.style.opacity = index === 0 ? 1 : 0;
             card.style.zIndex = index === 0 ? 10 : 0;
@@ -357,9 +478,8 @@
         cardText.innerText = situations[currentCardIndex].text;
         cardEl.style.transform = "translate(0, 0) rotate(0deg)";
         cardEl.style.opacity = 1;
-        cardEl.className = "swipe-card"; // Reset classes
+        cardEl.className = "swipe-card";
         
-        // Reset indicators
         document.getElementById('ind-left').style.opacity = 0;
         document.getElementById('ind-right').style.opacity = 0;
         document.getElementById('ind-top').style.opacity = 0;
@@ -393,7 +513,6 @@
 
         cardEl.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(${rotate}deg)`;
 
-        // Visual Feedback Indicators
         document.getElementById('ind-left').style.opacity = deltaX < -50 ? 1 : 0;
         document.getElementById('ind-right').style.opacity = deltaX > 50 ? 1 : 0;
         document.getElementById('ind-top').style.opacity = deltaY < -50 ? 1 : 0;
@@ -411,11 +530,10 @@
         const x = matrix.m41;
         const y = matrix.m42;
 
-        if (x > 100) processChoice('green');       // Derecha
-        else if (x < -100) processChoice('red');   // Izquierda
-        else if (y < -100) processChoice('yellow');// Arriba
+        if (x > 100) processChoice('green');
+        else if (x < -100) processChoice('red');
+        else if (y < -100) processChoice('yellow');
         else {
-            // Reset position
             cardEl.style.transition = "transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
             cardEl.style.transform = "translate(0, 0) rotate(0deg)";
             resetIndicators();
@@ -441,11 +559,9 @@
         resetIndicators();
         const situation = situations[currentCardIndex];
         
-        // Show Feedback Modal
         showFeedback(situation, color);
 
         currentCardIndex++;
-        // Load next card happens after modal closes
     }
 
     function showFeedback(data, userColor) {
@@ -459,17 +575,15 @@
         document.getElementById('fb-context').innerText = data.context;
         document.getElementById('fb-action').innerText = data.action;
 
-        // Estilos según respuesta correcta real
         badge.className = 'feedback-badge';
         if(data.correct === 'red') { badge.classList.add('bg-red'); badge.innerText = "VIOLENCIA GRAVE"; }
         if(data.correct === 'yellow') { badge.classList.add('bg-yellow'); badge.innerText = "ALERTA DE RIESGO"; }
         if(data.correct === 'green') { badge.classList.add('bg-green'); badge.innerText = "RELACIÓN SANA"; }
         
-        // Cambiar fondo aurora según resultado
         if(userColor === data.correct) {
-            document.querySelector('.aurora-bg').style.filter = "hue-rotate(90deg)"; // Efecto éxito visual
+            document.querySelector('.aurora-bg').style.filter = "brightness(1.1)";
         } else {
-            document.querySelector('.aurora-bg').style.filter = "grayscale(100%)"; // Efecto error
+            document.querySelector('.aurora-bg').style.filter = "brightness(0.8)";
         }
     }
 

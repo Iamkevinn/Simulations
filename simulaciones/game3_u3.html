@@ -3,129 +3,179 @@
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-/* --- ESTILOS DE FUERZA BRUTA (SOLID COLORS) --- */
+/* --- ESTILOS IDENTIDAD COLOMBIA SIN MACHISMO (CLARO) --- */
 :root {
-    --audio-bg: #170047;        /* Fondo profundo */
-    --audio-panel: #480241;     /* Panel sólido */
+    --bg-main: #F8FAFC;         /* Fondo claro */
+    --bg-panel: #FFFFFF;        /* Tarjetas blancas */
+    
+    --brand-purple: #582C83;    /* Morado Institucional (Principal) */
+    --brand-magenta: #D23B78;   /* Magenta (Acento) */
+    --brand-orange: #F47920;    /* Naranja (Acción/Alerta) */
+    --brand-yellow: #FFC82F;    /* Amarillo (Detalle) */
 
-    --neon-pink: #E44700;       /* Violencia / Alerta */
-    --neon-cyan: #FEC82F;       /* Solución / Acción / Tech */
-    --neon-green: #EE7D4F;      /* Éxito / Resolución */
+    --text-main: #334155;       /* Gris oscuro para lectura */
+    --text-light: #64748B;      /* Texto secundario */
 
-    --text-main: #ffffff;
-
-    --btn-solid: #480241;       /* Botón estable, no reactivo */
+    --border-color: #E2E8F0;
 }
-
 
 #voice-analyst-container {
     width: 100%;
     min-height: 850px;
     height: auto;
-    background-color: var(--audio-bg) !important;
+    background-color: var(--bg-main) !important;
     font-family: 'Inter', sans-serif;
     color: var(--text-main) !important;
-    border: 2px solid #333 !important;
-    border-radius: 10px;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
 }
 
-/* --- VISUALIZADOR DE ONDAS (ANIMACIÓN CONSTANTE) --- */
+/* --- VISUALIZADOR DE ONDAS (SUAVE) --- */
 .sound-wave-container {
     position: absolute;
-    top: 50%; left: 0; width: 100%; height: 200px;
-    transform: translateY(-50%);
+    top: 120px; /* Ajustado para que no tape el header */
+    left: 0; width: 100%; height: 150px;
     display: flex; justify-content: center; align-items: center;
-    gap: 5px; opacity: 0.1; pointer-events: none; z-index: 0;
+    gap: 8px; opacity: 0.15; pointer-events: none; z-index: 0;
 }
 .bar {
-    width: 10px; background: var(--neon-pink);
+    width: 12px; 
+    background: var(--brand-purple);
+    border-radius: 20px;
     animation: equalizer 1s infinite ease-in-out;
 }
 @keyframes equalizer {
     0% { height: 20px; }
-    50% { height: 150px; opacity: 0.5; }
+    50% { height: 100px; opacity: 0.8; }
     100% { height: 20px; }
 }
-/* Generar variación en las barras */
-.bar:nth-child(odd) { animation-duration: 0.8s; background: var(--neon-cyan); }
-.bar:nth-child(2n) { animation-duration: 1.1s; }
-.bar:nth-child(3n) { animation-duration: 1.3s; }
+/* Variación de colores de marca */
+.bar:nth-child(odd) { animation-duration: 0.8s; background: var(--brand-magenta); }
+.bar:nth-child(2n) { animation-duration: 1.1s; background: var(--brand-orange); }
+.bar:nth-child(3n) { animation-duration: 1.3s; background: var(--brand-purple); }
 
-/* --- HEADER --- */
+/* --- HEADER CON LOGOS --- */
 .audio-header {
-    z-index: 10; padding: 25px; text-align: center;
-    background: #000000 !important;
-    border-bottom: 2px solid var(--neon-pink) !important;
+    z-index: 10; padding: 20px 30px; 
+    background: #FFFFFF !important;
+    border-bottom: 4px solid var(--brand-purple) !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
 }
+
+.client-logo {
+    height: 55px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.header-center {
+    flex: 1;
+    text-align: center;
+    min-width: 280px;
+}
+
 .audio-title {
     font-family: 'Share Tech Mono', monospace;
-    font-size: clamp(1.5rem, 4vw, 2.2rem);
-    color: var(--neon-pink) !important;
-    margin: 0; text-transform: uppercase; letter-spacing: 2px;
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    color: var(--brand-purple) !important;
+    margin: 0; text-transform: uppercase; letter-spacing: 1px;
+    font-weight: bold;
 }
-.audio-subtitle { color: #ccc !important; margin-top: 5px; font-size: 0.9rem; }
+.audio-subtitle { 
+    color: var(--brand-orange) !important; 
+    margin-top: 5px; font-size: 0.95rem; font-weight: 700; 
+}
 
 /* --- NAVEGACIÓN --- */
 .audio-nav {
     display: flex; justify-content: center; gap: 15px; padding: 20px;
-    background: #111 !important; z-index: 10; flex-wrap: wrap;
+    background: #F1F5F9 !important; z-index: 10; flex-wrap: wrap;
+    border-bottom: 1px solid var(--border-color);
 }
 .nav-audio-btn {
-    background-color: #222 !important; color: #fff !important;
-    border: 1px solid #555 !important; padding: 12px 30px;
+    background-color: #FFFFFF !important; color: var(--text-light) !important;
+    border: 2px solid var(--border-color) !important; padding: 12px 30px;
     cursor: pointer; font-family: 'Share Tech Mono', monospace;
     font-size: 1rem; text-transform: uppercase; transition: 0.2s;
-    min-width: 160px;
+    min-width: 160px; border-radius: 6px;
+    font-weight: 600;
+}
+.nav-audio-btn:hover {
+    background-color: #fff !important;
+    color: var(--brand-purple) !important;
+    border-color: var(--brand-purple) !important;
 }
 .nav-audio-btn.active {
-    background-color: var(--neon-pink) !important; color: #000 !important;
-    border-color: #fff !important; font-weight: bold;
-    box-shadow: 0 0 15px var(--neon-pink);
+    background-color: var(--brand-purple) !important; color: #FFFFFF !important;
+    border-color: var(--brand-purple) !important; font-weight: bold;
+    box-shadow: 0 4px 10px rgba(88, 44, 131, 0.2);
 }
 
 /* --- VISTAS --- */
 .content-viewport {
-    flex: 1; padding: 20px; position: relative; z-index: 5;
+    flex: 1; padding: 30px; position: relative; z-index: 5;
     display: flex; justify-content: center;
 }
 
 /* VISTA 1: TIPOLOGÍAS (CARDS) */
 .types-grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px; width: 100%; max-width: 1100px; display: none;
+    gap: 25px; width: 100%; max-width: 1100px; display: none;
 }
 .type-card {
-    background-color: var(--audio-panel) !important;
-    border: 1px solid #444 !important; border-left: 5px solid var(--neon-cyan) !important;
-    padding: 25px; border-radius: 5px; position: relative;
-    transition: transform 0.3s;
+    background-color: var(--bg-panel) !important;
+    border: 1px solid var(--border-color) !important; 
+    border-left: 5px solid var(--brand-magenta) !important;
+    padding: 25px; border-radius: 8px; position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
-.type-card:hover { transform: translateY(-5px); border-color: var(--neon-cyan) !important; }
-.t-header { font-family: 'Share Tech Mono', monospace; font-size: 1.3rem; color: var(--neon-cyan) !important; margin-bottom: 10px; }
-.t-body { font-size: 0.95rem; line-height: 1.5; color: #eee !important; }
+.type-card:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+.t-header { 
+    font-family: 'Share Tech Mono', monospace; 
+    font-size: 1.2rem; color: var(--brand-purple) !important; 
+    margin-bottom: 10px; font-weight: bold;
+}
+.t-body { font-size: 0.95rem; line-height: 1.6; color: var(--text-main) !important; }
 
 /* VISTA 2: SIMULADOR (FORO) */
 .forum-console {
     width: 100%; max-width: 1000px; display: none; flex-direction: column;
-    background-color: #000 !important; border: 1px solid #333; padding: 20px;
-    border-radius: 10px; box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    background-color: #FFFFFF !important; 
+    border: 1px solid var(--border-color); padding: 30px;
+    border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
 /* REPRODUCTOR DE TESTIMONIO */
 .player-box {
-    background-color: #111 !important; border: 1px solid var(--neon-pink);
-    padding: 20px; border-radius: 5px; margin-bottom: 30px;
+    background-color: #F8FAFC !important; 
+    border: 1px solid var(--brand-purple);
+    padding: 20px; border-radius: 8px; margin-bottom: 30px;
     display: flex; flex-direction: column; gap: 10px;
 }
-.player-label { color: var(--neon-pink) !important; font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; }
+.player-label { 
+    color: var(--brand-magenta) !important; 
+    font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; font-weight: bold; 
+}
 .transcript-text {
-    font-size: 1.1rem; line-height: 1.6; color: #fff !important; font-style: italic;
-    background: #050505; padding: 15px; border-left: 3px solid #333;
+    font-size: 1.1rem; line-height: 1.6; color: var(--text-main) !important; font-style: italic;
+    background: #FFFFFF; padding: 20px; border-left: 4px solid var(--brand-orange);
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
 }
 
 /* INTERACCIÓN */
@@ -134,41 +184,56 @@
 }
 .board-col { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 15px; }
 .col-head {
-    color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;
-    border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 10px;
+    color: var(--brand-purple); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;
+    border-bottom: 2px solid var(--border-color); padding-bottom: 8px; margin-bottom: 10px; font-weight: bold;
 }
 
-/* BOTONES DE OPCIÓN (SÓLIDOS) */
+/* BOTONES DE OPCIÓN */
 .analysis-btn {
-    background-color: var(--btn-solid) !important;
-    color: #fff !important; padding: 15px; border: 1px solid #555 !important;
-    cursor: pointer; text-align: left; border-radius: 4px; transition: 0.2s;
+    background-color: #FFFFFF !important;
+    color: var(--text-main) !important; padding: 18px; 
+    border: 1px solid var(--border-color) !important;
+    cursor: pointer; text-align: left; border-radius: 8px; transition: 0.2s;
     display: flex; align-items: center; justify-content: space-between;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
-.analysis-btn:hover { background-color: #3d2566 !important; border-color: #fff !important; }
+.analysis-btn:hover { 
+    background-color: #FDF4FF !important; /* Lila muy claro */
+    border-color: var(--brand-purple) !important; 
+    transform: translateY(-2px);
+}
 .analysis-btn.selected {
-    background-color: var(--neon-cyan) !important; color: #000 !important;
-    border-color: #fff !important; font-weight: bold;
+    background-color: var(--brand-purple) !important; color: #FFFFFF !important;
+    border-color: var(--brand-purple) !important; font-weight: bold;
 }
 .analysis-btn.correct {
-    background-color: var(--neon-green) !important; color: #000 !important;
-    border-color: #fff !important; pointer-events: none;
+    background-color: #DCFCE7 !important; /* Verde pastel */
+    color: #166534 !important; /* Verde oscuro */
+    border-color: #22C55E !important; 
+    pointer-events: none;
 }
 .analysis-btn.wrong {
-    background-color: #ff3333 !important; color: #fff !important;
+    background-color: #FEF2F2 !important; /* Rojo pastel */
+    color: #991B1B !important;
+    border-color: #EF4444 !important;
     animation: shake 0.3s;
 }
 
 /* FEEDBACK */
 .console-feedback {
-    margin-top: 25px; padding: 15px; background: #050505; border: 1px solid #333;
-    font-family: 'Share Tech Mono', monospace; color: var(--neon-cyan); text-align: center;
+    margin-top: 25px; padding: 20px; 
+    background: #F1F5F9; border: 1px solid var(--border-color); border-radius: 8px;
+    font-family: 'Share Tech Mono', monospace; 
+    color: var(--brand-purple); text-align: center; font-weight: bold;
 }
 
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
 /* RESPONSIVE */
-@media (max-width: 1200px) {
+@media (max-width: 900px) {
+    .audio-header { flex-direction: column; text-align: center; }
+    .client-logo { height: 45px; margin-bottom: 10px; }
     .analysis-board { flex-direction: column; }
     .nav-audio-btn { width: 100%; }
 }
@@ -177,7 +242,7 @@
 
 <div id="voice-analyst-container">
     
-    <!-- Animación de fondo (Barras) -->
+    <!-- Animación de fondo (Barras Colores Marca) -->
     <div class="sound-wave-container">
         <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
         <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
@@ -186,10 +251,18 @@
         <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
     </div>
 
-    <!-- HEADER -->
+    <!-- HEADER CON LOGOS -->
     <div class="audio-header">
-        <h2 class="audio-title">Unidad 3: Violencias Específicas</h2>
-        <div class="audio-subtitle">Análisis de Riesgos y Estrategias de Prevención</div>
+        <!-- Logo Izquierdo: UNP -->
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+        
+        <div class="header-center">
+            <h2 class="audio-title">Unidad 3: Violencias Específicas</h2>
+            <div class="audio-subtitle">Análisis de Riesgos y Estrategias de Prevención</div>
+        </div>
+
+        <!-- Logo Derecho: Comisión -->
+        <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo">
     </div>
 
     <!-- NAV -->
@@ -255,7 +328,7 @@
                 ESPERANDO ANÁLISIS DEL EXPERTO...
             </div>
             
-            <button id="next-case-btn" class="nav-audio-btn" style="display:none; margin: 20px auto 0 auto; background:var(--neon-green)!important; color:black!important;" onclick="nextCase()">SIGUIENTE TESTIMONIO >></button>
+            <button id="next-case-btn" class="nav-audio-btn" style="display:none; margin: 20px auto 0 auto; background:#F47920!important; color:white!important; border-color:#F47920!important;" onclick="nextCase()">SIGUIENTE TESTIMONIO >></button>
 
         </div>
 
@@ -293,7 +366,7 @@ const casesData = [
     {
         text: "\"En mi comunidad me prohibieron entrar al salón comunal por ser trans. Dicen que doy 'mal ejemplo'. Además, han aparecido grafitis amenazantes en mi puerta.\"",
         correctViol: 'simb',
-        correctSol: 'riesgo', // Opción simulada en lógica
+        correctSol: 'riesgo', 
         fb: "CORRECTO. Es Violencia Simbólica (exclusión) y Amenaza (grafitis). Solución: Activar ruta de riesgo específica para líderes."
     }
 ];
@@ -317,9 +390,9 @@ function checkStep(step, value, btn) {
     if (step === 1 && value === currentData.correctViol) isCorrect = true;
     if (step === 2 && value === currentData.correctSol) isCorrect = true;
     
-    // Caso especial para el caso 2 (ajuste dinámico de botones)
+    // Lógica interna
     if (currentCase === 1 && step === 1 && value === 'simb') isCorrect = true;
-    if (currentCase === 1 && step === 2 && value === 'cap') isCorrect = true; // Reutilizamos botón A para simplificar código, idealmente cambiar texto
+    if (currentCase === 1 && step === 2 && value === 'cap') isCorrect = true; 
 
     if (isCorrect) {
         btn.classList.add('correct');
@@ -328,41 +401,37 @@ function checkStep(step, value, btn) {
         
         if(step1Done && step2Done) {
             feedback.innerText = currentData.fb;
-            feedback.style.color = "#39ff14";
+            feedback.style.color = "#16A34A"; // Verde oscuro legible
             document.getElementById('next-case-btn').style.display = 'block';
         } else {
             feedback.innerText = "Diagnóstico parcial correcto. Continúa...";
-            feedback.style.color = "#00f3ff";
+            feedback.style.color = "#582C83"; // Morado marca
         }
     } else {
         btn.classList.add('wrong');
         feedback.innerText = "ANÁLISIS INCORRECTO. Revisa los conceptos.";
-        feedback.style.color = "#ff007f";
+        feedback.style.color = "#DC2626"; // Rojo oscuro legible
     }
 }
 
 function nextCase() {
     currentCase++;
     if(currentCase < casesData.length) {
-        // Cargar caso 2
         document.getElementById('transcript').innerText = casesData[currentCase].text;
         
-        // Reset UI
         step1Done = false; step2Done = false;
         document.querySelectorAll('.analysis-btn').forEach(b => b.classList.remove('correct', 'wrong', 'selected'));
         document.getElementById('next-case-btn').style.display = 'none';
         document.getElementById('feedback-txt').innerText = "ESPERANDO ANÁLISIS...";
-        document.getElementById('feedback-txt').style.color = "#00f3ff";
+        document.getElementById('feedback-txt').style.color = "#582C83";
         
-        // Cambiar textos de botones para Caso 2 (Truco rápido DOM)
         if(currentCase === 1) {
             const cols = document.querySelectorAll('.board-col');
-            // Col 1
             cols[0].querySelectorAll('button')[0].innerText = "A. Violencia Física";
             cols[0].querySelectorAll('button')[1].innerText = "B. Violencia Institucional";
-            cols[0].querySelectorAll('button')[2].innerText = "C. Violencia Simbólica y Amenaza"; // Correcta
-            // Col 2
-            cols[1].querySelectorAll('button')[0].innerText = "A. Activar Ruta de Riesgo Líderes"; // Correcta (mapeada a 'cap')
+            cols[0].querySelectorAll('button')[2].innerText = "C. Violencia Simbólica y Amenaza"; 
+            
+            cols[1].querySelectorAll('button')[0].innerText = "A. Activar Ruta de Riesgo Líderes"; 
             cols[1].querySelectorAll('button')[1].innerText = "B. Ignorar";
             cols[1].querySelectorAll('button')[2].innerText = "C. Medidas policivas simples";
         }
@@ -370,9 +439,7 @@ function nextCase() {
         gsap.from(".player-box", {opacity: 0, x: -20});
         
     } else {
-        // Fin
-        document.getElementById('view-sim').innerHTML = `<div style='text-align:center; padding:40px;'><h2 style='color:#39ff14'>¡SESIÓN COMPLETADA!</h2><p>Has identificado correctamente las violencias y sus estrategias de prevención.</p></div>`;
+        document.getElementById('view-sim').innerHTML = `<div style='text-align:center; padding:40px;'><h2 style='color:#582C83'>¡SESIÓN COMPLETADA!</h2><p style='color:#333'>Has identificado correctamente las violencias y sus estrategias de prevención.</p></div>`;
     }
 }
-
 </script>

@@ -3,19 +3,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-/* --- VARIABLES DE DISEÑO (SÓLIDOS Y OPACOS) --- */
+/* --- VARIABLES DE DISEÑO (LIGHT THEME / BRAND) --- */
 :root {
-    --mc-bg: #170047;          /* Fondo carbón reinterpretado */
-    --mc-card: #480241;        /* Superficie elevada */
-
-    --mc-toxic: #E44700;       /* Pacto de silencio / daño */
-    --mc-heal: #EE7D4F;        /* Nuevo pacto / reparación */
-
-    --mc-text: #ffffff;        /* Texto principal */
-
-    --mc-accent: #FEC82F;      /* Valor / foco / decisión */
+    --mc-bg: #FFFFFF;          /* Fondo Blanco Puro */
+    --mc-card: #F8FAFC;        /* Superficie gris muy suave */
+    
+    --mc-toxic: #D23B78;       /* Magenta (El pacto / Problema) */
+    --mc-heal: #582C83;        /* Morado (La solución / Institucional) */
+    --mc-accent: #F47920;      /* Naranja (Acción) */
+    
+    --mc-text: #334155;        /* Gris Oscuro (Texto) */
+    --mc-border: #E2E8F0;      /* Bordes suaves */
 }
-
 
 #masculinity-circle-container {
     width: 100%;
@@ -24,7 +23,7 @@
     background-color: var(--mc-bg) !important;
     font-family: 'Roboto', sans-serif;
     color: var(--mc-text);
-    border: 2px solid #444;
+    border: 1px solid var(--mc-border);
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -32,28 +31,52 @@
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
 }
 
-/* --- FONDO ANIMADO (RED DE CONEXIONES) --- */
+/* --- FONDO ANIMADO (RED DE CONEXIONES SUTIL) --- */
 .network-bg {
     position: absolute; top:0; left:0; width:100%; height:100%;
-    background-image: radial-gradient(#333 1px, transparent 1px);
+    /* Puntos gris suave sobre blanco */
+    background-image: radial-gradient(#CBD5E1 1px, transparent 1px);
     background-size: 30px 30px;
-    opacity: 0.3; z-index: 0; pointer-events: none;
+    opacity: 0.5; z-index: 0; pointer-events: none;
 }
 
-/* --- HEADER --- */
+/* --- HEADER CON LOGOS --- */
 .mc-header {
-    text-align: center; margin-bottom: 40px; z-index: 10;
-    border-bottom: 3px solid var(--mc-toxic); padding-bottom: 20px;
+    z-index: 10;
+    border-bottom: 4px solid var(--mc-toxic); 
+    padding-bottom: 20px;
+    margin-bottom: 40px;
     transition: border-color 1s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    background: rgba(255,255,255,0.9);
 }
+
+.client-logo {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.header-text {
+    flex: 1;
+    text-align: center;
+    min-width: 280px;
+}
+
 .mc-title {
-    font-family: 'Anton', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem);
-    text-transform: uppercase; margin: 0; letter-spacing: 2px;
-    color: var(--mc-text);
+    font-family: 'Anton', sans-serif; font-size: clamp(1.8rem, 4vw, 3rem);
+    text-transform: uppercase; margin: 0; letter-spacing: 1px;
+    color: var(--mc-heal); /* Título Morado */
 }
-.mc-subtitle { color: #aaa; margin-top: 10px; font-size: 1.1rem; }
+.mc-subtitle { color: var(--mc-accent); margin-top: 5px; font-size: 1rem; font-weight: bold; }
 
 /* --- EL CÍRCULO (VISUALIZADOR) --- */
 .circle-stage {
@@ -65,21 +88,25 @@
 /* El Núcleo (El Pacto) */
 .core-pact {
     width: 120px; height: 120px; border-radius: 50%;
-    background: #000; border: 4px solid var(--mc-toxic);
+    background: #FFFFFF; 
+    border: 5px solid var(--mc-toxic);
     display: flex; justify-content: center; align-items: center;
     text-align: center; font-weight: bold; font-size: 0.9rem;
-    box-shadow: 0 0 30px rgba(230, 57, 70, 0.4);
+    color: var(--mc-toxic);
+    box-shadow: 0 0 30px rgba(210, 59, 120, 0.2);
     z-index: 2; transition: all 1s;
 }
 
 /* Los Nodos (Hombres) */
 .node-man {
     width: 60px; height: 60px; border-radius: 50%;
-    background: var(--mc-card); border: 2px solid #555;
+    background: #FFFFFF; 
+    border: 2px solid var(--mc-border);
     position: absolute; display: flex; justify-content: center; align-items: center;
-    font-size: 1.5rem; z-index: 2; transition: all 0.5s;
+    font-size: 1.8rem; z-index: 2; transition: all 0.5s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
-/* Posicionamiento Radial Manual para estabilidad */
+/* Posicionamiento Radial Manual */
 .nm-1 { top: 0; }
 .nm-2 { top: 35%; right: 0; }
 .nm-3 { bottom: 0; right: 20%; }
@@ -89,25 +116,27 @@
 /* Cadenas (Líneas) */
 .chain-line {
     position: absolute; top: 50%; left: 50%;
-    height: 4px; background: var(--mc-toxic);
+    height: 6px; 
+    background: var(--mc-toxic); /* Magenta = Pacto vigente */
     transform-origin: 0 50%; z-index: 1;
     transition: background 1s, width 1s;
-    box-shadow: 0 0 10px rgba(230, 57, 70, 0.5);
+    opacity: 0.6;
 }
 
 /* --- ÁREA DE INTERACCIÓN (SITUACIONES) --- */
 .interaction-zone {
-    background: var(--mc-card); padding: 30px; border-radius: 10px;
-    border: 1px solid #555; max-width: 800px; margin: 0 auto; width: 100%;
+    background: var(--mc-card); padding: 30px; border-radius: 12px;
+    border: 1px solid var(--mc-border); max-width: 800px; margin: 0 auto; width: 100%;
     z-index: 10; display: flex; flex-direction: column; gap: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.03);
 }
 
 .scenario-box {
     border-left: 5px solid var(--mc-toxic); padding-left: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 10px; background: #fff; padding: 20px; border-radius: 0 8px 8px 0;
 }
 .scenario-label { color: var(--mc-toxic); font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; text-transform: uppercase; }
-.scenario-text { font-size: 1.1rem; line-height: 1.6; color: white; font-style: italic; }
+.scenario-text { font-size: 1.1rem; line-height: 1.6; color: var(--mc-text); font-style: italic; }
 
 /* Botones de Decisión */
 .decisions-grid {
@@ -116,15 +145,32 @@
 }
 
 .decision-btn {
-    background: #1a1a1d; color: white; border: 1px solid #555;
-    padding: 15px; border-radius: 8px; cursor: pointer; text-align: left;
-    transition: 0.3s; display: flex; align-items: center; gap: 10px;
-    font-size: 1rem; opacity: 1 !important; /* Forzar visibilidad */
+    background: #FFFFFF; color: var(--mc-text); 
+    border: 1px solid var(--mc-border);
+    padding: 18px; border-radius: 8px; cursor: pointer; text-align: left;
+    transition: 0.3s; display: flex; align-items: center; gap: 15px;
+    font-size: 1rem; opacity: 1 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
-.decision-btn:hover { background: #333; border-color: white; transform: translateY(-3px); }
+.decision-btn:hover { 
+    background: #F8FAFC; 
+    border-color: var(--mc-accent); 
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
 
-.decision-btn.correct { border-color: var(--mc-heal); background: rgba(76, 201, 240, 0.1); }
-.decision-btn.wrong { border-color: var(--mc-toxic); background: rgba(230, 57, 70, 0.1); opacity: 0.6 !important; }
+.decision-btn.correct { 
+    border-color: var(--mc-heal); 
+    background: #F3E8FF; /* Lila muy claro */
+    color: var(--mc-heal);
+    font-weight: bold;
+}
+.decision-btn.wrong { 
+    border-color: var(--mc-toxic); 
+    background: #FFF1F2; /* Rojo/Rosa muy claro */
+    color: #991B1B;
+    opacity: 0.7 !important; 
+}
 
 /* Icono del botón */
 .d-icon { font-size: 1.5rem; }
@@ -133,15 +179,18 @@
 .feedback-msg {
     text-align: center; font-weight: bold; margin-top: 15px;
     min-height: 40px; color: var(--mc-heal); font-size: 1.1rem;
-    display: none; /* Se activa con JS */
-    border: 1px dashed var(--mc-heal); padding: 10px; border-radius: 5px;
+    display: none;
+    border: 1px dashed var(--mc-heal); padding: 15px; border-radius: 8px;
+    background: #FDF4FF;
 }
 
 /* RESPONSIVE */
-@media (max-width: 1200px) {
+@media (max-width: 900px) {
+    .mc-header { flex-direction: column; text-align: center; }
+    .client-logo { height: 50px; }
     .circle-stage { height: 300px; transform: scale(0.9); }
-    .node-man { width: 50px; height: 50px; font-size: 1.2rem; }
-    .core-pact { width: 90px; height: 90px; font-size: 0.8rem; }
+    .node-man { width: 50px; height: 50px; font-size: 1.5rem; }
+    .core-pact { width: 90px; height: 90px; font-size: 0.75rem; }
 }
 
 </style>
@@ -149,15 +198,24 @@
 <div id="masculinity-circle-container">
     <div class="network-bg"></div>
 
+    <!-- HEADER CON LOGOS -->
     <div class="mc-header">
-        <h1 class="mc-title">Rompiendo el Pacto</h1>
-        <p class="mc-subtitle">Dinámica 3: Círculo de Masculinidades. Identifica y rompe la complicidad.</p>
+        <!-- Logo Izquierdo: UNP -->
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+        
+        <div class="header-text">
+            <h1 class="mc-title">Rompiendo el Pacto</h1>
+            <p class="mc-subtitle">Dinámica 3: Círculo de Masculinidades</p>
+        </div>
+
+        <!-- Logo Derecho: Comisión -->
+        <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo">
     </div>
 
     <!-- EL CÍRCULO VISUAL -->
     <div class="circle-stage">
         
-        <!-- Líneas (Cadenas) - Se posicionan con JS -->
+        <!-- Líneas (Cadenas) -->
         <div class="chain-line" id="line-1"></div>
         <div class="chain-line" id="line-2"></div>
         <div class="chain-line" id="line-3"></div>
@@ -193,7 +251,7 @@
 
         <div class="feedback-msg" id="fb-text">...</div>
         
-        <button id="next-btn" style="display:none; background:var(--mc-accent); color:black; border:none; padding:10px 20px; font-weight:bold; cursor:pointer; width:100%; margin-top:10px;" onclick="nextLevel()">SIGUIENTE SITUACIÓN</button>
+        <button id="next-btn" style="display:none; background:var(--mc-accent); color:white; border:none; padding:15px 20px; border-radius:8px; font-weight:bold; cursor:pointer; width:100%; margin-top:10px; font-size:1rem;" onclick="nextLevel()">SIGUIENTE SITUACIÓN</button>
 
     </div>
 </div>
@@ -234,8 +292,7 @@ let currIdx = 0;
 
 // --- CONFIGURACIÓN VISUAL INICIAL ---
 function setupLines() {
-    // Calcular posiciones para conectar el centro con los nodos
-    // Esto es puramente estético y aproximado para el pentágono
+    // Calcular posiciones
     const lines = [
         { rot: -90, width: 140 }, // Arriba
         { rot: -18, width: 140 }, // Der Arriba
@@ -248,7 +305,6 @@ function setupLines() {
         const el = document.getElementById(`line-${i+1}`);
         el.style.width = l.width + 'px';
         el.style.transform = `translate(0, -50%) rotate(${l.rot}deg)`;
-        // Ajuste fino para centrar en el origen
         el.style.left = "50%";
         el.style.top = "50%";
     });
@@ -290,25 +346,25 @@ function makeChoice(opt, btnElement) {
         document.getElementById('fb-text').style.display = 'block';
         document.getElementById('next-btn').style.display = 'block';
 
-        // Transformar líneas del círculo (Romper cadenas)
-        // Convertimos líneas rojas a azules una por una o en grupo
-        const lineId = currIdx + 1; // 1, 2, 3...
-        // Activamos más de una línea para efecto visual
+        // Transformar líneas (Magenta -> Morado Institucional)
+        const lineId = currIdx + 1; 
         const targetLine = document.getElementById(`line-${lineId}`);
-        const nextTarget = document.getElementById(`line-${lineId === 5 ? 1 : lineId + 1}`); // Circular
-
+        
         targetLine.style.background = "var(--mc-heal)";
-        targetLine.style.boxShadow = "0 0 15px var(--mc-heal)";
+        targetLine.style.boxShadow = "0 0 10px rgba(88, 44, 131, 0.5)"; // Sombra morada suave
         
         if(currIdx === 2) { // Último nivel
-             // Transformar TODO
              document.querySelectorAll('.chain-line').forEach(l => {
                  l.style.background = "var(--mc-heal)";
-                 l.style.boxShadow = "0 0 20px var(--mc-heal)";
+                 l.style.boxShadow = "0 0 15px rgba(88, 44, 131, 0.6)";
              });
-             document.getElementById('core-circle').style.borderColor = "var(--mc-heal)";
-             document.getElementById('core-circle').innerHTML = "CÍRCULO<br>SEGURO";
-             document.getElementById('core-circle').style.color = "var(--mc-heal)";
+             
+             // Transformar Núcleo
+             const core = document.getElementById('core-circle');
+             core.style.borderColor = "var(--mc-heal)";
+             core.style.color = "var(--mc-heal)";
+             core.innerHTML = "CÍRCULO<br>SEGURO";
+             
              document.querySelector('.mc-header').style.borderColor = "var(--mc-heal)";
         }
 
@@ -317,8 +373,8 @@ function makeChoice(opt, btnElement) {
         btnElement.classList.add('wrong');
         gsap.to(btnElement, {x: 10, duration: 0.1, yoyo: true, repeat: 3});
         
-        // El núcleo palpita en rojo
-        gsap.from("#core-circle", {scale: 1.1, borderColor: "#fff", duration: 0.2});
+        // El núcleo palpita (Magenta)
+        gsap.from("#core-circle", {scale: 1.1, borderColor: "#D23B78", duration: 0.2});
     }
 }
 
@@ -331,8 +387,8 @@ function nextLevel() {
         document.querySelector('.interaction-zone').innerHTML = `
             <div style="text-align:center; padding:30px;">
                 <h2 style="color:var(--mc-heal); font-family:'Anton'; font-size:2.5rem;">¡PACTO ROTO!</h2>
-                <p style="font-size:1.2rem;">Has transformado la complicidad en corresponsabilidad.</p>
-                <p>Ahora este es un espacio seguro para prevenir violencias.</p>
+                <p style="font-size:1.2rem; color:var(--mc-text);">Has transformado la complicidad en corresponsabilidad.</p>
+                <p style="color:var(--mc-text);">Ahora este es un espacio seguro para prevenir violencias.</p>
                 <div style="font-size:4rem; margin-top:20px;">🤝✨</div>
             </div>
         `;

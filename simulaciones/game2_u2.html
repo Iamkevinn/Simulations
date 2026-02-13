@@ -3,235 +3,297 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<!-- Fuentes Institucionales -->
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
+/* --- PALETA DE COLORES (CLAROS / INSTITUCIONALES) --- */
 :root {
-    --noir-bg: #170047;        /* Fondo oscuro profundo */
-    --noir-paper: #FEC82F;     /* Superficie clara (papel reinterpretado) */
-    --noir-accent: #E44700;    /* Acento dramático */
-
-    --font-type: 'Courier New', Courier, monospace;
+    --tf-purple: #4B1E7A;          /* Morado Institucional (Texto, Bordes) */
+    --tf-orange: #E35205;          /* Naranja (Acción, Alerta) */
+    --tf-yellow: #FDB913;          /* Amarillo (Detalles) */
+    
+    --bg-main: #FFFFFF;            /* Fondo General */
+    --bg-paper: #F9F9F9;           /* Fondo Expediente */
+    
+    --text-main: #333333;          /* Texto lectura */
+    --text-light: #ffffff;         /* Texto sobre colores fuertes */
+    
+    --font-head: 'Sora', sans-serif;
+    --font-body: 'Inter', sans-serif;
 }
 
+* { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
 
-    * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+body {
+    margin: 0;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F3E5F5 100%);
+    color: var(--text-main);
+    font-family: var(--font-body);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
 
-    body {
-        margin: 0;
-        background-color: var(--noir-bg);
-        color: var(--noir-paper);
-        font-family: var(--font-type);
-        height: 100vh;
-        width: 100vw;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-    }
+/* --- LOGOS DEL CLIENTE (Overlay Superior) --- */
+.header-logos {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 300;
+    pointer-events: none; /* Permitir clicks debajo */
+}
 
-    /* --- EFECTOS DE AMBIENTE --- */
-    .film-grain {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
-        opacity: 0.4; pointer-events: none; z-index: 100;
-    }
+.header-logos img {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 5px rgba(255,255,255,0.8)); /* Sombra blanca para asegurar contraste */
+}
 
-    /* --- PANTALLA 1: EL EXPEDIENTE (TEORÍA) --- */
-    #briefing-screen {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: #000; z-index: 200;
-        display: flex; justify-content: center; align-items: center;
-        padding: 20px;
-    }
+/* --- PANTALLA 1: EL EXPEDIENTE (TEORÍA) --- */
+#briefing-screen {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255,255,255,0.95); z-index: 200;
+    display: flex; justify-content: center; align-items: center;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+}
 
-    .dossier-file {
-        background: #f4f4f0; color: #111;
-        width: 100%; max-width: 800px; max-height: 90vh;
-        padding: 40px;
-        box-shadow: 0 0 50px rgba(255,255,255,0.1);
-        transform: rotate(-1deg);
-        overflow-y: auto;
-        position: relative;
-        border: 1px solid #ccc;
-    }
+.dossier-file {
+    background: white; 
+    color: var(--text-main);
+    width: 100%; max-width: 800px; max-height: 90vh;
+    padding: 40px;
+    box-shadow: 0 20px 50px rgba(75, 30, 122, 0.15);
+    border: 1px solid #e0e0e0;
+    border-radius: 15px;
+    overflow-y: auto;
+    position: relative;
+    /* Decoración superior tipo folder */
+    border-top: 6px solid var(--tf-purple);
+}
 
-    .stamp-top {
-        position: absolute; top: 20px; right: 20px;
-        border: 4px solid var(--noir-accent); color: var(--noir-accent);
-        font-weight: bold; font-size: 1.5rem; padding: 5px 15px;
-        transform: rotate(15deg); opacity: 0.8;
-    }
+.stamp-top {
+    position: absolute; top: 20px; right: 20px;
+    border: 2px solid var(--tf-orange); 
+    color: var(--tf-orange);
+    font-family: var(--font-head);
+    font-weight: 800; font-size: 1rem; padding: 5px 15px;
+    transform: rotate(15deg); opacity: 0.9;
+    border-radius: 4px;
+}
 
-    .dossier-title {
-        font-size: 1.2rem; border-bottom: 2px solid #000;
-        margin-bottom: 20px; padding-bottom: 10px; text-transform: uppercase;
-    }
+.dossier-title {
+    font-family: var(--font-head);
+    font-size: 1.5rem; 
+    color: var(--tf-purple);
+    border-bottom: 2px solid #eee;
+    margin-bottom: 20px; padding-bottom: 10px; 
+    text-transform: uppercase;
+    font-weight: 800;
+}
 
-    .dossier-content ul { padding-left: 20px; }
-    .dossier-content li { margin-bottom: 8px; }
+.dossier-content ul { padding-left: 20px; color: #555; }
+.dossier-content li { margin-bottom: 10px; }
 
-    .btn-start {
-        background: #000; color: #fff; border: none;
-        padding: 15px 30px; font-size: 1rem; font-weight: bold;
-        cursor: pointer; margin-top: 20px; width: 100%;
-        font-family: var(--font-type); transition: 0.2s;
-    }
-    .btn-start:hover { background: var(--noir-accent); }
+.btn-start {
+    background: var(--tf-purple); color: white; border: none;
+    padding: 15px 30px; font-size: 1rem; font-weight: bold;
+    cursor: pointer; margin-top: 20px; width: 100%;
+    font-family: var(--font-head); transition: 0.2s;
+    border-radius: 30px;
+}
+.btn-start:hover { background: var(--tf-orange); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(227, 82, 5, 0.3); }
 
-    /* --- PANTALLA 2: SIMULACIÓN --- */
-    .simulation-layout {
-        display: none; flex-direction: column;
-        height: 100%; width: 100%; max-width: 1200px; margin: 0 auto;
-    }
+/* --- PANTALLA 2: SIMULACIÓN --- */
+.simulation-layout {
+    display: none; flex-direction: column;
+    height: 100%; width: 100%; max-width: 1200px; margin: 0 auto;
+    background: white;
+    padding-top: 70px; /* Espacio para logos */
+}
 
-    /* HEADER */
-    .top-bar {
-        height: 50px; background: #1a1a1a; border-bottom: 1px solid #444;
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 0 15px; flex-shrink: 0;
-    }
+/* HEADER INTERNO */
+.top-bar {
+    height: 40px; background: #f0f0f0; border-bottom: 1px solid #e0e0e0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 15px; flex-shrink: 0;
+    font-family: var(--font-head); font-weight: bold; font-size: 0.9rem;
+    color: var(--tf-purple);
+    gap: 10px;
+}
 
-    /* ESCENARIO */
-    .scene-stage {
-        flex-grow: 1; position: relative;
-        background: radial-gradient(circle at bottom, #2a2a2a 0%, #000 70%);
-        display: flex; justify-content: space-between; align-items: flex-end;
-        overflow: hidden; padding-bottom: 0;
-    }
+/* ESCENARIO */
+.scene-stage {
+    flex-grow: 1; position: relative;
+    background: white; /* Fondo limpio */
+    display: flex; justify-content: space-between; align-items: flex-end;
+    overflow: hidden; padding-bottom: 0;
+}
 
-    /* PERSONAJES */
-    .char-container {
-        width: 40%; height: 80%;
-        position: relative; transition: all 0.3s;
-        display: flex; align-items: flex-end; justify-content: center;
-    }
-    
-    .char-img {
-        height: 100%; max-height: 400px; width: auto;
-        filter: grayscale(100%) brightness(0.4);
-        transition: 0.5s;
-    }
+/* PERSONAJES */
+.char-container {
+    width: 40%; height: 80%;
+    position: relative; transition: all 0.3s;
+    display: flex; align-items: flex-end; justify-content: center;
+}
 
-    .speaking .char-img {
-        filter: grayscale(100%) brightness(1.1) drop-shadow(0 0 15px rgba(255,255,255,0.3));
-        transform: scale(1.05);
-    }
+.char-img {
+    height: 100%; max-height: 400px; width: auto;
+    filter: grayscale(100%); /* Mantener B/N para seriedad */
+    transition: 0.5s;
+    opacity: 0.6;
+}
 
-    /* BURBUJA DE TEXTO */
-    .dialogue-area {
-        position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-        width: 90%; max-width: 600px; z-index: 20;
-    }
+.speaking .char-img {
+    filter: grayscale(0%); /* Color al hablar */
+    opacity: 1;
+    transform: scale(1.05);
+    drop-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
 
-    .bubble {
-        background: var(--noir-paper); color: #000;
-        padding: 15px 20px; border-radius: 4px;
-        position: relative; box-shadow: 0 10px 30px #000;
-        border: 2px solid #fff; min-height: 80px;
-        display: flex; flex-direction: column; justify-content: center;
-    }
-    
-    .bubble-name {
-        font-weight: bold; font-size: 0.8rem; color: var(--noir-accent);
-        margin-bottom: 5px; text-transform: uppercase;
-    }
-    .bubble-text { font-size: 1rem; line-height: 1.4; }
+/* BURBUJA DE TEXTO */
+.dialogue-area {
+    position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+    width: 90%; max-width: 600px; z-index: 20;
+}
 
-    /* CONTROLES INFERIORES */
-    .control-panel {
-        height: auto; min-height: 120px;
-        background: #000; border-top: 1px solid #444;
-        padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-        flex-shrink: 0; z-index: 30;
-    }
+.bubble {
+    background: white; color: var(--text-main);
+    padding: 20px 25px; border-radius: 20px;
+    position: relative; 
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    border: 1px solid #eee; min-height: 100px;
+    display: flex; flex-direction: column; justify-content: center;
+}
 
-    .btn-next {
-        background: transparent; border: 1px solid #fff; color: #fff;
-        padding: 10px 30px; font-family: var(--font-type); font-weight: bold;
-        cursor: pointer; animation: pulse 2s infinite; display: none;
-    }
-    .btn-next:hover { background: #fff; color: #000; }
-    @keyframes pulse { 0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.7; } }
+.bubble-name {
+    font-family: var(--font-head);
+    font-weight: 800; font-size: 0.85rem; color: var(--tf-purple);
+    margin-bottom: 8px; text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.bubble-text { font-size: 1.05rem; line-height: 1.5; color: #444; }
 
-    .decision-box {
-        display: none; width: 100%; flex-wrap: wrap; justify-content: center; gap: 10px;
-    }
-    .stamp-btn {
-        background: #111; color: var(--noir-accent); border: 2px solid var(--noir-accent);
-        padding: 10px 15px; font-weight: bold; cursor: pointer; text-transform: uppercase;
-        font-family: var(--font-type); flex-grow: 1; max-width: 200px;
-        transition: 0.2s;
-    }
-    .stamp-btn:hover { background: var(--noir-accent); color: #fff; }
+/* CONTROLES INFERIORES */
+.control-panel {
+    height: auto; min-height: 140px;
+    background: #FAFAFA; border-top: 1px solid #eee;
+    padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    flex-shrink: 0; z-index: 30;
+}
 
-    /* --- NUEVO: SISTEMA DE FEEDBACK INTEGRADO (Custom Alert) --- */
-    .feedback-layer {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.85); z-index: 400; /* Encima de todo */
-        display: none; justify-content: center; align-items: center;
-        padding: 20px;
-    }
+.btn-next {
+    background: var(--tf-purple); border: none; color: white;
+    padding: 12px 40px; font-family: var(--font-head); font-weight: bold;
+    cursor: pointer; border-radius: 30px;
+    box-shadow: 0 4px 10px rgba(75, 30, 122, 0.2);
+    display: none; /* JS lo activa */
+    transition: 0.3s;
+}
+.btn-next:hover { background: var(--tf-orange); transform: translateY(-2px); }
 
-    .feedback-card {
-        background: #f4f4f0; color: #111;
-        padding: 30px; width: 100%; max-width: 500px;
-        box-shadow: 0 0 50px rgba(255,0,0,0.2);
-        border: 1px solid #999;
-        transform: rotate(1deg);
-        position: relative;
-        animation: stampIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
+.decision-box {
+    display: none; width: 100%; flex-wrap: wrap; justify-content: center; gap: 10px;
+}
+.stamp-btn {
+    background: white; color: var(--tf-purple); border: 1px solid var(--tf-purple);
+    padding: 12px 20px; font-weight: bold; cursor: pointer; text-transform: uppercase;
+    font-family: var(--font-body); flex-grow: 1; max-width: 220px;
+    border-radius: 10px;
+    transition: 0.2s;
+    font-size: 0.85rem;
+}
+.stamp-btn:hover { background: var(--tf-purple); color: white; transform: translateY(-2px); }
 
-    @keyframes stampIn {
-        from { transform: scale(1.5) rotate(10deg); opacity: 0; }
-        to { transform: scale(1) rotate(1deg); opacity: 1; }
-    }
+/* --- SISTEMA DE FEEDBACK (MODAL) --- */
+.feedback-layer {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255,255,255,0.9); z-index: 400; 
+    display: none; justify-content: center; align-items: center;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+}
 
-    .feedback-header {
-        border-bottom: 2px dashed #333; margin-bottom: 15px; padding-bottom: 10px;
-        font-weight: bold; text-transform: uppercase; color: var(--noir-accent);
-        display: flex; justify-content: space-between; align-items: center;
-    }
+.feedback-card {
+    background: white; color: #333;
+    padding: 30px; width: 100%; max-width: 500px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    border-radius: 20px;
+    border: 1px solid #eee;
+    transform: rotate(0deg); /* Quitamos rotación */
+    position: relative;
+    animation: stampIn 0.3s ease-out;
+}
 
-    .feedback-body { font-size: 1rem; line-height: 1.5; margin-bottom: 20px; }
+@keyframes stampIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
 
-    .btn-feedback {
-        background: #111; color: white; border: none; width: 100%;
-        padding: 12px; font-weight: bold; cursor: pointer; font-family: var(--font-type);
-    }
-    .btn-feedback:hover { background: var(--noir-accent); }
+.feedback-header {
+    border-bottom: 2px solid #f0f0f0; margin-bottom: 15px; padding-bottom: 10px;
+    font-weight: 800; text-transform: uppercase; color: var(--tf-orange);
+    font-family: var(--font-head);
+    display: flex; justify-content: space-between; align-items: center;
+}
 
-    /* INFORME FINAL */
-    .report-card {
-        background: #f4f4f0; color: #000; padding: 30px;
-        max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;
-        border: 4px solid #000;
-    }
+.feedback-body { font-size: 1rem; line-height: 1.6; margin-bottom: 25px; color: #555; }
 
-    @media (max-width: 768px) {
-        .char-img { height: 100%; object-fit: contain; width: 100%; }
-        .scene-stage { align-items: flex-end; }
-        .bubble-text { font-size: 0.9rem; }
-        .stamp-btn { font-size: 0.8rem; padding: 8px; }
-        .dossier-file { padding: 20px; }
-    }
+.btn-feedback {
+    background: var(--tf-purple); color: white; border: none; width: 100%;
+    padding: 12px; font-weight: bold; cursor: pointer; 
+    font-family: var(--font-head); border-radius: 30px;
+    transition: 0.3s;
+}
+.btn-feedback:hover { background: var(--tf-orange); }
+
+/* INFORME FINAL */
+.report-card {
+    background: white; color: #333; padding: 40px;
+    max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    border-top: 8px solid var(--tf-purple);
+}
+
+@media (max-width: 768px) {
+    .header-logos img { height: 35px; } /* Logos más pequeños en móvil */
+    .char-img { height: 100%; object-fit: contain; width: 100%; }
+    .scene-stage { align-items: flex-end; }
+    .bubble-text { font-size: 0.95rem; }
+    .stamp-btn { font-size: 0.75rem; padding: 10px; }
+    .dossier-file { padding: 25px; }
+}
 </style>
 </head>
 <body>
 
-    <div class="film-grain"></div>
+    <!-- LOGOS OVERLAY -->
+    <div class="header-logos">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP">
+        <img src="../Styles/logo.png" alt="Logo Comisión">
+    </div>
 
-    <!-- BRIEFING -->
+    <!-- PANTALLA 1: EL EXPEDIENTE (TEORÍA) -->
     <div id="briefing-screen">
         <div class="dossier-file">
             <div class="stamp-top">CONFIDENCIAL</div>
             <h2 class="dossier-title">TEMA 4: CLASIFICACIÓN DE VIOLENCIAS</h2>
             <p><strong>CONTEXTO:</strong> Violencias en escenarios institucionales y comunitarios.</p>
-            <p>Incluyen el trato discriminatorio, la revictimización, la dilación de trámites y la aplicación de protocolos sin enfoque de género.</p>
-            <div style="background: rgba(0,0,0,0.05); padding: 15px; margin: 15px 0; border-left: 4px solid var(--noir-accent);">
-                <strong>MANIFESTACIONES:</strong>
-                <ul class="dossier-content">
+            <p style="color:#666; line-height:1.6;">Incluyen el trato discriminatorio, la revictimización, la dilación de trámites y la aplicación de protocolos sin enfoque de género.</p>
+            <div style="background: #FAFAFA; padding: 20px; margin: 20px 0; border-left: 4px solid var(--tf-orange); border-radius: 0 10px 10px 0;">
+                <strong style="color:var(--tf-purple);">MANIFESTACIONES COMUNES:</strong>
+                <ul class="dossier-content" style="margin-top:10px;">
                     <li>Trato discriminatorio u omisiones.</li>
                     <li>Obstáculos para acceder a justicia.</li>
-                    <li>Minimización de denuncias.</li>
+                    <li>Minimización de denuncias ("problemas pasionales").</li>
                     <li>Dilación de trámites administrativos.</li>
                     <li>Medidas insuficientes o tardías.</li>
                 </ul>
@@ -240,11 +302,11 @@
         </div>
     </div>
 
-    <!-- SIMULACIÓN -->
+    <!-- PANTALLA 2: SIMULACIÓN -->
     <div class="simulation-layout" id="sim-screen">
         <div class="top-bar">
             <span>CASO #902: ATENCIÓN AL USUARIO</span>
-            <span style="color:var(--noir-accent)">● GRABANDO</span>
+            <span style="color:var(--tf-orange); font-size:1.2rem; margin-left:5px;">●</span>
         </div>
         <div class="scene-stage">
             <div class="dialogue-area">
@@ -261,23 +323,23 @@
             </div>
         </div>
         <div class="control-panel">
-            <div id="instruction" style="color:#888; margin-bottom:10px; font-size:0.9rem;">...</div>
+            <div id="instruction" style="color:#888; margin-bottom:15px; font-size:0.9rem; font-weight:bold;">...</div>
             <button class="btn-next" id="btn-next" onclick="nextStep()">CONTINUAR ▶</button>
             <div class="decision-box" id="decision-box">
                 <button class="stamp-btn" onclick="showCustomFeedback('revic')">REVICTIMIZACIÓN</button>
                 <button class="stamp-btn" onclick="showCustomFeedback('dilacion')">DILACIÓN / OBSTÁCULOS</button>
                 <button class="stamp-btn" onclick="showCustomFeedback('genero')">SIN ENFOQUE GÉNERO</button>
-                <button class="stamp-btn" style="border-color:#555; color:#555;" onclick="showCustomFeedback('ok')">PROCEDIMIENTO CORRECTO</button>
+                <button class="stamp-btn" style="border-color:#999; color:#666;" onclick="showCustomFeedback('ok')">PROCEDIMIENTO CORRECTO</button>
             </div>
         </div>
     </div>
 
-    <!-- NUEVO: SISTEMA DE FEEDBACK (MODAL PERSONALIZADO) -->
+    <!-- MODAL FEEDBACK -->
     <div class="feedback-layer" id="custom-feedback">
         <div class="feedback-card">
             <div class="feedback-header">
                 <span>REPORTE DE OBSERVACIÓN</span>
-                <span style="border:2px solid var(--noir-accent); padding:2px 5px; font-size:0.8rem; transform:rotate(-5deg);">REGISTRADO</span>
+                <span style="background:var(--tf-orange); color:white; padding:2px 8px; border-radius:4px; font-size:0.7rem;">REGISTRADO</span>
             </div>
             <div class="feedback-body" id="feedback-text">
                 <!-- Texto dinámico aquí -->
@@ -289,12 +351,12 @@
     <!-- INFORME FINAL -->
     <div class="feedback-layer" id="final-modal">
         <div class="report-card">
-            <h2 style="text-align:center; border-bottom:2px solid black;">INFORME DE AUDITORÍA</h2>
-            <p><strong>Análisis Colectivo del Caso:</strong></p>
-            <ul style="line-height:1.6; padding-left:20px;">
-                <li style="margin-bottom:10px;"><strong>¿Hubo revictimización?</strong><br><span style="color:var(--noir-accent)">SÍ.</span> Al minimizar la denuncia como "problemas de pareja".</li>
-                <li style="margin-bottom:10px;"><strong>¿Se aplicó enfoque de género?</strong><br><span style="color:var(--noir-accent)">NO.</span> Se priorizó el trámite administrativo sobre el riesgo vital.</li>
-                <li style="margin-bottom:10px;"><strong>¿Qué se puede mejorar?</strong><br>Capacitación en empatía, protocolos flexibles y reconocimiento inmediato del riesgo.</li>
+            <h2 style="text-align:center; color:var(--tf-purple); font-family:var(--font-head); margin-bottom:30px;">INFORME DE AUDITORÍA</h2>
+            <p style="font-size:1.1rem; margin-bottom:20px;"><strong>Análisis Colectivo del Caso:</strong></p>
+            <ul style="line-height:1.8; padding-left:20px; color:#444;">
+                <li style="margin-bottom:15px;"><strong>¿Hubo revictimización?</strong><br><span style="color:var(--tf-orange); font-weight:bold;">SÍ.</span> Al minimizar la denuncia como "problemas de pareja".</li>
+                <li style="margin-bottom:15px;"><strong>¿Se aplicó enfoque de género?</strong><br><span style="color:var(--tf-orange); font-weight:bold;">NO.</span> Se priorizó el trámite administrativo sobre el riesgo vital.</li>
+                <li style="margin-bottom:15px;"><strong>¿Qué se puede mejorar?</strong><br>Capacitación en empatía, protocolos flexibles y reconocimiento inmediato del riesgo.</li>
             </ul>
             <button class="btn-start" onclick="location.reload()">REPETIR EJERCICIO</button>
         </div>
@@ -303,11 +365,11 @@
 <script>
     const script = [
         { role: 'protected', name: 'PERSONA PROTEGIDA', text: "Buenos días. Vengo a solicitar protección urgente. Mi expareja me amenazó de muerte ayer en mi comunidad.", type: 'info' },
-        { role: 'official', name: 'FUNCIONARIO UNP', text: "A ver, señora. Cálmese. ¿Trae la denuncia formal ante la Fiscalía? Sin ese papel no podemos radicar nada.", type: 'choice', correct: 'dilacion', feedback: "¡ALERTA DETECTADA!<br><br>Exigir requisitos burocráticos (denuncia formal) ante un riesgo inminente es un <strong>Obstáculo de Acceso</strong> y <strong>Dilación</strong>." },
+        { role: 'official', name: 'FUNCIONARIO UNP', text: "A ver, señora. Cálmese. ¿Trae la denuncia formal ante la Fiscalía? Sin ese papel no podemos radicar nada.", type: 'choice', correct: 'dilacion', feedback: "<strong style='color:var(--tf-orange)'>¡ALERTA DETECTADA!</strong><br><br>Exigir requisitos burocráticos (denuncia formal) ante un riesgo inminente es un <strong>Obstáculo de Acceso</strong> y <strong>Dilación</strong>. La prioridad debe ser la vida." },
         { role: 'protected', name: 'PERSONA PROTEGIDA', text: "No tengo fiscalía en mi vereda... Pero tengo los mensajes de texto y testigos de la guardia indígena.", type: 'info' },
-        { role: 'official', name: 'FUNCIONARIO UNP', text: "Mire, los mensajes se falsifican. Además, los problemas pasionales se arreglan en casa, esto es para líderes amenazados de verdad.", type: 'choice', correct: 'revic', feedback: "¡FALTA GRAVE!<br><br>Calificarlo de 'problema pasional' es <strong>Minimización</strong> y <strong>Revictimización</strong>. Desconoce la violencia de género." },
+        { role: 'official', name: 'FUNCIONARIO UNP', text: "Mire, los mensajes se falsifican. Además, los problemas pasionales se arreglan en casa, esto es para líderes amenazados de verdad.", type: 'choice', correct: 'revic', feedback: "<strong style='color:var(--tf-orange)'>¡FALTA GRAVE!</strong><br><br>Calificarlo de 'problema pasional' es <strong>Minimización</strong> y <strong>Revictimización</strong>. Desconoce la violencia de género y pone en riesgo a la víctima." },
         { role: 'protected', name: 'PERSONA PROTEGIDA', text: "¡Soy lideresa! Él me ataca por mi labor comunitaria. ¡Me va a matar!", type: 'info' },
-        { role: 'official', name: 'FUNCIONARIO UNP', text: "Bueno, llene este formulario. El estudio de riesgo demora 3 meses. Mientras tanto, procure no salir de su casa.", type: 'choice', correct: 'genero', feedback: "¡ERROR CRÍTICO!<br><br>Una medida tardía (3 meses) ante amenaza de muerte es una <strong>Medida Insuficiente</strong>. Falta enfoque preventivo." },
+        { role: 'official', name: 'FUNCIONARIO UNP', text: "Bueno, llene este formulario. El estudio de riesgo demora 3 meses. Mientras tanto, procure no salir de su casa.", type: 'choice', correct: 'genero', feedback: "<strong style='color:var(--tf-orange)'>¡ERROR CRÍTICO!</strong><br><br>Una medida tardía (3 meses) ante amenaza de muerte es una <strong>Medida Insuficiente</strong>. Se requiere activación de ruta de emergencia." },
         { role: 'system', name: 'SISTEMA', text: "FIN DE LA INTERACCIÓN. GENERANDO REPORTE DE ANÁLISIS...", type: 'end' }
     ];
 
@@ -349,12 +411,11 @@
         else document.getElementById('box-official').classList.add('speaking');
 
         if (step.type === 'info') {
-            instruction.innerText = "LEA Y CONTINÚE...";
+            instruction.innerText = "LEA ATENTAMENTE Y CONTINÚE...";
             btnNext.style.display = 'block';
         } else if (step.type === 'choice') {
-            instruction.innerText = "⚠️ INTERVENCIÓN: CLASIFIQUE LA CONDUCTA";
-            instruction.style.color = "var(--noir-accent)";
-            instruction.style.fontWeight = "bold";
+            instruction.innerText = "⚠️ INTERVENCIÓN REQUERIDA: CLASIFIQUE LA CONDUCTA";
+            instruction.style.color = "var(--tf-orange)";
             decisionBox.style.display = 'flex';
         }
     }
@@ -369,10 +430,6 @@
         const step = script[currentIndex];
         const modal = document.getElementById('custom-feedback');
         const text = document.getElementById('feedback-text');
-        
-        // Lógica simple para este demo: asumimos que el usuario acierta o aprende del error.
-        // En un juego complejo, validaríamos (if choice === step.correct).
-        // Aquí mostramos el feedback educativo directamente.
         
         text.innerHTML = step.feedback;
         modal.style.display = "flex";

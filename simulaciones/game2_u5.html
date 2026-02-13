@@ -3,21 +3,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
-/* --- ESTILO NEUMORFISMO (LIMPIO Y CLARO) --- */
+/* --- ESTILO LIGHT / COLOMBIA SIN MACHISMO --- */
 :root {
-    --neu-bg: #FEC82F;              /* Fondo claro cálido */
-    --neu-shadow-light: #ffffff;    /* Luz */
-    --neu-shadow-dark: #EE7D4F;     /* Sombra suave derivada */
+    /* Paleta Institucional */
+    --brand-purple: #582C83;    /* Morado */
+    --brand-magenta: #D23B78;   /* Magenta */
+    --brand-orange: #F47920;    /* Naranja */
+    --brand-yellow: #FFC82F;    /* Amarillo */
+    --brand-bg: #ffffff;        /* Fondo Blanco Puro */
+    
+    /* Variables Lógicas del Juego Mapeadas a la Marca */
+    --neu-bg: var(--brand-bg);
+    --neu-shadow-light: #ffffff;
+    --neu-shadow-dark: #E2E8F0; /* Sombra gris muy suave */
 
-    /* Colores Sólidos para el Gráfico */
-    --c-work: #170047;              /* Trabajo (estructura, foco) */
-    --c-care: #E44700;              /* Cuidado / alerta / carga emocional */
-    --c-rest: #480241;              /* Descanso (profundo, estable) */
+    --c-work: var(--brand-purple);  /* Trabajo = Morado */
+    --c-care: var(--brand-magenta); /* Cuidado = Magenta */
+    --c-rest: var(--brand-yellow);  /* Descanso = Amarillo */
 
-    --text-main: #170047;            /* Texto principal */
-    --text-muted: #D23B78;           /* Texto secundario */
+    --text-main: #333333;           /* Gris oscuro */
+    --text-muted: #64748B;          /* Gris medio */
 }
-
 
 #clock-game-v2 {
     width: 100%;
@@ -33,18 +39,48 @@
     flex-direction: column;
     position: relative;
     overflow: hidden;
-    box-shadow: 10px 10px 30px rgba(0,0,0,0.1);
+    /* Borde sutil y sombra elegante */
+    border: 1px solid #F1F5F9;
+    box-shadow: 0 10px 40px rgba(88, 44, 131, 0.08); 
 }
 
-/* --- HEADER --- */
-.game-header { text-align: center; margin-bottom: 40px; z-index: 10; }
+/* --- HEADER CON LOGOS --- */
+.game-header { 
+    margin-bottom: 40px; 
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--brand-yellow);
+    padding-bottom: 20px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.client-logo {
+    height: 60px; /* Tamaño prominente */
+    width: auto;
+    object-fit: contain;
+}
+
+.gh-text-area {
+    text-align: center;
+    flex: 1;
+    min-width: 250px;
+}
+
 .gh-title { 
     font-family: 'Nunito', sans-serif; font-weight: 900; 
-    font-size: clamp(2rem, 5vw, 3rem); margin: 0; color: var(--text-main); 
+    font-size: clamp(1.8rem, 4vw, 2.5rem); margin: 0; 
+    color: var(--brand-purple); /* Título Morado */
+    text-transform: uppercase;
 }
-.gh-subtitle { font-size: 1.1rem; color: var(--text-muted); margin-top: 5px; }
+.gh-subtitle { 
+    font-size: 1rem; color: var(--brand-orange); /* Subtítulo Naranja */
+    margin-top: 5px; font-weight: 700;
+}
 
-/* --- CONTENEDOR FLEXIBLE (Reloj Izq - Controles Der) --- */
+/* --- CONTENEDOR FLEXIBLE --- */
 .game-flex {
     display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start;
     gap: 50px; z-index: 5;
@@ -55,96 +91,109 @@
     width: 320px; height: 320px;
     border-radius: 50%;
     background: var(--neu-bg);
-    box-shadow: 20px 20px 60px var(--neu-shadow-dark), -20px -20px 60px var(--neu-shadow-light);
+    /* Sombras suaves "Soft UI" */
+    box-shadow: 15px 15px 30px var(--neu-shadow-dark), -15px -15px 30px var(--neu-shadow-light);
     display: flex; justify-content: center; align-items: center;
     position: relative;
-    flex-shrink: 0; /* No encoger */
+    flex-shrink: 0;
+    border: 5px solid #fff;
 }
 
-/* El Pastel (Conic Gradient) */
+/* El Pastel */
 .pie-chart {
     width: 280px; height: 280px; border-radius: 50%;
-    /* Inicialmente todo Verde (Descanso) */
     background: conic-gradient(
         var(--c-work) 0deg 0deg, 
         var(--c-care) 0deg 0deg, 
         var(--c-rest) 0deg 360deg
     );
-    transition: background 0.8s ease-in-out; /* Animación suave del cambio */
-    box-shadow: inset 5px 5px 10px rgba(0,0,0,0.1);
+    transition: background 0.8s ease-in-out;
 }
 
 /* Centro con Datos */
 .clock-center {
     position: absolute; width: 160px; height: 160px; border-radius: 50%;
     background: var(--neu-bg);
-    box-shadow: 5px 5px 10px var(--neu-shadow-dark), -5px -5px 10px var(--neu-shadow-light);
     display: flex; flex-direction: column; justify-content: center; align-items: center;
     z-index: 10;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
 }
-.hours-big { font-size: 3.5rem; font-weight: 900; line-height: 1; color: var(--text-main); }
+.hours-big { font-size: 3.5rem; font-weight: 900; line-height: 1; color: var(--brand-purple); }
 .label-small { font-size: 0.8rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase; }
 
-/* Leyenda del Reloj */
+/* Leyenda */
 .chart-legend {
-    margin-top: 20px; display: flex; gap: 15px; justify-content: center; font-size: 0.8rem; font-weight: bold;
+    margin-top: 20px; display: flex; gap: 15px; justify-content: center; font-size: 0.85rem; font-weight: bold; color: #555;
 }
-.legend-item { display: flex; align-items: center; gap: 5px; }
-.dot { width: 12px; height: 12px; border-radius: 50%; }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
-/* 2. CONTROLES (BOTONES) */
+/* 2. CONTROLES */
 .controls-panel {
     flex: 1; min-width: 300px; max-width: 500px;
     display: flex; flex-direction: column; gap: 20px;
 }
 
-/* Tarjeta de Resumen Numérico */
+/* Tarjeta de Resumen */
 .stats-summary {
-    background: var(--neu-bg); padding: 20px; border-radius: 15px;
-    box-shadow: inset 5px 5px 10px var(--neu-shadow-dark), inset -5px -5px 10px var(--neu-shadow-light);
+    background: #F8FAFC; /* Gris muy claro */
+    padding: 20px; border-radius: 15px;
+    border: 1px solid #E2E8F0;
     display: flex; justify-content: space-between;
 }
 .stat-item { text-align: center; }
 .stat-num { font-size: 1.5rem; font-weight: bold; display: block; }
-.stat-lbl { font-size: 0.8rem; color: var(--text-muted); }
+.stat-lbl { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
 
 /* Botones */
-.btn-group { display: flex; flex-direction: column; gap: 15px; }
+.btn-group { display: flex; flex-direction: column; gap: 12px; }
 
 .game-btn {
-    border: none; padding: 15px 20px; border-radius: 12px;
-    background: var(--neu-bg); color: var(--text-main);
-    box-shadow: 6px 6px 12px var(--neu-shadow-dark), -6px -6px 12px var(--neu-shadow-light);
-    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1rem;
-    cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;
+    border: 1px solid #E2E8F0; padding: 15px 20px; border-radius: 12px;
+    background: #ffffff; color: var(--text-main);
+    /* Sombra ligera para botón */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+    font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 1rem;
+    cursor: pointer; transition: all 0.2s;
     display: flex; justify-content: space-between; align-items: center;
 }
-.game-btn:active {
-    box-shadow: inset 4px 4px 8px var(--neu-shadow-dark), inset -4px -4px 8px var(--neu-shadow-light);
-    transform: scale(0.98);
+.game-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--brand-orange);
+    box-shadow: 0 6px 12px rgba(244, 121, 32, 0.15);
 }
+.game-btn:active { transform: scale(0.98); }
+
 .btn-badge {
-    background: #333; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;
+    color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 800;
 }
 
-/* Botón UNP (Especial) */
+/* Botón UNP */
 .btn-unp {
-    margin-top: 20px; background: #e3f2fd; color: #0277bd; border: 1px solid #0277bd;
+    margin-top: 20px; 
+    background: var(--brand-purple) !important; 
+    color: #ffffff !important; 
+    border: none !important;
     display: none; justify-content: center;
+    box-shadow: 0 10px 20px rgba(88, 44, 131, 0.3);
 }
+.btn-unp:hover { background: #451d6b !important; }
 
 /* ALERTAS */
 .alert-box {
     margin-top: 20px; padding: 15px; border-radius: 10px; text-align: center;
     font-weight: bold; display: none; animation: popIn 0.3s;
+    font-size: 0.95rem;
 }
-.alert-crisis { background: #ffcccc; color: #c0392b; border: 2px solid #c0392b; }
-.alert-success { background: #d4edda; color: #155724; border: 2px solid #155724; }
+.alert-crisis { background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; }
+.alert-success { background: #F0FDF4; color: #16A34A; border: 1px solid #BBF7D0; }
 
 @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
 /* RESPONSIVE */
-@media (max-width: 1200px) {
+@media (max-width: 768px) {
+    .game-header { justify-content: center; flex-direction: column; text-align: center; }
+    .client-logo { height: 50px; margin-bottom: 10px; }
     .game-flex { flex-direction: column; align-items: center; gap: 30px; }
     .controls-panel { width: 100%; }
 }
@@ -152,9 +201,18 @@
 
 <div id="clock-game-v2">
     
+    <!-- HEADER CON LOGOS INTEGRADOS -->
     <div class="game-header">
-        <h1 class="gh-title">El Reloj del Cuidado</h1>
-        <p class="gh-subtitle">Administra 24 horas. Evita la "Pobreza de Tiempo".</p>
+        <!-- Logo Izquierdo: UNP -->
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+        
+        <div class="gh-text-area">
+            <h1 class="gh-title">El Reloj del Cuidado</h1>
+            <p class="gh-subtitle">Administra 24 horas. Evita la "Pobreza de Tiempo".</p>
+        </div>
+
+        <!-- Logo Derecho: Comisión -->
+        <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo">
     </div>
 
     <div class="game-flex">
@@ -190,7 +248,7 @@
                     <span class="stat-lbl">Cuidado</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-num" id="stat-rest" style="color:var(--c-rest)">24h</span>
+                    <span class="stat-num" id="stat-rest" style="color:var(--brand-orange)">24h</span> <!-- Naranja para resaltar -->
                     <span class="stat-lbl">Salud/Sueño</span>
                 </div>
             </div>
@@ -240,7 +298,7 @@ let isCrisis = false;
 function updateChart() {
     const total = 24;
     
-    // Convertir horas a grados (360 grados / 24 horas = 15 grados por hora)
+    // Convertir horas a grados
     const degWork = (timeData.work / total) * 360;
     const degCare = (timeData.care / total) * 360;
     
@@ -248,7 +306,7 @@ function updateChart() {
     const endWork = degWork;
     const endCare = degWork + degCare;
     
-    // CSS Conic Gradient
+    // CSS Conic Gradient usando las nuevas variables de color
     const gradient = `conic-gradient(
         var(--c-work) 0deg ${endWork}deg,
         var(--c-care) ${endWork}deg ${endCare}deg,
@@ -267,9 +325,9 @@ function updateChart() {
     
     // Color de Alerta en el reloj si queda poco tiempo
     if(timeData.rest < 6) {
-        document.getElementById('disp-rest').style.color = "#c0392b";
+        document.getElementById('disp-rest').style.color = "#DC2626"; // Rojo alerta
     } else {
-        document.getElementById('disp-rest').style.color = "#2c3e50";
+        document.getElementById('disp-rest').style.color = "var(--brand-purple)"; // Morado normal
     }
 }
 
@@ -350,5 +408,4 @@ function showMessage(text, type) {
 
 // Iniciar gráfico
 updateChart();
-
 </script>

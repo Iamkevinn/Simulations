@@ -402,6 +402,65 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        /* =========================================
+   BARRA DE LOGOS
+   ========================================= */
+.logos-header-bar {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: var(--shadow-soft);
+}
+
+.logos-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+.logos-container img {
+    height: 60px; /* Más grandes para ser predominantes */
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    filter: drop-shadow(0 2px 8px rgba(23, 0, 71, 0.1));
+}
+
+.logos-container img:hover {
+    transform: scale(1.08);
+    filter: drop-shadow(0 4px 12px rgba(23, 0, 71, 0.2));
+}
+
+/* Responsive para logos */
+@media (max-width: 992px) {
+    .logos-container img {
+        height: 50px;
+    }
+    
+    .logos-container {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .logos-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .logos-container img {
+        height: 45px;
+    }
+    
+    .logos-header-bar {
+        padding: 15px;
+    }
+}
     </style>
 </head>
 <body>
@@ -414,6 +473,14 @@
 
     <div class="desk-container">
         
+            <!-- BARRA DE LOGOS -->
+    <div class="logos-header-bar">
+        <div class="logos-container">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP">
+            <img src="../Styles/logo.png" alt="Logo Comisión">
+        </div>
+    </div>
+
         <!-- HEADER -->
         <header class="legal-header">
             <div class="badge-law">NORMATIVA VIGENTE</div>

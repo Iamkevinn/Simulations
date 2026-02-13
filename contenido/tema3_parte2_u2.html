@@ -5,13 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
     :root {
-    --bg-main: #170047;          /* Fondo principal */
-    --card-bg: #480241;          /* Tarjetas */
-    --accent-alert: #E44700;     /* Violencia / alerta crítica */
-    --accent-success: #FEC82F;   /* Éxito / logro institucional */
-    --accent-light: #D23B78;     /* Transformación */
-    --text-color: #FEC82F;       /* Texto principal */
-    --neon-blue: #EE7D4F;        /* Acento neón */
+    --bg-main: #F5F5F5;          /* Fondo principal claro */
+    --card-bg: #FFFFFF;          /* Tarjetas blancas */
+    --accent-alert: #E85D9A;     /* Rosa vibrante */
+    --accent-success: #FFB84D;   /* Naranja cálido */
+    --accent-light: #9B59B6;     /* Morado */
+    --text-color: #2C2C2C;       /* Texto oscuro */
+    --neon-blue: #FF6B35;        /* Naranja intenso */
+    --border-color: #E85D9A;     /* Borde rosa */
 }
 
 
@@ -32,8 +33,8 @@
     /* --- FONDO AMBIENTAL --- */
     .ambient-grid {
         position: absolute; width: 200%; height: 200%;
-        background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-image: linear-gradient(rgba(232, 93, 154, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232, 93, 154, 0.08) 1px, transparent 1px);
         background-size: 60px 60px;
         transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
         animation: gridFlow 40s linear infinite;
@@ -43,15 +44,58 @@
 
     /* --- HUD SUPERIOR --- */
     .hud-header {
-        height: 70px; background: rgba(22, 33, 62, 0.95);
-        border-bottom: 2px solid var(--accent-light);
+        height: 70px; background: rgba(255, 255, 255, 0.98);
+        border-bottom: 3px solid var(--border-color);
         display: flex; justify-content: space-between; align-items: center;
-        padding: 0 20px; z-index: 50; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        padding: 0 20px; z-index: 50; box-shadow: 0 3px 15px rgba(0,0,0,0.1);
     }
-    .hud-title { font-weight: bold; text-transform: uppercase; letter-spacing: 1px; color: var(--neon-blue); }
     
-    .progress-track { width: 150px; height: 10px; background: #0f3460; border-radius: 5px; overflow: hidden; }
-    .progress-fill { height: 100%; width: 0%; background: var(--accent-alert); transition: width 0.5s; }
+    /* Logos Container */
+    .logos-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-shrink: 0;
+    }
+    
+    .logos-container img {
+        height: 45px;
+        width: auto;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+    
+    .logos-container img:hover {
+        transform: scale(1.05);
+    }
+    
+    .hud-title { 
+        font-weight: bold; 
+        text-transform: uppercase; 
+        letter-spacing: 1px; 
+        color: var(--accent-alert);
+        flex-grow: 1;
+        text-align: center;
+    }
+    
+    .progress-section {
+        flex-shrink: 0;
+    }
+    
+    .progress-track { 
+        width: 150px; 
+        height: 10px; 
+        background: #E0E0E0; 
+        border-radius: 5px; 
+        overflow: hidden; 
+        border: 1px solid var(--border-color);
+    }
+    .progress-fill { 
+        height: 100%; 
+        width: 0%; 
+        background: linear-gradient(90deg, var(--accent-alert), var(--accent-success)); 
+        transition: width 0.5s; 
+    }
 
     /* --- CONTENEDOR PRINCIPAL --- */
     .game-stage {
@@ -73,7 +117,7 @@
         position: relative; width: 100%; height: 100%;
         text-align: center; transition: transform 0.8s;
         transform-style: preserve-3d;
-        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
     }
     
     .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
@@ -83,55 +127,102 @@
         -webkit-backface-visibility: hidden; backface-visibility: hidden;
         border-radius: 15px; padding: 20px;
         display: flex; flex-direction: column; justify-content: center; align-items: center;
-        border: 2px solid var(--accent-light);
+        border: 3px solid var(--border-color);
     }
     
     .flip-front {
-        background: linear-gradient(135deg, var(--card-bg), #1a1a2e);
+        background: linear-gradient(135deg, #FFFFFF, #F8F8F8);
     }
-    .flip-icon { font-size: 4rem; margin-bottom: 20px; animation: floatIcon 3s infinite ease-in-out; }
+    .flip-icon { 
+        font-size: 4rem; 
+        margin-bottom: 20px; 
+        animation: floatIcon 3s infinite ease-in-out; 
+    }
     @keyframes floatIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
     .flip-back {
-        background: var(--accent-light); color: white;
-        transform: rotateY(180deg); text-align: left;
-        font-size: 0.9rem; line-height: 1.5; overflow-y: auto;
+        background: var(--accent-light); 
+        color: white;
+        transform: rotateY(180deg); 
+        text-align: left;
+        font-size: 0.9rem; 
+        line-height: 1.5; 
+        overflow-y: auto;
     }
-    .flip-back h3 { border-bottom: 1px solid white; padding-bottom: 10px; width: 100%; text-align: center; }
+    .flip-back h3 { 
+        border-bottom: 2px solid white; 
+        padding-bottom: 10px; 
+        width: 100%; 
+        text-align: center; 
+        margin-bottom: 15px;
+    }
 
     /* --- FASE 2: AUDITORÍA DE EXPEDIENTE (CASO SIMULADO) --- */
     #phase2 { display: none; width: 100%; max-width: 800px; flex-direction: column; align-items: center; }
     
     .case-folder {
-        background: #f4f4f4; color: #333;
-        width: 100%; padding: 30px; border-radius: 5px;
-        transform: rotate(-1deg); position: relative;
-        box-shadow: 10px 10px 40px rgba(0,0,0,0.5);
+        background: #FFFFFF; 
+        color: #333;
+        width: 100%; 
+        padding: 30px; 
+        border-radius: 5px;
+        transform: rotate(-1deg); 
+        position: relative;
+        box-shadow: 8px 8px 30px rgba(0,0,0,0.15);
+        border: 2px solid var(--accent-alert);
         min-height: 400px;
     }
     .folder-label {
-        position: absolute; top: -15px; left: 0; background: #e0e0e0;
-        padding: 5px 20px; font-weight: bold; border-radius: 5px 5px 0 0;
+        position: absolute; 
+        top: -15px; 
+        left: 0; 
+        background: var(--accent-success);
+        padding: 5px 20px; 
+        font-weight: bold; 
+        border-radius: 5px 5px 0 0;
+        color: white;
     }
     
     .evidence-grid {
-        display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;
+        display: grid; 
+        grid-template-columns: 1fr 1fr; 
+        gap: 15px; 
+        margin-top: 20px;
     }
     
     .evidence-item {
-        background: #fff; border: 2px dashed #999; padding: 15px;
-        cursor: pointer; transition: 0.3s; position: relative;
+        background: #FAFAFA; 
+        border: 2px dashed #CCC; 
+        padding: 15px;
+        cursor: pointer; 
+        transition: 0.3s; 
+        position: relative;
+        border-radius: 5px;
     }
-    .evidence-item:hover { background: #ffeaea; border-color: var(--accent-alert); }
+    .evidence-item:hover { 
+        background: #FFF0F5; 
+        border-color: var(--accent-alert); 
+        transform: translateY(-2px);
+    }
     
     .evidence-item.detected {
-        background: #ffe6e6; border: 2px solid var(--accent-alert);
-        color: var(--accent-alert); font-weight: bold;
+        background: #FFE6F0; 
+        border: 2px solid var(--accent-alert);
+        color: var(--accent-alert); 
+        font-weight: bold;
         animation: shake 0.5s;
     }
     .evidence-item.detected::after {
-        content: 'DETECTADO'; position: absolute; top: -10px; right: -10px;
-        background: var(--accent-alert); color: white; font-size: 0.7rem; padding: 2px 5px; transform: rotate(10deg);
+        content: 'DETECTADO'; 
+        position: absolute; 
+        top: -10px; 
+        right: -10px;
+        background: var(--accent-alert); 
+        color: white; 
+        font-size: 0.7rem; 
+        padding: 2px 8px; 
+        transform: rotate(10deg);
+        border-radius: 3px;
     }
 
     @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
@@ -140,48 +231,115 @@
     #phase3 { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 900px; }
     
     .strategy-board {
-        display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 100%;
+        display: grid; 
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 20px; 
+        width: 100%;
     }
     
     .strategy-module {
-        background: rgba(255,255,255,0.05); border: 1px solid var(--neon-blue);
-        padding: 20px; border-radius: 10px; cursor: pointer;
-        display: flex; align-items: center; gap: 15px;
-        transition: 0.3s; opacity: 0.7;
+        background: #FFFFFF; 
+        border: 2px solid var(--accent-light);
+        padding: 20px; 
+        border-radius: 10px; 
+        cursor: pointer;
+        display: flex; 
+        align-items: center; 
+        gap: 15px;
+        transition: 0.3s; 
+        opacity: 0.8;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     }
-    .strategy-module:hover { opacity: 1; background: rgba(0, 255, 245, 0.1); }
+    .strategy-module:hover { 
+        opacity: 1; 
+        background: rgba(232, 93, 154, 0.05); 
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    }
     
     .strategy-module.active {
-        background: linear-gradient(90deg, var(--accent-success), var(--accent-light));
-        border-color: white; opacity: 1; transform: scale(1.02);
-        box-shadow: 0 0 20px var(--accent-light);
+        background: linear-gradient(135deg, var(--accent-success), var(--accent-alert));
+        border-color: var(--accent-success); 
+        opacity: 1; 
+        transform: scale(1.02);
+        box-shadow: 0 0 25px rgba(232, 93, 154, 0.4);
+        color: white;
     }
     
-    .module-icon { font-size: 1.5rem; background: rgba(0,0,0,0.3); width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; border-radius: 50%; }
+    .strategy-module.active strong {
+        color: white;
+    }
+    
+    .module-icon { 
+        font-size: 1.5rem; 
+        background: rgba(232, 93, 154, 0.1); 
+        width: 50px; 
+        height: 50px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        border-radius: 50%;
+        border: 2px solid var(--accent-light);
+    }
+    
+    .strategy-module.active .module-icon {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: white;
+    }
 
     /* --- CONTROLES --- */
     .controls {
-        height: 80px; background: rgba(22, 33, 62, 0.95);
-        display: flex; justify-content: center; align-items: center;
-        gap: 20px; z-index: 50; border-top: 1px solid var(--accent-light);
+        height: 80px; 
+        background: rgba(255, 255, 255, 0.98);
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        gap: 20px; 
+        z-index: 50; 
+        border-top: 3px solid var(--border-color);
+        box-shadow: 0 -3px 15px rgba(0,0,0,0.1);
     }
     .nav-btn {
-        background: transparent; border: 1px solid var(--text-color); color: var(--text-color);
-        padding: 10px 20px; border-radius: 30px; cursor: pointer; transition: 0.3s;
+        background: transparent; 
+        border: 2px solid var(--accent-alert); 
+        color: var(--text-color);
+        padding: 10px 20px; 
+        border-radius: 30px; 
+        cursor: pointer; 
+        transition: 0.3s;
+        font-weight: 500;
     }
-    .nav-btn.active { background: var(--accent-alert); border-color: var(--accent-alert); font-weight: bold; }
+    .nav-btn.active { 
+        background: var(--accent-alert); 
+        border-color: var(--accent-alert); 
+        font-weight: bold;
+        color: white;
+    }
     .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
     /* MODAL */
     .modal-overlay {
-        position: fixed; top:0; left:0; width:100%; height:100%;
-        background: rgba(0,0,0,0.9); z-index: 100;
-        display: none; justify-content: center; align-items: center; padding: 20px;
+        position: fixed; 
+        top:0; 
+        left:0; 
+        width:100%; 
+        height:100%;
+        background: rgba(0,0,0,0.85); 
+        z-index: 100;
+        display: none; 
+        justify-content: center; 
+        align-items: center; 
+        padding: 20px;
     }
     .modal-box {
-        background: var(--card-bg); border: 2px solid var(--neon-blue);
-        padding: 30px; max-width: 600px; text-align: center; border-radius: 10px;
-        box-shadow: 0 0 50px rgba(0, 255, 245, 0.2); animation: popUp 0.4s;
+        background: white; 
+        border: 3px solid var(--accent-success);
+        padding: 30px; 
+        max-width: 600px; 
+        text-align: center; 
+        border-radius: 15px;
+        box-shadow: 0 0 50px rgba(232, 93, 154, 0.3); 
+        animation: popUp 0.4s;
     }
     @keyframes popUp { from{transform:scale(0.8); opacity:0;} to{transform:scale(1); opacity:1;} }
 
@@ -189,6 +347,41 @@
     @media (max-width: 768px) {
         .evidence-grid, .strategy-board { grid-template-columns: 1fr; }
         .flip-card { width: 100%; height: 350px; }
+        
+        .logos-container img {
+            height: 35px;
+        }
+        
+        .hud-header {
+            padding: 0 10px;
+        }
+        
+        .logos-container {
+            gap: 8px;
+        }
+        
+        .hud-title {
+            font-size: 0.85rem;
+        }
+        
+        .progress-track {
+            width: 120px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .logos-container img {
+            height: 30px;
+        }
+        
+        .hud-title {
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .progress-track {
+            width: 100px;
+        }
     }
 
 </style>
@@ -199,9 +392,13 @@
 
 <!-- HUD -->
 <div class="hud-header">
+    <div class="logos-container">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP">
+        <img src="../Styles/logo.png" alt="Logo Comisión">
+    </div>
     <div class="hud-title" id="phase-title">FASE 1: CATEGORIZACIÓN</div>
-    <div>
-        <div style="font-size:0.7rem; text-align:right; margin-bottom:5px;">SINCRONIZACIÓN</div>
+    <div class="progress-section">
+        <div style="font-size:0.7rem; text-align:right; margin-bottom:5px; color: var(--text-color);">SINCRONIZACIÓN</div>
         <div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div>
     </div>
 </div>
@@ -216,7 +413,7 @@
             <div class="flip-card-inner">
                 <div class="flip-front">
                     <div class="flip-icon">⚖️</div>
-                    <h3>3.1 ENFOQUE JURÍDICO</h3>
+                    <h3 style="color: var(--accent-alert);">3.1 ENFOQUE JURÍDICO</h3>
                     <p style="opacity:0.7; font-size:0.8rem;">(Clic para analizar)</p>
                 </div>
                 <div class="flip-back">
@@ -236,7 +433,7 @@
             <div class="flip-card-inner">
                 <div class="flip-front">
                     <div class="flip-icon">🏛️</div>
-                    <h3>3.2 ENFOQUE POLÍTICO</h3>
+                    <h3 style="color: var(--accent-alert);">3.2 ENFOQUE POLÍTICO</h3>
                     <p style="opacity:0.7; font-size:0.8rem;">(Clic para analizar)</p>
                 </div>
                 <div class="flip-back">
@@ -255,7 +452,7 @@
     <div id="phase2">
         <div class="case-folder">
             <div class="folder-label">EXPEDIENTE D-2025</div>
-            <h2 style="color:#d32f2f; border-bottom:2px solid #999; padding-bottom:10px;">ANÁLISIS DE CASO DISCIPLINARIO SIMULADO</h2>
+            <h2 style="color:var(--accent-alert); border-bottom:2px solid var(--border-color); padding-bottom:10px;">ANÁLISIS DE CASO DISCIPLINARIO SIMULADO</h2>
             <p style="font-size:0.9rem;"><strong>Instrucción:</strong> Identifique y marque las fallas en el proceso disciplinario y el trato institucional.</p>
             
             <div class="evidence-grid">
@@ -271,7 +468,7 @@
 
     <!-- FASE 3: ESTRATEGIAS (RECONFIGURACIÓN) -->
     <div id="phase3">
-        <h2 style="color:var(--neon-blue); text-align:center; margin-bottom:20px;">6. ESTRATEGIAS PARA DESMONTAR PRÁCTICAS</h2>
+        <h2 style="color:var(--accent-alert); text-align:center; margin-bottom:20px;">6. ESTRATEGIAS PARA DESMONTAR PRÁCTICAS</h2>
         <p style="text-align:center; margin-bottom:20px;">Active los módulos necesarios para transformar la UNP.</p>
         
         <div class="strategy-board">
@@ -306,11 +503,11 @@
 <!-- MODAL FINAL -->
 <div class="modal-overlay" id="modal">
     <div class="modal-box">
-        <h2 style="color:var(--neon-blue)">TRANSFORMACIÓN COMPLETADA</h2>
-        <p style="margin:20px 0; line-height:1.6;">
+        <h2 style="color:var(--accent-success)">TRANSFORMACIÓN COMPLETADA</h2>
+        <p style="margin:20px 0; line-height:1.6; color: var(--text-color);">
             La incorporación de los feminismos comunitarios y decoloniales, junto con el desmontaje de las discriminaciones estructurales, fortalece una UNP más preventiva, legítima y comprometida con la protección integral desde los derechos humanos.
         </p>
-        <button onclick="document.getElementById('modal').style.display='none'" style="background:var(--accent-light); color:white; border:none; padding:10px 20px; font-weight:bold; cursor:pointer;">FINALIZAR MÓDULO</button>
+        <button onclick="document.getElementById('modal').style.display='none'" style="background:var(--accent-alert); color:white; border:none; padding:10px 20px; font-weight:bold; cursor:pointer; border-radius:5px;">FINALIZAR MÓDULO</button>
     </div>
 </div>
 
@@ -351,7 +548,7 @@
         if(modulesActive === 4) {
             setTimeout(() => {
                 document.getElementById('modal').style.display = 'flex';
-                document.getElementById('progress-bar').style.background = "var(--neon-blue)";
+                document.getElementById('progress-bar').style.background = "var(--accent-success)";
             }, 1000);
         }
     }

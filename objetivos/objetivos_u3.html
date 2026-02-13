@@ -3,57 +3,65 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-/* --- 1. ESTÉTICA "AURORA FLUIDA" --- */
+/* --- 1. ESTÉTICA "AURORA FLUIDA" (CLARA - 25N) --- */
 :root {
-    --fluid-bg: #170047;                 /* Fondo fluido principal */
+    /* Fondos */
+    --fluid-bg: #F4F6F9;                 /* Fondo fluido claro */
+    --card-bg: #FFFFFF;                  /* Fondo de tarjetas */
 
-    --glass: rgba(23, 0, 71, 0.6);        /* Glass integrado al fondo */
-    --border: rgba(254, 200, 47, 0.25);   /* Borde con acento cálido */
+    /* Glass y Bordes */
+    --glass: rgba(255, 255, 255, 0.8);    /* Glass blanco */
+    --border: rgba(254, 200, 47, 0.5);    /* Borde amarillo suave */
 
-    --accent-pink: #D23B78;              /* Emoción / tensión / narrativa */
-    --accent-cyan: #FEC82F;              /* CTA / progreso / recompensas */
-    --accent-purple: #480241;            /* Profundidad / capas internas */
+    /* Acentos Institucionales */
+    --accent-pink: #D23B78;              /* Emoción / tensión */
+    --accent-cyan: #480241;              /* Morado UNP (Principal) */
+    --accent-purple: #FF9800;            /* Naranja (Secundario) */
+    --accent-yellow: #FEC82F;            /* Amarillo (Detalles) */
 
-    --text-white: #ffffff;               /* Máximo contraste */
+    /* Textos */
+    --text-main: #333333;                /* Texto oscuro */
+    --text-muted: #555555;               /* Texto secundario */
 }
 
 #prism-container {
     width: 100%;
-    min-height: 750px; /* Altura adaptable */
+    min-height: 750px;
     height: auto;
     background-color: var(--fluid-bg);
     position: relative;
     overflow: hidden;
     font-family: 'Outfit', sans-serif;
-    color: var(--text-white);
+    color: var(--text-main);
     border-radius: 20px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+    border: 1px solid #e0e0e0;
 }
 
-/* Fondo Aurora Animado */
+/* Fondo Aurora Animado (Suavizado para fondo claro) */
 .aurora-blob {
     position: absolute;
     filter: blur(80px);
-    opacity: 0.6;
+    opacity: 0.25; /* Menos opacidad para no saturar */
     border-radius: 50%;
-    animation: floatAurora 10s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+    animation: floatAurora 12s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 0;
 }
-.blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--accent-purple); }
-.blob-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: var(--accent-cyan); animation-delay: -5s; }
-.blob-3 { top: 40%; left: 40%; width: 30vw; height: 30vw; background: var(--accent-pink); animation-duration: 15s; }
+.blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--accent-cyan); } /* Morado */
+.blob-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: var(--accent-purple); animation-delay: -5s; } /* Naranja */
+.blob-3 { top: 40%; left: 40%; width: 30vw; height: 30vw; background: var(--accent-pink); animation-duration: 15s; } /* Rosa */
 
 @keyframes floatAurora {
     0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(30px, -30px) scale(1.1); }
+    100% { transform: translate(40px, -40px) scale(1.1); }
 }
 
-/* Grid de Ruido (Textura) */
+/* Grid de Ruido (Sutil) */
 .noise-overlay {
     position: absolute; top:0; left:0; width:100%; height:100%;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
     z-index: 1; pointer-events: none;
 }
 
@@ -61,122 +69,167 @@
 .prism-header {
     position: relative; z-index: 10;
     padding: 20px 30px;
-    background: rgba(15, 23, 42, 0.6);
+    background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border);
-    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    border-bottom: 1px solid #eee;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+}
+
+/* Logos Container */
+.logos-container {
+    display: flex; align-items: center; gap: 15px; margin-right: auto;
+}
+.client-logo {
+    height: 45px; width: auto; object-fit: contain;
+}
+
+.title-group {
+    display: flex; flex-direction: column;
 }
 
 .prism-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: clamp(1.2rem, 3vw, 1.5rem);
-    background: linear-gradient(to right, #fff, #cbd5e1);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    color: var(--accent-cyan); /* Morado */
+    font-weight: 700;
     margin: 0;
 }
 
-.prism-nav { display: flex; gap: 10px; }
+.prism-nav { display: flex; gap: 10px; margin-left: auto; }
 .nav-pill {
-    padding: 8px 16px; border-radius: 20px;
-    background: var(--glass); border: 1px solid var(--border);
-    font-size: 0.8rem; cursor: pointer; transition: 0.3s;
+    padding: 8px 18px; border-radius: 20px;
+    background: #fff; border: 1px solid #ddd;
+    font-size: 0.9rem; cursor: pointer; transition: 0.3s;
+    color: var(--text-muted); font-weight: 500;
 }
-.nav-pill:hover, .nav-pill.active { background: white; color: black; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+.nav-pill:hover { background: #f9f9f9; transform: translateY(-2px); }
+.nav-pill.active { 
+    background: var(--accent-cyan); color: white; border-color: var(--accent-cyan); 
+    box-shadow: 0 4px 10px rgba(72, 2, 65, 0.2);
+}
 
 /* --- CONTENIDO --- */
 .prism-content {
     flex: 1; position: relative; z-index: 5;
-    padding: 30px; display: flex; flex-direction: column; align-items: center;
+    padding: 40px; display: flex; flex-direction: column; align-items: center;
     overflow-y: auto;
 }
 
-/* SECCIÓN 1: CONCEPTOS (Tarjetas Holográficas) */
+/* SECCIÓN 1: CONCEPTOS (Tarjetas) */
 .concept-grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px; width: 100%; max-width: 1000px;
-    display: none; /* Controlado por JS */
+    gap: 25px; width: 100%; max-width: 1100px;
+    display: none; 
 }
 .holo-card {
-    background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-    border-radius: 15px; padding: 25px;
-    backdrop-filter: blur(5px); transition: 0.3s;
-    position: relative; overflow: hidden;
+    background: #FFFFFF; border: 1px solid #eee;
+    border-left: 4px solid var(--accent-purple); /* Borde Naranja */
+    border-radius: 12px; padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    transition: 0.3s; position: relative; overflow: hidden;
 }
-.holo-card::before {
-    content:''; position: absolute; top:0; left:-100%; width:100%; height:100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: 0.5s;
+.holo-card:hover { 
+    transform: translateY(-5px); 
+    border-color: var(--accent-cyan); /* Cambia a Morado */
+    box-shadow: 0 10px 30px rgba(72, 2, 65, 0.1); 
 }
-.holo-card:hover::before { left: 100%; }
-.holo-card:hover { transform: translateY(-5px); border-color: var(--accent-cyan); box-shadow: 0 10px 30px rgba(6, 182, 212, 0.2); }
-.holo-card h3 { color: var(--accent-cyan); margin-top:0; font-family: 'Space Grotesk', sans-serif; }
+.holo-card h3 { 
+    color: var(--accent-cyan); margin-top:0; margin-bottom: 10px;
+    font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem;
+}
+.holo-card p {
+    font-size: 0.95rem; line-height: 1.6; color: var(--text-muted);
+}
 
 /* SECCIÓN 2: SIMULADOR (CHAT) */
 .sim-container {
-    width: 100%; max-width: 600px;
-    background: rgba(0,0,0,0.3); border: 1px solid var(--border);
-    border-radius: 20px; overflow: hidden;
+    width: 100%; max-width: 700px;
+    background: #FFFFFF; border: 1px solid #ddd;
+    border-radius: 16px; overflow: hidden;
     display: flex; flex-direction: column;
-    height: 500px; /* Altura fija para el chat */
-    display: none; /* Controlado por JS */
+    height: 550px; 
+    display: none; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
 .chat-window {
-    flex: 1; padding: 20px; overflow-y: auto;
-    display: flex; flex-direction: column; gap: 15px;
+    flex: 1; padding: 25px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 20px;
+    background: #F9FAFB;
 }
 .chat-bubble {
-    padding: 15px; border-radius: 15px; max-width: 80%;
-    font-size: 0.95rem; line-height: 1.5; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    padding: 15px 20px; border-radius: 12px; max-width: 85%;
+    font-size: 0.95rem; line-height: 1.5; 
+    animation: popIn 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 .bot {
-    background: rgba(255,255,255,0.1); border-top-left-radius: 2px; align-self: flex-start;
-    border-left: 3px solid var(--accent-pink);
+    background: #FFFFFF; border-top-left-radius: 2px; align-self: flex-start;
+    border-left: 4px solid var(--accent-cyan); color: var(--text-main);
 }
 .user-choice {
-    background: rgba(6, 182, 212, 0.2); border-bottom-right-radius: 2px; align-self: flex-end;
-    border-right: 3px solid var(--accent-cyan); text-align: right;
+    background: #FFF3E0; /* Naranja muy claro */
+    border-bottom-right-radius: 2px; align-self: flex-end;
+    border-right: 4px solid var(--accent-purple); text-align: right;
+    color: #444;
 }
 
 .controls-area {
-    padding: 20px; background: rgba(0,0,0,0.4);
-    border-top: 1px solid var(--border);
+    padding: 20px; background: #FFFFFF;
+    border-top: 1px solid #eee;
     display: flex; flex-direction: column; gap: 10px;
 }
 .option-btn {
-    padding: 12px; border-radius: 10px; border: 1px solid var(--border);
-    background: rgba(255,255,255,0.05); color: white; cursor: pointer;
-    transition: 0.2s; text-align: left; font-size: 0.9rem;
+    padding: 15px; border-radius: 8px; border: 1px solid #ddd;
+    background: #fff; color: var(--text-main); cursor: pointer;
+    transition: 0.2s; text-align: left; font-size: 0.95rem; font-weight: 500;
 }
-.option-btn:hover { background: rgba(255,255,255,0.15); border-color: var(--accent-purple); }
+.option-btn:hover { 
+    background: #F3E5F5; /* Morado claro */
+    border-color: var(--accent-cyan); color: var(--accent-cyan); 
+}
 
 /* SECCIÓN 3: OBJETIVOS (INFO) */
 .info-section {
     width: 100%; max-width: 800px; display: none;
-    background: rgba(0,0,0,0.4); padding: 30px; border-radius: 20px; border: 1px solid var(--border);
+    background: #FFFFFF; padding: 40px; border-radius: 16px; 
+    border: 1px solid #eee; border-top: 5px solid var(--accent-yellow);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
+.info-section h3 { margin-top: 0; font-family: 'Space Grotesk', sans-serif; }
+.info-section li { margin-bottom: 10px; color: var(--text-muted); }
 
 /* ANIMACIONES */
-@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
 /* RESPONSIVE */
-@media (max-width: 1200px) {
-    #prism-container { border-radius: 0; min-height: 100vh; }
+@media (max-width: 900px) {
     .prism-header { flex-direction: column; align-items: flex-start; }
-    .sim-container { height: 60vh; border: none; background: transparent; }
-    .chat-bubble { max-width: 90%; font-size: 0.9rem; }
+    .logos-container { width: 100%; justify-content: space-between; margin-bottom: 10px; }
+    .prism-nav { width: 100%; justify-content: center; margin-left: 0; }
+}
+@media (max-width: 600px) {
+    .client-logo { height: 35px; }
+    .prism-content { padding: 20px; }
 }
 
 </style>
 
 <div id="prism-container">
     <div class="noise-overlay"></div>
+    <!-- Blobs suaves -->
     <div class="aurora-blob blob-1"></div>
     <div class="aurora-blob blob-2"></div>
     <div class="aurora-blob blob-3"></div>
 
     <div class="prism-header">
-        <h2 class="prism-title">Unidad 3: Identidades Diversas</h2>
+        <div class="logos-container">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+            <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo">
+        </div>
+        <div class="title-group">
+            <h2 class="prism-title">Unidad 3: Identidades Diversas</h2>
+        </div>
         <div class="prism-nav">
             <div class="nav-pill" onclick="showSection('info', this)">🎯 Objetivos</div>
             <div class="nav-pill active" onclick="showSection('concepts', this)">🧠 Conceptos</div>
@@ -188,14 +241,14 @@
         
         <!-- SECCIÓN 1: OBJETIVOS & JUSTIFICACIÓN -->
         <div id="sec-info" class="info-section">
-            <h3 style="color:var(--accent-pink)">OBJETIVOS DE APRENDIZAJE</h3>
+            <h3 style="color:var(--accent-cyan)">OBJETIVOS DE APRENDIZAJE</h3>
             <ul style="line-height:1.6; padding-left:20px;">
                 <li>Analizar críticamente el sistema sexo-género y tensiones transfeministas.</li>
                 <li>Reconocer el marco jurídico para identidades no binarias y trans.</li>
                 <li>Identificar violencias específicas y proponer estrategias.</li>
                 <li>Aplicar enfoque diferencial y comunicación inclusiva.</li>
             </ul>
-            <div style="margin-top:20px; padding:15px; background:rgba(255,255,255,0.05); border-left:3px solid var(--accent-cyan);">
+            <div style="margin-top:25px; padding:20px; background:#FFF8E1; border-left:4px solid var(--accent-purple); border-radius: 0 8px 8px 0; color: #444;">
                 <strong>JUSTIFICACIÓN:</strong> Esta unidad es clave para comprender la diversidad y los retos institucionales, fortaleciendo la capacidad para garantizar la no discriminación.
             </div>
         </div>
@@ -258,18 +311,16 @@ function showSection(id, btn) {
 
     btn.classList.add('active');
     
-    gsap.fromTo(target, {opacity: 0, y: 10}, {opacity: 1, y: 0, duration: 0.4});
+    gsap.fromTo(target, {opacity: 0, y: 15}, {opacity: 1, y: 0, duration: 0.4});
 }
 
 // --- LÓGICA DEL SIMULADOR (JUEGO DE ROLES) ---
 let simStep = 0;
 
 const simData = [
+    { /* PASO 0 (INICIO) */ },
     {
-        // PASO 0 (INICIO - YA RENDERIZADO EN HTML)
-    },
-    {
-        // PASO 1: RESPUESTA AL NOMBRE
+        // PASO 1
         options: [
             {
                 text: "A. Usar el nombre del documento sin preguntar.",
@@ -286,7 +337,7 @@ const simData = [
         ]
     },
     {
-        // PASO 2: VIOLENCIA ESPECÍFICA
+        // PASO 2
         question: "La persona menciona que ha recibido amenazas por su identidad de género en su barrio. ¿Qué acción tomas?",
         options: [
             {
@@ -306,7 +357,7 @@ const simData = [
     {
         // PASO 3: FINAL
         question: "🎉 <strong>Simulación Finalizada.</strong><br>Has aplicado el reconocimiento institucional y el enfoque diferencial.",
-        options: [] // Fin del juego
+        options: [] 
     }
 ];
 
@@ -317,32 +368,35 @@ function playTurn(optionIndex) {
     // 1. Mostrar elección del usuario
     const userBubble = document.createElement('div');
     userBubble.className = 'chat-bubble user-choice';
-    // Obtener texto de la opción seleccionada (lógica simplificada para el ejemplo)
-    let selectedText = "";
-    if(simStep === 0) selectedText = optionIndex === 1 ? simData[1].options[0].text : simData[1].options[1].text;
-    else selectedText = optionIndex === 1 ? simData[simStep + 1].options[0].text : simData[simStep + 1].options[1].text;
+    
+    let currentStepData = simStep === 0 ? simData[1] : simData[simStep+1];
+    
+    // Safety check para evitar errores si el paso no existe
+    if (!currentStepData || !currentStepData.options) return;
+
+    let selectedText = optionIndex === 1 ? currentStepData.options[0].text : currentStepData.options[1].text;
     
     userBubble.innerHTML = "Tú: " + selectedText;
     chatFeed.appendChild(userBubble);
 
     // 2. Procesar lógica (Feedback)
-    let currentStepData = simStep === 0 ? simData[1] : simData[simStep+1];
     let choiceData = optionIndex === 1 ? currentStepData.options[0] : currentStepData.options[1];
     
     setTimeout(() => {
         const botBubble = document.createElement('div');
         botBubble.className = 'chat-bubble bot';
         botBubble.innerHTML = choiceData.feedback;
-        if(choiceData.correct) botBubble.style.borderLeftColor = 'var(--accent-cyan)';
-        else botBubble.style.borderLeftColor = '#ef4444'; // Rojo error
-        chatFeed.appendChild(botBubble);
         
-        // Scroll al fondo
+        // Estilos de borde según acierto/error
+        if(choiceData.correct) botBubble.style.borderLeftColor = 'var(--accent-cyan)'; // Morado
+        else botBubble.style.borderLeftColor = '#D32F2F'; // Rojo error
+        
+        chatFeed.appendChild(botBubble);
         chatFeed.scrollTop = chatFeed.scrollHeight;
 
-        // 3. Siguiente Pregunta (Si existe)
+        // 3. Siguiente Pregunta
         simStep++;
-        if(simStep < simData.length - 1 && simStep < 2) { // Limite de ejemplo
+        if(simStep < simData.length - 1 && simStep < 2) { 
              setTimeout(() => {
                  const nextQ = document.createElement('div');
                  nextQ.className = 'chat-bubble bot';
@@ -350,13 +404,12 @@ function playTurn(optionIndex) {
                  chatFeed.appendChild(nextQ);
                  chatFeed.scrollTop = chatFeed.scrollHeight;
                  
-                 // Actualizar botones
                  let nextOpts = simData[simStep+1].options;
                  controls.innerHTML = `
                     <button class="option-btn" onclick="playTurn(1)">${nextOpts[0].text}</button>
                     <button class="option-btn" onclick="playTurn(2)">${nextOpts[1].text}</button>
                  `;
-             }, 1500);
+             }, 1000);
         } else if (simStep >= 2) {
              // Fin
              setTimeout(() => {
@@ -365,11 +418,14 @@ function playTurn(optionIndex) {
                  endMsg.innerHTML = "Has completado la práctica de atención inclusiva.";
                  chatFeed.appendChild(endMsg);
                  chatFeed.scrollTop = chatFeed.scrollHeight;
-                 controls.innerHTML = `<button class="option-btn" onclick="location.reload()">Reiniciar Simulación</button>`;
-             }, 1500);
+                 controls.innerHTML = `<button class="option-btn" style="text-align:center;" onclick="location.reload()">Reiniciar Simulación</button>`;
+             }, 1000);
         }
 
-    }, 600);
+    }, 500);
 }
+
+// Iniciar con la sección por defecto (Conceptos)
+showSection('concepts', document.querySelectorAll('.nav-pill')[1]);
 
 </script>

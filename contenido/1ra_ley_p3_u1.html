@@ -356,6 +356,120 @@
             .stamp-circle span { font-size: 0.9rem; }
             .stamp-circle i { font-size: 2rem; }
         }
+        /* =========================================
+   BARRA DE LOGOS MEGA PROMINENTE
+   ========================================= */
+.mega-logos-showcase {
+    position: relative;
+    z-index: 10;
+    background: linear-gradient(135deg, var(--f-white) 0%, #fafbfc 100%);
+    padding: 50px 40px;
+    border-radius: 24px;
+    box-shadow: 0 15px 50px -10px rgba(23, 0, 71, 0.2);
+    margin-bottom: 60px;
+    border: 3px solid rgba(23, 0, 71, 0.1);
+    text-align: center;
+}
+
+.logos-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px; /* Mucha separación */
+    margin-bottom: 20px;
+}
+
+.logo-principal {
+    height: 90px; /* MUCHO MÁS GRANDES - casi el doble */
+    width: auto;
+    object-fit: contain;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 5px 15px rgba(23, 0, 71, 0.15));
+}
+
+.logo-principal:hover {
+    transform: scale(1.15);
+    filter: drop-shadow(0 8px 25px rgba(23, 0, 71, 0.3));
+}
+
+.logo-separator {
+    width: 2px;
+    height: 80px;
+    background: linear-gradient(180deg, transparent, var(--f-gold), transparent);
+    opacity: 0.4;
+}
+
+.logos-subtitle {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(23, 0, 71, 0.08);
+}
+
+/* Efecto de brillo al hacer hover en el contenedor */
+.mega-logos-showcase:hover {
+    box-shadow: 0 20px 60px -15px rgba(23, 0, 71, 0.25);
+    border-color: rgba(254, 200, 47, 0.4);
+}
+
+.mega-logos-showcase:hover .logo-separator {
+    opacity: 0.8;
+    background: linear-gradient(180deg, transparent, var(--f-gold), transparent);
+}
+
+/* Responsive para logos mega prominentes */
+@media (max-width: 768px) {
+    .mega-logos-showcase {
+        padding: 40px 30px;
+    }
+    
+    .logos-display {
+        gap: 40px;
+    }
+    
+    .logo-principal {
+        height: 75px;
+    }
+    
+    .logo-separator {
+        height: 65px;
+    }
+}
+
+@media (max-width: 576px) {
+    .mega-logos-showcase {
+        padding: 35px 20px;
+    }
+    
+    .logos-display {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .logo-principal {
+        height: 70px;
+    }
+    
+    .logo-separator {
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--f-gold), transparent);
+    }
+    
+    .logos-subtitle {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .logo-principal {
+        height: 65px;
+    }
+}
     </style>
 </head>
 <body>
@@ -366,6 +480,16 @@
 
     <div class="audit-container">
         
+            <!-- BARRA DE LOGOS ULTRA PROMINENTE -->
+    <div class="mega-logos-showcase">
+        <div class="logos-display">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP" class="logo-principal">
+            <div class="logo-separator"></div>
+            <img src="../Styles/logo.png" alt="Logo Comisión" class="logo-principal">
+        </div>
+        <div class="logos-subtitle">Unidad Nacional de Protección - Comisión de Transversalidad</div>
+    </div>
+    
         <!-- HEADER -->
         <header class="audit-header">
             <div class="header-line"></div>

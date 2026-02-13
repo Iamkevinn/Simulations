@@ -1,127 +1,225 @@
 <!-- LIBRERÍAS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* --- VARIABLES --- */
+/* --- VARIABLES (PALETA 25N - CLARA) --- */
 :root {
-    --bg-dark: #170047;     /* Fondo principal institucional */
-    --paper-text: #170047; /* Texto sobre fondos claros */
-    --accent: #D23B78;     /* Acento primario / acciones */
-    --handle: #FEC82F;     /* Controles interactivos / feedback */
+    /* Fondos */
+    --bg-main: #FFFFFF;         /* Fondo limpio */
+    --bg-panel: #F9FAFB;        /* Gris muy claro para contraste */
+    
+    /* Colores Institucionales (Imagen Referencia) */
+    --brand-purple: #480241;    /* Morado oscuro (Texto principal / Logos) */
+    --brand-orange: #FF9800;    /* Naranja (Acentos) */
+    --brand-yellow: #FEC82F;    /* Amarillo (Manija / Detalles) */
+    --brand-violet: #7B1FA2;    /* Violeta medio */
+    
+    /* Textos */
+    --text-main: #2D2D2D;       /* Gris oscuro lectura */
+    --text-purple: #480241;     /* Títulos */
+
+    /* Estados Semánticos (Suavizados para fondo claro) */
+    --state-bad-bg: #FFEBEE;    /* Fondo Rojo suave */
+    --state-bad-text: #C62828;  /* Texto Rojo oscuro */
+    --state-good-bg: #E8F5E9;   /* Fondo Verde suave */
+    --state-good-text: #2E7D32; /* Texto Verde oscuro */
 }
 
 /* CONTENEDOR GENERAL */
 #workshop-slider-v2 {
     width: 100%;
-    background-color: var(--bg-dark) !important;
+    background-color: var(--bg-main) !important;
     font-family: 'Montserrat', sans-serif;
-    color: white !important;
-    border: 2px solid #444 !important;
+    color: var(--text-main) !important;
+    border: 1px solid #e0e0e0 !important;
+    border-top: 5px solid var(--brand-yellow) !important; /* Detalle estético superior */
     border-radius: 12px;
-    padding: 20px;
+    padding: 30px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
-/* HEADER */
-.slider-header { text-align: center; margin-bottom: 20px; }
-.slider-title { font-weight: 800; font-size: clamp(1.5rem, 4vw, 2.2rem); margin: 0; text-transform: uppercase; color: white !important; }
-.slider-instr { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: #ccc; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 4px; margin-top: 10px; display: inline-block; }
+/* --- HEADER DE LOGOS (NUEVO) --- */
+.logo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
 
-/* --- COMPARADOR (SOLUCIÓN DE ALTURA) --- */
+.logo-img {
+    height: 60px; /* Tamaño base */
+    width: auto;
+    object-fit: contain;
+    transition: all 0.3s ease;
+}
+
+/* HEADER TEXTOS */
+.slider-header { text-align: center; margin-bottom: 30px; }
+.slider-title { 
+    font-weight: 800; 
+    font-size: clamp(1.5rem, 4vw, 2rem); 
+    margin: 0; 
+    text-transform: uppercase; 
+    color: var(--brand-purple) !important; 
+    letter-spacing: -0.5px;
+}
+.slider-instr { 
+    font-family: 'Space Mono', monospace; 
+    font-size: 0.85rem; 
+    color: var(--brand-purple); 
+    background: var(--brand-yellow); /* Fondo amarillo */
+    padding: 6px 15px; 
+    border-radius: 20px; 
+    margin-top: 15px; 
+    display: inline-block; 
+    font-weight: 700;
+}
+
+/* --- COMPARADOR --- */
 .comparison-wrapper {
     position: relative;
     width: 100%;
     max-width: 800px;
     margin: 0 auto;
     border-radius: 8px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    box-shadow: 0 15px 40px rgba(72, 2, 65, 0.15); /* Sombra morada sutil */
     background: #ffffff !important;
-    /* Quitamos overflow hidden global para que no corte sombras, pero lo manejamos internamente */
     user-select: none;
+    border: 1px solid #eee;
 }
 
-/* ESTILOS COMUNES DE TEXTO (Para que alineen perfecto) */
+/* ESTILOS COMUNES DE TEXTO */
 .doc-content {
-    padding: 40px; /* Espacio interno generoso */
+    padding: 40px; 
     box-sizing: border-box;
     font-family: 'Space Mono', monospace;
-    font-size: clamp(0.9rem, 2.5vw, 1.1rem); /* Fuente escalable */
-    line-height: 2; /* Altura de línea amplia para leer bien */
-    color: var(--paper-text) !important;
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem); 
+    line-height: 2; 
+    color: var(--text-main) !important;
     margin: 0;
 }
 
 .doc-heading {
     font-weight: bold; font-size: 1.3rem; 
-    border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; 
+    color: var(--brand-violet);
+    border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; 
     display: block;
 }
 
-/* CAPA BASE (MALA/ROJA) - ESTA DEFINE LA ALTURA */
+/* CAPA BASE (MALA - ROJA/GRIS) */
 .layer-base {
-    position: relative; /* Clave: Relative empuja la altura del contenedor */
+    position: relative; 
     width: 100%;
-    height: auto; /* Crece con el texto */
-    background-color: #ffeaea !important; 
+    height: auto; 
+    background-color: #fafafa !important; /* Gris muy suave */
     z-index: 1;
 }
 
-/* CAPA SUPERIOR (BUENA/VERDE) - ESTA SE RECORTA */
+/* CAPA SUPERIOR (BUENA - BLANCA/VERDE) */
 .layer-overlay {
-    position: absolute; /* Flota encima */
-    top: 0; left: 0; bottom: 0; /* Se estira al alto de la base */
-    width: 50%; /* Ancho inicial */
-    background-color: #e8fff0 !important;
+    position: absolute; 
+    top: 0; left: 0; bottom: 0; 
+    width: 50%; 
+    background-color: #ffffff !important;
     z-index: 2;
-    overflow: hidden; /* Aquí sucede la magia del recorte */
-    border-right: 3px solid var(--handle);
+    overflow: hidden; 
+    border-right: 4px solid var(--brand-orange); /* Línea divisoria naranja */
 }
 
-/* El contenido dentro del overlay debe tener un ancho fijo para no refluir al cortar */
 .layer-overlay .doc-content {
-    width: 100vw; /* Truco: Forzar ancho grande para que el texto no se mueva al reducir la ventana */
-    max-width: 800px; /* Pero limitado al contenedor */
+    width: 100vw; 
+    max-width: 800px; 
 }
-/* Corrección específica para asegurar alineación */
 .comparison-wrapper { container-type: inline-size; }
 
-/* RESALTADOS */
-.bad { background-color: #ffb3b3 !important; color: #b30000 !important; text-decoration: line-through; padding: 0 5px; }
-.good { background-color: #b3ffb3 !important; color: #006600 !important; padding: 0 5px; }
+/* RESALTADOS (CLAROS Y LEGIBLES) */
+.bad { 
+    background-color: var(--state-bad-bg) !important; 
+    color: var(--state-bad-text) !important; 
+    text-decoration: line-through; 
+    padding: 2px 6px; 
+    border-radius: 4px;
+}
+.good { 
+    background-color: var(--state-good-bg) !important; 
+    color: var(--state-good-text) !important; 
+    padding: 2px 6px; 
+    border-radius: 4px;
+    font-weight: bold;
+    border-bottom: 2px solid var(--state-good-text);
+}
 
 /* HANDLE (MANIJA) */
 .slider-handle {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 40px; height: 40px; background: var(--handle) !important;
+    width: 45px; height: 45px; 
+    background: var(--brand-purple) !important; /* Botón morado */
+    color: white;
     border-radius: 50%; z-index: 10; display: flex; align-items: center; justify-content: center;
-    cursor: col-resize; box-shadow: 0 0 15px rgba(0, 180, 216, 0.6); border: 3px solid white;
-    touch-action: none; /* Crucial para móvil */
+    cursor: col-resize; 
+    box-shadow: 0 0 0 5px rgba(255, 152, 0, 0.3); /* Aura naranja */
+    border: 3px solid white;
+    touch-action: none; 
+    font-size: 1.2rem;
 }
 
-/* ETIQUETAS */
+/* ETIQUETAS FLOTANTES */
 .label-floating {
-    position: absolute; bottom: 10px; font-size: 0.7rem; font-weight: bold; padding: 5px; border-radius: 3px; color: white;
+    position: absolute; bottom: 15px; 
+    font-size: 0.75rem; font-weight: 800; 
+    padding: 6px 12px; border-radius: 20px; color: white;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* RESPONSIVE AGRESIVO */
+/* CAJAS DE PASOS (NUEVO ESTILO LIGHT) */
+.step-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 6px solid var(--brand-violet);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    color: var(--text-main);
+    transition: transform 0.2s;
+}
+.step-card:hover { transform: translateY(-3px); }
+.step-card strong { color: var(--brand-purple); display: block; margin-bottom: 5px; }
+
+/* RESPONSIVE */
 @media (max-width: 1200px) {
-    .doc-content { padding: 20px; line-height: 1.6; } /* Menos padding en móvil */
-    .doc-heading { font-size: 1.1rem; }
-    /* Ajuste para que el texto overlay coincida con el base en pantallas pequeñas */
+    .doc-content { padding: 25px; line-height: 1.6; } 
     .layer-overlay .doc-content { width: 100%; } 
+}
+@media (max-width: 600px) {
+    .logo-header { justify-content: center; }
+    .logo-img { height: 45px; }
+    #workshop-slider-v2 { padding: 15px; }
 }
 </style>
 
 <div id="workshop-slider-v2">
     
+    <!-- HEADER CON LOGOS -->
+    <div class="logo-header">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="logo-img">
+        <img src="../Styles/logo.png" alt="Logo Comisión" class="logo-img">
+    </div>
+
     <div class="slider-header">
         <h2 class="slider-title">Transformación del Lenguaje</h2>
-        <div class="slider-instr">↔ ARRASTRA LA BARRA AZUL</div>
+        <div class="slider-instr">↔ ARRASTRA EL CÍRCULO MORADO</div>
         <br>
-        <div class="slider-instr">Esto es un ejemplo, revisa a tu alrededor, en tu entorno, y analiza que puedes encontrar</div>
+        <div style="font-size: 0.9rem; color: #666; margin-top: 10px; max-width: 600px; margin-left: auto; margin-right: auto;">
+            Esto es un ejemplo. Revisa a tu alrededor, en tu entorno, y analiza qué puedes encontrar.
+        </div>
     </div>
 
     <div class="comparison-wrapper" id="comp-wrap">
@@ -135,13 +233,12 @@
                 Es deber de <span class="bad">los ciudadanos</span> y <span class="bad">sus esposas</span>.<br><br>
                 <span class="bad">El jefe</span> revisará el ingreso de <span class="bad">los visitantes</span>.<br><br>
                 Atentamente,<br>La Administración.
-                <div class="label-floating" style="right:10px; background:#ef233c;">ORIGINAL</div>
+                <div class="label-floating" style="right:15px; background:var(--brand-purple);">LENGUAJE EXCLUYENTE</div>
             </div>
         </div>
 
         <!-- CAPA SUPERIOR (Se recorta) -->
         <div class="layer-overlay" id="overlay-layer">
-            <!-- IMPORTANTE: El contenido debe ser idéntico en estructura al de arriba -->
             <div class="doc-content" id="overlay-content">
                 <span class="doc-heading">MEMORANDO #001</span>
                 Para: <span class="good">La dirección</span> de área.<br><br>
@@ -149,7 +246,7 @@
                 Es deber de <span class="good">la ciudadanía</span> y <span class="good">sus cónyuges</span>.<br><br>
                 <span class="good">La jefatura</span> revisará el ingreso de <span class="good">las visitas</span>.<br><br>
                 Atentamente,<br>La Administración.
-                <div class="label-floating" style="left:10px; background:#38b000;">INCLUSIVO</div>
+                <div class="label-floating" style="left:15px; background:var(--brand-orange);">LENGUAJE INCLUSIVO</div>
             </div>
         </div>
 
@@ -158,13 +255,15 @@
 
     </div>
 
-    <!-- PASOS -->
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px; margin-top:30px;">
-        <div style="background:#2b2b36; padding:15px; border-left:4px solid #8338ec;">
-            <strong>1. IDENTIFICAR:</strong> Busca generalizaciones masculinas.
+    <!-- PASOS ESTILIZADOS -->
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px; margin-top:40px;">
+        <div class="step-card">
+            <strong>1. IDENTIFICAR:</strong> 
+            Busca generalizaciones masculinas que invisibilizan.
         </div>
-        <div style="background:#2b2b36; padding:15px; border-left:4px solid #8338ec;">
-            <strong>2. TRANSFORMAR:</strong> Usa sustantivos colectivos.
+        <div class="step-card" style="border-left-color: var(--brand-orange);">
+            <strong>2. TRANSFORMAR:</strong> 
+            Usa sustantivos colectivos y formas abstractas.
         </div>
     </div>
 
@@ -190,8 +289,7 @@ function updateSlider(x) {
     overlay.style.width = percent + "%";
     handleBtn.style.left = percent + "%";
     
-    // Truco: Para que el texto de la capa superior no se mueva al recortar,
-    // debemos fijar su ancho al ancho total del contenedor padre.
+    // Sincronización de ancho para efecto máscara
     overlayContent.style.width = rect.width + "px";
 }
 
@@ -214,12 +312,11 @@ document.addEventListener('touchmove', (e) => {
     updateSlider(e.touches[0].pageX);
 });
 
-// Inicialización: Ajustar ancho de contenido overlay al cargar y al redimensionar
+// Inicialización
 function syncWidth() {
     overlayContent.style.width = wrapper.offsetWidth + "px";
 }
 window.addEventListener('resize', syncWidth);
-// Ejecutar al inicio con pequeña demora para asegurar renderizado
 setTimeout(syncWidth, 100);
 
 // Animación inicial

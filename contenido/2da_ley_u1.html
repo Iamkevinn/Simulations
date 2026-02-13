@@ -9,24 +9,27 @@
 
 <style>
     /* =========================================
-       1. RESET Y VARIABLES GLOBALES
+       1. RESET Y VARIABLES GLOBALES (PALETA CLARA 25N)
        ========================================= */
     * {
-        box-sizing: border-box; /* Vital para responsive */
+        box-sizing: border-box; 
     }
 
 :root {
-    --purple-main: #170047;   /* Branding principal */
-    --purple-dark: #480241;   /* Oscuro profundo */
-    --purple-light: #EE7D4F;  /* Claro cálido / superficies */
-    --white: #ffffff;        /* Blanco puro */
-    --alert-yellow: #FEC82F; /* Alerta / aviso */
-    --text-slate: #170047;   /* Texto principal */
+    --purple-main: #170047;   /* Morado UNP (Principal) */
+    --purple-dark: #480241;   /* Morado Oscuro */
+    --purple-light: #D23B78;  /* Magenta/Rosa (Acento) */
+    
+    --accent-orange: #FF9800; /* Naranja (Detalles) */
+    --accent-yellow: #FEC82F; /* Amarillo (Fondo/Highlights) */
+    
+    --white: #ffffff;         /* Blanco puro */
+    --text-slate: #333333;    /* Texto principal oscuro */
     --bg-gradient: linear-gradient(
         135deg,
-        #f8fafc 0%,
-        #FEC82F 100%
-    );
+        #ffffff 0%,
+        #FFFDE7 100%
+    ); /* Fondo muy claro, casi blanco */
 }
 
     body {
@@ -41,15 +44,15 @@
         position: relative;
         background: var(--bg-gradient);
         color: var(--text-slate);
-        padding: 60px 20px;
+        padding: 40px 20px;
         overflow: hidden;
-        min-height: 100vh; /* Altura de pantalla completa */
-        /* Eliminamos bordes gigantes fijos para móvil */
+        min-height: 100vh;
         display: flex;
-        justify-content: center;
+        flex-direction: column; /* Cambiado a columna para logos arriba */
+        align-items: center;
     }
 
-    /* FONDO ANIMADO */
+    /* FONDO ANIMADO (SUAVIZADO) */
     .arena-bg {
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
@@ -61,7 +64,7 @@
         position: absolute;
         font-size: 3rem;
         color: var(--purple-main);
-        opacity: 0.05;
+        opacity: 0.03; /* Muy sutil */
         animation: floatUp 15s infinite linear;
     }
 
@@ -84,6 +87,29 @@
     }
 
     /* =========================================
+       LOGOS DEL CLIENTE (NUEVO)
+       ========================================= */
+    .logos-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        margin-bottom: 30px;
+        width: 100%;
+        z-index: 10;
+        flex-wrap: wrap;
+    }
+
+    .client-logo {
+        height: 60px;
+        width: auto;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+    .client-logo:hover { transform: scale(1.05); }
+
+
+    /* =========================================
        3. HEADER Y NOTICIAS
        ========================================= */
     .breaking-news { text-align: center; margin-bottom: 50px; }
@@ -95,13 +121,13 @@
         color: white;
         border-radius: 5px;
         margin-bottom: 30px;
-        box-shadow: 0 5px 15px rgba(124, 58, 237, 0.3);
+        box-shadow: 0 5px 15px rgba(72, 2, 65, 0.2);
     }
 
     .ticker {
         display: flex;
         white-space: nowrap;
-        animation: ticker 20s infinite linear;
+        animation: ticker 25s infinite linear;
     }
 
     .ticker__item {
@@ -118,41 +144,42 @@
 
     .main-headline h1 {
         font-family: 'Roboto Slab', serif;
-        font-size: clamp(2.5rem, 6vw, 5rem); /* Texto fluido */
+        font-size: clamp(2.5rem, 6vw, 5rem);
         line-height: 1;
         margin: 15px 0;
-        color: var(--purple-dark);
-        text-shadow: 3px 3px 0px rgba(0,0,0,0.05);
+        color: var(--purple-main);
+        text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
     }
 
     .date-badge {
         display: inline-block;
-        background: var(--text-slate);
+        background: var(--purple-light);
         color: white;
-        padding: 5px 15px;
+        padding: 6px 15px;
         border-radius: 4px;
         font-weight: 700;
         text-transform: uppercase;
-        font-size: 0.75rem;
+        font-size: 0.8rem;
     }
 
     .subtitle {
         font-size: clamp(1.1rem, 3vw, 1.5rem);
         font-weight: 700;
-        color: var(--purple-main);
+        color: var(--purple-dark);
         margin-bottom: 25px;
     }
 
     .alert-box {
         display: inline-block;
-        background: #fffbeb;
-        border: 2px solid var(--alert-yellow);
-        color: #92400e;
-        padding: 12px 20px;
+        background: #FFF3E0; /* Naranja muy claro */
+        border: 2px solid var(--accent-orange);
+        color: #E65100;
+        padding: 12px 25px;
         border-radius: 12px;
-        font-size: 0.9rem;
-        max-width: 90%; /* Para que no se salga en móvil */
+        font-size: 0.95rem;
+        max-width: 90%;
         animation: pulseAlert 2s infinite;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
     @keyframes pulseAlert { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
@@ -163,7 +190,7 @@
     .campaign-deck {
         display: flex;
         justify-content: center;
-        flex-wrap: wrap; /* Permitir que bajen de línea */
+        flex-wrap: wrap;
         gap: 30px;
         margin-bottom: 60px;
         perspective: 1000px;
@@ -172,8 +199,8 @@
     .campaign-card {
         background-color: transparent;
         width: 100%;
-        max-width: 320px; /* Ancho máximo, pero flexible hacia abajo */
-        height: 400px;    /* Altura fija necesaria para flip effect */
+        max-width: 320px;
+        height: 420px;
         perspective: 1000px;
         cursor: pointer;
     }
@@ -185,7 +212,7 @@
         text-align: center;
         transition: transform 0.8s;
         transform-style: preserve-3d;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         border-radius: 20px;
     }
 
@@ -203,23 +230,25 @@
         align-items: center;
         justify-content: center;
         padding: 25px;
-        border: 4px solid white; /* Borde más visible */
+        border: 1px solid #eee;
     }
 
     .card-front {
         background: white;
-        color: var(--purple-dark);
+        color: var(--text-slate);
+        border-bottom: 5px solid var(--purple-main);
     }
 
     .card-back {
         background: var(--purple-main);
         color: white;
         transform: rotateY(180deg);
+        border: 4px solid var(--accent-yellow);
     }
 
     .icon-circle {
         width: 90px; height: 90px;
-        background: var(--purple-light);
+        background: var(--accent-yellow);
         color: var(--purple-main);
         border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
@@ -228,54 +257,54 @@
     }
 
     .tap-hint {
-        margin-top: auto; /* Empuja al fondo */
+        margin-top: auto;
         padding-top: 20px;
         font-size: 0.8rem;
-        color: #94a3b8;
+        color: #888;
         animation: bounce 1s infinite;
         text-transform: uppercase;
         letter-spacing: 1px;
+        font-weight: 600;
     }
 
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-    .card-back h3 { font-family: 'Roboto Slab', serif; font-size: 1.4rem; margin-bottom: 10px; }
-    .card-back p { line-height: 1.5; font-size: 0.95rem; }
-    .goal-tag { background: white; color: var(--purple-main); padding: 5px 10px; border-radius: 5px; font-weight: 800; font-size: 0.7rem; margin-top: 15px; }
-    .contrast-box { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; margin-top: 15px; font-weight: 700; font-size: 0.85rem; width: 100%; }
+    .card-back h3 { font-family: 'Roboto Slab', serif; font-size: 1.4rem; margin-bottom: 10px; color: var(--accent-yellow); }
+    .card-back p { line-height: 1.6; font-size: 0.95rem; }
+    .goal-tag { background: white; color: var(--purple-main); padding: 5px 12px; border-radius: 5px; font-weight: 800; font-size: 0.75rem; margin-top: 15px; text-transform: uppercase;}
+    .contrast-box { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; margin-top: 15px; font-weight: 700; font-size: 0.85rem; width: 100%; border: 1px dashed rgba(255,255,255,0.3); }
 
     /* =========================================
-       5. SECCIÓN DE VIOLENCIA (GRID RESPONSIVE)
+       5. SECCIÓN DE VIOLENCIA (GRID)
        ========================================= */
     .battle-section {
         background: white;
-        padding: 40px 20px;
+        padding: 40px 25px;
         border-radius: 20px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
         text-align: center;
         margin-bottom: 60px;
+        border: 1px solid #e0e0e0;
     }
 
-    .battle-title { font-family: 'Roboto Slab', serif; font-size: clamp(1.5rem, 4vw, 2rem); color: var(--purple-dark); margin-top: 0; }
-    .battle-desc { margin-bottom: 30px; color: #64748b; font-size: 0.95rem; }
+    .battle-title { font-family: 'Roboto Slab', serif; font-size: clamp(1.5rem, 4vw, 2rem); color: var(--purple-main); margin-top: 0; }
+    .battle-desc { margin-bottom: 30px; color: #666; font-size: 1rem; }
 
-    /* Solución GRID para móviles y escritorio */
     .violence-grid {
         display: grid;
-        /* Magia responsive: columnas de mínimo 130px, rellena el espacio */
-        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
         gap: 15px;
         justify-content: center;
     }
 
     .v-item {
         position: relative;
-        /* Aspect ratio cuadrado automático */
         aspect-ratio: 1 / 1; 
         border-radius: 15px;
         overflow: hidden;
         cursor: pointer;
-        width: 100%; /* Ocupa la celda del grid */
+        width: 100%;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
 
     .v-cover {
@@ -289,35 +318,34 @@
         text-align: center;
     }
 
-    .v-cover i { font-size: clamp(1.5rem, 3vw, 2.5rem); margin-bottom: 10px; }
-    .v-cover span { font-weight: 800; font-size: 0.75rem; }
+    .v-cover i { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 10px; }
+    .v-cover span { font-weight: 800; font-size: 0.8rem; letter-spacing: 0.5px; }
 
-    /* Colores */
-    .v-cover.verbal { background: #ef4444; }
-    .v-cover.physical { background: #b91c1c; }
-    .v-cover.digital { background: #3b82f6; }
-    .v-cover.economic { background: #eab308; }
-    .v-cover.symbolic { background: #a855f7; }
+    /* Colores Específicos */
+    .v-cover.verbal { background: #E53935; } /* Rojo */
+    .v-cover.physical { background: #8E24AA; } /* Morado */
+    .v-cover.digital { background: #1E88E5; } /* Azul */
+    .v-cover.economic { background: #FDD835; color: #333; } /* Amarillo */
+    .v-cover.symbolic { background: #FB8C00; } /* Naranja */
 
     .v-reveal {
         position: absolute;
         width: 100%; height: 100%;
-        background: var(--purple-dark);
+        background: var(--purple-main);
         color: white;
         display: flex; align-items: center; justify-content: center;
-        padding: 10px;
-        font-size: 0.8rem;
+        padding: 15px;
+        font-size: 0.85rem;
         z-index: 1;
-        line-height: 1.3;
+        line-height: 1.4;
     }
 
-    /* Efecto Hover compatible con Touch (primer toque activa hover en iOS/Android) */
     .v-item:hover .v-cover {
-        transform: translateY(-100%) rotate(10deg);
+        transform: translateY(-100%) rotate(5deg);
         opacity: 0;
     }
 
-    .source-center { margin-top: 30px; font-size: 0.7rem; color: #94a3b8; font-style: italic; }
+    .source-center { margin-top: 30px; font-size: 0.75rem; color: #888; font-style: italic; }
 
     /* =========================================
        6. VOTACIÓN Y BOTONES
@@ -333,73 +361,70 @@
         padding: 40px;
         border-radius: 20px;
         text-align: center;
-        box-shadow: 0 20px 40px rgba(124, 58, 237, 0.4);
+        box-shadow: 0 15px 30px rgba(72, 2, 65, 0.3);
         width: 100%;
-        max-width: 600px;
+        max-width: 650px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Detalle decorativo */
+    .ballot-box::before {
+        content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+        pointer-events: none;
     }
 
-    .ballot-box p { font-size: 1.1rem; margin-bottom: 20px; font-weight: 700; }
+    .ballot-box p { font-size: 1.2rem; margin-bottom: 25px; font-weight: 700; position: relative; z-index: 2; }
 
     .vote-btn {
-        background: white;
+        background: var(--accent-yellow);
         color: var(--purple-main);
         border: none;
-        padding: 15px 30px;
-        font-size: 1rem;
+        padding: 18px 40px;
+        font-size: 1.1rem;
         font-weight: 900;
         border-radius: 50px;
         cursor: pointer;
-        box-shadow: 0 10px 0 rgba(0,0,0,0.2);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         transition: 0.2s;
         max-width: 100%;
-        white-space: normal; /* Permite texto en varias líneas si es necesario */
+        white-space: normal;
+        position: relative; z-index: 2;
+    }
+
+    .vote-btn:hover {
+        transform: translateY(-2px);
+        background: #fff;
     }
 
     .vote-btn:active {
-        transform: translateY(5px);
-        box-shadow: 0 5px 0 rgba(0,0,0,0.2);
+        transform: translateY(2px);
     }
 
     .vote-confirmation {
         margin-top: 20px;
-        font-size: 1rem;
+        font-size: 1.1rem;
         font-weight: 800;
         display: none;
-        animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        color: var(--accent-yellow);
+        animation: popIn 0.5s ease;
+        position: relative; z-index: 2;
     }
 
-    @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+    @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
     /* =========================================
-       7. MEDIA QUERIES (AJUSTES FINOS)
+       7. MEDIA QUERIES
        ========================================= */
     @media (max-width: 600px) {
-        .political-arena-wrapper {
-            padding: 40px 15px; /* Menos padding en móvil */
-            border-radius: 0; /* Quitar bordes redondeados en móvil */
-            border: none;
-        }
-
-        .alert-box {
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-align: left;
-        }
-
-        /* En móvil muy pequeño, reducir altura de tarjeta si es necesario */
-        .campaign-card {
-            height: 380px;
-        }
-
-        .battle-section {
-            padding: 25px 15px;
-        }
-
-        .ballot-box {
-            padding: 30px 20px;
-        }
+        .political-arena-wrapper { padding: 20px 10px; }
+        .logos-header { gap: 15px; margin-bottom: 20px; }
+        .client-logo { height: 45px; }
+        .alert-box { font-size: 0.85rem; text-align: left; }
+        .campaign-card { height: 380px; }
+        .battle-section { padding: 25px 15px; }
+        .ballot-box { padding: 30px 20px; }
     }
 </style>
 </head>
@@ -415,6 +440,12 @@
         <i class="fas fa-gavel float-icon i5"></i>
     </div>
 
+    <!-- LOGOS DEL CLIENTE -->
+    <div class="logos-header">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+        <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo">
+    </div>
+
     <div class="arena-container">
         
         <!-- HEADER -->
@@ -424,7 +455,7 @@
                     <div class="ticker__item">📢 LEY 2453 DE 2025: NUEVO HITO DEMOCRÁTICO</div>
                     <div class="ticker__item">🛑 SANCIÓN A LA VIOLENCIA POLÍTICA</div>
                     <div class="ticker__item">🗳️ PARTICIPACIÓN EN IGUALDAD</div>
-                    <!-- Duplicado para loop infinito fluido -->
+                    <!-- Repetición para loop -->
                     <div class="ticker__item">📢 LEY 2453 DE 2025: NUEVO HITO DEMOCRÁTICO</div>
                     <div class="ticker__item">🛑 SANCIÓN A LA VIOLENCIA POLÍTICA</div>
                     <div class="ticker__item">🗳️ PARTICIPACIÓN EN IGUALDAD</div>
@@ -456,7 +487,7 @@
                         <h3>Participación Segura</h3>
                         <p>Busca <strong>prevenir, atender, seguir y sancionar</strong> la violencia contra las mujeres en el ejercicio de sus derechos políticos.</p>
                         <div class="goal-tag">META: IGUALDAD SIN VIOLENCIA</div>
-                        <span class="source-text" style="font-size:0.7rem; margin-top:10px; display:block;">Fuente: Función Pública</span>
+                        <span class="source-text" style="font-size:0.7rem; margin-top:10px; display:block; opacity:0.8;">Fuente: Función Pública</span>
                     </div>
                 </div>
             </div>
@@ -476,7 +507,7 @@
                             <i class="fas fa-ban"></i> NO es Laboral<br>
                             <i class="fas fa-ban"></i> NO es Educativo
                         </div>
-                        <span class="source-text" style="font-size:0.7rem; margin-top:10px; display:block;">Fuente: Función Pública</span>
+                        <span class="source-text" style="font-size:0.7rem; margin-top:10px; display:block; opacity:0.8;">Fuente: Función Pública</span>
                     </div>
                 </div>
             </div>
@@ -564,12 +595,13 @@ function castVote() {
     const btn = document.getElementById('vote-btn');
     const msg = document.getElementById('vote-conf');
     
-    btn.style.transform = "translateY(5px)";
-    btn.style.boxShadow = "0 5px 0 rgba(0,0,0,0.2)";
-    btn.style.background = "#e2e8f0";
-    btn.style.color = "#94a3b8";
-    btn.innerHTML = 'voto registrado';
+    btn.style.transform = "translateY(2px)";
+    btn.style.boxShadow = "none";
+    btn.style.background = "#fff";
+    btn.style.color = "#999";
+    btn.innerHTML = 'Voto Registrado';
     btn.disabled = true;
+    btn.style.cursor = "default";
 
     msg.style.display = "block";
 }
@@ -585,9 +617,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.querySelectorAll('.campaign-card, .battle-section').forEach(el => {
+    document.querySelectorAll('.campaign-card, .battle-section, .ballot-box').forEach(el => {
         el.style.opacity = "0";
-        el.style.transform = "translateY(40px)";
+        el.style.transform = "translateY(30px)";
         el.style.transition = "all 0.8s ease-out";
         observer.observe(el);
     });

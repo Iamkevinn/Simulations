@@ -5,12 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
     :root {
-    --bg-blueprint: #170047;                 /* Fondo plano institucional */
-    --line-blue: #D23B78;                    /* Líneas técnicas */
-    --text-white: #ffffff;                  /* Texto principal */
-    --highlight: #FEC82F;                   /* Resaltado / alerta */
-    --detected: #EE7D4F;                    /* Detección / éxito */
-    --grid-color: rgba(210, 59, 120, 0.2);   /* Rejilla */
+    --bg-blueprint: #F5F5F5;                 /* Fondo claro */
+    --line-blue: #E85D9A;                    /* Rosa vibrante (de la imagen) */
+    --text-white: #2C2C2C;                   /* Texto oscuro para contraste */
+    --highlight: #FFB84D;                    /* Naranja cálido (de la imagen) */
+    --detected: #9B59B6;                     /* Morado (de la imagen) */
+    --grid-color: rgba(232, 93, 154, 0.15);  /* Rejilla suave */
+    --accent-purple: #8B4F9E;                /* Morado del logo */
+    --accent-orange: #FF6B35;                /* Naranja intenso */
 }
 
 
@@ -50,19 +52,42 @@
 
     /* --- HUD --- */
     .hud {
-        height: 60px; background: rgba(0, 20, 40, 0.9);
+        height: 60px; background: rgba(255, 255, 255, 0.95);
         border-bottom: 2px solid var(--line-blue);
         display: flex; justify-content: space-between; align-items: center;
         padding: 0 20px; z-index: 50;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        box-shadow: 0 3px 15px rgba(0,0,0,0.1);
     }
+    
+    /* Logos Container */
+    .logos-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-shrink: 0;
+    }
+    
+    .logos-container img {
+        height: 40px;
+        width: auto;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+    
+    .logos-container img:hover {
+        transform: scale(1.05);
+    }
+    
     .hud-title { 
         font-family: 'Courier New', monospace; font-weight: bold; 
-        color: var(--highlight); text-transform: uppercase; letter-spacing: 1px;
+        color: var(--line-blue); text-transform: uppercase; letter-spacing: 1px;
+        flex-grow: 1;
+        text-align: center;
     }
     .mode-badge {
-        background: var(--line-blue); color: #001a33; 
+        background: var(--line-blue); color: white; 
         padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 0.8rem;
+        flex-shrink: 0;
     }
 
     /* --- ESCENARIO --- */
@@ -87,7 +112,7 @@
         position: absolute; top:0; left:0; width:100%; height:100%;
         display: flex; flex-direction: column; justify-content: center; align-items: center;
         padding: 40px; text-align: center;
-        background: rgba(0, 51, 102, 0.9);
+        background: rgba(255, 255, 255, 0.98);
         z-index: 5;
     }
 
@@ -101,14 +126,14 @@
         width: 320px; height: 320px;
         border: 2px solid var(--line-blue); border-radius: 50%;
         position: relative;
-        background: radial-gradient(circle, rgba(0,0,0,0) 0%, rgba(77, 166, 255, 0.1) 100%);
-        box-shadow: 0 0 30px rgba(77, 166, 255, 0.1);
+        background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(232, 93, 154, 0.05) 100%);
+        box-shadow: 0 0 30px rgba(232, 93, 154, 0.2);
     }
     
     .radar-sweep {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         border-radius: 50%;
-        background: conic-gradient(from 0deg, transparent 0deg, rgba(77, 166, 255, 0.5) 60deg, transparent 60deg);
+        background: conic-gradient(from 0deg, transparent 0deg, rgba(232, 93, 154, 0.4) 60deg, transparent 60deg);
         animation: radarSpin 3s linear infinite;
         z-index: 2; pointer-events: none;
     }
@@ -121,7 +146,7 @@
         border-radius: 50%;
         background: var(--highlight);
         display: flex; justify-content: center; align-items: center;
-        font-weight: bold; color: black; font-size: 1.2rem;
+        font-weight: bold; color: #2C2C2C; font-size: 1.2rem;
         cursor: pointer; z-index: 10;
         box-shadow: 0 0 15px var(--highlight);
         animation: pulseBlip 1s infinite;
@@ -129,24 +154,24 @@
     }
     @keyframes pulseBlip { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
 
-    .blip:hover { transform: scale(1.4); background: white; }
+    .blip:hover { transform: scale(1.4); background: var(--detected); color: white; }
 
     .blip.analyzed {
         width: auto; height: auto; padding: 5px 15px;
         border-radius: 4px; background: var(--detected);
-        color: black; font-size: 0.8rem; font-weight: bold;
+        color: white; font-size: 0.8rem; font-weight: bold;
         animation: none; box-shadow: 0 0 20px var(--detected);
         z-index: 20; transform: scale(1);
     }
 
     .radar-readout {
         margin-top: 20px;
-        background: rgba(0, 20, 40, 0.9);
-        border: 1px solid var(--highlight);
+        background: rgba(255, 255, 255, 0.95);
+        border: 2px solid var(--highlight);
         padding: 15px; width: 90%; max-width: 500px;
-        color: var(--highlight); font-family: 'Courier New', monospace;
+        color: var(--text-white); font-family: 'Courier New', monospace;
         min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
     /* --- FASE 3: SIMULACIÓN DE CASO (Mesa de Trabajo - INTACTA) --- */
@@ -159,17 +184,18 @@
     .case-file {
         background: white; color: #333;
         padding: 20px; border-radius: 2px;
-        box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.15);
         transform: rotate(-1deg);
         font-family: 'Courier New', monospace;
         position: relative;
+        border: 1px solid var(--line-blue);
     }
     .paper-clip {
         position: absolute; top: -10px; right: 20px; width: 15px; height: 40px;
-        border: 4px solid #888; border-radius: 10px; border-bottom: none;
+        border: 4px solid var(--line-blue); border-radius: 10px; border-bottom: none;
     }
     .stamp {
-        border: 3px solid var(--bg-blueprint); color: var(--bg-blueprint);
+        border: 3px solid var(--line-blue); color: var(--line-blue);
         font-weight: bold; padding: 5px; display: inline-block;
         transform: rotate(-10deg); margin-bottom: 15px; font-size: 1.2rem;
     }
@@ -178,31 +204,31 @@
         display: flex; flex-direction: column; gap: 15px;
     }
     .question-slot {
-        background: rgba(0, 51, 102, 0.8); border: 1px solid var(--line-blue);
+        background: rgba(255, 255, 255, 0.95); border: 2px solid var(--line-blue);
         padding: 15px; border-radius: 5px;
         transition: all 0.3s;
     }
-    .question-slot.active { border-color: var(--highlight); background: rgba(255, 204, 0, 0.1); }
+    .question-slot.active { border-color: var(--highlight); background: rgba(255, 184, 77, 0.1); }
     
     .answer-options {
         display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;
     }
     .option-btn {
-        background: transparent; border: 1px solid white; color: white;
+        background: transparent; border: 2px solid var(--line-blue); color: var(--text-white);
         padding: 5px 10px; font-size: 0.8rem; cursor: pointer;
         border-radius: 15px; transition: 0.2s;
     }
-    .option-btn:hover { background: rgba(255,255,255,0.2); }
-    .option-btn.selected { background: var(--highlight); color: black; border-color: var(--highlight); }
+    .option-btn:hover { background: rgba(232, 93, 154, 0.1); }
+    .option-btn.selected { background: var(--highlight); color: white; border-color: var(--highlight); }
 
     /* CONTROLES */
     .controls {
-        height: 70px; background: rgba(0, 20, 40, 0.95);
+        height: 70px; background: rgba(255, 255, 255, 0.98);
         display: flex; justify-content: center; align-items: center;
-        gap: 20px; z-index: 50; border-top: 1px solid var(--line-blue);
+        gap: 20px; z-index: 50; border-top: 2px solid var(--line-blue);
     }
     .nav-btn {
-        width: 14px; height: 14px; background: rgba(255,255,255,0.2);
+        width: 14px; height: 14px; background: rgba(232, 93, 154, 0.3);
         border-radius: 2px; cursor: pointer; transform: rotate(45deg);
         transition: 0.3s;
     }
@@ -211,20 +237,54 @@
     /* MODAL */
     .modal-overlay {
         position: fixed; top:0; left:0; width:100%; height:100%;
-        background: rgba(0,0,0,0.9); z-index: 100;
+        background: rgba(0,0,0,0.8); z-index: 100;
         display: none; justify-content: center; align-items: center; padding: 20px;
     }
     .modal-box {
-        background: var(--bg-blueprint); border: 2px solid var(--highlight);
+        background: white; border: 3px solid var(--highlight);
         padding: 30px; max-width: 600px; text-align: center;
-        color: white; font-family: 'Segoe UI', sans-serif;
-        box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        color: var(--text-white); font-family: 'Segoe UI', sans-serif;
+        box-shadow: 0 0 40px rgba(0,0,0,0.3);
+        border-radius: 8px;
     }
 
+    /* Responsive para logos */
     @media (max-width: 768px) {
         .workspace { grid-template-columns: 1fr; }
         .case-file { min-height: 200px; }
         .radar-scope { width: 280px; height: 280px; }
+        
+        .logos-container img {
+            height: 32px;
+        }
+        
+        .hud {
+            padding: 0 10px;
+        }
+        
+        .logos-container {
+            gap: 8px;
+        }
+        
+        .hud-title {
+            font-size: 0.85rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .logos-container img {
+            height: 28px;
+        }
+        
+        .hud-title {
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .mode-badge {
+            font-size: 0.7rem;
+            padding: 3px 8px;
+        }
     }
 </style>
 </head>
@@ -236,6 +296,10 @@
 
 <!-- HUD -->
 <div class="hud">
+    <div class="logos-container">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP">
+        <img src="../Styles/logo.png" alt="Logo Comisión">
+    </div>
     <div class="hud-title">ANÁLISIS ESTRUCTURAL</div>
     <div class="mode-badge" id="mode-badge">MODO: ESCÁNER</div>
 </div>
@@ -246,12 +310,12 @@
     <!-- FASE 1: DEFINICIÓN (LINTERNA) -->
     <div id="phase1">
         <div class="revealed-content">
-            <h2 style="color:var(--highlight); text-transform:uppercase; margin-bottom:20px;">¿Qué son las discriminaciones estructurales?</h2>
+            <h2 style="color:var(--line-blue); text-transform:uppercase; margin-bottom:20px;">¿Qué son las discriminaciones estructurales?</h2>
             <p style="font-size:1.1rem; max-width:700px; margin-bottom:30px;">
                 Desigualdades insertas en <strong>normas, procedimientos y culturas institucionales</strong>. No dependen de actos individuales, sino que se reproducen de manera sistemática.
             </p>
             <div style="text-align:left; max-width:700px;">
-                <h3 style="color:var(--line-blue);">CARACTERÍSTICAS OCULTAS:</h3>
+                <h3 style="color:var(--detected);">CARACTERÍSTICAS OCULTAS:</h3>
                 <ul style="list-style:none; padding:0;">
                     <li style="margin-bottom:10px;">🔍 Incorporadas en reglamentos y protocolos.</li>
                     <li style="margin-bottom:10px;">🔍 Decisiones "neutrales" con impacto desigual.</li>
@@ -270,7 +334,7 @@
 
     <!-- FASE 2: RADAR INTERACTIVO (CORREGIDO) -->
     <div id="phase2" class="radar-container">
-        <h2 style="color:var(--highlight); margin-bottom:20px;">Poblaciones más impactadas</h2>
+        <h2 style="color:var(--line-blue); margin-bottom:20px;">Poblaciones más impactadas</h2>
         <div class="radar-scope">
             <div class="radar-sweep"></div>
             
@@ -317,7 +381,7 @@
                 <div style="font-size:0.8rem; color:var(--line-blue);">3. ¿Qué elementos de discriminación estructural se identifican?</div>
             </div>
 
-            <button onclick="submitAnalysis()" style="background:var(--highlight); border:none; padding:10px; font-weight:bold; cursor:pointer; margin-top:10px; width:100%;">SOCIALIZAR CONCLUSIONES</button>
+            <button onclick="submitAnalysis()" style="background:var(--highlight); border:none; padding:10px; font-weight:bold; cursor:pointer; margin-top:10px; width:100%; color:white; border-radius:5px;">SOCIALIZAR CONCLUSIONES</button>
         </div>
     </div>
 
@@ -335,7 +399,7 @@
     <div class="modal-box">
         <h2 style="color:var(--highlight)">ANÁLISIS COMPLETADO</h2>
         <p id="modal-text"></p>
-        <button onclick="closeModal()" style="background:var(--highlight); border:none; padding:10px 20px; font-weight:bold; cursor:pointer; margin-top:15px;">CERRAR</button>
+        <button onclick="closeModal()" style="background:var(--highlight); border:none; padding:10px 20px; font-weight:bold; cursor:pointer; margin-top:15px; color:white; border-radius:5px;">CERRAR</button>
     </div>
 </div>
 
@@ -369,9 +433,8 @@
         
         // Actualizar panel de texto
         const readout = document.getElementById('radar-msg');
-        readout.innerHTML = `<strong style="color:white">${name}:</strong> ${desc}`;
+        readout.innerHTML = `<strong style="color:var(--detected)">${name}:</strong> ${desc}`;
         readout.style.borderColor = "var(--detected)";
-        readout.style.color = "var(--detected)";
     }
 
     // --- FASE 3: EJERCICIO (INTACTO) ---

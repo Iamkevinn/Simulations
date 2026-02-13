@@ -3,62 +3,88 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-/* --- ESTÉTICA --- */
+/* --- ESTÉTICA BASADA EN IMAGEN ADJUNTA (CLAROS/VIVOS) --- */
 :root {
-    --tf-purple: #480241;          /* Identidad principal (profundo) */
-    --tf-pink: #D23B78;            /* Acento emocional */
-    --tf-cyan: #FEC82F;            /* Acento activo / foco */
-
-    --tf-dark: #170047;            /* Fondo / base */
-    --tf-white: #ffffff;           /* Blanco limpio */
-
-    --glass: rgba(254, 200, 47, 0.12); /* Glass cálido */
+    /* Paleta extraída de la imagen */
+    --tf-purple: #4B1E7A;          /* Morado Institucional (Texto títulos, botones) */
+    --tf-orange: #E35205;          /* Naranja vibrante (Acentos, botones) */
+    --tf-yellow: #FDB913;          /* Amarillo Oro (Fondos detalles) */
+    --tf-pink: #D12A6A;            /* Rosa/Magenta (Detalles curvos) */
+    
+    --tf-bg-light: #F9F9F9;        /* Fondo general claro */
+    --tf-text-main: #333333;       /* Texto principal oscuro para lectura */
+    --tf-text-light: #ffffff;      /* Texto sobre fondos oscuros */
+    
+    --card-bg: rgba(255, 255, 255, 0.95); /* Tarjeta blanca casi sólida */
+    --shadow: 0 10px 40px rgba(75, 30, 122, 0.15); /* Sombra suave morada */
 }
-
 
 #debate-slider-container {
     width: 100%;
-    min-height: 650px;
+    min-height: 750px; /* Un poco más alto para acomodar logos */
     height: auto;
-    background: linear-gradient(135deg, #240046 0%, #10002B 100%);
+    /* Degradado sutil claro (Blanco a lila muy suave) */
+    background: linear-gradient(180deg, #FFFFFF 0%, #F3E5F5 100%);
     position: relative;
     overflow: hidden;
     font-family: 'Inter', sans-serif;
-    color: var(--tf-white);
+    color: var(--tf-text-main);
     border-radius: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* Alineación superior para dar espacio a logos */
     align-items: center;
-    padding: 40px 20px;
+    padding: 20px;
     box-sizing: border-box;
+    border: 1px solid #e0e0e0;
 }
 
-/* Fondo Animado */
-.geo-shape { position: absolute; opacity: 0.2; pointer-events: none; }
+/* --- LOGOS DEL CLIENTE --- */
+.header-logos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 20px;
+    padding: 0 10px;
+    z-index: 10;
+}
+
+.header-logos img {
+    height: 60px; /* Tamaño base */
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+/* Fondo Animado (Colores de la marca pero sutiles) */
+.geo-shape { position: absolute; opacity: 0.6; pointer-events: none; }
 .shape-1 { 
-    top: -10%; left: -10%; width: 300px; height: 300px; 
-    background: var(--tf-purple); filter: blur(80px); border-radius: 50%; 
+    top: -5%; left: -5%; width: 400px; height: 400px; 
+    background: var(--tf-yellow); filter: blur(90px); border-radius: 50%; 
+    opacity: 0.3;
     animation: float 10s infinite alternate; 
 }
 .shape-2 { 
-    bottom: -10%; right: -10%; width: 250px; height: 250px; 
-    background: var(--tf-cyan); filter: blur(60px); border-radius: 50%; 
+    bottom: 0%; right: -5%; width: 350px; height: 350px; 
+    background: var(--tf-pink); filter: blur(100px); border-radius: 50%; 
+    opacity: 0.2;
     animation: float 15s infinite alternate-reverse; 
 }
 @keyframes float { from {transform: translate(0,0);} to {transform: translate(30px, -30px);} }
 
 /* --- TARJETA PRINCIPAL --- */
 .debate-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(75, 30, 122, 0.1); /* Borde sutil morado */
     border-radius: 25px;
     padding: 40px;
     width: 100%;
     max-width: 800px;
     min-height: 400px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    box-shadow: var(--shadow);
     position: relative;
     display: flex;
     flex-direction: column;
@@ -66,10 +92,25 @@
     align-items: center;
     text-align: center;
     transition: transform 0.3s;
+    margin-top: 10px;
+    z-index: 5;
+}
+
+/* Decoración superior tarjeta (referencia a la cinta amarilla/naranja) */
+.debate-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20%;
+    right: 20%;
+    height: 6px;
+    background: linear-gradient(90deg, var(--tf-yellow), var(--tf-orange));
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .card-label {
-    background: var(--tf-cyan);
+    background: var(--tf-orange);
     color: white;
     padding: 5px 15px;
     border-radius: 20px;
@@ -78,6 +119,7 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(227, 82, 5, 0.3);
 }
 
 .card-title {
@@ -86,15 +128,13 @@
     font-weight: 800;
     line-height: 1.2;
     margin: 0 0 20px 0;
-    background: linear-gradient(to right, #fff, #bce0fd);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--tf-purple); /* Color sólido oscuro */
 }
 
 .card-context {
     font-size: 1.1rem;
     line-height: 1.6;
-    color: #ddd;
+    color: #555555; /* Gris oscuro para lectura */
     margin-bottom: 30px;
     max-width: 90%;
 }
@@ -102,29 +142,30 @@
 /* --- SECCIÓN DESPLEGABLE (ARGUMENTOS) --- */
 .arguments-panel {
     width: 100%;
-    background: rgba(0,0,0,0.3);
+    background: rgba(253, 185, 19, 0.1); /* Fondo amarillo muy suave */
     border-radius: 15px;
     overflow: hidden;
-    height: 0; /* Oculto por defecto */
+    height: 0; 
     opacity: 0;
     transition: all 0.5s ease;
+    border: 1px solid rgba(253, 185, 19, 0.3);
 }
 
 .arguments-content {
     padding: 25px;
     text-align: left;
-    border-left: 4px solid var(--tf-pink);
+    border-left: 5px solid var(--tf-purple); /* Borde lateral morado */
 }
 
-.arg-title { color: var(--tf-pink); font-weight: bold; margin-bottom: 10px; font-family: 'Sora', sans-serif; }
-.arg-list { margin: 0; padding-left: 20px; }
+.arg-title { color: var(--tf-orange); font-weight: bold; margin-bottom: 10px; font-family: 'Sora', sans-serif; }
+.arg-list { margin: 0; padding-left: 20px; color: #444; }
 .arg-list li { margin-bottom: 8px; font-size: 0.95rem; }
 
 /* BOTÓN DE REVELAR */
 .reveal-btn {
-    background: transparent;
+    background: white;
     border: 2px solid var(--tf-purple);
-    color: var(--tf-white);
+    color: var(--tf-purple);
     padding: 12px 30px;
     border-radius: 30px;
     cursor: pointer;
@@ -136,7 +177,11 @@
     gap: 10px;
     margin-top: 20px;
 }
-.reveal-btn:hover { background: var(--tf-purple); box-shadow: 0 0 20px rgba(123, 44, 191, 0.4); }
+.reveal-btn:hover { 
+    background: var(--tf-purple); 
+    color: white;
+    box-shadow: 0 5px 15px rgba(75, 30, 122, 0.3); 
+}
 
 /* --- NAVEGACIÓN (FLECHAS) --- */
 .nav-controls {
@@ -146,41 +191,73 @@
     max-width: 900px;
     margin-top: 30px;
     align-items: center;
+    z-index: 5;
 }
 
 .nav-arrow {
-    background: rgba(255,255,255,0.1);
-    border: none;
+    background: white;
+    border: 1px solid var(--tf-purple);
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    color: white;
+    color: var(--tf-purple);
     font-size: 1.5rem;
     cursor: pointer;
     transition: 0.3s;
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
-.nav-arrow:hover { background: var(--tf-cyan); transform: scale(1.1); }
-.nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+.nav-arrow:hover { 
+    background: var(--tf-purple); 
+    color: white; 
+    transform: scale(1.1); 
+}
+.nav-arrow:disabled { 
+    opacity: 0.4; 
+    cursor: not-allowed; 
+    background: #eee; 
+    border-color: #ccc; 
+    color: #999;
+    pointer-events: none; 
+}
 
 .slide-indicator {
     font-family: 'Sora', sans-serif;
     font-weight: bold;
     letter-spacing: 2px;
     font-size: 0.9rem;
-    color: var(--tf-cyan);
+    color: var(--tf-purple);
 }
 
 /* RESPONSIVE */
-@media (max-width: 1200px) {
-    .debate-card { padding: 25px; min-height: 300px; }
+@media (max-width: 768px) {
+    .header-logos {
+        flex-direction: row; /* Mantener fila en móviles, ajustar tamaño */
+        justify-content: space-between;
+        padding: 0 5px;
+    }
+    .header-logos img {
+        height: 40px; /* Logos más pequeños en móvil */
+    }
+    .debate-card { padding: 25px; min-height: 350px; }
     .nav-controls { padding: 0 10px; }
+    
+    /* Ajuste para que los logos no se peguen si son anchos */
+    .header-logos { gap: 15px; }
 }
 </style>
 
 <div id="debate-slider-container">
+    
+    <!-- SECCIÓN LOGOS (AGREGADA) -->
+    <div class="header-logos">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP">
+        <img src="../Styles/logo.png" alt="Logo Comisión">
+    </div>
+
+    <!-- Fondo -->
     <div class="geo-shape shape-1"></div>
     <div class="geo-shape shape-2"></div>
 

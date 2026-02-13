@@ -1,18 +1,29 @@
 <!-- LIBRERÍAS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-/* --- VARIABLES DE ALTO CONTRASTE (SÓLIDOS) --- */
+/* --- VARIABLES DE MARCA (PALETA CLARA 25N) --- */
 :root {
-    --mz-bg: #170047;      /* Fondo principal */
-    --mz-panel: #480241;   /* Paneles / niveles */
-    --mz-active: #E44700;  /* Estado activo / bloqueo (tensión real) */
-    --mz-future: #480241;  /* Pendiente / no activo */
-    --mz-done: #FEC82F;    /* Resuelto / éxito */
-    --mz-text: #FEC82F;    /* Texto sobre fondos oscuros */
+    /* Fondos */
+    --mz-bg: #FFFFFF;          /* Fondo limpio */
+    --mz-panel: #F9FAFB;       /* Tarjetas */
+    
+    /* Colores Institucionales */
+    --brand-purple: #480241;   /* Morado UNP */
+    --brand-orange: #FF9800;   /* Naranja Acento */
+    --brand-yellow: #FEC82F;   /* Amarillo Detalles */
+    --brand-green: #2E7D32;    /* Éxito / Hecho */
+    
+    /* Estados del Juego */
+    --mz-active: #FF9800;      /* Activo (Naranja) */
+    --mz-future: #E0E0E0;      /* Inactivo (Gris) */
+    --mz-done: #480241;        /* Resuelto (Morado) */
+    
+    /* Texto */
+    --mz-text: #333333;        /* Gris oscuro para lectura */
+    --mz-text-muted: #666666;
 }
-
 
 #justice-visible-container {
     width: 100%;
@@ -21,172 +32,222 @@
     background-color: var(--mz-bg) !important;
     font-family: 'Roboto', sans-serif;
     color: var(--mz-text);
-    border: 2px solid #333;
-    border-radius: 8px;
-    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 30px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
 }
 
-/* DECORACIÓN DE FONDO */
+/* HEADER LOGOS (NUEVO) */
+.logo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    flex-wrap: wrap;
+    gap: 15px;
+    z-index: 10;
+}
+.logo-img {
+    height: 55px; /* Tamaño controlado */
+    width: auto;
+    object-fit: contain;
+}
+
+/* DECORACIÓN DE FONDO (SUTIL) */
 .grid-lines {
     position: absolute; top:0; left:0; width:100%; height:100%;
     background-image: 
-        linear-gradient(#222 1px, transparent 1px),
-        linear-gradient(90deg, #222 1px, transparent 1px);
-    background-size: 40px 40px;
+        radial-gradient(var(--brand-yellow) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.2;
     z-index: 0; pointer-events: none;
 }
 
-/* HEADER */
+/* TITULOS */
 .vis-header {
-    text-align: center; margin-bottom: 40px; z-index: 10;
-    border-bottom: 2px solid var(--mz-done); padding-bottom: 20px;
+    text-align: center; margin-bottom: 50px; z-index: 10;
 }
 .vis-title {
-    font-family: 'Orbitron', sans-serif; color: var(--mz-done);
-    font-size: clamp(1.5rem, 4vw, 2.5rem); margin: 0; text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif; color: var(--brand-purple);
+    font-size: clamp(1.5rem, 4vw, 2.2rem); margin: 0; text-transform: uppercase;
+    font-weight: 800; letter-spacing: -0.5px;
 }
-.vis-desc { color: #ccc; margin-top: 10px; }
+.vis-desc { 
+    color: var(--mz-text-muted); margin-top: 10px; font-weight: 500;
+    background: #fff; display: inline-block; padding: 5px 15px; border-radius: 20px;
+    border: 1px solid #eee;
+}
 
 /* --- CONEXIÓN VERTICAL --- */
 .timeline-track {
-    position: absolute; top: 120px; bottom: 100px; left: 50%; width: 6px;
-    background: #222; transform: translateX(-50%); z-index: 1;
+    position: absolute; top: 180px; bottom: 120px; left: 50%; width: 4px;
+    background: #eee; transform: translateX(-50%); z-index: 1;
 }
 .timeline-fill {
-    position: absolute; top: 120px; left: 50%; width: 6px;
-    background: var(--mz-done); transform: translateX(-50%);
+    position: absolute; top: 180px; left: 50%; width: 4px;
+    background: var(--brand-purple); transform: translateX(-50%);
     height: 0%; /* JS lo controla */
     transition: height 0.5s ease; z-index: 1;
-    box-shadow: 0 0 15px var(--mz-done);
 }
 
 /* --- NODOS (ETAPAS) --- */
 .nodes-container {
-    display: flex; flex-direction: column; gap: 40px; z-index: 5;
+    display: flex; flex-direction: column; gap: 30px; z-index: 5;
     position: relative;
 }
 
 .node-box {
-    background: var(--mz-panel);
-    border: 2px solid #444;
-    border-radius: 10px;
-    padding: 20px;
-    max-width: 600px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-left: 5px solid var(--mz-future);
+    border-radius: 8px;
+    padding: 25px;
+    max-width: 650px;
     margin: 0 auto;
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 25px;
     transition: all 0.3s;
-    opacity: 1 !important; /* FORZAR VISIBILIDAD SIEMPRE */
+    opacity: 1 !important;
     position: relative;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
 }
 
-/* ESTADO: FUTURO (Gris) */
+/* ESTADO: FUTURO (Inactivo) */
 .node-box.future {
-    border-color: #333;
-    color: #666;
-    pointer-events: none; /* No clicable */
+    opacity: 0.6 !important;
+    pointer-events: none;
+    background: #fafafa;
 }
-.node-box.future .node-icon { background: #222; color: #444; border-color: #333; }
+.node-box.future .node-icon { background: #e0e0e0; color: #fff; border-color: transparent; }
 
-/* ESTADO: ACTIVO (Rojo - Clicable) */
+/* ESTADO: ACTIVO (Atención) */
 .node-box.active {
-    border-color: var(--mz-active);
-    box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
+    border-color: var(--mz-active); /* Naranja */
+    border-left: 5px solid var(--mz-active);
+    box-shadow: 0 10px 25px rgba(255, 152, 0, 0.15);
     cursor: pointer;
     transform: scale(1.02);
 }
 .node-box.active .node-icon {
-    background: #000; color: var(--mz-active); border-color: var(--mz-active);
-    animation: pulseIcon 1.5s infinite;
+    background: #fff; color: var(--mz-active); border: 2px solid var(--mz-active);
+    animation: pulseIcon 2s infinite;
 }
 .node-box.active::after {
-    content: 'CLICK PARA INVESTIGAR';
+    content: 'CLIC PARA INVESTIGAR';
     position: absolute; top: -12px; right: 20px;
     background: var(--mz-active); color: white;
-    font-size: 0.7rem; font-weight: bold; padding: 2px 8px; border-radius: 4px;
+    font-size: 0.7rem; font-weight: bold; padding: 4px 10px; border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* ESTADO: RESUELTO (Azul) */
+/* ESTADO: RESUELTO (Morado) */
 .node-box.solved {
-    border-color: var(--mz-done);
-    color: white;
+    border-color: var(--brand-green);
+    border-left: 5px solid var(--brand-green);
+    background: #F1F8E9; /* Verde muy claro */
 }
 .node-box.solved .node-icon {
-    background: var(--mz-done); color: #000; border-color: var(--mz-done);
+    background: var(--brand-green); color: #fff; border-color: var(--brand-green);
 }
 
 /* ICONO CIRCULAR */
 .node-icon {
-    width: 60px; height: 60px; border-radius: 50%;
-    border: 3px solid #444;
+    width: 50px; height: 50px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.8rem; font-weight: bold;
-    flex-shrink: 0; background: #000; z-index: 2;
+    font-size: 1.4rem; font-weight: 800;
+    flex-shrink: 0; z-index: 2;
+    transition: all 0.3s;
 }
 
 /* TEXTOS */
 .node-content { flex: 1; }
-.nc-head { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 5px; }
-.nc-body { font-size: 0.95rem; line-height: 1.4; }
+.nc-head { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1rem; margin-bottom: 5px; color: var(--brand-purple); }
+.nc-body { font-size: 0.95rem; line-height: 1.5; color: #555; }
 
 /* --- HUD HERRAMIENTAS (ABAJO) --- */
 .tools-dock {
     position: sticky; bottom: 0; left: 0; width: 100%;
-    background: #080808; border-top: 3px solid var(--mz-done);
+    background: #fff; border-top: 4px solid var(--brand-purple);
     padding: 20px; z-index: 50; margin-top: auto;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
 }
-.dock-title { text-align: center; color: var(--mz-done); font-weight: bold; margin-bottom: 15px; letter-spacing: 1px; }
+.dock-title { text-align: center; color: var(--brand-purple); font-weight: 800; margin-bottom: 15px; letter-spacing: 0.5px; font-size: 0.9rem; }
 
 .dock-grid {
-    display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
+    display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;
 }
 .tool-btn {
-    background: #222; color: white; border: 1px solid #555;
-    padding: 12px 20px; cursor: pointer; font-weight: bold; font-family: 'Roboto', sans-serif;
-    border-radius: 5px; flex: 1 1 150px; text-align: center;
+    background: #fff; color: var(--brand-purple); border: 1px solid #ddd;
+    padding: 12px 20px; cursor: pointer; font-weight: 700; font-family: 'Roboto', sans-serif;
+    border-radius: 6px; flex: 1 1 150px; text-align: center;
     transition: 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
-.tool-btn:hover { background: #333; border-color: white; }
-.tool-btn:active { background: var(--mz-done); color: black; }
+.tool-btn:hover { background: #f3e5f5; border-color: var(--brand-purple); transform: translateY(-2px); }
+.tool-btn:active { background: var(--brand-purple); color: white; }
 
-/* --- MODALES IN-GAME --- */
+/* --- MODALES IN-GAME (ESTILO TARJETA) --- */
 .game-modal {
     position: absolute; top:0; left:0; width:100%; height:100%;
-    background: rgba(0,0,0,0.95); z-index: 100;
+    background: rgba(255,255,255,0.9); /* Fondo blanco semitransparente */
+    backdrop-filter: blur(5px);
+    z-index: 100;
     display: none; flex-direction: column; justify-content: center; align-items: center;
     padding: 20px; text-align: center;
 }
 .gm-box {
-    border: 2px solid var(--mz-active); padding: 30px; background: #111;
-    max-width: 500px; border-radius: 10px;
+    border: none; padding: 40px; background: #fff;
+    max-width: 500px; border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(72, 2, 65, 0.2);
+    border-top: 6px solid var(--brand-orange);
 }
 .gm-icon { font-size: 3rem; margin-bottom: 15px; }
-.gm-title { color: var(--mz-active); font-family: 'Orbitron', sans-serif; font-size: 1.5rem; margin-bottom: 15px; }
-.gm-text { color: #ddd; font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px; }
+.gm-title { color: var(--brand-orange); font-family: 'Montserrat', sans-serif; font-weight:800; font-size: 1.4rem; margin-bottom: 15px; text-transform:uppercase;}
+.gm-text { color: #444; font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px; }
 .gm-close { 
-    background: #333; color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold;
+    background: var(--brand-purple); color: white; border: none; padding: 12px 30px; 
+    border-radius: 50px; cursor: pointer; font-weight: bold; transition: transform 0.2s;
 }
+.gm-close:hover { transform: scale(1.05); background: var(--brand-orange); }
 
-/* Toast Notification */
+/* Toast Notification (Estilo moderno) */
 .toast-msg {
-    position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-    padding: 15px 30px; border-radius: 50px; font-weight: bold; color: white;
-    z-index: 200; display: none; box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    position: absolute; top: 80px; left: 50%; transform: translateX(-50%);
+    padding: 12px 25px; border-radius: 50px; font-weight: bold; color: white;
+    z-index: 200; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    font-family: 'Montserrat', sans-serif; font-size: 0.9rem;
 }
 
-@keyframes pulseIcon { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 0, 85, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0); } }
+@keyframes pulseIcon { 0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 152, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); } }
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .logo-header { justify-content: center; }
+    .logo-img { height: 40px; }
+    .vis-title { font-size: 1.5rem; }
+    #justice-visible-container { padding: 15px; }
+}
 
 </style>
 
 <div id="justice-visible-container">
     <div class="grid-lines"></div>
+
+    <!-- HEADER LOGOS -->
+    <div class="logo-header">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="logo-img">
+        <img src="../Styles/logo.png" alt="Logo Comisión" class="logo-img">
+    </div>
     
     <div id="toast" class="toast-msg"></div>
 
@@ -247,7 +308,7 @@
             <div class="gm-icon">🚧</div>
             <h3 class="gm-title" id="p-title">...</h3>
             <p class="gm-text" id="p-desc">...</p>
-            <div style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">▼ CIERRA Y ELIGE UNA HERRAMIENTA ABAJO ▼</div>
+            <div style="font-size:0.8rem; color:#888; margin-bottom:15px; font-weight:bold;">▼ CIERRA Y ELIGE UNA HERRAMIENTA ABAJO ▼</div>
             <button class="gm-close" onclick="closePModal()">CERRAR VENTANA</button>
         </div>
     </div>
@@ -306,7 +367,7 @@ function closePModal() {
 // 2. USAR HERRAMIENTA
 function useTool(key) {
     if (!isInspecting) {
-        showToast("⚠️ Primero haz clic en la CAJA ROJA para ver el problema.", "orange");
+        showToast("⚠️ Primero haz clic en el RECUADRO NARANJA para ver el problema.", "#FF9800");
         return;
     }
 
@@ -315,14 +376,15 @@ function useTool(key) {
     if (key === data.solution) {
         // EXITO
         closePModal();
-        showToast("✅ HERRAMIENTA CORRECTA", "#00e5ff");
+        showToast("✅ HERRAMIENTA CORRECTA", "#2E7D32"); // Verde oscuro
         
         // Transformar Nodo Actual
         const node = document.getElementById(`n${level}`);
         node.classList.remove('active');
         node.classList.add('solved');
         node.querySelector('.node-icon').innerText = "✓";
-        document.getElementById(`txt-${level}`).innerHTML = `<span style='color:#00e5ff'>${data.fix}</span>`;
+        // Texto de feedback en verde
+        document.getElementById(`txt-${level}`).innerHTML = `<span style='color:#2E7D32; font-weight:bold;'>${data.fix}</span>`;
 
         // Avanzar Línea
         let h = 33 * level;
@@ -348,14 +410,14 @@ function useTool(key) {
         } else {
             // FIN
             setTimeout(() => {
-                showToast("🎉 ¡JUSTICIA RESTAURADA!", "#00e5ff");
-                document.querySelector('.vis-title').style.color = "#00e5ff";
+                showToast("🎉 ¡JUSTICIA RESTAURADA!", "#480241"); // Morado
+                document.querySelector('.vis-title').style.color = "#2E7D32";
             }, 1000);
         }
 
     } else {
         // ERROR
-        showToast("❌ HERRAMIENTA INCORRECTA", "#ff0055");
+        showToast("❌ HERRAMIENTA INCORRECTA", "#D32F2F"); // Rojo
         // Shake modal si está abierto
         if(document.getElementById('problem-modal').style.display === 'flex'){
             gsap.to(".gm-box", {x:10, duration:0.1, yoyo:true, repeat:3});
@@ -367,8 +429,9 @@ function useTool(key) {
 function showToast(text, color) {
     const t = document.getElementById('toast');
     t.innerText = text;
-    t.style.background = color === 'orange' ? '#ff9900' : (color.includes('#') ? color : '#333');
-    t.style.color = color === '#00e5ff' ? '#000' : '#fff'; // Contraste
+    // Colores legibles
+    t.style.background = color;
+    t.style.color = '#fff';
     
     t.style.display = 'block';
     gsap.fromTo(t, {y:-20, opacity:0}, {y:0, opacity:1, duration:0.3});

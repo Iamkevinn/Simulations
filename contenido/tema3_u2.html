@@ -5,13 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
     :root {
-    --bg-core: #170047;            /* Fondo base */
-    --bad: #E44700;                /* Negativo / daño */
-    --good: #EE7D4F;               /* Positivo / correcto */
-    --epist: #D23B78;              /* Conocimiento / reflexión */
-    --gold: #FEC82F;               /* Valor / logro */
-    --glass: rgba(23, 0, 71, 0.9); /* Glass institucional */
-    --text: #FEC82F;               /* Texto principal */
+    --bg-core: #F5F5F5;            /* Fondo claro */
+    --bad: #E85D9A;                /* Rosa para problemas */
+    --good: #9B59B6;               /* Morado para soluciones */
+    --epist: #FF6B35;              /* Naranja para epistemología */
+    --gold: #FFB84D;               /* Dorado para logros */
+    --glass: rgba(255, 255, 255, 0.98); /* Vidrio institucional */
+    --text: #2C2C2C;               /* Texto principal */
+    --border: #E85D9A;             /* Bordes */
 }
 
 
@@ -32,17 +33,65 @@
     /* --- FONDO --- */
     .ambient-bg {
         position: absolute; width: 100%; height: 100%;
-        background: radial-gradient(circle at center, #1e1b4b 0%, #020617 80%);
+        background: radial-gradient(circle at center, #FFFFFF 0%, #F0F0F0 80%);
         z-index: 0;
     }
     .grid-lines {
         position: absolute; width: 200%; height: 200%;
-        background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+        background-image: radial-gradient(rgba(232, 93, 154, 0.15) 1px, transparent 1px);
         background-size: 30px 30px;
-        opacity: 0.3;
-        animation: rotateBg 120s linear infinite; /* Más lento para no marear */
+        opacity: 0.5;
+        animation: rotateBg 120s linear infinite;
     }
     @keyframes rotateBg { from { transform: translate(-25%, -25%) rotate(0deg); } to { transform: translate(-25%, -25%) rotate(360deg); } }
+
+    /* --- HEADER CON LOGOS --- */
+    .top-header {
+        height: 70px;
+        background: var(--glass);
+        border-bottom: 3px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        z-index: 100;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    }
+    
+    .logos-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-shrink: 0;
+    }
+    
+    .logos-container img {
+        height: 45px;
+        width: auto;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+    
+    .logos-container img:hover {
+        transform: scale(1.05);
+    }
+    
+    .header-title {
+        flex-grow: 1;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.1rem;
+        color: var(--bad);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .score-display {
+        flex-shrink: 0;
+        font-weight: bold;
+        color: var(--good);
+        font-size: 0.9rem;
+    }
 
     /* --- ARENA DE JUEGO --- */
     .game-arena {
@@ -74,30 +123,31 @@
     }
     @keyframes drawFlow { to { stroke-dashoffset: 0; } }
 
-    /* NÚCLEO CENTRAL (Sin animación flotante) */
+    /* NÚCLEO CENTRAL */
     .core-system {
         position: absolute;
         width: 110px; height: 110px;
-        background: rgba(15, 23, 42, 0.95);
-        border: 2px solid white;
+        background: white;
+        border: 3px solid var(--border);
         border-radius: 50%;
         display: flex; justify-content: center; align-items: center;
         text-align: center; font-weight: bold; font-size: 0.8rem;
-        box-shadow: 0 0 40px rgba(255,255,255,0.15);
+        box-shadow: 0 5px 25px rgba(232, 93, 154, 0.2);
         z-index: 20;
         transition: all 0.5s;
+        color: var(--text);
     }
     .core-system::before {
         content: ''; position: absolute; width: 140%; height: 140%;
-        border: 1px dashed rgba(255,255,255,0.2); border-radius: 50%;
+        border: 2px dashed rgba(232, 93, 154, 0.3); border-radius: 50%;
         animation: spin 30s linear infinite;
     }
     @keyframes spin { 100% { transform: rotate(360deg); } }
     
     .core-system.active {
         border-color: var(--gold);
-        box-shadow: 0 0 60px var(--gold);
-        background: rgba(251, 191, 36, 0.2);
+        box-shadow: 0 0 60px rgba(255, 184, 77, 0.5);
+        background: rgba(255, 184, 77, 0.2);
         animation: pulseCore 0.6s 2;
     }
     @keyframes pulseCore { 50% { transform: scale(1.1); } }
@@ -109,93 +159,211 @@
         border-radius: 50%;
         display: flex; justify-content: center; align-items: center;
         font-size: 1.4rem; cursor: pointer;
-        background: rgba(30, 41, 59, 0.8);
-        border: 2px solid rgba(255,255,255,0.2);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        background: white;
+        border: 3px solid rgba(232, 93, 154, 0.3);
+        box-shadow: 0 3px 15px rgba(0,0,0,0.15);
         transition: transform 0.3s, background 0.3s, border-color 0.3s;
         z-index: 10;
         
-        /* Configuración base de la animación (duración se define en JS) */
         animation-name: floatOrbit;
         animation-timing-function: ease-in-out;
         animation-iteration-count: infinite;
     }
 
-    /* Animación de Flotación */
     @keyframes floatOrbit {
         0% { transform: translateY(0px); }
-        50% { transform: translateY(-15px); } /* Flotan 15px hacia arriba */
+        50% { transform: translateY(-15px); }
         100% { transform: translateY(0px); }
     }
     
-    /* Pausar animación al pasar el mouse para facilitar clic */
     .node:hover { 
         animation-play-state: paused;
         transform: scale(1.2) translateY(-5px); 
         z-index: 50; 
-        background: rgba(255,255,255,0.1);
+        background: rgba(232, 93, 154, 0.1);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
     }
 
-    /* Estado Activo (Seleccionado) */
     .node.active { 
-        background: white; color: black; 
+        background: var(--gold); 
+        color: white; 
         transform: scale(1.2); 
         z-index: 50; 
-        box-shadow: 0 0 20px white;
-        animation: none; /* Dejar de flotar si está seleccionado */
+        box-shadow: 0 0 25px var(--gold);
+        animation: none;
+        border-color: var(--gold);
     }
 
-    .node-bad { border-color: var(--bad); color: var(--bad); }
-    .node-good { border-color: var(--good); color: var(--good); }
+    .node-bad { border-color: var(--bad); }
+    .node-good { border-color: var(--good); }
     
-    /* EPISTEMOLOGÍA (Top) */
+    /* EPISTEMOLOGÍA */
     .node-epist {
         width: auto; height: auto;
         padding: 8px 15px; border-radius: 20px;
-        background: rgba(217, 70, 239, 0.2);
-        border: 1px solid var(--epist); color: var(--epist);
+        background: white;
+        border: 2px solid var(--epist); 
+        color: var(--epist);
         font-size: 0.9rem; font-weight: bold;
+    }
+    
+    .node-epist:hover {
+        background: rgba(255, 107, 53, 0.1);
     }
 
     /* ESTADO RESUELTO */
     .node.resolved {
-        background: var(--gold); color: black; border-color: white;
+        background: var(--gold); 
+        color: white; 
+        border-color: var(--gold);
         box-shadow: 0 0 30px var(--gold);
-        animation: pop 0.5s; /* Se detiene el float, hace pop */
+        animation: pop 0.5s;
     }
     @keyframes pop { 50% { transform: scale(1.4); } }
 
     /* --- HUD INFERIOR --- */
     .hud-panel {
         background: var(--glass);
-        border-top: 3px solid var(--epist);
+        border-top: 3px solid var(--border);
         padding: 20px; z-index: 100;
         min-height: 180px;
         display: flex; flex-direction: column;
-        box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
     }
-    .hud-header { display: flex; justify-content: space-between; color: var(--epist); font-weight: bold; font-size: 0.8rem; margin-bottom: 8px; }
-    .hud-content { font-size: 0.9rem; line-height: 1.5; color: #cbd5e1; flex-grow: 1; max-height: 150px; overflow-y: auto; }
+    .hud-header { 
+        display: flex; 
+        justify-content: space-between; 
+        color: var(--bad); 
+        font-weight: bold; 
+        font-size: 0.8rem; 
+        margin-bottom: 8px; 
+    }
+    .hud-content { 
+        font-size: 0.9rem; 
+        line-height: 1.5; 
+        color: var(--text); 
+        flex-grow: 1; 
+        max-height: 150px; 
+        overflow-y: auto; 
+    }
     
     .action-btn {
         margin-top: 10px;
-        background: linear-gradient(90deg, var(--gold), #f59e0b);
+        background: linear-gradient(90deg, var(--gold), #FFB84D);
         border: none; padding: 12px; width: 100%;
-        color: black; font-weight: bold; border-radius: 6px;
+        color: white; font-weight: bold; border-radius: 6px;
         cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
         display: none; animation: slideUp 0.3s;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.15);
     }
+    
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
     @keyframes slideUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
     /* MODAL VICTORIA */
-    .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 200; justify-content: center; align-items: center; padding: 20px; }
-    .modal-box { background: #0f172a; border: 2px solid var(--gold); padding: 30px; text-align: center; border-radius: 15px; max-width: 500px; animation: pop 0.5s; }
+    .modal { 
+        display: none; 
+        position: fixed; 
+        top:0; 
+        left:0; 
+        width:100%; 
+        height:100%; 
+        background: rgba(0,0,0,0.85); 
+        z-index: 200; 
+        justify-content: center; 
+        align-items: center; 
+        padding: 20px; 
+    }
+    .modal-box { 
+        background: white; 
+        border: 3px solid var(--gold); 
+        padding: 30px; 
+        text-align: center; 
+        border-radius: 15px; 
+        max-width: 500px; 
+        animation: pop 0.5s;
+        box-shadow: 0 0 50px rgba(255, 184, 77, 0.4);
+    }
+    
+    .modal-box h2 {
+        color: var(--gold);
+        margin-bottom: 15px;
+    }
+    
+    .modal-box p {
+        color: var(--text);
+        line-height: 1.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .logos-container img {
+            height: 35px;
+        }
+        
+        .top-header {
+            padding: 0 10px;
+        }
+        
+        .logos-container {
+            gap: 8px;
+        }
+        
+        .header-title {
+            font-size: 0.9rem;
+        }
+        
+        .score-display {
+            font-size: 0.8rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .logos-container img {
+            height: 30px;
+        }
+        
+        .header-title {
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .score-display {
+            font-size: 0.75rem;
+        }
+        
+        .node {
+            width: 45px;
+            height: 45px;
+            font-size: 1.2rem;
+        }
+        
+        .core-system {
+            width: 90px;
+            height: 90px;
+            font-size: 0.7rem;
+        }
+    }
 
 </style>
 </head>
 <body>
 
     <div class="ambient-bg"><div class="grid-lines"></div></div>
+
+    <!-- HEADER CON LOGOS -->
+    <div class="top-header">
+        <div class="logos-container">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP">
+            <img src="../Styles/logo.png" alt="Logo Comisión">
+        </div>
+        <div class="header-title">SISTEMA DE TRANSFORMACIÓN UNP</div>
+        <div class="score-display" id="score">TRANSFORMACIÓN: 0%</div>
+    </div>
 
     <div class="game-arena" id="arena">
         <svg class="svg-layer" id="svg-layer"></svg>
@@ -223,11 +391,11 @@
     <div class="hud-panel">
         <div class="hud-header">
             <span>SISTEMA DE MANDO</span>
-            <span id="score">TRANSFORMACIÓN: 0%</span>
+            <span style="color: var(--good);">ANÁLISIS EN CURSO</span>
         </div>
         <div class="hud-content" id="hud-desc">
-            <strong>Misión:</strong> El sistema tiene bloqueos <b>(Rojo, abajo)</b>.<br>
-            Toca un Problema y luego su Solución Comunitaria <b>(Verde, arriba)</b> para generar la conexión.
+            <strong>Misión:</strong> El sistema tiene bloqueos <b style="color: var(--bad);">(Rosa)</b>.<br>
+            Toca un Problema y luego su Solución Comunitaria <b style="color: var(--good);">(Morado)</b> para generar la conexión.
         </div>
         <button class="action-btn" id="btn-action">VINCULAR Y TRANSFORMAR</button>
     </div>
@@ -235,9 +403,9 @@
     <!-- MODAL -->
     <div class="modal" id="win-modal">
         <div class="modal-box">
-            <h2 style="color:var(--gold)">¡SISTEMA TRANSFORMADO!</h2>
-            <p style="color:#cbd5e1">Has integrado la protección colectiva y los saberes locales en la UNP.</p>
-            <button onclick="location.reload()" style="background:var(--gold); border:none; padding:10px 20px; font-weight:bold; cursor:pointer; margin-top:15px; border-radius:5px;">REINICIAR</button>
+            <h2>¡SISTEMA TRANSFORMADO!</h2>
+            <p>Has integrado la protección colectiva y los saberes locales en la UNP.</p>
+            <button onclick="location.reload()" style="background:var(--gold); border:none; padding:10px 20px; font-weight:bold; cursor:pointer; margin-top:15px; border-radius:5px; color:white;">REINICIAR</button>
         </div>
     </div>
 
@@ -280,13 +448,10 @@
     }
 
     // --- ALEATORIEDAD DE ANIMACIÓN ---
-    // Esto asegura que no parezcan robots moviéndose al unísono
     function randomizeFloat() {
         const nodes = document.querySelectorAll('.node');
         nodes.forEach(node => {
-            // Duración entre 3s y 6s
             const duration = 3 + Math.random() * 3;
-            // Retraso entre 0s y 2s
             const delay = Math.random() * 2;
             
             node.style.animationDuration = `${duration}s`;
@@ -336,10 +501,10 @@
             document.querySelectorAll('.node-good').forEach(n => n.classList.remove('active'));
             btn.style.display = 'none';
 
-            updateHud(db[id].title, db[id].text + "<br><br><span style='color:var(--bad)'>Selecciona la solución correspondiente.</span>");
+            updateHud(db[id].title, db[id].text + "<br><br><span style='color:var(--bad); font-weight: bold;'>Selecciona la solución correspondiente.</span>");
         } else {
             if(!activeBad) {
-                updateHud("ACCIÓN REQUERIDA", "Primero selecciona un problema (Rojo) del lado izquierdo.");
+                updateHud("ACCIÓN REQUERIDA", "Primero selecciona un problema (Rosa) del lado izquierdo.");
                 return;
             }
             document.querySelectorAll('.node-good').forEach(n => n.classList.remove('active'));
@@ -356,7 +521,7 @@
         if(db[activeBad].pair === activeGood) {
             success(activeBad, activeGood);
         } else {
-            updateHud("ERROR DE VINCULACIÓN", "<strong style='color:orange'>Esta solución no encaja con el problema.</strong> Intenta otra.");
+            updateHud("ERROR DE VINCULACIÓN", "<strong style='color:var(--epist)'>Esta solución no encaja con el problema.</strong> Intenta otra.");
             document.getElementById(activeGood).classList.remove('active');
             activeGood = null;
             btn.style.display = 'none';
@@ -368,7 +533,6 @@
         const g = document.getElementById(goodId);
         const c = document.getElementById('core');
 
-        // Stop float animation by removing animation style inline (if needed) or adding resolved class
         b.className = "node resolved"; b.innerHTML = "✨";
         g.className = "node resolved"; g.innerHTML = "✨";
         
@@ -414,7 +578,7 @@
     }
 
     function showEpist() { updateHud(db.epist.title, db.epist.text); }
-    function updateHud(t, txt) { document.getElementById('hud-desc').innerHTML = `<strong style="color:var(--epist)">${t}</strong><br>${txt}`; }
+    function updateHud(t, txt) { document.getElementById('hud-desc').innerHTML = `<strong style="color:var(--bad)">${t}</strong><br>${txt}`; }
 
 </script>
 

@@ -1,34 +1,34 @@
 <!-- LIBRERÍAS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Work+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-/* --- ESTILO MEMPHIS MODERNO (SÓLIDO) --- */
+/* --- ESTILO INSTITUCIONAL MODERNO (CLARO) --- */
 :root {
-    --bg-color: #FEC82F;          /* Fondo claro cálido */
-    --text-color: #170047;        /* Texto principal */
-
-    --accent-purple: #480241;     /* Acento estructural */
-    --accent-teal: #EE7D4F;       /* Acento secundario / interacción */
-    --accent-red: #E44700;        /* Error / énfasis negativo */
-    --accent-yellow: #D23B78;     /* Énfasis positivo / foco */
-
-    --border-color: #170047;      /* Bordes */
-    --border-width: 3px;
+    /* Paleta Imagen */
+    --tf-purple: #4B1E7A;          /* Estructural / Texto Títulos */
+    --tf-orange: #E35205;          /* Acento / Cargas pesadas */
+    --tf-yellow: #FDB913;          /* Bloques estándar */
+    --tf-teal: #00A499;            /* Equilibrio / Solución */
+    
+    --bg-main: #FFFFFF;            /* Fondo limpio */
+    --bg-panel: #F9F9F9;           /* Fondo paneles */
+    --text-main: #333333;          /* Texto lectura */
+    
+    --border-color: #e0e0e0;
+    --border-radius: 16px;
+    --shadow-soft: 0 10px 30px rgba(75, 30, 122, 0.1);
 }
-
 
 #balance-game-v2 {
     width: 100%;
-    min-height: 850px;
+    min-height: 900px;
     height: auto;
-    background-color: var(--bg-color) !important;
-    background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
-    background-size: 25px 25px;
-    font-family: 'Work Sans', sans-serif;
-    color: var(--text-color);
-    border: var(--border-width) solid var(--border-color);
-    border-radius: 12px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F3E5F5 100%);
+    font-family: 'Inter', sans-serif;
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -37,19 +37,51 @@
     padding: 20px;
 }
 
-/* --- HEADER --- */
+/* --- LOGOS DEL CLIENTE --- */
+.header-logos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 0 10px;
+    z-index: 10;
+}
+
+.header-logos img {
+    height: 55px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+/* --- HEADER TEXTO --- */
 .game-header {
-    text-align: center; margin-bottom: 30px; position: relative; z-index: 5;
-    background: white; border: var(--border-width) solid var(--border-color);
-    padding: 15px; box-shadow: 5px 5px 0 var(--border-color);
+    text-align: center; 
+    margin-bottom: 20px; 
+    position: relative; 
+    z-index: 5;
+    padding: 0 15px;
 }
 .gh-title {
-    font-family: 'Fredoka', sans-serif; font-size: clamp(1.5rem, 4vw, 2.2rem);
-    margin: 0; color: var(--accent-purple); text-transform: uppercase;
+    font-family: 'Sora', sans-serif; 
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    font-weight: 800;
+    margin: 0 0 10px 0; 
+    color: var(--tf-purple); 
+    line-height: 1.2;
 }
-.gh-desc { font-size: 0.95rem; margin-top: 5px; color: #555; }
+.gh-desc { 
+    font-size: 1rem; 
+    color: #555; 
+    background: white;
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
 
-/* --- BALANZA (RESPONSIVE) --- */
+/* --- BALANZA (DISEÑO LIMPIO) --- */
 .scale-stage {
     flex: 1; position: relative; min-height: 400px;
     display: flex; justify-content: center; align-items: center;
@@ -57,81 +89,93 @@
 
 /* Estructura */
 .scale-base {
-    width: 40px; height: 160px; background: var(--border-color);
+    width: 40px; height: 160px; 
+    background: var(--tf-purple); /* Base morada */
     position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
     border-radius: 20px 20px 0 0;
+    box-shadow: inset 5px 0 10px rgba(0,0,0,0.2);
 }
 .scale-base::after { /* Pie */
     content:''; position: absolute; bottom: -10px; left: -50px;
-    width: 140px; height: 20px; background: var(--border-color); border-radius: 10px;
+    width: 140px; height: 20px; 
+    background: var(--tf-purple); 
+    border-radius: 10px;
 }
 
 /* Brazo */
 .scale-arm-container {
-    position: absolute; top: 100px; /* Ajuste visual */
+    position: absolute; top: 100px; 
     width: 500px; height: 20px; 
-    /* El pivote es el centro */
 }
 
 .scale-beam {
-    width: 100%; height: 15px; background: var(--border-color); border-radius: 10px;
+    width: 100%; height: 12px; 
+    background: #555; /* Metal oscuro */
+    border-radius: 10px;
 }
 
 /* Platos */
 .plate-group {
     position: absolute; top: 5px; width: 120px;
-    /* Importante: transform-origin arriba para el péndulo */
 }
 .pg-left { left: 0; }
 .pg-right { right: 0; }
 
 .rope {
-    width: 2px; height: 120px; background: #555; position: absolute; top: 0;
+    width: 2px; height: 120px; 
+    background: #ccc; /* Cuerda gris clara */
+    position: absolute; top: 0;
 }
 .rope-1 { left: 10px; transform: rotate(10deg); transform-origin: top; }
 .rope-2 { right: 10px; transform: rotate(-10deg); transform-origin: top; }
 
 .plate-dish {
-    width: 120px; height: 10px; background: var(--border-color);
+    width: 120px; height: 10px; 
+    background: var(--tf-purple);
     position: absolute; top: 120px; left: 0;
-    display: flex; flex-direction: column-reverse; /* Apilar hacia arriba */
+    display: flex; flex-direction: column-reverse; 
     align-items: center; justify-content: flex-start;
+    border-radius: 5px;
 }
 
 /* ETIQUETAS DE PLATOS */
 .plate-label {
     position: absolute; top: 140px; width: 100%; text-align: center;
-    font-weight: bold; font-size: 0.8rem; background: white; 
-    border: 1px solid black; padding: 2px;
+    font-weight: bold; font-size: 0.8rem; color: #777;
+    font-family: 'Sora', sans-serif;
+    letter-spacing: 1px;
 }
 
 /* --- BLOQUES --- */
 .block {
     width: 90px; height: 40px; margin-bottom: 2px;
-    border: 2px solid var(--border-color);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.7rem; font-weight: bold; text-align: center; line-height: 1.1;
+    font-size: 0.75rem; font-weight: bold; text-align: center; line-height: 1.1;
     cursor: pointer; transition: 0.3s;
-    box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    font-family: 'Inter', sans-serif;
 }
 
-.block-visible { background: var(--accent-teal); color: white; }
+.block-visible { background: var(--tf-yellow); color: var(--tf-purple); }
 
-/* El bloque "misterioso" ahora es visible como incógnita */
+/* Bloque misterioso */
 .block-mystery {
-    background: #e0e0e0; color: #555; border-style: dashed;
+    background: #f0f0f0; color: #999; border: 2px dashed #ccc;
 }
 .block-mystery::after { content: "?"; font-size: 1.2rem; }
 
-/* El bloque revelado */
+/* Bloque revelado (Cargas pesadas) */
 .block-revealed {
-    background: var(--accent-red); color: white; border-style: solid;
+    background: var(--tf-orange); color: white; border: none;
     animation: flash 0.5s;
 }
 
+/* Bloque UNP (Solución) */
 .block-unp {
-    background: var(--accent-purple); color: white; width: 110px; height: 50px;
-    z-index: 10;
+    background: var(--tf-purple); color: white; width: 110px; height: 50px;
+    z-index: 10; border: 1px solid white;
 }
 
 /* --- CONTROLES Y HUD --- */
@@ -141,11 +185,13 @@
 }
 
 .inventory-box {
-    background: white; border: var(--border-width) solid var(--border-color);
-    padding: 15px; border-radius: 10px; width: 100%; max-width: 800px;
+    background: white; 
+    border: 1px solid #eee;
+    padding: 20px; border-radius: 15px; width: 100%; max-width: 800px;
     text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
 }
-.inv-title { font-weight: bold; margin-bottom: 10px; text-transform: uppercase; color: var(--accent-purple); }
+.inv-title { font-weight: 800; margin-bottom: 15px; color: var(--tf-purple); font-size: 0.9rem; letter-spacing: 1px; }
 
 .block-pool {
     display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
@@ -153,21 +199,24 @@
 
 /* BOTONES DE ACCIÓN */
 .action-btn {
-    padding: 15px 30px; font-family: 'Fredoka', sans-serif; font-size: 1.1rem;
-    border: var(--border-width) solid var(--border-color); border-radius: 50px;
-    cursor: pointer; transition: 0.2s; background: #ddd; color: #777;
-    pointer-events: none; /* Desactivado por defecto */
+    padding: 12px 30px; font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: bold;
+    border: 1px solid #ccc; border-radius: 50px;
+    cursor: pointer; transition: 0.2s; background: white; color: #999;
+    pointer-events: none; opacity: 0.6;
     display: flex; align-items: center; gap: 10px;
 }
 
 .action-btn.active {
-    background: var(--accent-yellow); color: black;
-    pointer-events: all; box-shadow: 5px 5px 0 var(--border-color);
+    background: var(--tf-orange); color: white; border-color: var(--tf-orange);
+    pointer-events: all; opacity: 1;
+    box-shadow: 0 4px 15px rgba(227, 82, 5, 0.3);
 }
-.action-btn.active:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--border-color); }
+.action-btn.active:hover { transform: translateY(-2px); }
 
-.unp-btn {
-    background: var(--accent-purple) !important; color: white !important;
+.unp-btn.active {
+    background: var(--tf-purple) !important; 
+    border-color: var(--tf-purple) !important;
+    box-shadow: 0 4px 15px rgba(75, 30, 122, 0.3);
 }
 
 /* --- MODALES --- */
@@ -176,24 +225,35 @@
     background: rgba(255,255,255,0.95); z-index: 100;
     display: flex; flex-direction: column; justify-content: center; align-items: center;
     padding: 30px; text-align: center; box-sizing: border-box;
+    backdrop-filter: blur(5px);
 }
 .modal-box {
-    background: white; border: 3px solid var(--border-color);
-    padding: 30px; border-radius: 15px; box-shadow: 10px 10px 0 var(--accent-teal);
+    background: white; border: 1px solid #eee;
+    padding: 40px; border-radius: 20px; 
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
     max-width: 600px;
 }
-.m-title { font-family: 'Fredoka'; font-size: 2rem; color: var(--accent-purple); margin-bottom: 15px; }
-.m-text { font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px; }
-.m-btn {
-    background: var(--accent-teal); color: white; border: 2px solid black;
-    padding: 10px 25px; font-weight: bold; cursor: pointer; font-size: 1rem;
+.m-title { 
+    font-family: 'Sora', sans-serif; 
+    font-weight: 800;
+    font-size: 1.8rem; 
+    color: var(--tf-purple); 
+    margin-bottom: 15px; 
 }
+.m-text { font-size: 1.1rem; line-height: 1.6; margin-bottom: 30px; color: #555; }
+.m-btn {
+    background: var(--tf-purple); color: white; border: none;
+    padding: 12px 30px; font-weight: bold; cursor: pointer; font-size: 1rem;
+    border-radius: 30px; transition: 0.3s;
+}
+.m-btn:hover { background: var(--tf-orange); transform: scale(1.05); }
 
 /* ANIMACIONES */
 @keyframes flash { 0% { transform: scale(1); } 50% { transform: scale(1.1); background: white; } 100% { transform: scale(1); } }
 
 /* RESPONSIVE */
-@media (max-width: 700px) {
+@media (max-width: 768px) {
+    .header-logos img { height: 40px; }
     .scale-arm-container { width: 280px; } /* Reducir balanza */
     .plate-group { width: 90px; }
     .block { width: 70px; font-size: 0.6rem; }
@@ -203,6 +263,12 @@
 </style>
 
 <div id="balance-game-v2">
+
+    <!-- HEADER CON LOGOS (AGREGADO) -->
+    <div class="header-logos">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP">
+        <img src="../Styles/logo.png" alt="Logo Comisión">
+    </div>
 
     <div class="game-header">
         <h1 class="gh-title">Balanza de Cargas Laborales</h1>
@@ -250,7 +316,7 @@
 
         <!-- Inventario -->
         <div class="inventory-box" id="inv-box">
-            <div class="inv-title">AÑADE PESO A LA BALANZA (Click):</div>
+            <div class="inv-title">AÑADE PESO A LA BALANZA (CLIC):</div>
             <div class="block-pool">
                 <div class="block block-visible" onclick="addBlock('visible', 'Jornada Laboral')">Jornada Laboral</div>
                 <div class="block block-mystery" onclick="addBlock('mystery', null)">Carga Oculta</div>
@@ -276,14 +342,14 @@
 
     <!-- MODAL FINAL -->
     <div class="modal-overlay" id="end-modal" style="display:none;">
-        <div class="modal-box" style="border-color:var(--accent-purple);">
-            <div class="m-title">EQUILIBRIO ALCANZADO</div>
+        <div class="modal-box">
+            <div class="m-title" style="color:var(--tf-teal)">EQUILIBRIO ALCANZADO</div>
             <p class="m-text">
                 Al aplicar la <strong>Corresponsabilidad UNP</strong>, la institución reconoce que el cuidado es un derecho y un deber colectivo, no solo de las mujeres.
                 <br><br>
                 Esto previene violencias económicas y psicológicas derivadas de la sobrecarga.
             </p>
-            <button class="m-btn" style="background:var(--accent-purple);" onclick="location.reload()">REPETIR EJERCICIO</button>
+            <button class="m-btn" style="background:var(--tf-teal);" onclick="location.reload()">REPETIR EJERCICIO</button>
         </div>
     </div>
 
@@ -358,6 +424,7 @@ function checkButtonStatus() {
     if (mysteryCount >= 2) {
         document.getElementById('btn-glasses').classList.add('active');
         document.getElementById('btn-glasses').innerText = "👓 ACTIVAR GAFAS DE GÉNERO (LISTO)";
+        document.getElementById('btn-glasses').style.opacity = "1";
     }
 }
 

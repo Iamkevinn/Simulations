@@ -1,11 +1,19 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <div class="c190-mission-wrapper">
-    <!-- Fondo de Cuadrícula Dinámica (Radar) -->
+    <!-- Fondo de Cuadrícula Dinámica (Ahora sutil en gris/naranja) -->
     <div class="radar-grid"></div>
     <div class="scan-line-v"></div>
 
     <div class="mission-dashboard">
+        
+        <!-- NUEVO: Contenedor de Logos del Cliente -->
+        <div class="header-logos">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo unp-logo">
+            <div class="logo-divider"></div>
+            <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo comision-logo">
+        </div>
+
         <!-- Encabezado de la Misión -->
         <header class="dashboard-header">
             <div class="mission-id">REF: CONVENIO 190 OIT / UNP-COL</div>
@@ -20,7 +28,8 @@
             <div class="module-box info-trigger" onclick="toggleDetail('diag')">
                 <div class="module-status">ESTADO: CRÍTICO</div>
                 <div class="module-icon"><i class="fas fa-triangle-exclamation"></i></div>
-                <h3 style="color:rgba(255, 255, 255, 0.725);">1. Contexto Institucional</h3>
+                <!-- Nota: Cambié el color inline de blanco a gris oscuro para que se vea en fondo claro -->
+                <h3 style="color:rgba(23, 0, 71, 0.8);">1. Contexto Institucional</h3>
                 <div class="mini-bar"><div class="fill" style="width: 85%;"></div></div>
                 <div id="diag" class="module-detail">
                     <p>La violencia y el acoso son problemáticas <strong>estructurales y multidimensionales</strong>. En la UNP, la naturaleza de las funciones puede normalizar prácticas autoritarias y violencias simbólicas que debemos desaprender.</p>
@@ -31,15 +40,14 @@
             <div class="module-box info-trigger" onclick="toggleDetail('norm')">
                 <div class="module-status">ESTADO: NORMATIVO</div>
                 <div class="module-icon"><i class="fas fa-gavel"></i></div>
-                <h3 style="color:rgba(255, 255, 255, 0.725);">2. Marco Convenio 190</h3>
-                <div class="mini-bar"><div class="fill" style="width: 100%; background: var(--c190-cyan);"></div></div>
+                <!-- Nota: Cambié el color inline de blanco a gris oscuro -->
+                <h3 style="color:rgba(23, 0, 71, 0.8);">2. Marco Convenio 190</h3>
+                <div class="mini-bar"><div class="fill" style="width: 100%; background: var(--c190-orange);"></div></div>
                 <div id="norm" class="module-detail">
                     <p>Reconoce el derecho a un mundo del trabajo libre de violencia. Incluye espacios físicos, comunicaciones y trayectos. Protege contra la violencia <strong>física, psicológica, sexual, económica y simbólica</strong>.</p>
                 </div>
             </div>
 
-            </div>
-            
         </div>
 
         <!-- Panel de Mensaje de Impacto -->
@@ -58,38 +66,84 @@
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;700;900&display=swap');
 
 :root {
-    --c190-bg: #170047;                 /* Fondo profundo */
-    --c190-cyan: #FEC82F;               /* Acento luminoso principal */
-    --c190-purple: #D23B78;             /* Acento neón secundario */
-    --c190-red: #E44700;                /* Error / peligro */
-    --c190-glass: rgba(23, 0, 71, 0.8);  /* Glass institucional */
-    --c190-border: rgba(254, 200, 47, 0.25); /* Borde luminoso */
+    /* Paleta Extraída del Flyer (Tema Claro) */
+    --c190-bg: #FFFFFF;                 /* Fondo Blanco Limpio */
+    --c190-text-main: #333333;          /* Texto Gris Oscuro */
+    --c190-orange: #F7941D;             /* Naranja del flyer */
+    --c190-purple: #662D91;             /* Morado del flyer */
+    --c190-yellow: #FEC82F;             /* Amarillo del flyer */
+    --c190-red: #E44700;                /* Rojo/Naranja fuerte */
+    
+    /* Variables de UI */
+    --c190-glass: rgba(243, 244, 246, 0.9);  /* Gris muy claro semi-transparente */
+    --c190-border: rgba(102, 45, 145, 0.15); /* Borde morado sutil */
+    --c190-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
-
 
 .c190-mission-wrapper {
     background-color: var(--c190-bg);
+    /* Fondo con degradado sutil inspirado en el flyer */
+    background: linear-gradient(135deg, #ffffff 0%, #fcf5ff 100%);
     font-family: 'Inter', sans-serif;
-    color: white;
+    color: var(--c190-text-main);
     padding: 60px 20px;
     position: relative;
     overflow: hidden;
     border-radius: 30px;
-    border: 1px solid var(--c190-border);
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
-/* Fondo Radar Animado */
+/* --- LOGOS CLIENTE --- */
+.header-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.client-logo {
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.unp-logo {
+    max-height: 60px; /* Ajustar según proporciones reales */
+    max-width: 150px;
+}
+
+.comision-logo {
+    max-height: 70px; /* Logo 25N suele ser más cuadrado/alto */
+    max-width: 150px;
+}
+
+.logo-divider {
+    width: 2px;
+    height: 40px;
+    background-color: var(--c190-orange);
+    opacity: 0.3;
+}
+
+.header-logos:hover .client-logo {
+    transform: scale(1.05);
+}
+
+/* Fondo Radar Animado (Adaptado a claro) */
 .radar-grid {
     position: absolute;
     top: 0; left: 0; width: 200%; height: 200%;
+    /* Grid gris suave y naranja suave */
     background-image: 
-        linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
+        linear-gradient(rgba(102, 45, 145, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(102, 45, 145, 0.03) 1px, transparent 1px);
     background-size: 40px 40px;
     z-index: 0;
     transform: perspective(500px) rotateX(60deg);
     animation: grid-move 20s linear infinite;
-    opacity: 0.5;
+    opacity: 1;
 }
 
 @keyframes grid-move {
@@ -100,10 +154,11 @@
 .scan-line-v {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 4px;
-    background: linear-gradient(to right, transparent, var(--c190-cyan), transparent);
-    box-shadow: 0 0 15px var(--c190-cyan);
+    background: linear-gradient(to right, transparent, var(--c190-orange), transparent);
+    box-shadow: 0 0 15px rgba(247, 148, 29, 0.4);
     z-index: 1;
     animation: scan-v 4s linear infinite;
+    opacity: 0.6;
 }
 
 @keyframes scan-v {
@@ -119,24 +174,48 @@
 }
 
 /* Header */
-.dashboard-header { text-align: center; margin-bottom: 50px; }
-.mission-id { font-family: 'Share Tech Mono', monospace; color: var(--c190-cyan); letter-spacing: 4px; font-size: 0.8rem; margin-bottom: 10px; }
+.dashboard-header { text-align: center; margin-bottom: 40px; }
+.mission-id { 
+    font-family: 'Share Tech Mono', monospace; 
+    color: var(--c190-purple); 
+    letter-spacing: 4px; 
+    font-size: 0.8rem; 
+    margin-bottom: 10px; 
+    font-weight: bold;
+}
+
+.subtitle {
+    color: #555;
+    margin-top: 10px;
+}
 
 .glitch-title {
     font-size: clamp(1.8rem, 5vw, 3.2rem);
     font-weight: 900;
     position: relative;
     text-transform: uppercase;
+    color: var(--c190-text-main); /* Texto base oscuro */
 }
 
 .glitch-title::before, .glitch-title::after {
     content: attr(data-text);
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     opacity: 0.8;
+    background: var(--c190-bg); /* Importante para ocultar el texto original */
 }
 
-.glitch-title::before { color: var(--c190-purple); left: -2px; animation: glitch 3s infinite; }
-.glitch-title::after { color: var(--c190-cyan); left: 2px; animation: glitch 3s infinite reverse; }
+.glitch-title::before { 
+    color: var(--c190-orange); 
+    left: -2px; 
+    z-index: -1;
+    animation: glitch 3s infinite; 
+}
+.glitch-title::after { 
+    color: var(--c190-purple); 
+    left: 2px; 
+    z-index: -2;
+    animation: glitch 3s infinite reverse; 
+}
 
 @keyframes glitch {
     0% { transform: translate(0); }
@@ -163,12 +242,13 @@
     transition: all 0.3s;
     position: relative;
     overflow: hidden;
+    box-shadow: var(--c190-shadow);
 }
 
 .module-box:hover {
-    background: rgba(0, 242, 255, 0.05);
-    border-color: var(--c190-cyan);
-    box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+    background: #fff;
+    border-color: var(--c190-orange);
+    box-shadow: 0 5px 20px rgba(247, 148, 29, 0.15);
 }
 
 .module-status {
@@ -176,12 +256,16 @@
     font-size: 0.65rem;
     position: absolute;
     top: 15px; right: 20px;
-    color: var(--c190-cyan);
+    color: var(--c190-purple);
+    font-weight: bold;
+    background: rgba(102, 45, 145, 0.05);
+    padding: 2px 8px;
+    border-radius: 4px;
 }
 
 .module-icon {
     font-size: 1.8rem;
-    color: var(--c190-cyan);
+    color: var(--c190-orange);
     margin-bottom: 15px;
 }
 
@@ -194,7 +278,7 @@
 .mini-bar {
     width: 100px;
     height: 4px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.1);
     margin-bottom: 15px;
 }
 
@@ -208,7 +292,7 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
-    color: #cbd5e1;
+    color: #4a4a4a; /* Texto de párrafo oscuro */
     font-size: 1rem;
     line-height: 1.6;
 }
@@ -222,16 +306,19 @@
 /* Footer Impact */
 .impact-panel { margin-top: 50px; }
 .alert-box {
-    background: linear-gradient(90deg, var(--c190-purple), transparent);
-    border: 1px solid var(--c190-purple);
+    /* Degradado morado más elegante y legible */
+    background: linear-gradient(135deg, var(--c190-purple), #8e44ad);
+    border: none;
     padding: 25px;
     border-radius: 15px;
     display: flex;
     align-items: center;
     gap: 20px;
+    color: white;
+    box-shadow: 0 5px 20px rgba(102, 45, 145, 0.3);
 }
 
-.alert-box i { font-size: 2rem; color: white; animation: pulse 2s infinite; }
+.alert-box i { font-size: 2rem; color: var(--c190-yellow); animation: pulse 2s infinite; }
 .alert-text { font-size: 1.1rem; }
 
 @keyframes pulse {
@@ -244,25 +331,29 @@
 @media (max-width: 600px) {
     .c190-mission-wrapper { padding: 40px 15px; }
     .glitch-title { font-size: 1.5rem; }
+    
+    .header-logos {
+        gap: 15px;
+    }
+    
+    .unp-logo, .comision-logo {
+        max-height: 45px;
+    }
 }
 </style>
 
 <script>
 /**
- * Lógica de interacción para la "Consola"
- * Permite expandir los módulos como un sistema de archivos
+ * Lógica de interacción
+ * Se mantiene exacta a la original
  */
 function toggleDetail(id) {
-    // Cerrar otros si se desea (opcional)
-    // document.querySelectorAll('.module-box').forEach(b => b.classList.remove('active'));
-    
     const box = event.currentTarget;
     box.classList.toggle('active');
 }
 
-// Micro-interacción: Simular "carga de sistema"
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("C190 System Booting...");
+    console.log("C190 System Booting... (Light Mode)");
     const boxes = document.querySelectorAll('.module-box');
     boxes.forEach((box, index) => {
         setTimeout(() => {

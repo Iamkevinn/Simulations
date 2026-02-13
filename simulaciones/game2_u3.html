@@ -3,39 +3,55 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@500&display=swap" rel="stylesheet">
 
 <style>
-/* --- ESTILOS DE FUERZA BRUTA (OVERRIDES) --- */
+/* --- ESTILOS TEMA CLARO (LIGHT THEME) --- */
 
-/* 1. CONTENEDOR PRINCIPAL: Fondo negro sólido */
+/* 1. CONTENEDOR PRINCIPAL: Fondo Blanco/Gris Claro */
 #juris-final-container {
-    background-color: #020617 !important; /* Negro azulado sólido */
-    background-image: none !important;
+    background-color: #F8FAFC !important; /* Fondo muy claro (casi blanco) */
     width: 100%;
     min-height: 800px;
     height: auto;
     font-family: 'Roboto', sans-serif;
-    color: white !important;
-    border: 2px solid #334155 !important;
+    color: #334155 !important; /* Texto Gris Oscuro */
+    border: 1px solid #E2E8F0 !important; /* Borde sutil */
     border-radius: 12px;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
     position: relative;
     z-index: 1;
+    overflow: hidden; /* Para que las esquinas redondeadas funcionen bien */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* 2. CABECERA */
+/* 2. CABECERA CON LOGOS */
 .final-header {
-    background-color: #0f172a !important; /* Sólido */
+    background-color: #FFFFFF !important; /* Blanco puro */
     padding: 20px;
-    text-align: center;
-    border-bottom: 3px solid #06b6d4 !important;
+    border-bottom: 4px solid #0EA5E9 !important; /* Azul Cian corporativo */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Logos a los extremos */
+    flex-wrap: wrap;
+    gap: 15px;
 }
+
+/* Estilos de los logos */
+.client-logo {
+    height: 60px; /* Tamaño prominente */
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
 .final-title {
-    color: #06b6d4 !important;
+    color: #0F172A !important; /* Azul marino muy oscuro */
     font-family: 'Oswald', sans-serif;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     text-transform: uppercase;
     margin: 0;
+    text-align: center;
+    flex: 1; /* Ocupa el espacio central */
 }
 
 /* 3. NAVEGACIÓN */
@@ -44,33 +60,43 @@
     justify-content: center;
     gap: 15px;
     padding: 20px;
-    background-color: #1e293b !important; /* Gris oscuro sólido */
+    background-color: #F1F5F9 !important; /* Gris muy suave */
     flex-wrap: wrap;
+    border-bottom: 1px solid #E2E8F0;
 }
+
 .final-btn {
-    background-color: #334155 !important; /* Gris medio sólido */
-    color: #ffffff !important;
-    border: 1px solid #94a3b8 !important;
-    padding: 15px 30px;
+    background-color: #FFFFFF !important; /* Botón blanco */
+    color: #64748B !important; /* Texto gris */
+    border: 2px solid #CBD5E1 !important;
+    padding: 12px 25px;
     cursor: pointer;
     font-weight: bold;
     font-family: 'Oswald', sans-serif;
     text-transform: uppercase;
     transition: all 0.2s;
-    opacity: 1 !important; /* Forzar opacidad total */
+    border-radius: 6px;
 }
+
+.final-btn:hover {
+    background-color: #E2E8F0 !important;
+    color: #334155 !important;
+}
+
 .final-btn.active {
-    background-color: #06b6d4 !important; /* Cian sólido */
-    color: #000000 !important;
-    border-color: #fff !important;
+    background-color: #0EA5E9 !important; /* Azul activo */
+    color: #FFFFFF !important; /* Texto blanco */
+    border-color: #0284C7 !important;
+    box-shadow: 0 2px 4px rgba(14, 165, 233, 0.3);
 }
 
 /* 4. ÁREA DE CONTENIDO */
 .final-viewport {
-    padding: 20px;
+    padding: 30px;
     flex: 1;
     display: flex;
     justify-content: center;
+    background-color: #F8FAFC;
 }
 
 /* VISTA 1: TARJETAS DE TEORÍA */
@@ -82,14 +108,19 @@
     max-width: 1100px;
     display: none; /* Controlado por JS */
 }
+
 .theory-card-final {
-    background-color: #1e293b !important; /* Sólido */
-    color: #ffffff !important;
-    border: 1px solid #475569 !important;
-    border-top: 5px solid #d946ef !important; /* Magenta */
+    background-color: #FFFFFF !important; /* Tarjeta blanca */
+    color: #334155 !important;
+    border: 1px solid #E2E8F0 !important;
+    border-top: 5px solid #0EA5E9 !important; /* Borde superior azul */
     padding: 25px;
     border-radius: 8px;
-    opacity: 1 !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05); /* Sombra suave */
+}
+
+.theory-card-final h3 {
+    color: #0369A1 !important; /* Azul oscuro para títulos */
 }
 
 /* VISTA 2: JUEGO */
@@ -101,17 +132,19 @@
 }
 
 .scenario-box {
-    background-color: #172554 !important; /* Azul oscuro sólido */
-    border-left: 5px solid #06b6d4 !important;
+    background-color: #EFF6FF !important; /* Azul muy pálido */
+    border-left: 5px solid #3B82F6 !important; /* Azul fuerte */
     padding: 20px;
     margin-bottom: 30px;
-    border-radius: 5px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
+
 .scenario-text {
-    color: #ffffff !important;
+    color: #1E293B !important;
     font-size: 1.1rem;
     font-style: italic;
-    opacity: 1 !important;
+    margin: 0;
 }
 
 /* COLUMNAS Y BOTONES DEL JUEGO */
@@ -119,46 +152,48 @@
     display: flex;
     gap: 30px;
     width: 100%;
-    flex-wrap: wrap; /* RESPONSIVE */
+    flex-wrap: wrap; 
 }
+
 .col-final {
     flex: 1;
-    min-width: 300px; /* Evita que se aplasten */
+    min-width: 300px; 
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
+
 .col-label-final {
-    background-color: #000000 !important;
-    color: #d946ef !important;
-    padding: 10px;
+    background-color: #334155 !important; /* Encabezado columna gris oscuro */
+    color: #FFFFFF !important;
+    padding: 12px;
     text-align: center;
     font-weight: bold;
     font-family: 'Oswald', sans-serif;
+    border-radius: 6px 6px 0 0;
 }
 
-/* BOTÓN DE OPCIÓN - BLINDADO CONTRA TRANSPARENCIA */
+/* BOTÓN DE OPCIÓN */
 .opt-btn-final {
-    background-color: #334155 !important; /* GRIS SÓLIDO */
-    background-image: none !important; /* Quitar gradientes del tema */
-    color: #ffffff !important;
+    background-color: #FFFFFF !important; /* Fondo blanco */
+    color: #334155 !important; /* Texto oscuro */
     padding: 20px;
-    border: 2px solid #64748b !important;
+    border: 2px solid #CBD5E1 !important; /* Borde gris claro */
     border-radius: 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    opacity: 1 !important; /* OPACO SIEMPRE */
-    box-shadow: none !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.1s, box-shadow 0.1s;
     position: relative;
     z-index: 10;
 }
 
 /* ID CIRCULAR */
 .opt-id-final {
-    background-color: #000000 !important;
-    color: #06b6d4 !important;
+    background-color: #E2E8F0 !important;
+    color: #475569 !important;
     width: 35px;
     height: 35px;
     display: flex;
@@ -172,126 +207,74 @@
 
 /* ESTADOS DEL BOTÓN */
 .opt-btn-final:hover {
-    background-color: #475569 !important;
-    border-color: #ffffff !important;
+    background-color: #F1F5F9 !important;
+    border-color: #94A3B8 !important;
+    transform: translateY(-2px);
 }
+
 .opt-btn-final.selected {
-    background-color: #1e40af !important; /* Azul sólido */
-    border-color: #06b6d4 !important;
-    box-shadow: 0 0 0 3px #06b6d4 !important;
+    background-color: #E0F2FE !important; /* Azul muy claro */
+    border-color: #0EA5E9 !important; /* Borde Azul */
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.3) !important;
 }
+
 .opt-btn-final.matched {
-    background-color: #064e3b !important; /* Verde sólido */
-    border-color: #10b981 !important;
+    background-color: #DCFCE7 !important; /* Verde muy claro */
+    border-color: #22C55E !important; /* Borde verde */
+    color: #14532D !important; /* Texto verde oscuro */
     pointer-events: none;
+}
+
+.opt-btn-final.matched .opt-id-final {
+    background-color: #22C55E !important;
+    color: white !important;
 }
 
 /* FEEDBACK */
 .feedback-final {
     margin-top: 30px;
     padding: 15px;
-    background-color: #000000 !important;
-    border: 1px solid #333;
+    background-color: #FFFFFF !important;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
     text-align: center;
-    color: #06b6d4 !important;
+    color: #64748B !important;
     font-family: monospace;
     font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* RESPONSIVE */
-@media (max-width: 1200px) {
+/* RESPONSIVE: Ajuste de logos y columnas */
+@media (max-width: 768px) {
     .columns-final { flex-direction: column; }
     .col-label-final { text-align: left; }
+    
+    .final-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    .client-logo {
+        height: 50px; /* Un poco más pequeños en móvil */
+        margin-bottom: 10px;
+    }
+    .final-title {
+        order: 2; /* Título en medio visualmente o al final según preferencia */
+        margin: 10px 0;
+    }
 }
-
-/* 1. CONTENEDOR PRINCIPAL */
-#juris-final-container {
-    background-color: #170047 !important;
-    color: #ffffff !important;
-    border: 2px solid #480241 !important;
-}
-
-/* 2. CABECERA */
-.final-header {
-    background-color: #170047 !important;
-    border-bottom: 3px solid #FEC82F !important;
-}
-.final-title {
-    color: #FEC82F !important;
-}
-
-/* 3. NAVEGACIÓN */
-.final-nav {
-    background-color: #480241 !important;
-}
-.final-btn {
-    background-color: #170047 !important;
-    border: 1px solid #EE7D4F !important;
-}
-.final-btn.active {
-    background-color: #FEC82F !important;
-    color: #000000 !important;
-    border-color: #ffffff !important;
-}
-
-/* 4. TARJETAS DE TEORÍA */
-.theory-card-final {
-    background-color: #480241 !important;
-    border: 1px solid #EE7D4F !important;
-    border-top: 5px solid #D23B78 !important;
-}
-
-/* 5. ESCENARIO */
-.scenario-box {
-    background-color: #170047 !important;
-    border-left: 5px solid #FEC82F !important;
-}
-
-/* 6. COLUMNAS */
-.col-label-final {
-    background-color: #170047 !important;
-    color: #D23B78 !important;
-}
-
-/* 7. BOTONES DE OPCIÓN */
-.opt-btn-final {
-    background-color: #480241 !important;
-    border: 2px solid #EE7D4F !important;
-}
-.opt-id-final {
-    background-color: #170047 !important;
-    color: #FEC82F !important;
-}
-
-/* ESTADOS */
-.opt-btn-final:hover {
-    background-color: #EE7D4F !important;
-    border-color: #ffffff !important;
-}
-.opt-btn-final.selected {
-    background-color: #D23B78 !important;
-    border-color: #FEC82F !important;
-    box-shadow: 0 0 0 3px #FEC82F !important;
-}
-.opt-btn-final.matched {
-    background-color: #E44700 !important;
-    border-color: #FEC82F !important;
-    pointer-events: none;
-}
-
-/* 8. FEEDBACK */
-.feedback-final {
-    background-color: #170047 !important;
-    color: #FEC82F !important;
-    border: 1px solid #EE7D4F !important;
-}
-
 </style>
 
 <div id="juris-final-container">
-    
+
+    <!-- CABECERA CON LOGOS -->
     <div class="final-header">
+        <!-- Logo UNP -->
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+        
         <h2 class="final-title">Reconocimiento Jurídico (Unidad 3)</h2>
+        
+        <!-- Logo Comisión -->
+        <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo">
     </div>
 
     <div class="final-nav">
@@ -304,19 +287,19 @@
         <!-- TEORÍA -->
         <div id="view-theory-final" class="theory-grid-final" style="display: grid;">
             <div class="theory-card-final">
-                <h3 style="color:#06b6d4; margin-top:0;">Sentencia T-033 de 2022</h3>
+                <h3 style="margin-top:0;">Sentencia T-033 de 2022</h3>
                 <p>Ordena incluir el marcador "No Binario" (NB) en documentos de identidad.</p>
             </div>
             <div class="theory-card-final">
-                <h3 style="color:#06b6d4; margin-top:0;">Sentencia T-527 de 2024</h3>
+                <h3 style="margin-top:0;">Sentencia T-527 de 2024</h3>
                 <p>Exige análisis de riesgo con enfoque diferencial estricto para personas trans.</p>
             </div>
             <div class="theory-card-final">
-                <h3 style="color:#06b6d4; margin-top:0;">No Discriminación</h3>
+                <h3 style="margin-top:0;">No Discriminación</h3>
                 <p>Obligación activa del Estado de eliminar barreras administrativas.</p>
             </div>
             <div class="theory-card-final">
-                <h3 style="color:#06b6d4; margin-top:0;">Ajustes Institucionales</h3>
+                <h3 style="margin-top:0;">Ajustes Institucionales</h3>
                 <p>Adaptar formularios y protocolos para respetar el nombre identitario.</p>
             </div>
         </div>
@@ -330,7 +313,7 @@
                 </p>
             </div>
 
-            <p style="color:#fff !important; margin-bottom:15px; opacity:1 !important;">
+            <p style="color:#64748B !important; margin-bottom:15px; opacity:1 !important; text-align:center;">
                 INSTRUCCIÓN: Toca un <strong>HECHO</strong> (Izquierda) y su <strong>FUNDAMENTO</strong> (Derecha).
             </p>
 
@@ -380,7 +363,7 @@
 </div>
 
 <script>
-// --- CONTROL DE VISTAS ---
+// --- CONTROL DE VISTAS (SIN CAMBIOS) ---
 function setViewFinal(view) {
     document.querySelectorAll('.final-btn').forEach(b => b.classList.remove('active'));
     event.target.classList.add('active');
@@ -394,12 +377,12 @@ function setViewFinal(view) {
     } else {
         theory.style.display = 'none';
         game.style.display = 'flex';
-        // Pequeña animación de entrada
+        // Animación de entrada
         gsap.from(".opt-btn-final", {x: 20, opacity: 0, stagger: 0.1, clearProps:"all"});
     }
 }
 
-// --- JUEGO ---
+// --- LÓGICA DEL JUEGO (SIN CAMBIOS) ---
 let leftSelF = null;
 let rightSelF = null;
 let pairsF = 0;
@@ -409,7 +392,7 @@ function gameClick(side, id, el) {
 
     const fb = document.getElementById('feedback-msg-final');
 
-    // Reset de la columna actual
+    // Reset visual de selección en la columna actual
     const parentId = side === 'left' ? 'col-left-final' : 'col-right-final';
     document.getElementById(parentId).querySelectorAll('.opt-btn-final').forEach(b => b.classList.remove('selected'));
     
@@ -418,12 +401,12 @@ function gameClick(side, id, el) {
     if(side === 'left') leftSelF = {id, el};
     else rightSelF = {id, el};
 
-    // Validar
+    // Validar si hay par
     if(leftSelF && rightSelF) {
         if(leftSelF.id === rightSelF.id) {
             // Correcto
             fb.innerText = ">> ¡CONEXIÓN CORRECTA!";
-            fb.style.color = "#10b981"; // Verde brillante
+            fb.style.color = "#16A34A"; // Verde
 
             leftSelF.el.classList.add('matched');
             rightSelF.el.classList.add('matched');
@@ -436,12 +419,12 @@ function gameClick(side, id, el) {
 
             if(pairsF === 3) {
                 fb.innerText = ">> CASO COMPLETADO: AJUSTES REQUERIDOS.";
-                fb.style.color = "#d946ef";
+                fb.style.color = "#2563EB"; // Azul Éxito
             }
         } else {
             // Incorrecto
             fb.innerText = ">> ERROR: NO CORRESPONDE.";
-            fb.style.color = "#ef4444"; // Rojo
+            fb.style.color = "#DC2626"; // Rojo
 
             gsap.to([leftSelF.el, rightSelF.el], {x: 5, duration: 0.1, yoyo: true, repeat: 3});
 
@@ -451,7 +434,7 @@ function gameClick(side, id, el) {
                 leftSelF = null;
                 rightSelF = null;
                 fb.innerText = "INTENTA DE NUEVO...";
-                fb.style.color = "#06b6d4";
+                fb.style.color = "#64748B"; // Gris neutro
             }, 1000);
         }
     }

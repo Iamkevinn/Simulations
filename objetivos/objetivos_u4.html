@@ -7,16 +7,21 @@
 
 <style>
 :root{
-  --bg:#170047;            /* Fondo base profundo (marca) */
-  --panel:#480241;         /* Panel principal */
-  --panel-soft:#2a0130;    /* Panel suave (derivado del panel) */
+  /* --- PALETA CLARA (25N) --- */
+  --bg: #F4F6F9;             /* Fondo base claro */
+  --panel: #FFFFFF;          /* Panel blanco limpio */
+  --panel-soft: #F8F9FA;     /* Panel suave (gris muy claro) */
 
-  --accent:#FEC82F;        /* Acento principal (acciones, foco) */
-  --accent-strong:#E44700; /* Acento fuerte (decisiones críticas) */
-  --violet:#D23B78;        /* Emoción / narrativa */
+  --accent: #480241;         /* Acento principal (Morado UNP - Texto fuerte/Iconos) */
+  --accent-strong: #FF9800;  /* Acento fuerte (Naranja - Detalles) */
+  --violet: #D23B78;         /* Emoción / Puntos (Magenta) */
+  --yellow: #FEC82F;         /* Detalles decorativos */
 
-  --text:#ffffff;          /* Texto principal */
-  --muted:#EE7D4F;         /* Texto secundario */
+  --text: #333333;           /* Texto principal oscuro para lectura */
+  --muted: #555555;          /* Texto secundario */
+  
+  --shadow-color: rgba(72, 2, 65, 0.1); /* Sombra morada suave */
+  --grid-line: rgba(72, 2, 65, 0.05);   /* Líneas de grilla sutiles */
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
@@ -24,8 +29,8 @@
 body{
   font-family: "Segoe UI", system-ui, sans-serif;
   background:
-    radial-gradient(circle at 20% 10%, #1e293b 0%, transparent 40%),
-    radial-gradient(circle at 80% 80%, #1e1b4b 0%, transparent 40%),
+    radial-gradient(circle at 20% 10%, #ffffff 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, #f3e5f5 0%, transparent 40%),
     var(--bg);
   color:var(--text);
   overflow-x:hidden;
@@ -36,8 +41,8 @@ body{
   position:fixed;
   inset:0;
   background:
-    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size:40px 40px;
   animation: desplazamiento 40s linear infinite;
   pointer-events:none;
@@ -53,13 +58,34 @@ main{
   position:relative;
   max-width:1200px;
   margin:auto;
-  padding:5rem 2rem 6rem;
+  padding:2rem 2rem 6rem; /* Ajustado padding superior */
   display:grid;
   gap:4.5rem;
   z-index:1;
 }
 
-/* ───── HEADER ───── */
+/* ───── LOGOS DEL CLIENTE (NUEVO) ───── */
+.logos-header {
+  display: flex;
+  justify-content: center; /* Centrados o space-between según prefieras */
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.client-logo {
+  height: 60px; /* Tamaño controlado */
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.client-logo:hover {
+  transform: scale(1.05);
+}
+
+/* ───── HEADER TEXTO ───── */
 header{
   text-align:center;
   position:relative;
@@ -69,20 +95,22 @@ header::after{
   content:"";
   display:block;
   width:120px;
-  height:3px;
+  height:4px;
   margin:1.5rem auto 0;
-  background:linear-gradient(90deg, transparent, var(--accent), transparent);
+  background:linear-gradient(90deg, transparent, var(--accent-strong), transparent); /* Naranja */
 }
 
 header h1{
   font-size:clamp(2.2rem,4vw,3.2rem);
   letter-spacing:0.06em;
+  color: var(--accent); /* Morado */
+  font-weight: 800;
 }
 
 header h2{
   margin-top:1rem;
   color:var(--muted);
-  font-weight:400;
+  font-weight: 500;
 }
 
 /* ───── TARJETAS ───── */
@@ -91,9 +119,10 @@ header h2{
   background:linear-gradient(180deg, var(--panel), var(--panel-soft));
   border-radius:20px;
   padding:3rem;
+  border: 1px solid #e0e0e0;
   box-shadow:
-    0 0 0 1px rgba(255,255,255,0.05),
-    0 40px 80px rgba(0,0,0,0.4);
+    0 0 0 1px rgba(0,0,0,0.02),
+    0 20px 40px var(--shadow-color);
   opacity:0;
   transform:translateY(60px);
   transition:1s cubic-bezier(.19,1,.22,1);
@@ -110,9 +139,9 @@ header h2{
   position:absolute;
   left:0;
   top:0;
-  width:4px;
+  width:5px;
   height:100%;
-  background:linear-gradient(180deg, var(--accent), transparent);
+  background:linear-gradient(180deg, var(--accent), var(--accent-strong)); /* Morado a Naranja */
   border-radius:20px 0 0 20px;
 }
 
@@ -123,14 +152,15 @@ header h2{
   display:flex;
   align-items:center;
   gap:0.8rem;
-  color:var(--accent);
+  color:var(--accent); /* Morado */
+  font-weight: 700;
 }
 
 .icon{
   width:28px;
   height:28px;
-  stroke:var(--accent);
-  stroke-width:1.8;
+  stroke:var(--accent-strong); /* Naranja */
+  stroke-width:2;
   fill:none;
 }
 
@@ -146,6 +176,7 @@ header h2{
   line-height:1.7;
   cursor:default;
   transition:0.4s;
+  color: var(--text);
 }
 
 .obj::before{
@@ -157,18 +188,20 @@ header h2{
   height:18px;
   border-radius:50%;
   border:2px solid var(--violet);
-  box-shadow:0 0 0 rgba(192,132,252,0.6);
+  background: #fff;
+  box-shadow:0 0 0 rgba(210, 59, 120, 0.4);
   animation:pulso 3s infinite;
 }
 
 .obj:hover{
   transform:translateX(6px);
+  color: var(--accent);
 }
 
 @keyframes pulso{
-  0%{box-shadow:0 0 0 0 rgba(192,132,252,0.5)}
-  70%{box-shadow:0 0 0 10px rgba(192,132,252,0)}
-  100%{box-shadow:0 0 0 0 rgba(192,132,252,0)}
+  0%{box-shadow:0 0 0 0 rgba(210, 59, 120, 0.5)}
+  70%{box-shadow:0 0 0 10px rgba(210, 59, 120, 0)}
+  100%{box-shadow:0 0 0 0 rgba(210, 59, 120, 0)}
 }
 
 /* ───── TEXTO JUSTIFICACIÓN ───── */
@@ -176,18 +209,25 @@ header h2{
   line-height:1.9;
   text-align:justify;
   position:relative;
+  color: var(--text);
 }
 
 /* ───── INTERACCIÓN PROFESIONAL ───── */
 .section:hover{
   box-shadow:
-    0 0 0 1px rgba(125,211,252,0.3),
-    0 50px 120px rgba(0,0,0,0.6);
+    0 0 0 1px var(--accent-strong),
+    0 30px 60px rgba(72, 2, 65, 0.15);
+  transform: translateY(-5px);
 }
 
 /* ───── RESPONSIVE ───── */
 @media(max-width:1200px){
   .section{padding:2.2rem}
+}
+@media(max-width:600px){
+  .logos-header { gap: 15px; }
+  .client-logo { height: 45px; }
+  header h1 { font-size: 1.8rem; }
 }
 </style>
 </head>
@@ -197,6 +237,12 @@ header h2{
 <div class="grid"></div>
 
 <main>
+
+<!-- Logos del Cliente -->
+<div class="logos-header">
+    <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+    <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo">
+</div>
 
 <header>
   <h1>Unidad No. 4</h1>

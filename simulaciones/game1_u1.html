@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    /* --- ESTILOS GENERALES --- */
+    :root {
+        --bg-body: #f4f6f9;
+        --card-bg: #ffffff;
+        --brand-purple: #480241;
+        --brand-orange: #FF8C00;
+        --brand-yellow: #FEC82F;
+        --brand-magenta: #C2185B;
+        --text-main: #333333;
+        --text-light: #666666;
+        --success: #2E7D32;
+        --error: #D32F2F;
+        --warning: #F57C00;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg-body);
+        background-image: 
+            radial-gradient(circle at 10% 20%, rgba(254, 200, 47, 0.1) 0%, transparent 20%),
+            radial-gradient(circle at 90% 80%, rgba(194, 24, 91, 0.1) 0%, transparent 20%);
+    }
+
+    #game-wrapper {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .game-card {
+        background: var(--card-bg);
+        border-top: 5px solid var(--brand-orange);
+        border-radius: 15px;
+        padding: 40px;
+        width: 100%;
+        max-width: 800px;
+        position: relative;
+        box-shadow: 0 10px 40px rgba(72, 2, 65, 0.15);
+        transition: transform 0.3s ease;
+    }
+
+    /* --- HUD Modificado (Cualitativo) --- */
+    .hud {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr; 
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+        width: 100%;
+    }
+
+    .logos-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        padding: 0 10px;
+    }
+
+    .logos-container img {
+        height: 85px;
+        width: auto;
+        object-fit: contain;
+        transition: height 0.3s ease;
+    }
+
+    .score-box {
+        background: rgba(72, 2, 65, 0.05);
+        padding: 10px 5px;
+        border-radius: 30px;
+        border: 1px solid rgba(72, 2, 65, 0.1);
+        font-size: 0.75rem; 
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--brand-purple);
+        letter-spacing: 0.5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; 
+    }
+
+    /* Estilos dinámicos para el estado de protección */
+    .status-safe { background: #E8F5E9; color: var(--success); border-color: var(--success); }
+    .status-risk { background: #FFEBEE; color: var(--error); border-color: var(--error); }
+    .status-neutral { background: #FFF3E0; color: var(--warning); border-color: var(--warning); }
+
+    .hud > :first-child { justify-self: start; width: auto; min-width: 120px; } 
+    .hud > :last-child { justify-self: end; width: auto; min-width: 120px; }
+
+    @media (max-width: 768px) {
+        .hud { display: flex; flex-direction: column; gap: 15px; }
+        .logos-container img { height: 70px; }
+        .hud > .score-box { width: 48%; font-size: 0.7rem; min-width: auto; }
+    }
+
+    /* --- ELEMENTOS DE JUEGO --- */
+    .progress-container {
+        width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; margin-bottom: 30px; overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%; background: linear-gradient(90deg, var(--brand-orange), var(--brand-yellow)); width: 0%; transition: width 0.5s ease;
+    }
+
+    h2 {
+        color: var(--brand-purple); margin-top: 0; font-size: 1.6rem; margin-bottom: 15px;
+        border-bottom: 2px solid rgba(254, 200, 47, 0.5); padding-bottom: 10px; display: inline-block;
+    }
+
+    p { color: var(--text-main); line-height: 1.6; font-size: 1.05rem; margin-bottom: 25px; }
+    strong { color: var(--brand-purple); }
+
+    .btn-game {
+        background: linear-gradient(135deg, var(--brand-orange) 0%, #F57C00 100%);
+        border: none; padding: 18px 25px; color: white; font-size: 1.05rem; font-weight: bold;
+        border-radius: 10px; cursor: pointer; transition: all 0.2s; display: block; width: 100%;
+        margin: 15px 0; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .btn-game:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(255, 140, 0, 0.3); }
+
+    .option-btn {
+        background: white; color: var(--text-main); text-align: left; border: 2px solid #e0e0e0;
+        text-transform: none; font-weight: normal; position: relative; padding-left: 25px; transition: all 0.2s ease;
+    }
+    
+    .option-btn:hover {
+        border-color: var(--brand-purple); background: rgba(72, 2, 65, 0.03);
+        color: var(--brand-purple); font-weight: 500; transform: translateX(5px);
+    }
+
+    .scene { display: none; animation: fadeIn 0.5s ease-out; }
+    .scene.active { display: block; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Modal de Feedback (Ajustado) */
+    .feedback-overlay {
+        position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px); z-index: 50;
+        display: none; flex-direction: column; justify-content: center; align-items: center;
+        padding: 30px; text-align: center; border-radius: 15px;
+    }
+
+    .feedback-content {
+        background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        max-width: 90%; border: 1px solid #eee;
+    }
+
+    .feedback-icon { font-size: 3.5rem; margin-bottom: 10px; display: block; }
+    
+    /* Estados finales sin bordes de color duro, más sutiles */
+    .state-success { border-top-color: var(--success); }
+    .state-fail { border-top-color: var(--error); }
+    
+    .final-score-display {
+        font-size: 1.4rem; font-weight: bold; margin: 20px 0; padding: 15px;
+        background: #f8f8f8; border-radius: 10px; color: var(--brand-purple);
+        border-left: 4px solid var(--brand-purple);
+    }
+</style>
+</head>
+<body>
+
+<div id="game-wrapper">
+    <div class="game-card" id="card-container">
+        
+        <!-- HUD Superior Modificado: Sin porcentajes -->
+        <div class="hud" id="hud-container">
+            <span class="score-box" id="level-display">FASE: INICIACIÓN</span>
+
+            <div class="logos-container">
+                <img src="../Styles/UNP I.svg" alt="Logo UNP">
+                <img src="../Styles/logo.png" alt="Logo Comisión">
+            </div>
+
+            <!-- CAMBIO: Indicador Cualitativo -->
+            <span class="score-box status-neutral" id="protection-display">🛡️ NIVEL DE PROTECCIÓN: INICIAL</span>
+        </div>
+        
+        <div class="progress-container"><div class="progress-fill" id="progress-bar"></div></div>
+
+        <!-- ESCENA 0: INTRODUCCIÓN -->
+        <div class="scene active" id="scene-0">
+            <div style="text-align:center; margin-bottom:20px;">
+                <span style="font-size:3rem;">🎗️</span>
+            </div>
+           <h2>Ruta de Derechos: Convenio 190 y Ley 2365</h2>
+            <p>Bienvenida(o). Este no es un examen de memoria, es un ejercicio de <strong>Ética del Cuidado</strong>.</p>
+            <p>Tus decisiones en los siguientes casos determinarán si se construye un <strong>entorno seguro</strong> o si se permite que el riesgo escale.</p>
+            <p style="color: var(--brand-purple); font-size: 0.9rem; background: rgba(88,44,131,0.05); padding: 15px; border-radius: 8px; border-left: 4px solid var(--brand-purple);">
+                👁️ <strong>Enfoque:</strong> El objetivo no es "ganar puntos", sino garantizar la no repetición y la protección integral.
+            </p>
+            <button class="btn-game" onclick="startGame()">Comenzar Evaluación</button>
+        </div>
+
+        <!-- =========== CONTENIDO INTACTO (SITUACIONES Y OPCIONES) =========== -->
+
+        <!-- ESCENA 1: PREGUNTA 1 -->
+        <div class="scene" id="scene-1">
+            <h2>Caso 1: Las burlas</h2>
+            <p>Detectas burlas sistemáticas hacia una compañera. El jefe de área dice: "Son cosas de la cultura de oficina". La agresión ocurrió en un <span style="color: var(--success); font-weight: 800;">grupo de WhatsApp</span> laboral y en diferentes pasillos, fuera del horario.</p>
+            <p>Según el <strong>Convenio 190 de la OIT</strong>, ¿cuál es el análisis correcto?</p>
+            <button class="btn-game option-btn" onclick="handleAnswer(1, false)">Es un problema de convivencia leve al ser fuera de la oficina.</button>
+            <button class="btn-game option-btn" onclick="handleAnswer(1, true)">Constituye un <strong>entorno laboral hostil</strong>. El C190 protege el "mundo del trabajo", incluyendo comunicaciones digitales y trayectos.</button>
+            <button class="btn-game option-btn" onclick="handleAnswer(1, false)">Solo se activa la ruta si la agresión ocurre en las instalaciones físicas.</button>
+        </div>
+
+        <!-- ESCENA 2: PREGUNTA 2 -->
+        <div class="scene" id="scene-2">
+            <h2>Caso 2: El Contratista</h2>
+            <p>Un contratista por prestación de servicios acosa a una funcionaria. La entidad argumenta que no puede intervenir proactivamente porque "él no es empleado de planta".</p>
+            <p><strong>Bajo la Ley 2365 de 2024:</strong> ¿Es válido este argumento?</p>
+            <button class="btn-game option-btn" onclick="handleAnswer(2, true)">NO. La entidad tiene la obligación legal de <strong>PREVENIR</strong> y sancionar, cobijando a contratistas y pasantes.</button>
+            <button class="btn-game option-btn" onclick="handleAnswer(2, false)">SI. Jurídicamente solo Recursos Humanos puede actuar cuando hay un contrato laboral firmado.</button>
+        </div>
+
+        <!-- ESCENA 3: PREGUNTA 3 -->
+        <div class="scene" id="scene-3">
+            <h2>Caso 3: La Herramienta</h2>
+            <p>Para evitar que la denuncia se pierda en el olvido y garantizar trazabilidad estatal, ¿dónde debe registrarse obligatoriamente este caso?</p>
+            <button class="btn-game option-btn" onclick="handleAnswer(3, false)">Únicamente en el archivo interno de la entidad.</button>
+            <button class="btn-game option-btn" onclick="handleAnswer(3, true)">En el SIVIGE (Sistema de Información de Violencias de Género).</button>
+            <button class="btn-game option-btn" onclick="handleAnswer(3, false)">En la página web de la alcaldía local.</button>
+        </div>
+
+        <!-- ESCENA 4: PREGUNTA 4 -->
+        <div class="scene" id="scene-4">
+            <h2>Caso 4: Jurisdicción</h2>
+            <p>Llega una alerta: "Amenazan a una mujer candidata al senado para que abandone su campaña". Algunos compañeros comentan que es "un lío de faldas".</p>
+            <p>¿Cuál es la ruta correcta para abordar este caso?</p>
+            <button class="btn-game option-btn" onclick="handleAnswer(4, false)">Acoso Laboral (Ley 1010), pues ocurre entre colegas.</button>
+            <button class="btn-game option-btn" onclick="handleAnswer(4, true)"><strong>Ley 2453 (Violencia Política)</strong>. Se busca excluirla estructuralmente del poder, no es un conflicto doméstico.</button>
+        </div>
+
+        <!-- =========== FIN CONTENIDO INTACTO =========== -->
+
+        <!-- ESCENA FINAL -->
+        <div class="scene" id="scene-final">
+            <h2 id="final-title">Resultados</h2>
+            <div id="final-icon" class="feedback-icon"></div>
+            
+            <!-- Resultado Cualitativo -->
+            <div class="final-score-display" id="final-score"></div>
+
+            <p id="final-message"></p>
+            <button class="btn-game" id="final-btn" onclick="resetGame()">Reiniciar</button>
+        </div>
+
+        <!-- FEEDBACK POP-UP (Cualitativo) -->
+        <div id="feedback-modal" class="feedback-overlay">
+            <div class="feedback-content">
+                <div id="fb-icon" class="feedback-icon"></div>
+                <h3 id="fb-title" style="margin:10px 0;"></h3>
+                <p id="fb-text" style="font-size: 1.1rem; color:#444;"></p>
+                <button class="btn-game" style="width: auto; padding: 10px 40px; margin: 20px auto 0;" onclick="closeFeedback()">Continuar >></button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // --- LÓGICA REAJUSTADA: CUALITATIVA ---
+    
+    // Variables de Estado (Sin score numérico visible)
+    let gameState = { 
+        correctAnswers: 0, 
+        currentScene: 0 
+    };
+
+    // BASE DE DATOS DE FEEDBACK (Enfoque: Impacto)
+    const feedbackDB = {
+        1: {
+            correct: {
+                title: "🛡️ Entorno Protegido",
+                text: "Correcto. Al reconocer que la violencia no requiere un espacio físico, proteges a la víctima. El 'mundo del trabajo' (C190) incluye lo digital."
+            },
+            incorrect: {
+                title: "⚠️ Riesgo de Escalada",
+                text: "Cuidado. Considerar esto 'cultura' normaliza la violencia. El C190 protege contra entornos hostiles, incluso en medios digitales."
+            }
+        },
+        2: {
+            correct: {
+                title: "🤝 Garantía de Derechos",
+                text: "Muy bien. La Ley 2365 obliga a proteger a todas las personas en la entidad. La dignidad no depende del tipo de contrato."
+            },
+            incorrect: {
+                title: "🚫 Desprotección",
+                text: "Incorrecto. Usar el tipo de contrato como excusa deja a la víctima vulnerable. La ley exige PREVENCIÓN universal en la entidad."
+            }
+        },
+        3: {
+            correct: {
+                title: "📊 Visibilidad",
+                text: "Exacto. El SIVIGE garantiza que el caso no se pierda y permite al Estado formular políticas públicas reales."
+            },
+            incorrect: {
+                title: "😶 Invisibilización",
+                text: "Riesgo. Los archivos aislados generan impunidad. Sin registro centralizado (SIVIGE), la violencia estructural permanece oculta."
+            }
+        },
+        4: {
+            correct: {
+                title: "🏛️ Defensa Democrática",
+                text: "Crucial. Identificaste la Violencia Política. Al no reducirlo a 'líos personales', proteges el derecho de las mujeres al poder."
+            },
+            incorrect: {
+                title: "📉 Estereotipo Dañino",
+                text: "Error grave. Calificarlo de 'lío de faldas' es una estrategia para deslegitimar a las mujeres y aumenta su riesgo físico."
+            }
+        }
+    };
+
+    function startGame() {
+        gameState.correctAnswers = 0;
+        updateStatusUI();
+        showScene(1);
+    }
+
+    function showScene(n) {
+        document.querySelectorAll('.scene').forEach(el => el.classList.remove('active'));
+        document.getElementById(`scene-${n}`).classList.add('active');
+        
+        let progress = ((n-1) / 4) * 100;
+        if(n === 'final') progress = 100;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+        
+        const levels = ["Intro", "Mundo del Trabajo (OIT)", "Prevención (Ley 2365)", "El Registro", "Violencia Política", "Evaluación"];
+        const lvlIdx = (n === 'final') ? 5 : n;
+        document.getElementById('level-display').innerText = `FASE: ${levels[lvlIdx]}`;
+    }
+
+    // Maneja la respuesta manteniendo los parámetros originales (index, true/false)
+    function handleAnswer(qIndex, isCorrect) {
+        const modal = document.getElementById('feedback-modal');
+        const icon = document.getElementById('fb-icon');
+        const title = document.getElementById('fb-title');
+        const text = document.getElementById('fb-text');
+
+        // Mapeamos el true/false a la nueva lógica de Feedback de Impacto
+        const content = isCorrect ? feedbackDB[qIndex].correct : feedbackDB[qIndex].incorrect;
+
+        if (isCorrect) {
+            gameState.correctAnswers++;
+            icon.innerText = "✅";
+            title.style.color = "var(--success)";
+        } else {
+            icon.innerText = "⚠️";
+            title.style.color = "var(--error)";
+        }
+
+        title.innerText = content.title;
+        text.innerText = content.text;
+        
+        updateStatusUI(); // Actualiza la píldora superior
+        modal.style.display = "flex";
+        modal.dataset.nextScene = (qIndex < 4) ? qIndex + 1 : 'final';
+    }
+
+    function closeFeedback() {
+        document.getElementById('feedback-modal').style.display = "none";
+        const next = document.getElementById('feedback-modal').dataset.nextScene;
+        if (next === 'final') evaluateGame();
+        else showScene(parseInt(next));
+    }
+
+    function updateStatusUI() {
+        const display = document.getElementById('protection-display');
+        
+        // Lógica simple para mostrar estado cualitativo
+        if (gameState.correctAnswers >= 3) {
+            display.innerText = "🛡️ NIVEL: ENTORNO SEGURO";
+            display.className = "score-box status-safe";
+        } else if (gameState.correctAnswers > 0) {
+            display.innerText = "⚠️ NIVEL: ALERTA PREVENTIVA";
+            display.className = "score-box status-neutral";
+        } else {
+            display.innerText = "🚩 NIVEL: RIESGO ACTIVO";
+            display.className = "score-box status-risk";
+        }
+    }
+
+    function evaluateGame() {
+        showScene('final');
+        const card = document.getElementById('card-container');
+        const title = document.getElementById('final-title');
+        const msg = document.getElementById('final-message');
+        const scoreDisplay = document.getElementById('final-score');
+        const btn = document.getElementById('final-btn');
+        const icon = document.getElementById('final-icon');
+
+        // Evaluación Cualitativa Final (Sin números)
+        if (gameState.correctAnswers === 4) {
+            card.classList.add('state-success');
+            card.classList.remove('state-fail');
+            icon.innerText = "💜";
+            title.innerText = "COMPROMISO ÉTICO";
+            title.style.color = "var(--brand-purple)";
+            scoreDisplay.innerText = "RESULTADO: GARANTÍA DE DERECHOS";
+            msg.innerHTML = "Has tomado decisiones que protegen la vida y la dignidad. <br>Comprendes que la normativa es una herramienta de cuidado, no solo un trámite.";
+            btn.innerText = "Finalizar Módulo";
+            btn.style.background = "var(--success)";
+        } else if (gameState.correctAnswers >= 2) {
+            card.classList.add('state-fail');
+            card.classList.remove('state-success');
+            icon.innerText = "⚠️";
+            title.innerText = "REFUERZO NECESARIO";
+            title.style.color = "var(--warning)";
+            scoreDisplay.innerText = "RESULTADO: BRECHAS DE PROTECCIÓN";
+            msg.innerHTML = "Algunas decisiones fueron correctas, pero otras dejaron vulnerables a las víctimas. <br>En protección, una omisión puede escalar el riesgo.";
+            btn.innerText = "Repasar Conceptos";
+            btn.style.background = "var(--brand-orange)";
+            btn.onclick = resetGame;
+        } else {
+            card.classList.add('state-fail');
+            card.classList.remove('state-success');
+            icon.innerText = "😓";
+            title.innerText = "ALERTA CRÍTICA";
+            title.style.color = "var(--error)";
+            scoreDisplay.innerText = "RESULTADO: REVICTIMIZACIÓN";
+            msg.innerHTML = "Las decisiones tomadas normalizan la violencia o desprotegen a las mujeres. <br>Es urgente revisar los protocolos de la Ley 2365.";
+            btn.innerText = "Reiniciar Módulo";
+            btn.style.background = "var(--error)";
+            btn.onclick = resetGame;
+        }
+    }
+
+    function resetGame() {
+        document.getElementById('card-container').classList.remove('state-success', 'state-fail');
+        startGame();
+    }
+</script>
+
+</body>
+</html>

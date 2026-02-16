@@ -1,0 +1,411 @@
+<!-- LIBRERÍAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+/* --- ESTILO LIGHT / COLOMBIA SIN MACHISMO --- */
+:root {
+    /* Paleta Institucional */
+    --brand-purple: #582C83;    /* Morado */
+    --brand-magenta: #D23B78;   /* Magenta */
+    --brand-orange: #F47920;    /* Naranja */
+    --brand-yellow: #FFC82F;    /* Amarillo */
+    --brand-bg: #ffffff;        /* Fondo Blanco Puro */
+    
+    /* Variables Lógicas del Juego Mapeadas a la Marca */
+    --neu-bg: var(--brand-bg);
+    --neu-shadow-light: #ffffff;
+    --neu-shadow-dark: #E2E8F0; /* Sombra gris muy suave */
+
+    --c-work: var(--brand-purple);  /* Trabajo = Morado */
+    --c-care: var(--brand-magenta); /* Cuidado = Magenta */
+    --c-rest: var(--brand-yellow);  /* Descanso = Amarillo */
+
+    --text-main: #333333;           /* Gris oscuro */
+    --text-muted: #64748B;          /* Gris medio */
+}
+
+#clock-game-v2 {
+    width: 100%;
+    min-height: 900px;
+    height: auto;
+    background-color: var(--neu-bg) !important;
+    font-family: 'Quicksand', sans-serif;
+    color: var(--text-main);
+    border-radius: 20px;
+    padding: 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    /* Borde sutil y sombra elegante */
+    border: 1px solid #F1F5F9;
+    box-shadow: 0 10px 40px rgba(88, 44, 131, 0.08); 
+}
+
+/* --- HEADER CON LOGOS --- */
+.game-header { 
+    margin-bottom: 40px; 
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--brand-yellow);
+    padding-bottom: 20px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.client-logo {
+    height: 120px; /* Tamaño prominente */
+    width: auto;
+    object-fit: contain;
+}
+
+.gh-text-area {
+    text-align: center;
+    flex: 1;
+    min-width: 250px;
+}
+
+.gh-title { 
+    font-family: 'Nunito', sans-serif; font-weight: 900; 
+    font-size: clamp(1.8rem, 4vw, 2.5rem); margin: 0; 
+    color: var(--brand-purple); /* Título Morado */
+    text-transform: uppercase;
+}
+.gh-subtitle { 
+    font-size: 1rem; color: var(--brand-orange); /* Subtítulo Naranja */
+    margin-top: 5px; font-weight: 700;
+}
+
+/* --- CONTENEDOR FLEXIBLE --- */
+.game-flex {
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start;
+    gap: 50px; z-index: 5;
+}
+
+/* 1. EL RELOJ (GRÁFICO) */
+.clock-container {
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: var(--neu-bg);
+    /* Sombras suaves "Soft UI" */
+    box-shadow: 15px 15px 30px var(--neu-shadow-dark), -15px -15px 30px var(--neu-shadow-light);
+    display: flex; justify-content: center; align-items: center;
+    position: relative;
+    flex-shrink: 0;
+    border: 5px solid #fff;
+}
+
+/* El Pastel */
+.pie-chart {
+    width: 280px; height: 280px; border-radius: 50%;
+    background: conic-gradient(
+        var(--c-work) 0deg 0deg, 
+        var(--c-care) 0deg 0deg, 
+        var(--c-rest) 0deg 360deg
+    );
+    transition: background 0.8s ease-in-out;
+}
+
+/* Centro con Datos */
+.clock-center {
+    position: absolute; width: 160px; height: 160px; border-radius: 50%;
+    background: var(--neu-bg);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    z-index: 10;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
+}
+.hours-big { font-size: 3.5rem; font-weight: 900; line-height: 1; color: var(--brand-purple); }
+.label-small { font-size: 0.8rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase; }
+
+/* Leyenda */
+.chart-legend {
+    margin-top: 20px; display: flex; gap: 15px; justify-content: center; font-size: 0.85rem; font-weight: bold; color: #555;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+/* 2. CONTROLES */
+.controls-panel {
+    flex: 1; min-width: 300px; max-width: 500px;
+    display: flex; flex-direction: column; gap: 20px;
+}
+
+/* Tarjeta de Resumen */
+.stats-summary {
+    background: #F8FAFC; /* Gris muy claro */
+    padding: 20px; border-radius: 15px;
+    border: 1px solid #E2E8F0;
+    display: flex; justify-content: space-between;
+}
+.stat-item { text-align: center; }
+.stat-num { font-size: 1.5rem; font-weight: bold; display: block; }
+.stat-lbl { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
+
+/* Botones */
+.btn-group { display: flex; flex-direction: column; gap: 12px; }
+
+.game-btn {
+    border: 1px solid #E2E8F0; padding: 15px 20px; border-radius: 12px;
+    background: #ffffff; color: var(--text-main);
+    /* Sombra ligera para botón */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+    font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 1rem;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.game-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--brand-orange);
+    box-shadow: 0 6px 12px rgba(244, 121, 32, 0.15);
+}
+.game-btn:active { transform: scale(0.98); }
+
+.btn-badge {
+    color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 800;
+}
+
+/* Botón UNP */
+.btn-unp {
+    margin-top: 20px; 
+    background: var(--brand-purple) !important; 
+    color: #ffffff !important; 
+    border: none !important;
+    display: none; justify-content: center;
+    box-shadow: 0 10px 20px rgba(88, 44, 131, 0.3);
+}
+.btn-unp:hover { background: #451d6b !important; }
+
+/* ALERTAS */
+.alert-box {
+    margin-top: 20px; padding: 15px; border-radius: 10px; text-align: center;
+    font-weight: bold; display: none; animation: popIn 0.3s;
+    font-size: 0.95rem;
+}
+.alert-crisis { background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; }
+.alert-success { background: #F0FDF4; color: #16A34A; border: 1px solid #BBF7D0; }
+
+@keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .game-header { justify-content: center; flex-direction: column; text-align: center; }
+    .client-logo { height: 85px; margin-bottom: 10px; }
+    .game-flex { flex-direction: column; align-items: center; gap: 30px; }
+    .controls-panel { width: 100%; }
+}
+</style>
+
+<div id="clock-game-v2">
+    
+    <!-- HEADER CON LOGOS INTEGRADOS -->
+    <div class="game-header">
+        <!-- Logo Izquierdo: UNP -->
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+        
+        <div class="gh-text-area">
+            <h1 class="gh-title">El Reloj del Cuidado</h1>
+            <p class="gh-subtitle">Administra 24 horas. Evita la "Pobreza de Tiempo".</p>
+        </div>
+
+        <!-- Logo Derecho: Comisión -->
+        <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo">
+    </div>
+
+    <div class="game-flex">
+        
+        <!-- IZQUIERDA: EL RELOJ -->
+        <div style="display:flex; flex-direction:column; align-items:center;">
+            <div class="clock-container">
+                <div class="pie-chart" id="chart"></div>
+                <div class="clock-center">
+                    <div class="hours-big" id="disp-rest">24</div>
+                    <div class="label-small">HORAS LIBRES</div>
+                </div>
+            </div>
+            
+            <div class="chart-legend">
+                <div class="legend-item"><div class="dot" style="background:var(--c-work)"></div> Trabajo</div>
+                <div class="legend-item"><div class="dot" style="background:var(--c-care)"></div> Cuidado</div>
+                <div class="legend-item"><div class="dot" style="background:var(--c-rest)"></div> Descanso</div>
+            </div>
+        </div>
+
+        <!-- DERECHA: CONTROLES -->
+        <div class="controls-panel">
+            
+            <!-- Resumen Numérico -->
+            <div class="stats-summary">
+                <div class="stat-item">
+                    <span class="stat-num" id="stat-work" style="color:var(--c-work)">0h</span>
+                    <span class="stat-lbl">Trabajo</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num" id="stat-care" style="color:var(--c-care)">0h</span>
+                    <span class="stat-lbl">Cuidado</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num" id="stat-rest" style="color:var(--brand-orange)">24h</span> <!-- Naranja para resaltar -->
+                    <span class="stat-lbl">Salud/Sueño</span>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="btn-group">
+                <button class="game-btn" onclick="addHours('work', 8)">
+                    <span>💼 Agregar Jornada Laboral</span>
+                    <span class="btn-badge" style="background:var(--c-work)">-8h</span>
+                </button>
+                <button class="game-btn" onclick="addHours('care', 4)">
+                    <span>🏠 Tareas del Hogar</span>
+                    <span class="btn-badge" style="background:var(--c-care)">-4h</span>
+                </button>
+                <button class="game-btn" onclick="addHours('care', 2)">
+                    <span>🍼 Cuidado de Personas</span>
+                    <span class="btn-badge" style="background:var(--c-care)">-2h</span>
+                </button>
+                <button class="game-btn" onclick="addHours('work', 2)">
+                    <span>🚌 Transporte</span>
+                    <span class="btn-badge" style="background:var(--c-work)">-2h</span>
+                </button>
+            </div>
+
+            <!-- Botón UNP -->
+            <button id="btn-unp" class="game-btn btn-unp" onclick="applyReform()">
+                🏛️ APLICAR POLÍTICA DE BIENESTAR UNP
+            </button>
+
+            <!-- Caja de Mensajes -->
+            <div id="msg-box" class="alert-box"></div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+// --- ESTADO INICIAL ---
+let timeData = {
+    work: 0,
+    care: 0,
+    rest: 24
+};
+let isCrisis = false;
+
+// 1. ACTUALIZAR EL GRÁFICO (Lógica de Grados)
+function updateChart() {
+    const total = 24;
+    
+    // Convertir horas a grados
+    const degWork = (timeData.work / total) * 360;
+    const degCare = (timeData.care / total) * 360;
+    
+    // Puntos de corte para el gradiente
+    const endWork = degWork;
+    const endCare = degWork + degCare;
+    
+    // CSS Conic Gradient usando las nuevas variables de color
+    const gradient = `conic-gradient(
+        var(--c-work) 0deg ${endWork}deg,
+        var(--c-care) ${endWork}deg ${endCare}deg,
+        var(--c-rest) ${endCare}deg 360deg
+    )`;
+    
+    document.getElementById('chart').style.background = gradient;
+    
+    // Actualizar Textos
+    document.getElementById('disp-rest').innerText = timeData.rest;
+    
+    // Actualizar Panel Estadístico
+    document.getElementById('stat-work').innerText = timeData.work + 'h';
+    document.getElementById('stat-care').innerText = timeData.care + 'h';
+    document.getElementById('stat-rest').innerText = timeData.rest + 'h';
+    
+    // Color de Alerta en el reloj si queda poco tiempo
+    if(timeData.rest < 6) {
+        document.getElementById('disp-rest').style.color = "#DC2626"; // Rojo alerta
+    } else {
+        document.getElementById('disp-rest').style.color = "var(--brand-purple)"; // Morado normal
+    }
+}
+
+// 2. AÑADIR HORAS
+function addHours(type, amount) {
+    if(isCrisis) return; // Bloqueado si ya terminó
+
+    if (timeData.rest - amount < 0) {
+        showMessage("⚠️ No hay suficientes horas en el día.", "alert");
+        return;
+    }
+
+    // Lógica matemática simple
+    timeData[type] += amount;
+    timeData.rest -= amount;
+
+    updateChart();
+    checkHealth();
+}
+
+// 3. VERIFICAR SALUD
+function checkHealth() {
+    const msgBox = document.getElementById('msg-box');
+    
+    if (timeData.rest <= 6) {
+        isCrisis = true;
+        showMessage("⚠️ ALERTA: SOBRECARGA. Tienes menos de 6h para dormir. Esto es violencia económica y afecta tu salud.", "alert");
+        
+        // Mostrar Botón UNP
+        const btnUnp = document.getElementById('btn-unp');
+        btnUnp.style.display = 'flex';
+        gsap.from(btnUnp, {y: 20, opacity: 0, duration: 0.5});
+    } else {
+        msgBox.style.display = 'none';
+    }
+}
+
+// 4. APLICAR REFORMA
+function applyReform() {
+    // La UNP aplica flexibilidad y apoyo
+    // Efecto: Reduce horas de transporte (Teletrabajo) y carga de cuidado (Apoyo institucional)
+    
+    // Reducir valores (Simulación)
+    const workReduction = 2; // Ahorro transporte
+    const careReduction = 2; // Apoyo cuidado
+    
+    // Validar que no queden negativos
+    if(timeData.work >= workReduction) timeData.work -= workReduction;
+    if(timeData.care >= careReduction) timeData.care -= careReduction;
+    
+    // Recalcular descanso
+    timeData.rest = 24 - timeData.work - timeData.care;
+    
+    isCrisis = false; // Salimos de crisis
+    
+    updateChart();
+    
+    // Mensaje de Éxito
+    showMessage("✅ REFORMA APLICADA: Teletrabajo (-2h Transporte) y Apoyo Psicosocial (-2h Carga). ¡Has recuperado 4 horas de vida!", "success");
+    
+    document.getElementById('btn-unp').style.display = 'none';
+    
+    // Animación de celebración en el reloj
+    gsap.from("#chart", {scale: 1.1, duration: 0.5, yoyo: true, repeat: 1});
+}
+
+function showMessage(text, type) {
+    const box = document.getElementById('msg-box');
+    box.innerHTML = text;
+    box.style.display = 'block';
+    
+    if(type === 'alert') {
+        box.className = "alert-box alert-crisis";
+    } else {
+        box.className = "alert-box alert-success";
+    }
+}
+
+// Iniciar gráfico
+updateChart();
+</script>

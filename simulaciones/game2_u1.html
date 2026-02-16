@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Fuentes Institucionales -->
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+    /* --- PALETA DE COLORES (CLAROS / INSTITUCIONALES) --- */
+    :root {
+        /* Identidad Visual 25N */
+        --tf-purple: #4B1E7A;          /* Morado Institucional (Texto, Bordes, Jefe) */
+        --tf-orange: #E35205;          /* Naranja (Acentos, Jugador) */
+        --tf-yellow: #FDB913;          /* Amarillo (Detalles) */
+        
+        --bg-main: #FFFFFF;            /* Fondo General */
+        --bg-card: #F9F9F9;            /* Fondo Tarjeta */
+        
+        --text-main: #333333;          /* Texto lectura */
+        --text-light: #ffffff;         /* Texto sobre colores fuertes */
+        
+        /* Roles */
+        --boss-bg: #F3E5F5;            /* Fondo Burbuja Jefe (Lila suave) */
+        --boss-text: #4B1E7A;          /* Texto Jefe */
+        
+        --player-bg: #FFF3E0;          /* Fondo Burbuja Jugador (Naranja suave) */
+        --player-text: #E65100;        /* Texto Jugador */
+        
+        --narrator-bg: #EEEEEE;        /* Narrador neutro */
+        --narrator-text: #666666;
+
+        /* Tensión */
+        --tension-low: #8BC34A;
+        --tension-mid: #FFC107;
+        --tension-high: #E35205;
+    }
+
+    body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+    #game-role-wrapper {
+        background: linear-gradient(180deg, #FFFFFF 0%, #F3E5F5 100%);
+        min-height: 750px;
+        color: var(--text-main);
+        display: flex;
+        flex-direction: column; /* Cambiado para apilar logos y tarjeta */
+        justify-content: flex-start;
+        align-items: center;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px;
+        border: 1px solid #e0e0e0;
+    }
+
+    /* --- LOGOS DEL CLIENTE --- */
+    .header-logos {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 600px;
+        margin-bottom: 20px;
+        z-index: 20;
+    }
+
+    .header-logos img {
+        height: 115px;
+        width: auto;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+
+    /* Tarjeta Principal */
+    .role-card {
+        background: var(--bg-main);
+        border: 1px solid rgba(75, 30, 122, 0.15); /* Borde morado suave */
+        box-shadow: 0 10px 40px rgba(75, 30, 122, 0.1);
+        border-radius: 20px;
+        width: 100%;
+        max-width: 600px;
+        height: 600px;
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    /* --- BARRA DE TENSIÓN --- */
+    .tension-header {
+        padding: 15px 20px;
+        background: white;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .tension-label { 
+        font-size: 0.8rem; 
+        font-weight: 800; 
+        text-transform: uppercase; 
+        color: var(--tf-purple);
+        font-family: 'Sora', sans-serif;
+    }
+    
+    .tension-bar-bg {
+        flex-grow: 1;
+        height: 12px;
+        background: #eee;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .tension-fill {
+        height: 100%;
+        width: 0%;
+        background: var(--tension-low);
+        transition: width 0.5s ease-out, background 0.3s;
+        border-radius: 10px;
+    }
+
+    /* --- ÁREA DE DRAMATIZACIÓN (Chat) --- */
+    .drama-stage {
+        flex-grow: 1;
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        background-color: #fafafa;
+        /* Scrollbar styling */
+        scrollbar-width: thin;
+        scrollbar-color: var(--tf-purple) #f0f0f0;
+    }
+
+    .msg-bubble {
+        padding: 15px 20px;
+        border-radius: 15px;
+        max-width: 85%;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    @keyframes popIn {
+        from { opacity: 0; transform: scale(0.9) translateY(10px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Estilos de personajes */
+    .msg-boss {
+        background: var(--boss-bg);
+        border-left: 5px solid var(--boss-text);
+        align-self: flex-start;
+        color: var(--boss-text);
+        border-top-left-radius: 2px;
+    }
+    .msg-boss::before { 
+        content: 'Director General (Jefe)'; 
+        font-size: 0.75rem; 
+        color: var(--boss-text); 
+        display: block; 
+        margin-bottom: 5px; 
+        font-weight: 800; 
+        text-transform: uppercase;
+    }
+
+    .msg-player {
+        background: var(--player-bg);
+        border-right: 5px solid var(--player-text);
+        align-self: flex-end;
+        color: var(--text-main);
+        text-align: right;
+        border-top-right-radius: 2px;
+    }
+    .msg-player::before { 
+        content: 'TÚ (Especialista)'; 
+        font-size: 0.75rem; 
+        color: var(--player-text); 
+        display: block; 
+        margin-bottom: 5px; 
+        font-weight: 800; 
+        text-transform: uppercase;
+    }
+
+    .msg-narrator {
+        text-align: center;
+        font-style: italic;
+        color: var(--narrator-text);
+        font-size: 0.85rem;
+        margin: 10px 0;
+        align-self: center;
+        background: var(--narrator-bg);
+        padding: 8px 20px;
+        border-radius: 20px;
+        border: 1px solid #ddd;
+    }
+
+    /* --- ÁREA DE INTERACCIÓN --- */
+    .interaction-area {
+        padding: 20px;
+        background: white;
+        border-top: 1px solid #eee;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .choice-btn {
+        background: white;
+        border: 2px solid var(--tf-purple);
+        color: var(--tf-purple);
+        padding: 15px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: left;
+        font-size: 0.95rem;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+    }
+
+    .choice-btn:hover {
+        background: var(--tf-purple);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(75, 30, 122, 0.2);
+    }
+
+    /* Animación de Tensión (Sacudida) */
+    .shake { animation: shake 0.5s; }
+    @keyframes shake {
+        0% { transform: translate(1px, 1px) rotate(0deg); }
+        10% { transform: translate(-1px, -2px) rotate(-1deg); }
+        20% { transform: translate(-3px, 0px) rotate(1deg); }
+        30% { transform: translate(3px, 2px) rotate(0deg); }
+        40% { transform: translate(1px, -1px) rotate(1deg); }
+        50% { transform: translate(-1px, 2px) rotate(-1deg); }
+        60% { transform: translate(-3px, 1px) rotate(0deg); }
+        100% { transform: translate(0, 0) rotate(0); }
+    }
+
+    /* Pantalla Final */
+    .end-screen {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(255, 255, 255, 0.98); /* Fondo blanco casi sólido */
+        z-index: 50;
+        display: none; 
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start; 
+        overflow-y: auto; 
+        backdrop-filter: blur(5px);
+    }
+
+    .end-content-wrapper {
+        margin: auto; 
+        padding: 40px 30px; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box; 
+    }
+    
+    .end-content-wrapper h2 {
+        font-family: 'Sora', sans-serif;
+        color: var(--tf-purple);
+        font-size: 1.8rem;
+    }
+
+    .concept-tag {
+        background: var(--tf-purple);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin: 5px;
+        display: inline-block;
+        font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+        .header-logos img { height: 80px; }
+        .role-card { height: 600px; border-radius: 15px; }
+        .msg-bubble { max-width: 95%; }
+    }
+</style>
+</head>
+<body>
+
+<div id="game-role-wrapper">
+    
+    <!-- HEADER LOGOS (Nuevo) -->
+    <div class="header-logos">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP">
+        <img src="../Styles/logo.png" alt="Logo Comisión">
+    </div>
+
+    <div class="role-card" id="game-card">
+        
+        <!-- Barra Superior -->
+        <div class="tension-header">
+            <span class="tension-label">Nivel de Tensión</span>
+            <div class="tension-bar-bg">
+                <div class="tension-fill" id="tension-fill"></div>
+            </div>
+            <span id="tension-emoji" style="font-size:1.5rem;">😐</span>
+        </div>
+
+        <!-- Escenario de Chat -->
+        <div class="drama-stage" id="chat-box">
+            <div class="msg-narrator">
+                Estás en el Comité de Evaluación de Riesgo. Eres la especialista técnica con más experiencia en la sala. El resto son directivos hombres.
+            </div>
+            <div class="msg-boss">
+                Bien, señores. Como íbamos diciendo, el esquema del protegido X se mantiene igual. No veo razones para cambios drásticos.
+            </div>
+        </div>
+
+        <!-- Opciones -->
+        <div class="interaction-area" id="options-box">
+            <button class="choice-btn" onclick="handleScene(1)">Levantar la mano: "Director, los datos de terreno muestran un riesgo inminente."</button>
+            <button class="choice-btn" onclick="handleScene(2)">Quedarse callada y anotar en la libreta (Evitar conflicto).</button>
+        </div>
+
+        <!-- Pantalla Final -->
+        <div class="end-screen" id="end-screen">
+            <div class="end-content-wrapper">
+                <h2>ANÁLISIS DE LA SITUACIÓN</h2>
+                <p id="end-message" style="line-height: 1.6; font-size: 1.1rem; color: #555;"></p>
+                <div id="concepts-revealed" style="margin: 25px 0;"></div>
+                <button class="choice-btn" style="text-align: center; background: var(--tf-orange); color:white; border:none; width: auto; padding: 12px 40px;" onclick="location.reload()">
+                    Reintentar Simulación
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    let tension = 20; // 0 a 100
+    let currentStep = 0;
+    
+    // Base de datos de la narrativa
+    const story = {
+        1: { // Opción: Hablar
+            narrator: "El Director te mira por encima de sus gafas. Varios colegas revisan sus celulares.",
+            boss: "¿Riesgo inminente? Mire, doctora... no nos pongamos dramáticos. Aquí nos basamos en hechos, no en corazonadas.",
+            tensionImpact: 20,
+            options: [
+                { text: "Insistir: 'No es una corazonada. Es el informe técnico 4B.'", next: 3 },
+                { text: "Disculparse: 'Quizás me expresé mal, lo revisaré.'", next: 4 }
+            ]
+        },
+        2: { // Opción: Callar
+            narrator: "Decides no intervenir. La reunión continúa. Sientes una punzada en el estómago.",
+            boss: "Perfecto. Si no hay objeciones, cerramos el acta. Ah, y tráiganos café, por favor.",
+            tensionImpact: 10,
+            options: [
+                { text: "Hacerlo notar: 'Yo soy especialista, no asistente.'", next: 5 },
+                { text: "Ignorarlo y salir de la sala frustrada.", next: 6 }
+            ]
+        },
+        3: { // Opción: Insistir (Confrontación)
+            narrator: "El ambiente se corta con un cuchillo. Un colega te interrumpe.",
+            boss: "(Interrupción) A ver, niña, déjeme terminar. Ya sabemos leer informes. Lo que necesitamos es criterio político.",
+            tensionImpact: 30, // Tensión crítica
+            options: [
+                { text: "Finalizar Simulación", next: 99, outcome: "aggressive" }
+            ]
+        },
+        4: { // Opción: Sumisión (Gaslighting)
+            narrator: "Bajas la mirada. El director sonríe con condescendencia.",
+            boss: "Así me gusta. Hay que aprender a escuchar a los que llevan años en esto.",
+            tensionImpact: 5,
+            options: [
+                { text: "Finalizar Simulación", next: 99, outcome: "passive" }
+            ]
+        },
+        5: { // Opción: Defender rol (Jerarquía)
+            narrator: "Se hace un silencio incómodo.",
+            boss: "Vaya carácter. Aquí en la UNP somos una familia, colaboramos en todo. No sea conflictiva.",
+            tensionImpact: 40,
+            options: [
+                { text: "Finalizar Simulación", next: 99, outcome: "hierarchy" }
+            ]
+        },
+        6: { // Salir (Invisibilización)
+            narrator: "Sales de la sala. Nadie nota tu salida. Tu aporte técnico fue ignorado.",
+            boss: "",
+            tensionImpact: 0,
+            options: [
+                { text: "Finalizar Simulación", next: 99, outcome: "invisible" }
+            ]
+        }
+    };
+
+    // Función principal de renderizado de escena
+    function handleScene(sceneId, outcome = null) {
+        
+        if (sceneId === 99) {
+            showEnding(outcome);
+            return;
+        }
+
+        const sceneData = story[sceneId];
+        currentStep = sceneId;
+
+        // Actualizar Tensión
+        updateTension(sceneData.tensionImpact);
+
+        // Renderizar Narrador
+        if (sceneData.narrator) {
+            addMessage(sceneData.narrator, 'msg-narrator');
+        }
+
+        // Renderizar Jefe (con delay para realismo)
+        if (sceneData.boss) {
+            setTimeout(() => {
+                addMessage(sceneData.boss, 'msg-boss');
+                triggerShake(); // El jefe siempre genera tensión
+            }, 600);
+        }
+
+        // Renderizar botones (ocultar mientras habla)
+        const optionsBox = document.getElementById('options-box');
+        optionsBox.innerHTML = ''; 
+        
+        setTimeout(() => {
+            renderButtons(sceneData.options);
+        }, 1200);
+    }
+
+    function addMessage(text, className) {
+        const chatBox = document.getElementById('chat-box');
+        const bubble = document.createElement('div');
+        bubble.className = `msg-bubble ${className}`;
+        bubble.innerText = text;
+        chatBox.appendChild(bubble);
+        // Scroll suave hacia abajo
+        chatBox.scrollTo({
+            top: chatBox.scrollHeight,
+            behavior: 'smooth'
+        });
+    }
+
+    function renderButtons(options) {
+        const optionsBox = document.getElementById('options-box');
+        optionsBox.innerHTML = ''; // Limpiar anteriores
+
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.innerText = opt.text;
+            
+            // Asignar evento
+            btn.onclick = function() {
+                // Agregar mensaje del jugador antes de cambiar escena (Resumen de la acción)
+                // Tomamos solo la parte narrativa del texto del botón (antes de los dos puntos si existen)
+                const playerText = opt.text.includes(':') ? opt.text.split(':')[1].replace(/"/g, '').trim() : opt.text;
+                
+                addMessage(playerText, 'msg-player'); 
+                
+                // Pequeña pausa
+                setTimeout(() => {
+                    if (opt.outcome) {
+                        handleScene(opt.next, opt.outcome);
+                    } else {
+                        handleScene(opt.next);
+                    }
+                }, 500);
+            };
+            
+            optionsBox.appendChild(btn);
+        });
+    }
+
+    function updateTension(amount) {
+        tension += amount;
+        if (tension > 100) tension = 100;
+        
+        const fill = document.getElementById('tension-fill');
+        const emoji = document.getElementById('tension-emoji');
+
+        fill.style.width = `${tension}%`;
+
+        // Colores y Emojis según nivel
+        if (tension < 40) {
+            fill.style.background = "var(--tension-low)"; // Verde
+            emoji.innerText = "😐";
+        } else if (tension < 75) {
+            fill.style.background = "var(--tension-mid)"; // Amarillo
+            emoji.innerText = "😓";
+        } else {
+            fill.style.background = "var(--tension-high)"; // Naranja
+            emoji.innerText = "🤬";
+        }
+    }
+
+    function triggerShake() {
+        const card = document.getElementById('game-card');
+        card.classList.remove('shake');
+        void card.offsetWidth; // Trigger reflow
+        card.classList.add('shake');
+    }
+
+    function showEnding(outcome) {
+        const screen = document.getElementById('end-screen');
+        const msg = document.getElementById('end-message');
+        const concepts = document.getElementById('concepts-revealed');
+        
+        screen.style.display = "flex";
+        
+        let analysis = "";
+        let tags = "";
+
+        switch(outcome) {
+            case 'aggressive':
+                analysis = "Intentaste imponer tu criterio técnico, pero fuiste silenciada. El jefe usó tu tono para etiquetarte de 'emocional' y desvalidar tu argumento profesional.";
+                tags = "<span class='concept-tag'>Tone Policing</span> <span class='concept-tag'>Gaslighting</span>";
+                break;
+            case 'passive':
+                analysis = "Decidiste ceder para evitar problemas. La armonía se mantuvo, pero el riesgo de seguridad persiste y tu rol fue reducido al de una subordinada sin voz.";
+                tags = "<span class='concept-tag'>Invisibilización</span> <span class='concept-tag'>Rol de Género</span>";
+                break;
+            case 'hierarchy':
+                analysis = "Al defender tu estatus, apelaron a la 'familia' (chantaje emocional) para mantenerte en tu lugar. La jerarquía se usó para frenar la competencia técnica femenina.";
+                tags = "<span class='concept-tag'>Abuso Jerárquico</span> <span class='concept-tag'>Techo de Cristal</span>";
+                break;
+            case 'invisible':
+                analysis = "Tu salida pasó desapercibida. En estructuras rígidas, la ausencia de las mujeres en la toma de decisiones se normaliza tanto que ni siquiera se nota su falta.";
+                tags = "<span class='concept-tag'>Exclusión Sistemática</span>";
+                break;
+        }
+
+        msg.innerHTML = `<strong>Resultado:</strong> ${analysis}<br><br>¿Notaste lo difícil que fue acertar? Las estructuras desiguales crean escenarios donde perder es la norma.`;
+        concepts.innerHTML = tags;
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    /* --- 1. PALETA DE COLORES (CLARA - 25N) --- */
+    :root {
+        /* Fondos */
+        --bg-body: #F4F6F9;              /* Fondo de página gris muy claro/azulado */
+        --bg-card: #FFFFFF;              /* Fondo del contenedor principal */
+        --bg-panel: #F3E5F5;             /* Fondo panel izquierdo (Morado muy suave) */
+        
+        /* Marca Institucional */
+        --brand-purple: #480241;         /* Morado UNP (Identidad principal) */
+        --brand-orange: #FF9800;         /* Naranja (Acento fuerte / 25N) */
+        --brand-yellow: #FEC82F;         /* Amarillo (Detalles / Badge) */
+
+        /* Textos */
+        --text-main: #2D2D2D;            /* Gris oscuro para lectura */
+        --text-muted: #555555;           /* Texto secundario */
+
+        /* Bordes y Sombras */
+        --border-color: #E0E0E0;
+        --shadow-soft: 0 10px 30px rgba(72, 2, 65, 0.08); /* Sombra morada muy sutil */
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background: linear-gradient(135deg, #ffffff 0%, #f3e5f5 100%);
+        color: var(--text-main);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    /* Contenedor estilo "Dashboard" - Clean Light */
+    .interface-container {
+        width: 95%;
+        max-width: 1200px;
+        height: 90vh;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-top: 5px solid var(--brand-orange); /* Detalle superior de color */
+        border-radius: 16px;
+        box-shadow: var(--shadow-soft);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cabecera con Logos */
+    .header-bar {
+        padding: 20px 40px;
+        border-bottom: 1px solid var(--border-color);
+        background: #fff;
+        display: flex;
+        justify-content: space-between; /* Título izq, Logos der */
+        align-items: center;
+        gap: 20px;
+    }
+
+    .header-content {
+        flex: 1;
+    }
+
+    .logos-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .client-logo {
+        height: 115px; /* Altura controlada */
+        width: auto;
+        object-fit: contain;
+        transition: transform 0.3s;
+    }
+    .client-logo:hover { transform: scale(1.05); }
+
+    .unit-badge {
+        background: var(--brand-purple);
+        color: var(--brand-yellow);
+        padding: 5px 12px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: inline-block;
+        margin-bottom: 8px;
+    }
+
+    .main-title {
+        font-size: 1.5rem;
+        margin: 0;
+        font-weight: 700;
+        color: var(--brand-purple);
+        line-height: 1.2;
+    }
+
+    /* Cuerpo dividido en dos columnas */
+    .content-body {
+        flex-grow: 1;
+        display: grid;
+        grid-template-columns: 35% 65%; /* Ajuste de proporción */
+        overflow: hidden; 
+    }
+
+    /* Columna Izquierda: Justificación */
+    .col-justification {
+        padding: 40px;
+        border-right: 1px solid var(--border-color);
+        background: var(--bg-panel); /* Fondo diferenciador */
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .section-title {
+        color: var(--brand-orange);
+        font-size: 0.9rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        border-bottom: 2px solid var(--brand-orange);
+        padding-bottom: 8px;
+        margin-bottom: 10px;
+        display: inline-block;
+        width: fit-content;
+    }
+
+    .text-block {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: var(--text-main);
+        text-align: justify;
+    }
+
+    /* Columna Derecha: Objetivos */
+    .col-objectives {
+        padding: 40px;
+        background: #fff;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--brand-purple) #f0f0f0;
+    }
+
+    .objectives-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .obj-card {
+        background: #FFFFFF;
+        border: 1px solid var(--border-color);
+        border-left: 5px solid var(--brand-purple); /* Borde morado */
+        padding: 25px;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+
+    .obj-card:hover {
+        background: #FFF8E1; /* Fondo crema muy suave al hover */
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        border-left-color: var(--brand-orange); /* Cambia a naranja al hover */
+    }
+
+    .obj-number {
+        font-size: 0.75rem;
+        color: var(--brand-purple);
+        font-weight: 800;
+        margin-bottom: 8px;
+        opacity: 1;
+        background: #F3E5F5;
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 4px;
+    }
+
+    .obj-text {
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #444;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+        .header-bar { flex-direction: column-reverse; align-items: flex-start; }
+        .logos-container { width: 100%; justify-content: flex-end; margin-bottom: 10px; }
+    }
+
+    @media (max-width: 768px) {
+        .interface-container { height: 100vh; width: 100%; border-radius: 0; border: none; }
+        .content-body { grid-template-columns: 1fr; overflow-y: auto; }
+        .col-justification { border-right: none; border-bottom: 1px solid var(--border-color); height: auto; padding: 30px; }
+        .col-objectives { padding: 30px; }
+        .client-logo { height: 75px; }
+    }
+</style>
+</head>
+<body>
+
+    <div class="interface-container">
+        
+        <!-- Cabecera con Título y Logos -->
+        <div class="header-bar">
+            <div class="header-content">
+                <span class="unit-badge">UNIDAD 02</span>
+                <h1 class="main-title">Fundamentos Conceptuales y Marco Jurídico</h1>
+            </div>
+            
+            <!-- Contenedor de Logos del Cliente -->
+            <div class="logos-container">
+                <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+                <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo">
+            </div>
+        </div>
+
+        <div class="content-body">
+            
+            <!-- Columna 1: Justificación -->
+            <div class="col-justification">
+                <div class="section-title">JUSTIFICACIÓN RESUMEN</div>
+                <div class="text-block">
+                    <p>Esta unidad proporciona las bases conceptuales y jurídicas necesarias para comprender la complejidad de las violencias de género y los enfoques que orientan su prevención. Integra perspectivas críticas como la interseccionalidad y los feminismos decoloniales, analiza las discriminaciones estructurales y actualiza el conocimiento sobre normas nacionales e internacionales. Con ello, se busca fortalecer la capacidad de aplicar estos marcos en la práctica institucional, garantizando la protección de derechos y la vida libre de violencias.</p>
+                </div>
+            </div>
+
+            <!-- Columna 2: Objetivos de Aprendizaje -->
+            <div class="col-objectives">
+                <div class="section-title" style="margin-bottom: 20px;">OBJETIVOS DE APRENDIZAJE</div>
+                
+                <div class="objectives-grid">
+                    <!-- Objetivo 1 -->
+                    <div class="obj-card">
+                        <div class="obj-number">OBJETIVO 01</div>
+                        <div class="obj-text">Comprender la diversidad de enfoques de género y su aplicación práctica en la toma de decisiones institucionales.</div>
+                    </div>
+
+                    <!-- Objetivo 2 -->
+                    <div class="obj-card">
+                        <div class="obj-number">OBJETIVO 02</div>
+                        <div class="obj-text">Analizar los aportes de los feminismos comunitarios y decoloniales en la crítica al derecho y la transformación social.</div>
+                    </div>
+
+                    <!-- Objetivo 3 -->
+                    <div class="obj-card">
+                        <div class="obj-number">OBJETIVO 03</div>
+                        <div class="obj-text">Identificar las discriminaciones estructurales en entornos institucionales y proponer estrategias para su desmontaje.</div>
+                    </div>
+
+                    <!-- Objetivo 4 -->
+                    <div class="obj-card">
+                        <div class="obj-number">OBJETIVO 04</div>
+                        <div class="obj-text">Reconocer las tipologías de violencia de género y los marcos normativos vigentes para su prevención y atención.</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

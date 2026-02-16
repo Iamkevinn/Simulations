@@ -1,0 +1,381 @@
+<!-- ESTILOS (CSS) MEJORADOS -->
+<style>
+    /* Reset local para evitar conflictos con tu tema de WordPress */
+    .social-game-wrapper * {
+        box-sizing: border-box;
+    }
+
+    /* CONTENEDOR TIPO IPHONE */
+    .social-game-wrapper {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        max-width: 380px; /* Ancho estándar móvil */
+        height: 700px; /* Altura fija */
+        max-height: 90vh; /* Para pantallas pequeñas */
+        margin: 0 auto;
+        background: #000000;
+        color: #F5F5F5;
+        border-radius: 35px;
+        border: 8px solid #2c2c2c;
+        position: relative;
+        overflow: hidden; /* Todo lo que salga se oculta */
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* HEADER */
+    .sg-header {
+        height: 50px;
+        padding: 0 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #000;
+        border-bottom: 1px solid #1a1a1a;
+        z-index: 10;
+        flex-shrink: 0; /* No encoger */
+    }
+    .sg-username { font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 5px; }
+    
+    /* ÁREA DE CONTENIDO CON SCROLL */
+    .sg-feed {
+        flex: 1; /* Ocupa el espacio restante */
+        overflow-y: auto; /* Scroll vertical */
+        overflow-x: hidden;
+        scrollbar-width: none; /* Ocultar scrollbar Firefox */
+        padding-bottom: 20px;
+    }
+    .sg-feed::-webkit-scrollbar { display: none; } /* Ocultar scrollbar Chrome */
+
+    /* PERFIL */
+    .sg-profile { padding: 20px 15px; display: flex; align-items: center; gap: 20px; }
+    .sg-avatar-ring {
+        width: 80px; height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        padding: 2px;
+        flex-shrink: 0;
+    }
+    .sg-avatar-img {
+        width: 100%; height: 100%; background: #333; border-radius: 50%; border: 3px solid #000;
+        background-image: url('https://ui-avatars.com/api/?name=Luisa+M&background=222&color=fff&size=128');
+        background-size: cover;
+    }
+    .sg-stats { display: flex; gap: 15px; text-align: center; flex: 1; justify-content: space-around; }
+    .sg-stat-item b { display: block; font-size: 16px; color: #fff; }
+    .sg-stat-item span { font-size: 12px; color: #888; }
+
+    /* BIO */
+    .sg-bio { padding: 0 15px 15px; font-size: 14px; line-height: 1.4; border-bottom: 1px solid #1a1a1a; }
+    .sg-bio strong { display: block; margin-bottom: 4px; font-size: 14px; }
+    
+    /* POSTS */
+    .sg-post { margin-bottom: 15px; border-bottom: 1px solid #1a1a1a; padding-bottom: 10px; }
+    .sg-post-header { padding: 8px 12px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; }
+    .sg-mini-avatar { width: 30px; height: 30px; border-radius: 50%; background: #333; background-image: url('https://ui-avatars.com/api/?name=Luisa+M&background=222&color=fff'); background-size: cover; }
+    
+    .sg-post-img {
+        width: 100%;
+        height: 300px;
+        background: #1a1a1a;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #666;
+        position: relative;
+    }
+    .sg-overlay-emoji { font-size: 60px; }
+
+    /* ACCIONES (Like, Comment, Share) */
+    .sg-actions { padding: 10px 12px; display: flex; gap: 15px; }
+    .sg-icon { width: 24px; height: 24px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .sg-likes { padding: 0 12px; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+    
+    /* CAPTIONS & COMENTARIOS */
+    .sg-caption { padding: 0 12px; font-size: 13px; line-height: 1.4; margin-bottom: 8px; }
+    .sg-caption strong { margin-right: 5px; }
+    .sg-comments { padding: 0 12px; font-size: 13px; color: #a8a8a8; }
+    .sg-one-comment { margin-top: 4px; color: #dbdbdb; }
+
+    /* --- MECÁNICA DE JUEGO (RED FLAGS) --- */
+    .red-flag-target {
+        border-bottom: 1px dashed #666;
+        cursor: pointer;
+        padding: 0 2px;
+        transition: 0.3s;
+        position: relative;
+    }
+    .red-flag-target:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+    /* Estado encontrado */
+    .flag-found {
+        background: rgba(220, 38, 38, 0.2);
+        border: 1px solid #dc2626;
+        border-radius: 4px;
+        color: #fca5a5;
+        text-decoration: none;
+        animation: highlightPop 0.5s ease;
+    }
+
+    /* FOOTER FALSO */
+    .sg-footer {
+        height: 50px;
+        background: #000;
+        border-top: 1px solid #1a1a1a;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    /* UI DE PUNTUACIÓN FLOTANTE */
+    .game-score-pill {
+        position: absolute;
+        bottom: 60px; /* Encima del footer */
+        right: 15px;
+        background: #008069;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    /* MODAL DE INFORMACIÓN */
+    .sg-modal-bg {
+        position: absolute; top:0; left:0; width:100%; height:100%;
+        background: rgba(0,0,0,0.85); z-index: 100;
+        display: none; justify-content: center; align-items: flex-end; /* Abajo tipo iOS */
+    }
+    .sg-modal-content {
+        background: #1c1c1e;
+        width: 100%;
+        border-radius: 20px 20px 0 0;
+        padding: 25px;
+        border-top: 4px solid #ef4444;
+        animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .sg-modal-title { font-size: 18px; font-weight: 700; color: #ef4444; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .sg-modal-body { font-size: 14px; line-height: 1.5; color: #d1d5db; margin-bottom: 20px; }
+    .sg-badge { font-size: 10px; background: #374151; padding: 4px 8px; border-radius: 4px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; }
+    .sg-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; background: #333; color: white; margin-top: 10px; }
+    .sg-btn:hover { background: #444; }
+
+    /* PANTALLA GANADORA */
+    .sg-win-screen {
+        position: absolute; top:0; left:0; width:100%; height:100%;
+        background: #000; z-index: 110; display: none;
+        flex-direction: column; justify-content: center; align-items: center; padding: 30px; text-align: center;
+    }
+
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    @keyframes highlightPop { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+</style>
+
+<div class="social-game-wrapper" id="socialGame">
+    
+    <!-- HEADER -->
+    <div class="sg-header">
+        <div class="sg-username">luisa.design25 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+        <!-- Icono Menu SVG -->
+        <svg class="sg-icon" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </div>
+
+    <!-- FEED SCROLLABLE -->
+    <div class="sg-feed">
+        
+        <!-- INFO PERFIL -->
+        <div class="sg-profile">
+            <div class="sg-avatar-ring"><div class="sg-avatar-img"></div></div>
+            <div class="sg-stats">
+                <div class="sg-stat-item"><b>14</b><span>Posts</span></div>
+                <div class="sg-stat-item"><b>842</b><span>Seguidores</span></div>
+                <div class="sg-stat-item"><b>110</b><span>Seguidos</span></div>
+            </div>
+        </div>
+
+        <!-- BIO -->
+        <div class="sg-bio">
+            <strong>Luisa Martínez</strong>
+            Diseño Gráfico 🎨 | Bogotá 🇨🇴<br>
+            Amante de los gatos 🐱<br>
+            <!-- FLAG 1 -->
+            <span class="red-flag-target" onclick="detectFlag(this, 1)">Propiedad de @Camilo_Fit 🔒⛔</span>
+        </div>
+
+        <!-- POST 1 -->
+        <div class="sg-post">
+            <div class="sg-post-header">
+                <div class="sg-mini-avatar"></div> luisa.design25
+            </div>
+            <!-- IMAGEN: Pareja -->
+            <div class="sg-post-img" style="background: radial-gradient(circle at center, #333, #000);">
+                <span class="sg-overlay-emoji">👫🔒</span>
+            </div>
+            <div class="sg-actions">
+                <svg class="sg-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                <svg class="sg-icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                <svg class="sg-icon" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </div>
+            <div class="sg-likes">52 Me gusta</div>
+            <div class="sg-caption">
+                <strong>luisa.design25</strong>
+                <!-- FLAG 2 -->
+                <span class="red-flag-target" onclick="detectFlag(this, 2)">Camilo dice que no necesito amigos falsos si lo tengo a él. ❤️ #SoloTuYYo</span>
+            </div>
+        </div>
+
+        <!-- POST 2 -->
+        <div class="sg-post">
+            <div class="sg-post-header">
+                <div class="sg-mini-avatar"></div> luisa.design25
+            </div>
+            <!-- IMAGEN: Fiesta -->
+            <div class="sg-post-img" style="background: linear-gradient(135deg, #2c3e50, #000);">
+                <span class="sg-overlay-emoji">💃🥂</span>
+            </div>
+            <div class="sg-actions">
+                <svg class="sg-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                <svg class="sg-icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            </div>
+            <div class="sg-likes">120 Me gusta</div>
+            <div class="sg-caption">
+                <strong>luisa.design25</strong> Noche de chicas 🍹
+            </div>
+            <div class="sg-comments">
+                <div class="sg-one-comment">
+                    <strong>camilo_fit</strong>
+                    <!-- FLAG 3 -->
+                    <span class="red-flag-target" onclick="detectFlag(this, 3)">Borra eso ya. Pareces una cualquiera mostrando tanto. Qué vergüenza. 😡</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- POST 3 -->
+        <div class="sg-post">
+            <div class="sg-post-header">
+                <div class="sg-mini-avatar"></div> luisa.design25
+            </div>
+            <!-- IMAGEN: Flores -->
+            <div class="sg-post-img" style="background: #2a0a0a;">
+                <span class="sg-overlay-emoji">🌹😿</span>
+            </div>
+            <div class="sg-actions">
+                <svg class="sg-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </div>
+            <div class="sg-caption">
+                <strong>luisa.design25</strong>
+                <!-- FLAG 4 -->
+                <span class="red-flag-target" onclick="detectFlag(this, 4)">A veces peleamos y me grita, pero luego me trae flores. Él cambia por mí. 🥺❤️</span>
+            </div>
+        </div>
+
+    </div> <!-- Fin Feed -->
+
+    <!-- SCORE FLOTANTE -->
+    <div class="game-score-pill">
+        🚩 <span id="sg-score">0</span>/4
+    </div>
+
+    <!-- FOOTER NAV FALSO -->
+    <div class="sg-footer">
+        <svg class="sg-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <svg class="sg-icon" style="opacity:0.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <svg class="sg-icon" style="opacity:0.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+    </div>
+
+    <!-- MODAL POPUP -->
+    <div class="sg-modal-bg" id="sgModal">
+        <div class="sg-modal-content">
+            <div class="sg-modal-title">🚩 <span id="modTitle">Alerta</span></div>
+            <div class="sg-badge" id="modLegal">Ley 1257</div>
+            <div class="sg-modal-body" id="modBody">Texto...</div>
+            <button class="sg-btn" onclick="closeGameModal()">Entendido</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA WIN -->
+    <div class="sg-win-screen" id="sgWin">
+        <div style="font-size:50px; margin-bottom:10px;">🛡️</div>
+        <h2 style="color:#4caf50; margin-bottom:10px;">¡Perfil Analizado!</h2>
+        <p style="color:#ccc; font-size:14px; line-height:1.5;">Has identificado correctamente las 4 señales de violencia digital y psicológica.</p>
+        <div style="background:#111; padding:15px; border-radius:10px; margin:20px 0; text-align:left; border:1px solid #333;">
+            <p style="font-size:13px; color:#aaa; margin:0;"><b>Recuerda:</b> En redes sociales, el control suele disfrazarse de "amor intenso". Si ves esto, ofrece apoyo, no juzgues.</p>
+        </div>
+        <button class="sg-btn" style="background:#008069;" onclick="location.reload()">Reiniciar</button>
+    </div>
+
+</div>
+
+<!-- JAVASCRIPT LÓGICA -->
+<script>
+    // DATOS DE LAS RED FLAGS
+    const flagsDB = {
+        1: {
+            t: "Sentido de Propiedad",
+            b: "Tratar a la pareja como un objeto ('Propiedad de') no es romántico. Es cosificación y anula la identidad de Luisa.",
+            l: "Violencia Simbólica"
+        },
+        2: {
+            t: "Aislamiento Social",
+            b: "Frases como 'no necesitas amigos' buscan cortar la red de apoyo de la víctima para que dependa 100% del agresor.",
+            l: "Daño Psicológico (Ley 1257)"
+        },
+        3: {
+            t: "Humillación Pública",
+            b: "Criticar la ropa y ordenar borrar fotos en comentarios públicos es coerción. Busca avergonzarla para controlarla.",
+            l: "Derecho al Libre Desarrollo"
+        },
+        4: {
+            t: "Ciclo de Violencia",
+            b: "La fase de 'Luna de Miel' (regalos tras gritos) es una trampa. El agresor no cambia con flores, necesita intervención profesional.",
+            l: "Ciclo de Abuso"
+        }
+    };
+
+    let foundCount = 0;
+    const foundIDs = new Set();
+    const modalEl = document.getElementById('sgModal');
+    const scoreEl = document.getElementById('sg-score');
+
+    function detectFlag(el, id) {
+        if(foundIDs.has(id)) return; // Ya encontrado
+
+        // Marcar visualmente
+        el.classList.add('flag-found');
+        foundIDs.add(id);
+        foundCount++;
+        scoreEl.innerText = foundCount;
+
+        // Vibrar
+        if(navigator.vibrate) navigator.vibrate(50);
+
+        // Llenar Modal
+        const data = flagsDB[id];
+        document.getElementById('modTitle').innerText = data.t;
+        document.getElementById('modBody').innerText = data.b;
+        document.getElementById('modLegal').innerText = data.l;
+
+        // Mostrar Modal
+        setTimeout(() => {
+            modalEl.style.display = 'flex';
+        }, 300);
+    }
+
+    function closeGameModal() {
+        modalEl.style.display = 'none';
+        
+        // Verificar victoria
+        if(foundCount >= 4) {
+            setTimeout(() => {
+                document.getElementById('sgWin').style.display = 'flex';
+            }, 500);
+        }
+    }
+</script>

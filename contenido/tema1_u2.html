@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+    /* --- VARIABLES & ESTÉTICA CYBERPUNK --- */
+:root {
+    --bg-deep: #F4F2F7;              /* Fondo gris claro */
+    --neon-blue: #FEC82F;            /* Amarillo institucional */
+    --neon-purple: #D23B78;          /* Magenta */
+    --alert-red: #E44700;            /* Naranja fuerte */
+    --holo-green: #EE7D4F;           /* Naranja suave */
+    --glass: rgba(255, 255, 255, 0.9);
+    --text-ui: #3D0059;              /* Morado institucional */
+}
+
+
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-deep);
+        color: white;
+        font-family: 'Segoe UI', 'Roboto', sans-serif;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* --- FONDO ANIMADO (Siempre visible) --- */
+    .grid-background {
+        position: absolute;
+        top: 0; left: 0; width: 200%; height: 200%;
+        background-image: 
+            linear-gradient(rgba(14, 165, 233, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(14, 165, 233, 0.1) 1px, transparent 1px);
+        background-size: 40px 40px;
+        transform: perspective(300px) rotateX(60deg) translateY(-100px);
+        animation: gridMove 20s linear infinite;
+        z-index: 0; pointer-events: none;
+    }
+    @keyframes gridMove { 0% { transform: perspective(300px) rotateX(60deg) translateY(0); } 100% { transform: perspective(300px) rotateX(60deg) translateY(40px); } }
+
+    /* --- ESTRUCTURA DE LAYOUT (Mobile First Approach) --- */
+    
+    /* 1. HEADER (Compacto) */
+    .top-bar {
+        height: 80px;
+        background: rgba(2, 6, 23, 0.95);
+        border-bottom: 1px solid var(--neon-blue);
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 15px;
+        z-index: 50; flex-shrink: 0;
+    }
+    .status-indicator { font-size: 0.7rem; color: var(--holo-green); animation: blink 2s infinite; }
+    @keyframes blink { 50% { opacity: 0.3; } }
+
+    /* 2. AREA DE INFORMACIÓN (Panel Superior Fijo) */
+    .info-display-zone {
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(5px);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding: 15px;
+        overflow-y: auto;
+        position: relative;
+        z-index: 40;
+        transition: all 0.3s;
+    }
+    
+    .info-card {
+        background: rgba(30, 41, 59, 0.6);
+        border-left: 3px solid var(--neon-blue);
+        padding: 15px;
+        border-radius: 0 8px 8px 0;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        margin-bottom: 10px;
+    }
+    @keyframes slideInRight { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    /* 3. ÁREA VISUAL (El Sujeto y Animaciones) */
+    .visual-stage {
+        flex-grow: 1; /* Ocupa el espacio restante */
+        position: relative;
+        display: flex; justify-content: center; align-items: center;
+        overflow: hidden;
+        z-index: 10;
+    }
+
+    /* Silueta */
+    .subject-wrapper {
+        position: relative;
+        width: 280px; height: 90%;
+        display: flex; justify-content: center; align-items: center;
+    }
+
+    .silhouette {
+        width: 100%; height: 100%;
+        background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png');
+        background-size: contain; background-repeat: no-repeat; background-position: center;
+        filter: invert(1) brightness(0.6) opacity(0.5) drop-shadow(0 0 5px var(--neon-blue));
+        transition: all 0.5s;
+    }
+
+    /* Animación Láser (Siempre activa) */
+    .scanner-laser {
+        position: absolute; width: 120%; height: 2px;
+        background: var(--alert-red);
+        box-shadow: 0 0 15px var(--alert-red);
+        top: 0;
+        animation: scanAnim 3s ease-in-out infinite;
+        opacity: 0.8; pointer-events: none;
+    }
+    @keyframes scanAnim { 0% { top: 0%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+
+    /* Hotspots (Puntos de interacción) */
+    .hotspot {
+        position: absolute;
+        width: 40px; height: 40px; /* Área táctil grande */
+        display: flex; justify-content: center; align-items: center;
+        cursor: pointer;
+        z-index: 20;
+        display: none; /* Se activan en 1.3 */
+    }
+    .hotspot-dot {
+        width: 12px; height: 12px;
+        background: var(--neon-purple);
+        border: 2px solid white;
+        border-radius: 50%;
+        box-shadow: 0 0 10px var(--neon-purple);
+        animation: pulseDot 1.5s infinite;
+    }
+    @keyframes pulseDot { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(216, 180, 254, 0.7); } 70% { transform: scale(1.5); box-shadow: 0 0 0 10px rgba(216, 180, 254, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(216, 180, 254, 0); } }
+
+    /* 4. CONTROLES (Navegación Horizontal) */
+    .controls-dock {
+        height: 80px;
+        background: rgba(2, 6, 23, 0.98);
+        border-top: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        overflow-x: auto; /* Scroll horizontal */
+        padding: 0 15px;
+        gap: 15px;
+        z-index: 50; flex-shrink: 0;
+        /* Ocultar barra de scroll estética */
+        scrollbar-width: none; 
+    }
+    .controls-dock::-webkit-scrollbar { display: none; }
+
+    .nav-btn {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--neon-blue);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        white-space: nowrap;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.2s;
+        flex-shrink: 0;
+    }
+    .nav-btn.active {
+        background: var(--neon-blue);
+        color: black;
+        font-weight: bold;
+        box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
+    }
+    .final-btn {
+        background: var(--holo-green);
+        border-color: var(--holo-green);
+        color: black; font-weight: bold;
+    }
+
+    /* --- ESTILOS DE ESCRITORIO (Media Query) --- */
+    @media (min-width: 1200px) {
+        body { flex-direction: row; }
+        .top-bar { position: absolute; top:0; width: 100%; background: transparent; border: none; }
+        
+        .info-display-zone {
+            width: 300px; order: 1;
+            border-right: 1px solid rgba(255,255,255,0.1); border-bottom: none;
+            padding-top: 60px;
+        }
+        
+        .visual-stage { order: 2; height: 100%; }
+        .subject-wrapper { width: 400px; }
+        
+        .controls-dock {
+            width: 300px; height: 100%; order: 3;
+            flex-direction: column; justify-content: center;
+            border-top: none; border-left: 1px solid rgba(255,255,255,0.1);
+            overflow-y: auto; overflow-x: hidden;
+            padding-top: 60px;
+        }
+        .nav-btn { width: 100%; text-align: center; border-radius: 8px; margin-bottom: 10px; }
+    }
+
+    /* MODAL (Para sección 2.0) */
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.95);
+        z-index: 100;
+        display: none; justify-content: center; align-items: center;
+        padding: 20px;
+    }
+    .modal-content {
+        background: #0f172a;
+        border: 1px solid var(--holo-green);
+        width: 100%; max-width: 600px;
+        max-height: 80vh; overflow-y: auto;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+    }
+    .modal-title { color: var(--holo-green); font-size: 1.2rem; margin-bottom: 15px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
+    .modal-text { font-size: 0.95rem; line-height: 1.6; color: #cbd5e1; }
+    .close-modal { background: var(--holo-green); border: none; padding: 10px 20px; color: black; font-weight: bold; border-radius: 5px; margin-top: 20px; width: 100%; cursor: pointer; }
+    /* --- ESTILOS PARA TABLETS Y MÓVILES (< 1200px) --- */
+@media (max-width: 1200px) {
+    
+    /* El cuerpo vuelve a ser vertical */
+    body { flex-direction: column; }
+
+    /* Ajuste de la zona de controles a Cuadrícula 2x2 */
+    .controls-dock {
+        /* Dimensiones y posición */
+        width: 100%; 
+        height: auto; /* Altura automática para que quepan las filas */
+        order: 3; 
+        padding: 15px;
+        
+        /* Definición de la Cuadrícula (Grid) */
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* 2 columnas iguales */
+        grid-template-rows: auto auto;   /* 2 filas automáticas */
+        gap: 10px; /* Espacio entre botones */
+        
+        /* Quitar estilos anteriores de scroll o bordes laterales */
+        overflow: visible; 
+        border-left: none;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        background: rgba(2, 6, 23, 0.98);
+    }
+
+    /* Asegurar que los botones llenen su celda en la cuadrícula */
+    .nav-btn {
+        width: 100%;
+        height: 50px; /* Altura cómoda para el dedo */
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        white-space: normal; /* Permitir que el texto baje de línea si es largo */
+        line-height: 1.1;
+        font-size: 0.75rem; /* Ajuste leve de letra para que quepa bien */
+    }
+
+    /* Ajustes visuales de las otras zonas para que no se rompan */
+    .top-bar { position: relative; border-bottom: 1px solid var(--neon-blue); }
+    .visual-stage { order: 2; height: auto; flex-grow: 1; }
+    .subject-wrapper { width: 100%; max-width: 300px; }
+}
+</style>
+</head>
+<body>
+
+    <div class="grid-background"></div>
+
+    <!-- 1. BARRA SUPERIOR (Indicadores) -->
+    <div class="top-bar">
+        <div style="font-weight:bold; color:var(--neon-blue);">UNP // Diversidad de enfoques de <br> género</div>
+        <div class="status-indicator">● MONITOREO ACTIVO</div>
+    </div>
+
+    <!-- 2. PANEL DE INFORMACIÓN (Fijo arriba) -->
+    <div class="info-display-zone" id="info-panel">
+        <br>
+        <div class="info-card" style="border-left-color: var(--text-ui);">
+            <strong style="color:white;">SISTEMA INICIADO</strong><br>
+            Seleccione un módulo en la barra inferior para cargar datos.
+        </div>
+    </div>
+
+    <!-- 3. ESCENARIO VISUAL (Animado) -->
+    <div class="visual-stage">
+        <div class="subject-wrapper">
+            <div class="scanner-laser"></div>
+            <div class="silhouette" id="silhouette"></div>
+
+            <!-- Puntos Interactivos (Posición absoluta relativa al wrapper) -->
+            <!-- Ajustados para ser fáciles de tocar en móvil -->
+            <div class="hotspot" style="top: 15%; left: 45%;" onclick="loadCase('indigena')"><div class="hotspot-dot"></div></div>
+            <div class="hotspot" style="top: 30%; left: 25%;" onclick="loadCase('afro')"><div class="hotspot-dot"></div></div>
+            <div class="hotspot" style="top: 25%; left: 65%;" onclick="loadCase('trans')"><div class="hotspot-dot"></div></div>
+            <div class="hotspot" style="top: 50%; left: 40%;" onclick="loadCase('campesina')"><div class="hotspot-dot"></div></div>
+            <div class="hotspot" style="top: 15%; left: 65%;" onclick="loadCase('lider')"><div class="hotspot-dot"></div></div>
+        </div>
+    </div>
+
+    <!-- 4. BARRA DE CONTROLES (Scroll Horizontal en Móvil) -->
+    <div class="controls-dock">
+        <button class="nav-btn" onclick="activateSection('1.1', this)">1.1 HISTORIA</button>
+        <button class="nav-btn" onclick="activateSection('1.2', this)">1.2 TENSIÓN</button>
+        <button class="nav-btn" onclick="activateScanner(this)">1.3 RIESGO (INTERACTIVO)</button>
+        <button class="nav-btn final-btn" onclick="showFinalReport()">2.0 APLICACIÓN UNP</button>
+    </div>
+
+    <!-- 5. MODAL FINAL -->
+    <div class="modal-overlay" id="final-modal">
+        <div class="modal-content">
+            <div class="modal-title">2. APLICACIÓN DEL ENFOQUE EN LA UNP</div>
+            <div class="modal-text">
+                <p>Durante el desarrollo académico se enfatizó que, para la UNP, la interseccionalidad implica:</p>
+                <ul style="padding-left: 20px;">
+                    <li><strong>Identificar riesgos específicos</strong> según género, etnia y territorio.</li>
+                    <li>Reconocer que una mujer indígena lideresa enfrenta riesgos distintos a los de una mujer periodista urbana.</li>
+                    <li>Analizar factores combinados (Ej: mujeres trans desplazadas defensoras de DDHH).</li>
+                    <li>Evaluar el riesgo de forma más precisa, comprendiendo que las amenazas no afectan de manera homogénea.</li>
+                </ul>
+                <p style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 5px;">
+                    <strong>Desafío Actual:</strong> Crítica a los modelos de evaluación excesivamente estandarizados que no incorporan suficientes capas de vulnerabilidad.
+                </p>
+            </div>
+            <button class="close-modal" onclick="document.getElementById('final-modal').style.display='none'">CERRAR REPORTE</button>
+        </div>
+    </div>
+
+<script>
+    // --- CONTENIDO EXACTO (INTEGRIDAD DE DATOS) ---
+    const db = {
+        "1.1": {
+            title: "1.1 HISTORIA Y SIGNIFICADO",
+            color: "#0ea5e9", // Azul
+            text: `<strong>A través de actividades interactivas y juegos de roles</strong>, se abordó el origen y evolución del enfoque interseccional, comprendido como una herramienta analítica que examina cómo múltiples formas de discriminación se cruzan.<br><br>
+            <strong>Categorías identificadas:</strong><br>
+             Género<br> Etnia<br> Clase social<br> Orientación sexual<br> Discapacidad<br> Edad<br> Ubicación territorial<br><br>
+            <em>Estas categorías no actúan de manera aislada, sino que se entrelazan.</em>`
+        },
+        "1.2": {
+            title: "1.2 CRÍTICA SISTEMA SEXO-GÉNERO",
+            color: "#d8b4fe", // Morado
+            text: `<strong>El análisis crítico</strong> se desarrolló mediante debates guiados y simulaciones sobre tensiones actuales:<br><br>
+            • Roles de género impuestos socialmente.<br>
+            • Discriminación estructural.<br>
+            • Violencias basadas en género y diversidad sexual.<br><br>
+            <strong>Reflexión:</strong> Las instituciones, incluida la UNP, deben adaptar sus enfoques para responder a realidades sociales complejas.`
+        },
+        "1.3": {
+            title: "1.3 ANÁLISIS DE RIESGO (MODO ESCÁNER)",
+            color: "#f43f5e", // Rojo
+            text: `<strong>MODO INTERACTIVO ACTIVADO.</strong><br>
+            Aplicación práctica del enfoque interseccional al análisis de riesgo en Colombia.<br><br>
+            <span style="color:#f43f5e; font-weight:bold;">INSTRUCCIÓN:</span> Toque los puntos parpadeantes sobre la silueta para analizar los casos específicos (Mujeres indígenas, afro, trans, etc.).`
+        }
+    };
+
+    const cases = {
+        indigena: { title: "MUJERES INDÍGENAS", text: "Violencias territoriales, desplazamiento forzado y afectación cultural." },
+        afro: { title: "MUJERES AFRODESCENDIENTES", text: "Violencia sexual, racismo estructural y pobreza histórica." },
+        campesina: { title: "MUJERES CAMPESINAS", text: "Acceso limitado a la tierra, estigmatización y exclusión institucional." },
+        trans: { title: "PERSONAS LGBTIQ+ (TRANS)", text: "Violencia correctiva, amenazas de actores armados y exclusión social." },
+        lider: { title: "LIDERESAS SOCIALES", text: "Amenazas directas por su rol comunitario y defensa del territorio." }
+    };
+
+    // --- FUNCIONES DE INTERFAZ ---
+
+    function resetUI() {
+        // Quitar clases activas de botones
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        // Ocultar hotspots
+        document.querySelectorAll('.hotspot').forEach(h => h.style.display = 'none');
+        // Reset visual silueta
+        document.getElementById('silhouette').style.filter = "invert(1) brightness(0.6) opacity(0.5) drop-shadow(0 0 5px var(--neon-blue))";
+    }
+
+    function updateInfoPanel(title, content, color) {
+        const panel = document.getElementById('info-panel');
+        // Crear nueva tarjeta
+        const card = document.createElement('div');
+        card.className = 'info-card';
+        card.style.borderLeftColor = color;
+        card.innerHTML = `<div style="color:${color}; font-weight:bold; margin-bottom:5px; text-transform:uppercase;">${title}</div>${content}`;
+        
+        // Limpiar panel y agregar nueva (o acumular si prefieres, aquí reemplazamos para no saturar mobile)
+        panel.innerHTML = ''; 
+        panel.appendChild(card);
+    }
+
+    function activateSection(key, btn) {
+        resetUI();
+        btn.classList.add('active');
+        
+        const data = db[key];
+        updateInfoPanel(data.title, data.text, data.color);
+
+        // Efecto visual en la silueta según tema
+        const sil = document.getElementById('silhouette');
+        if(key === '1.2') {
+            sil.style.filter = "invert(1) brightness(0.8) opacity(0.7) drop-shadow(0 0 10px var(--neon-purple))";
+        }
+    }
+
+    function activateScanner(btn) {
+        resetUI();
+        btn.classList.add('active');
+        
+        const data = db["1.3"];
+        updateInfoPanel(data.title, data.text, data.color);
+
+        // Activar Modo Escáner Visual
+        const sil = document.getElementById('silhouette');
+        sil.style.filter = "invert(1) brightness(0.5) sepia(1) hue-rotate(-50deg) saturate(5) drop-shadow(0 0 15px red)";
+        
+        // Mostrar Hotspots
+        document.querySelectorAll('.hotspot').forEach(h => h.style.display = 'flex');
+    }
+
+    function loadCase(caseId) {
+        const data = cases[caseId];
+        // Inyectar tarjeta de caso en el panel superior SIN borrar la instrucción principal (opcional) o reemplazando
+        updateInfoPanel("CASO IDENTIFICADO: " + data.title, data.text, "#f43f5e");
+    }
+
+    function showFinalReport() {
+        document.getElementById('final-modal').style.display = 'flex';
+    }
+
+</script>
+
+</body>
+</html>

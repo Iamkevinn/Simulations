@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Unidad No. 4 - Políticas Públicas y Transformación Social</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  /* --- PALETA CLARA (25N) --- */
+  --bg: #F4F6F9;             /* Fondo base claro */
+  --panel: #FFFFFF;          /* Panel blanco limpio */
+  --panel-soft: #F8F9FA;     /* Panel suave (gris muy claro) */
+
+  --accent: #480241;         /* Acento principal (Morado UNP - Texto fuerte/Iconos) */
+  --accent-strong: #FF9800;  /* Acento fuerte (Naranja - Detalles) */
+  --violet: #D23B78;         /* Emoción / Puntos (Magenta) */
+  --yellow: #FEC82F;         /* Detalles decorativos */
+
+  --text: #333333;           /* Texto principal oscuro para lectura */
+  --muted: #555555;          /* Texto secundario */
+  
+  --shadow-color: rgba(72, 2, 65, 0.1); /* Sombra morada suave */
+  --grid-line: rgba(72, 2, 65, 0.05);   /* Líneas de grilla sutiles */
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 20% 10%, #ffffff 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, #f3e5f5 0%, transparent 40%),
+    var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* ───── FONDO DINÁMICO INSTITUCIONAL ───── */
+.grid{
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size:40px 40px;
+  animation: desplazamiento 40s linear infinite;
+  pointer-events:none;
+}
+
+@keyframes desplazamiento{
+  from{background-position:0 0}
+  to{background-position:400px 400px}
+}
+
+/* ───── CONTENEDOR ───── */
+main{
+  position:relative;
+  max-width:1200px;
+  margin:auto;
+  padding:2rem 2rem 6rem; /* Ajustado padding superior */
+  display:grid;
+  gap:4.5rem;
+  z-index:1;
+}
+
+/* ───── LOGOS DEL CLIENTE (NUEVO) ───── */
+.logos-header {
+  display: flex;
+  justify-content: center; /* Centrados o space-between según prefieras */
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.client-logo {
+  height: 120px; /* Tamaño controlado */
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.client-logo:hover {
+  transform: scale(1.05);
+}
+
+/* ───── HEADER TEXTO ───── */
+header{
+  text-align:center;
+  position:relative;
+}
+
+header::after{
+  content:"";
+  display:block;
+  width:120px;
+  height:4px;
+  margin:1.5rem auto 0;
+  background:linear-gradient(90deg, transparent, var(--accent-strong), transparent); /* Naranja */
+}
+
+header h1{
+  font-size:clamp(2.2rem,4vw,3.2rem);
+  letter-spacing:0.06em;
+  color: var(--accent); /* Morado */
+  font-weight: 800;
+}
+
+header h2{
+  margin-top:1rem;
+  color:var(--muted);
+  font-weight: 500;
+}
+
+/* ───── TARJETAS ───── */
+.section{
+  position:relative;
+  background:linear-gradient(180deg, var(--panel), var(--panel-soft));
+  border-radius:20px;
+  padding:3rem;
+  border: 1px solid #e0e0e0;
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.02),
+    0 20px 40px var(--shadow-color);
+  opacity:0;
+  transform:translateY(60px);
+  transition:1s cubic-bezier(.19,1,.22,1);
+}
+
+.section.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* Línea institucional lateral */
+.section::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  width:5px;
+  height:100%;
+  background:linear-gradient(180deg, var(--accent), var(--accent-strong)); /* Morado a Naranja */
+  border-radius:20px 0 0 20px;
+}
+
+/* ───── TÍTULOS ───── */
+.section h3{
+  font-size:1.5rem;
+  margin-bottom:2rem;
+  display:flex;
+  align-items:center;
+  gap:0.8rem;
+  color:var(--accent); /* Morado */
+  font-weight: 700;
+}
+
+.icon{
+  width:28px;
+  height:28px;
+  stroke:var(--accent-strong); /* Naranja */
+  stroke-width:2;
+  fill:none;
+}
+
+/* ───── OBJETIVOS ───── */
+.objetivos{
+  display:grid;
+  gap:1.8rem;
+}
+
+.obj{
+  position:relative;
+  padding-left:3rem;
+  line-height:1.7;
+  cursor:default;
+  transition:0.4s;
+  color: var(--text);
+}
+
+.obj::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0.4rem;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  border:2px solid var(--violet);
+  background: #fff;
+  box-shadow:0 0 0 rgba(210, 59, 120, 0.4);
+  animation:pulso 3s infinite;
+}
+
+.obj:hover{
+  transform:translateX(6px);
+  color: var(--accent);
+}
+
+@keyframes pulso{
+  0%{box-shadow:0 0 0 0 rgba(210, 59, 120, 0.5)}
+  70%{box-shadow:0 0 0 10px rgba(210, 59, 120, 0)}
+  100%{box-shadow:0 0 0 0 rgba(210, 59, 120, 0)}
+}
+
+/* ───── TEXTO JUSTIFICACIÓN ───── */
+.texto{
+  line-height:1.9;
+  text-align:justify;
+  position:relative;
+  color: var(--text);
+}
+
+/* ───── INTERACCIÓN PROFESIONAL ───── */
+.section:hover{
+  box-shadow:
+    0 0 0 1px var(--accent-strong),
+    0 30px 60px rgba(72, 2, 65, 0.15);
+  transform: translateY(-5px);
+}
+
+/* ───── RESPONSIVE ───── */
+@media(max-width:1200px){
+  .section{padding:2.2rem}
+}
+@media(max-width:600px){
+  .logos-header { gap: 15px; }
+  .client-logo { height: 85px; }
+  header h1 { font-size: 1.8rem; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="grid"></div>
+
+<main>
+
+<!-- Logos del Cliente -->
+<div class="logos-header">
+    <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+    <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo">
+</div>
+
+<header>
+  <h1>Unidad No. 4</h1>
+  <h2>Políticas Públicas y Transformación Social</h2>
+</header>
+
+<section class="section">
+  <h3>
+    <svg class="icon" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 7v10M7 12h10"/>
+    </svg>
+    OBJETIVOS DE APRENDIZAJE
+  </h3>
+
+  <div class="objetivos">
+    <div class="obj">Analizar los instrumentos de política pública con enfoque de género y su aplicación en el desarrollo nacional.</div>
+    <div class="obj">Evaluar el impacto de las reformas estructurales en mujeres y poblaciones diversas desde una perspectiva interseccional.</div>
+    <div class="obj">Identificar los mecanismos de participación política y estrategias para fortalecer la representación de grupos históricamente excluidos.</div>
+    <div class="obj">Reconocer los alcances del Convenio 190 de la OIT y las barreras para garantizar el acceso a la justicia de género.</div>
+  </div>
+</section>
+
+<section class="section">
+  <h3>
+    <svg class="icon" viewBox="0 0 24 24">
+      <path d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>
+    JUSTIFICACIÓN RESUMEN
+  </h3>
+
+  <p class="texto">
+    Esta unidad permite comprender cómo las políticas públicas y reformas estructurales
+    influyen en la garantía de derechos y la prevención de violencias. Aborda el análisis
+    del poder y el patriarcado institucional, la economía feminista y los impactos
+    territoriales, así como la participación política y la aplicación de estándares
+    internacionales como el Convenio 190. Con ello, se busca fortalecer el pensamiento
+    crítico y la capacidad para incidir en la transformación social y la construcción de
+    entornos más equitativos.
+  </p>
+</section>
+
+</main>
+
+<script>
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add("visible");
+    }
+  });
+},{threshold:0.25});
+
+document.querySelectorAll(".section").forEach(s=>observer.observe(s));
+</script>
+
+</body>
+</html>

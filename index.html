@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Centro de Control</title>
+
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #1e1e2f, #0b0b12);
+    font-family: system-ui, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+  }
+
+  .control-center {
+    width: 720px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(14px);
+    border-radius: 22px;
+    padding: 28px;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.45);
+  }
+
+  .folder {
+    margin-bottom: 18px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.05);
+    overflow: hidden;
+  }
+
+  .folder-header {
+    padding: 18px 22px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s;
+  }
+
+  .folder-header:hover {
+    background: rgba(255,255,255,0.08);
+  }
+
+  .folder-title {
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .folder-arrow {
+    transition: transform 0.3s ease;
+    opacity: 0.7;
+  }
+
+  .folder.open .folder-arrow {
+    transform: rotate(90deg);
+  }
+
+  .folder-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    background: rgba(0,0,0,0.15);
+  }
+
+  .page-link {
+    display: block;
+    padding: 14px 26px;
+    color: #cfcfcf;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.25s, color 0.25s;
+  }
+
+  .page-link:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+  }
+
+  .page-link.active {
+    background: rgba(74, 222, 128, 0.18);
+    color: #fff;
+  }
+
+  .page-indicator {
+    margin-top: 14px;
+    text-align: right;
+    font-size: 12px;
+    opacity: 0.6;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="control-center">
+
+  <!-- 📁 OBJETIVOS -->
+  <div class="folder">
+    <div class="folder-header">
+      <span class="folder-title">📁 Objetivos por unidad</span>
+      <span class="folder-arrow">▶</span>
+    </div>
+    <div class="folder-content">
+      <a href="objetivos/objetivos_u1.html" class="page-link">Unidad 1</a>
+      <a href="objetivos/objetivos_u2.html" class="page-link">Unidad 2</a>
+      <a href="objetivos/objetivos_u3.html" class="page-link">Unidad 3</a>
+      <a href="objetivos/objetivos_u4.html" class="page-link">Unidad 4</a>
+      <a href="objetivos/objetivos_u5.html" class="page-link">Unidad 5</a>
+      <a href="objetivos/objetivos_u6.html" class="page-link">Unidad 6</a>      
+    </div>
+  </div>
+
+  <!-- 📁 SIMULACIONES -->
+  <div class="folder">
+    <div class="folder-header">
+      <span class="folder-title">📁 Simulaciones</span>
+      <span class="folder-arrow">▶</span>
+    </div>
+    <div class="folder-content">
+      <a href="simulaciones/game1_u1.html" class="page-link">Unidad 1 - Juego 1</a>
+      <a href="simulaciones/game2_u1.html" class="page-link">Unidad 1 - Juego 2</a>
+      <a href="simulaciones/game2_u2.html" class="page-link">Unidad 2 - TEMA 4 - JUEGO 2</a>
+      <a href="simulaciones/game3_u2.html" class="page-link">Unidad 2 - TEMA 4 - JUEGO 3</a>
+      <a href="simulaciones/game4_u2.html" class="page-link">Unidad 2 - TEMA 4 - JUEGO 4</a>
+      <a href="simulaciones/game5_u2.html" class="page-link">Unidad 2 - TEMA 5 - JUEGO 1</a>
+      <a href="simulaciones/game1_u3.html" class="page-link">Unidad 3 - TEMA 1 - JUEGO 1</a>
+      <a href="simulaciones/game2_u3.html" class="page-link">Unidad 3 - TEMA 2 - JUEGO 1</a>
+      <a href="simulaciones/game3_u3.html" class="page-link">Unidad 3 - TEMA 3 - JUEGO 1</a>
+      <a href="simulaciones/game4_u3.html" class="page-link">Unidad 3 - TEMA 4 - JUEGO 1</a>
+      <a href="simulaciones/game5_u3.html" class="page-link">Unidad 3 - TEMA 5 - JUEGO 1</a>
+      <a href="simulaciones/game1_u4.html" class="page-link">Unidad 4 - TEMA 1 - JUEGO 1</a>
+      <a href="simulaciones/game2_u4.html" class="page-link">Unidad 4 - TEMA 2 - JUEGO 1</a>
+      <a href="simulaciones/game3_u4.html" class="page-link">Unidad 4 - TEMA 3 - JUEGO 1</a>
+      <a href="simulaciones/game4_u4.html" class="page-link">Unidad 4 - TEMA 4 - JUEGO 1</a>
+      <a href="simulaciones/game5_u4.html" class="page-link">Unidad 4 - TEMA 5 - JUEGO 1</a>
+      <a href="simulaciones/game1_u5.html" class="page-link">Unidad 5 JUEGO 1</a>
+      <a href="simulaciones/game2_u5.html" class="page-link">Unidad 5 JUEGO 2</a>
+      <a href="simulaciones/game3_u5.html" class="page-link">Unidad 5 JUEGO 3</a>
+      <a href="simulaciones/game4_u5.html" class="page-link">Unidad 5 JUEGO 4</a>
+    </div>
+  </div>
+
+  <!-- 📁 CONTENIDO -->
+  <div class="folder">
+    <div class="folder-header">
+      <span class="folder-title">📁 Contenido por unidad</span>
+      <span class="folder-arrow">▶</span>
+    </div>
+    <div class="folder-content">
+      <a href="contenido/tema3_u1.html" class="page-link">Unidad 1 - Tema 3</a>
+      <a href="contenido/convenio_u1.html" class="page-link">Unidad 1 - Convenio</a>
+      <a href="contenido/1ra_ley_p1_u1.html" class="page-link">Unidad 1 - 1ra Ley Parte 1</a>
+      <a href="contenido/1ra_ley_p2_u1.html" class="page-link">Unidad 1 - 1ra Ley Parte 2</a>
+      <a href="contenido/1ra_ley_p3_u1.html" class="page-link">Unidad 1 - 1ra Ley Parte 3</a>
+      <a href="contenido/2da_ley_u1.html" class="page-link">Unidad 1 - 2da Ley</a>
+      <a href="contenido/diferencias_leyes_u1.html" class="page-link">Unidad 1 - Diferencias en las leyes</a>
+      <a href="contenido/tema4_u1.html" class="page-link">Unidad 1 - TEMA 1.4</a>
+      <a href="contenido/caso4_u1.html" class="page-link">Unidad 1 - CASO 4</a>
+      <a href="contenido/tema1_u2.html" class="page-link">Unidad 2 - TEMA 1</a>
+      <a href="contenido/tema2_u2.html" class="page-link">Unidad 2 - TEMA 1.2</a>
+      <a href="contenido/tema3_u2.html" class="page-link">Unidad 2 - TEMA 1.3</a>
+      <a href="contenido/tema5_u2.html" class="page-link">Unidad 2 - TEMA 1.5</a>
+      <a href="contenido/tema3_parte1_u2.html" class="page-link">Unidad 2 - TEMA 3 - PARTE 1 - REAL</a>
+      <a href="contenido/tema3_parte2_u2.html" class="page-link">Unidad 2 - TEMA 3 - PARTE 2 - REAL</a>
+      <a href="contenido/tema3_parte3_u2.html" class="page-link">Unidad 2 - TEMA 3 - PARTE 3 - REAL</a>
+      <a href="contenido/tema3_parte4_u2.html" class="page-link">Unidad 2 - TEMA 3 - PARTE 4 - REAL</a>
+      <a href="contenido/tema4_u2.html" class="page-link">Unidad 2 - TEMA 4</a>
+    </div>
+  </div>
+
+  <div class="page-indicator" id="pageIndicator"></div>
+</div>
+
+<script>
+  // abrir / cerrar carpetas con cálculo de altura automático
+  document.querySelectorAll(".folder-header").forEach(header => {
+    header.addEventListener("click", () => {
+      const folder = header.parentElement;
+      const content = folder.querySelector(".folder-content");
+      
+      folder.classList.toggle("open");
+
+      if (folder.classList.contains("open")) {
+        // Asigna la altura real del contenido (scrollHeight)
+        content.style.maxHeight = content.scrollHeight + "px";
+      } else {
+        // Cierra la carpeta
+        content.style.maxHeight = null;
+      }
+    });
+  });
+
+  // detectar página actual y abrir carpeta correspondiente
+  const currentPage = window.location.pathname.split("/").pop();
+
+  document.querySelectorAll(".page-link").forEach(link => {
+    // Nota: verifica si el href coincide, ignorando rutas relativas si es necesario
+    if (link.getAttribute("href").endsWith(currentPage)) {
+      link.classList.add("active");
+      
+      const folder = link.closest(".folder");
+      folder.classList.add("open");
+      
+      // Abrir la carpeta contenedora automáticamente ajustando la altura
+      const content = folder.querySelector(".folder-content");
+      content.style.maxHeight = content.scrollHeight + "px";
+
+      document.getElementById("pageIndicator").textContent =
+        "Página actual: " + currentPage.replace(".html", "");
+    }
+  });
+</script>
+
+</body>
+</html>

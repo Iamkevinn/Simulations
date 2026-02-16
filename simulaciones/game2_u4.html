@@ -1,0 +1,361 @@
+<!-- LIBRERÍAS (GSAP) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:ital,wght@1,500&display=swap" rel="stylesheet">
+
+<style>
+/* --- 1. SISTEMA DE DISEÑO (IMAGEN UNP - CLARO) --- */
+:root {
+    /* Paleta extraída de la imagen */
+    --brand-purple: #582C83;     /* Pañoletas / Texto Logo */
+    --brand-magenta: #D23B78;    /* Esquina inferior izquierda */
+    --brand-orange: #F47920;     /* Hojas / Logo 25N */
+    --brand-yellow: #FFC82F;     /* Banner superior */
+    
+    --bg-base: #ffffff;          /* Fondo base limpio */
+    --bg-gradient: #FFFBF0;      /* Tinte cálido muy suave */
+
+    --glass: rgba(255, 255, 255, 0.85);   /* Cristal blanco */
+    --glass-border: rgba(88, 44, 131, 0.15); /* Borde morado muy sutil */
+
+    --text-main: #333333;        /* Texto principal oscuro */
+    --text-muted: #666666;       /* Texto secundario */
+    --text-inverse: #ffffff;     /* Texto sobre botones oscuros */
+
+    /* Semántica */
+    --success: #582C83;          /* Avance (Morado institucional) */
+    --danger: #C62828;           /* Peligro */
+    --warning: #F47920;          /* Advertencia (Naranja) */
+}
+
+#reform-sim-container {
+    width: 100%;
+    min-height: 850px;
+    height: auto;
+    /* Fondo radial suave blanco a crema */
+    background: radial-gradient(circle at top left, var(--bg-base), var(--bg-gradient));
+    position: relative;
+    overflow: hidden;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text-main);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1); /* Sombra más suave */
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+/* --- 2. FONDO VIVO (COLORES DEL PÓSTER) --- */
+.orb {
+    position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.4;
+    animation: orbFloat 10s infinite alternate ease-in-out; z-index: 0;
+}
+/* Orbes con los colores de la imagen */
+.orb-1 { width: 350px; height: 350px; background: var(--brand-yellow); top: -80px; left: -80px; opacity: 0.3; }
+.orb-2 { width: 450px; height: 450px; background: var(--brand-magenta); bottom: -100px; right: -100px; animation-duration: 15s; opacity: 0.2; }
+.orb-3 { width: 250px; height: 250px; background: var(--brand-orange); top: 30%; left: 40%; animation-duration: 12s; opacity: 0.15; }
+.orb-4 { width: 200px; height: 200px; background: var(--brand-purple); bottom: 10%; left: 10%; animation-duration: 18s; opacity: 0.15; }
+
+@keyframes orbFloat { from { transform: translate(0,0); } to { transform: translate(40px, 40px); } }
+
+/* --- 3. DASHBOARD (MÉTRICAS) --- */
+.dashboard-header {
+    position: relative; z-index: 10; padding: 25px;
+    background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--glass-border);
+    display: flex; flex-direction: column; gap: 15px;
+}
+
+.title-area h2 { 
+    margin: 0; font-size: 1.6rem; text-transform: uppercase; letter-spacing: 0.5px; 
+    color: var(--brand-purple); font-weight: 800;
+}
+.title-area span { font-size: 0.9rem; color: var(--text-muted); font-weight: 500;}
+
+.metrics-row {
+    display: flex; justify-content: space-around; gap: 15px; width: 100%;
+}
+
+.metric-card {
+    flex: 1; background: #ffffff; 
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    border-radius: 12px; padding: 12px; text-align: center;
+    display: flex; flex-direction: column; align-items: center;
+}
+.metric-label { font-size: 0.75rem; text-transform: uppercase; margin-bottom: 8px; color: var(--text-muted); font-weight: 700; }
+.metric-bar-bg { width: 100%; height: 8px; background: #EEE; border-radius: 4px; overflow: hidden; }
+.metric-fill { height: 100%; width: 50%; transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 4px; }
+
+/* Colores de métricas basados en la imagen */
+#m-rights .metric-fill { background: var(--brand-purple); } /* Derechos = Morado */
+#m-risk .metric-fill { background: var(--brand-orange); }  /* Riesgo = Naranja */
+#m-legit .metric-fill { background: var(--brand-magenta); } /* Legitimidad = Magenta */
+
+/* --- 4. ESCENARIO CENTRAL --- */
+.scenario-stage {
+    flex: 1; padding: 30px 20px; position: relative; z-index: 10;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+
+.card-stack {
+    position: relative; width: 100%; max-width: 650px; min-height: 420px;
+}
+
+/* TARJETA DE SITUACIÓN */
+.situation-card {
+    background: #ffffff;
+    color: var(--text-main);
+    border-radius: 24px;
+    padding: 40px;
+    /* Sombra elegante para resaltar sobre blanco */
+    box-shadow: 0 20px 60px rgba(88, 44, 131, 0.15), 0 5px 15px rgba(0,0,0,0.05);
+    border: 1px solid rgba(255,255,255,1);
+    position: absolute; top: 0; left: 0; width: 100%; height: auto;
+    transform-style: preserve-3d;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    box-sizing: border-box;
+    display: flex; flex-direction: column;
+}
+
+.card-tag {
+    background: var(--brand-yellow); color: var(--brand-purple); padding: 6px 14px;
+    border-radius: 20px; font-size: 0.75rem; font-weight: 800;
+    align-self: flex-start; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.card-content h3 { 
+    font-family: 'Playfair Display', serif; font-size: 2rem; margin: 0 0 15px 0; 
+    line-height: 1.1; color: var(--brand-purple); 
+}
+.card-content p { font-size: 1.05rem; line-height: 1.7; color: #444; margin-bottom: 30px; }
+
+/* BOTONES DE DECISIÓN */
+.decision-row {
+    margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+}
+
+.btn-reform {
+    background: var(--brand-purple); color: #fff; border: none; padding: 18px;
+    border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.95rem;
+    transition: all 0.2s; box-shadow: 0 8px 20px rgba(88, 44, 131, 0.3);
+}
+.btn-reproduce {
+    background: #f0f0f0; color: #666; border: 1px solid #ddd; padding: 18px;
+    border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.btn-reform:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(88, 44, 131, 0.4); background: #4a2470; }
+.btn-reproduce:hover { transform: translateY(-2px); background: #e0e0e0; color: #333; }
+
+/* --- 5. RESULTADOS / FORO (MODO CLARO) --- */
+.results-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    /* Fondo blanco casi opaco */
+    background: rgba(255, 255, 255, 0.98); z-index: 50;
+    display: none; flex-direction: column; justify-content: center; align-items: center;
+    padding: 30px; text-align: center; box-sizing: border-box;
+    color: var(--text-main);
+}
+.forum-title { 
+    font-size: 2.2rem; color: var(--brand-purple); 
+    font-family: 'Playfair Display', serif; margin-bottom: 20px; 
+}
+.forum-list { text-align: left; max-width: 600px; color: #555; line-height: 1.8; font-size: 1.1rem; }
+.forum-list li { margin-bottom: 12px; padding-left: 10px; border-left: 3px solid var(--brand-yellow); }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .metrics-row { gap: 8px; }
+    .metric-label { font-size: 0.6rem; }
+    .decision-row { grid-template-columns: 1fr; } 
+    .card-content h3 { font-size: 1.6rem; }
+    .situation-card { padding: 25px; }
+}
+</style>
+
+<div id="reform-sim-container">
+    <!-- Orbes decorativos claros -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard-header">
+        <div class="title-area">
+            <h2>Misión: Colombia Sin Machismo</h2>
+            <span>Estrategia Institucional para el 25N</span>
+        </div>
+        
+        <div class="metrics-row">
+            <div class="metric-card" id="m-rights">
+                <span class="metric-label">Enfoque de Género</span>
+                <div class="metric-bar-bg"><div class="metric-fill" style="width: 50%;"></div></div>
+            </div>
+            <div class="metric-card" id="m-risk">
+                <span class="metric-label">Riesgo Institucional</span>
+                <div class="metric-bar-bg"><div class="metric-fill" style="width: 30%;"></div></div>
+            </div>
+            <div class="metric-card" id="m-legit">
+                <span class="metric-label">Legitimidad Social</span>
+                <div class="metric-bar-bg"><div class="metric-fill" style="width: 50%;"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JUEGO -->
+    <div class="scenario-stage">
+        <div class="card-stack" id="card-container">
+            <!-- Las tarjetas se inyectan con JS -->
+        </div>
+    </div>
+
+    <!-- PANTALLA FINAL -->
+    <div class="results-overlay" id="final-screen">
+        <h2 class="forum-title">El Camino es el Cambio</h2>
+        <div style="font-size:4rem; margin-bottom:20px; color:var(--brand-magenta);">💜</div>
+        <p style="margin-bottom:30px; font-size: 1.2rem; color: #444;">Has completado la ruta. Reflexiona sobre la institucionalidad:</p>
+        <ul class="forum-list">
+            <li>¿Cómo transforma la UNP la realidad de las mujeres protegidas?</li>
+            <li>¿Es la violencia digital tan real como la física?</li>
+            <li>¿Por qué la perspectiva de género reduce el riesgo?</li>
+        </ul>
+        <button class="btn-reform" style="margin-top:30px; background:var(--brand-orange);" onclick="location.reload()">REINICIAR RUTA</button>
+    </div>
+</div>
+
+<script>
+// --- DATOS DEL CURSO (LÓGICA IGUAL, SOLO CAMBIOS ESTÉTICOS ARRIBA) ---
+const scenarios = [
+    {
+        tag: "VIOLENCIA DIGITAL",
+        title: "Acoso en Redes",
+        desc: "Una lideresa reporta acoso masivo y estigmatización en Twitter (X). El protocolo actual solo mide el riesgo físico por hombres armados. ¿Qué reforma aplicas?",
+        reform: {
+            text: "REFORMAR: Incluir Violencia Digital como indicador de riesgo.",
+            rights: 20, risk: -10, legit: 20,
+            feedback: "Excelente. Reconocer la violencia digital protege la integridad psicológica y política de la mujer."
+        },
+        repro: {
+            text: "MANTENER: Solo proteger ante amenaza física inminente.",
+            rights: -20, risk: 30, legit: -20,
+            feedback: "Peligroso. Al ignorar lo digital, el riesgo escala y la institución falla en su deber de protección."
+        }
+    },
+    {
+        tag: "ECONOMÍA DEL CUIDADO",
+        title: "Turnos de Escoltas",
+        desc: "Las escoltas mujeres solicitan ajustes de turno para labores de cuidado familiar. El reglamento actual es rígido e igual para todos.",
+        reform: {
+            text: "REFORMAR: Flexibilizar turnos reconociendo la carga de cuidado.",
+            rights: 20, risk: -5, legit: 15,
+            feedback: "Bien. La igualdad real exige que las instituciones adapten sus estructuras a la realidad del cuidado."
+        },
+        repro: {
+            text: "MANTENER: 'Igualdad es igualdad'. Mismos turnos para todos.",
+            rights: -15, risk: 10, legit: -10,
+            feedback: "Error. Esa 'igualdad' formal reproduce la desigualdad material y sobrecarga a las mujeres."
+        }
+    },
+    {
+        tag: "PREVENCIÓN",
+        title: "Matriz de Riesgo",
+        desc: "Se debate incluir preguntas específicas sobre violencia sexual en la evaluación de riesgo. Algunos dicen que 'invade la privacidad'.",
+        reform: {
+            text: "REFORMAR: Incluir indicadores de Violencia Sexual.",
+            rights: 25, risk: -20, legit: 25,
+            feedback: "Crucial. Lo que no se nombra no existe. Si no se pregunta y mide, no se puede prevenir."
+        },
+        repro: {
+            text: "MANTENER: No preguntar. Esperar denuncia voluntaria.",
+            rights: -30, risk: 40, legit: -30,
+            feedback: "Grave. El silencio institucional ante la posibilidad de violencia sexual genera responsabilidad del Estado."
+        }
+    }
+];
+
+let currentCard = 0;
+let metrics = { rights: 50, risk: 30, legit: 50 };
+
+renderCard();
+
+function renderCard() {
+    const container = document.getElementById('card-container');
+    const data = scenarios[currentCard];
+
+    const cardHTML = `
+        <div class="situation-card" id="active-card">
+            <div class="card-tag">${data.tag}</div>
+            <div class="card-content">
+                <h3>${data.title}</h3>
+                <p>${data.desc}</p>
+            </div>
+            <div class="decision-row">
+                <button class="btn-reform" onclick="makeDecision('reform')">💜 ${data.reform.text}</button>
+                <button class="btn-reproduce" onclick="makeDecision('repro')">✋ ${data.repro.text}</button>
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = cardHTML;
+    gsap.from("#active-card", {y: 40, opacity: 0, duration: 0.6, ease: "power2.out"});
+}
+
+function makeDecision(type) {
+    const data = scenarios[currentCard];
+    const outcome = data[type];
+    const card = document.getElementById('active-card');
+
+    updateMetrics(outcome.rights, outcome.risk, outcome.legit);
+
+    // Colores de feedback adaptados a la paleta clara
+    const borderColor = type === 'reform' ? 'var(--success)' : 'var(--danger)';
+    card.style.border = `2px solid ${borderColor}`;
+    card.style.boxShadow = `0 0 20px ${borderColor}40`; // 40 es transparencia hex
+    
+    card.querySelector('.card-content').innerHTML = `
+        <h3 style="color:${borderColor}">${type === 'reform' ? '¡CAMBIO APLICADO!' : 'DESIGUALDAD REPRODUCIDA'}</h3>
+        <p>${outcome.feedback}</p>
+    `;
+    card.querySelector('.decision-row').style.display = 'none';
+
+    setTimeout(() => {
+        const direction = type === 'reform' ? 100 : -100;
+        gsap.to(card, {
+            x: direction, rotation: direction/15, opacity: 0, duration: 0.5,
+            onComplete: () => {
+                currentCard++;
+                if(currentCard < scenarios.length) {
+                    renderCard();
+                } else {
+                    showFinal();
+                }
+            }
+        });
+    }, 2500);
+}
+
+function updateMetrics(dRights, dRisk, dLegit) {
+    metrics.rights = clamp(metrics.rights + dRights);
+    metrics.risk = clamp(metrics.risk + dRisk);
+    metrics.legit = clamp(metrics.legit + dLegit);
+
+    gsap.to("#m-rights .metric-fill", {width: metrics.rights + "%"});
+    gsap.to("#m-risk .metric-fill", {width: metrics.risk + "%"});
+    gsap.to("#m-legit .metric-fill", {width: metrics.legit + "%"});
+
+    // El riesgo se pone rojo si es alto
+    if(metrics.risk > 70) document.querySelector("#m-risk .metric-fill").style.background = "var(--danger)";
+    else document.querySelector("#m-risk .metric-fill").style.background = "var(--brand-orange)";
+}
+
+function clamp(val) { return Math.max(0, Math.min(100, val)); }
+
+function showFinal() {
+    const screen = document.getElementById('final-screen');
+    screen.style.display = 'flex';
+    gsap.from(screen, {opacity: 0, duration: 0.8});
+}
+</script>

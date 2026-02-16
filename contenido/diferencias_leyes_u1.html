@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparativa Ley 2365 vs 2453</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* =========================================
+   1. PALETA INSTITUCIONAL 25N
+   ========================================= */
+
+:root{
+    --color-primary: #FEC82F;     /* Amarillo */
+    --color-secondary: #E94E1B;   /* Naranja */
+    --color-accent: #D23B78;      /* Magenta */
+    --color-dark: #3D0059;        /* Morado institucional */
+    --color-bg: #F4F2F7;          /* Gris claro fondo */
+    --color-panel: #FFFFFF;       /* Blanco */
+    --color-border: rgba(61,0,89,0.1);
+    --color-text: #3D0059;
+}
+
+*{ box-sizing: border-box; }
+
+body{
+    margin:0;
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    display:flex;
+    justify-content:center;
+    padding:40px 20px;
+}
+
+/* =========================================
+   CONTENEDOR PRINCIPAL
+   ========================================= */
+
+.interface-container{
+    width:100%;
+    max-width:1100px;
+    background: var(--color-panel);
+    border-radius:18px;
+    box-shadow:0 15px 50px rgba(0,0,0,0.08);
+    padding:40px;
+}
+
+/* =========================================
+   LOGOS
+   ========================================= */
+
+.logo-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+    flex-wrap:wrap;
+    gap:20px;
+}
+
+.logo-bar img{
+    height:65px;
+    max-width:240px;
+    object-fit:contain;
+}
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.cyber-header{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+h1{
+    font-family:'Montserrat', sans-serif;
+    font-weight:800;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    margin:0;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.vs-badge{
+    font-size:1.2rem;
+    font-weight:700;
+    color:var(--color-dark);
+    margin:0 10px;
+}
+
+.subtitle{
+    margin-top:10px;
+    font-size:1rem;
+    opacity:0.8;
+}
+
+/* =========================================
+   BOTONES
+   ========================================= */
+
+.control-deck{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:15px;
+    margin-bottom:40px;
+}
+
+.data-chip{
+    background:white;
+    border:2px solid var(--color-primary);
+    color:var(--color-dark);
+    padding:12px 25px;
+    font-family:'Montserrat';
+    font-weight:600;
+    cursor:pointer;
+    border-radius:40px;
+    transition:0.3s ease;
+}
+
+.data-chip:hover{
+    background:var(--color-primary);
+    color:white;
+}
+
+.data-chip.active{
+    background:var(--color-secondary);
+    border-color:var(--color-secondary);
+    color:white;
+}
+
+.data-chip.read::after{
+    content:"✓";
+    margin-left:8px;
+}
+
+/* =========================================
+   COLUMNAS
+   ========================================= */
+
+.holo-screen{
+    display:flex;
+    gap:30px;
+    min-height:250px;
+}
+
+.data-column{
+    flex:1;
+    background:#FAF9FC;
+    border-radius:14px;
+    padding:25px;
+    border-top:5px solid var(--color-primary);
+    opacity:0;
+    transform:translateY(10px);
+    transition:0.4s ease;
+}
+
+.data-column.right-col{
+    border-top:5px solid var(--color-accent);
+}
+
+.data-column.active{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.col-header{
+    font-family:'Montserrat';
+    font-weight:700;
+    margin-bottom:15px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.col-header.blue{ color:var(--color-primary); }
+.col-header.pink{ color:var(--color-accent); }
+
+.source-tag{
+    font-size:0.75rem;
+    margin-left:auto;
+    opacity:0.6;
+}
+
+.content-text{
+    font-size:1.05rem;
+    line-height:1.6;
+    text-align:justify;
+}
+
+.highlight-blue{ color:var(--color-primary); font-weight:700; }
+.highlight-pink{ color:var(--color-accent); font-weight:700; }
+
+/* =========================================
+   CONCLUSIÓN
+   ========================================= */
+
+.conclusion-module{
+    margin-top:50px;
+    padding:25px;
+    border-radius:14px;
+    background:#F9F6FF;
+    border:2px dashed var(--color-border);
+    opacity:0.6;
+    transition:0.4s ease;
+    position:relative;
+}
+
+.conclusion-module.unlocked{
+    border:2px solid var(--color-secondary);
+    opacity:1;
+}
+
+.lock-overlay{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background:rgba(255,255,255,0.95);
+}
+
+.conclusion-module.unlocked .lock-overlay{
+    display:none;
+}
+
+.conc-title{
+    font-family:'Montserrat';
+    font-weight:700;
+    margin-bottom:20px;
+    color:var(--color-secondary);
+}
+
+.conc-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.conc-item{
+    background:white;
+    padding:15px;
+    border-left:4px solid;
+    border-radius:8px;
+}
+
+.conc-item.c1{ border-color:var(--color-primary); }
+.conc-item.c2{ border-color:var(--color-accent); }
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width:768px){
+
+    .interface-container{
+        padding:25px;
+    }
+
+    .holo-screen{
+        flex-direction:column;
+    }
+
+    .conc-grid{
+        grid-template-columns:1fr;
+    }
+
+    .logo-bar{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .logo-bar img{
+        height:55px;
+    }
+
+    .data-chip{
+        flex:1 1 45%;
+        text-align:center;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<div class="interface-container">
+
+    <!-- LOGOS -->
+    <div class="logo-bar">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP">
+        <img src="../Styles/logo.png" alt="Logo Comisión">
+    </div>
+
+    <!-- HEADER -->
+    <header class="cyber-header">
+        <h1>LEY 2365 <span class="vs-badge">VS</span> LEY 2453</h1>
+        <p class="subtitle">Módulo de Análisis Comparativo - Violencia de Género</p>
+    </header>
+
+    <!-- BOTONES -->
+    <div class="control-deck">
+        <button class="data-chip" onclick="loadData('objeto', this)">🎯 OBJETO</button>
+        <button class="data-chip" onclick="loadData('ambito', this)">🌍 ÁMBITO</button>
+        <button class="data-chip" onclick="loadData('derechos', this)">🛡️ DERECHOS</button>
+        <button class="data-chip" onclick="loadData('sujetos', this)">👥 SUJETOS</button>
+    </div>
+
+    <!-- COLUMNAS -->
+    <div class="holo-screen">
+        <div class="data-column" id="col-left">
+            <div class="col-header blue">
+                <i class="fas fa-building"></i> LEY 2365 (2024)
+                <span class="source-tag">Cancillería</span>
+            </div>
+            <div class="content-text" id="text-left">
+                <span style="color:gray;">Seleccione un punto para iniciar.</span>
+            </div>
+        </div>
+
+        <div class="data-column right-col" id="col-right">
+            <div class="col-header pink">
+                <i class="fas fa-landmark"></i> LEY 2453 (2025)
+                <span class="source-tag">Función Pública</span>
+            </div>
+            <div class="content-text" id="text-right">
+                <span style="color:gray;">Sistema en espera...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONCLUSIÓN -->
+    <div class="conclusion-module" id="conclusion-box">
+        <div class="lock-overlay">
+            <i class="fas fa-lock" style="font-size:2rem;color:#aaa;margin-bottom:10px;"></i>
+            Analiza los 4 puntos para desbloquear la síntesis
+        </div>
+
+        <h3 class="conc-title"><i class="fas fa-unlock-alt"></i> Síntesis Comparativa</h3>
+
+        <div class="conc-grid">
+            <div class="conc-item c1">
+                <strong>Ley 2365:</strong><br>
+                Marco jurídico para <span class="highlight-blue">prevenir y proteger contra el acoso sexual</span> en entornos laborales y educativos.
+            </div>
+
+            <div class="conc-item c2">
+                <strong>Ley 2453:</strong><br>
+                Regula la <span class="highlight-pink">violencia política contra las mujeres</span> y protege la participación democrática.
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+const comparisonData = {
+    objeto:{
+        left:"Prevenir, atender y proteger contra el <span class='highlight-blue'>acoso sexual</span> en el trabajo y educación superior.",
+        right:"Prevenir y sancionar la <span class='highlight-pink'>violencia política</span> contra las mujeres."
+    },
+    ambito:{
+        left:"Ámbito <span class='highlight-blue'>laboral y educativo</span>.",
+        right:"Ámbito <span class='highlight-pink'>político y electoral</span>."
+    },
+    derechos:{
+        left:"Protección integral frente al <span class='highlight-blue'>acoso sexual</span>.",
+        right:"Garantiza participación política libre de <span class='highlight-pink'>violencia de género</span>."
+    },
+    sujetos:{
+        left:"Empleadores, trabajadores, docentes y estudiantes.",
+        right:"Mujeres candidatas, elegidas o en ejercicio de cargos públicos."
+    }
+};
+
+let viewedTopics = new Set();
+const totalTopics = 4;
+
+function loadData(topic,btn){
+
+    document.querySelectorAll('.data-chip').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    btn.classList.add('read');
+
+    document.getElementById('text-left').innerHTML = comparisonData[topic].left;
+    document.getElementById('text-right').innerHTML = comparisonData[topic].right;
+
+    document.getElementById('col-left').classList.add('active');
+    document.getElementById('col-right').classList.add('active');
+
+    viewedTopics.add(topic);
+    checkConclusion();
+}
+
+function checkConclusion(){
+    if(viewedTopics.size === totalTopics){
+        document.getElementById('conclusion-box').classList.add('unlocked');
+    }
+}
+
+</script>
+
+</body>
+</html>

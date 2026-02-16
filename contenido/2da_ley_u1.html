@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ley 2453 - Responsive</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Roboto+Slab:wght@300;700&display=swap" rel="stylesheet">
+
+<style>
+    /* =========================================
+       1. RESET Y VARIABLES GLOBALES (PALETA CLARA 25N)
+       ========================================= */
+    * {
+        box-sizing: border-box; 
+    }
+
+:root {
+    --purple-main: #170047;   /* Morado UNP (Principal) */
+    --purple-dark: #480241;   /* Morado Oscuro */
+    --purple-light: #D23B78;  /* Magenta/Rosa (Acento) */
+    
+    --accent-orange: #FF9800; /* Naranja (Detalles) */
+    --accent-yellow: #FEC82F; /* Amarillo (Fondo/Highlights) */
+    
+    --white: #ffffff;         /* Blanco puro */
+    --text-slate: #333333;    /* Texto principal oscuro */
+    --bg-gradient: linear-gradient(
+        135deg,
+        #ffffff 0%,
+        #FFFDE7 100%
+    ); /* Fondo muy claro, casi blanco */
+}
+
+    body {
+        margin: 0;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    /* =========================================
+       2. CONTENEDOR PRINCIPAL
+       ========================================= */
+    .political-arena-wrapper {
+        position: relative;
+        background: var(--bg-gradient);
+        color: var(--text-slate);
+        padding: 40px 20px;
+        overflow: hidden;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column; /* Cambiado a columna para logos arriba */
+        align-items: center;
+    }
+
+    /* FONDO ANIMADO (SUAVIZADO) */
+    .arena-bg {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .float-icon {
+        position: absolute;
+        font-size: 3rem;
+        color: var(--purple-main);
+        opacity: 0.03; /* Muy sutil */
+        animation: floatUp 15s infinite linear;
+    }
+
+    .i1 { left: 10%; top: 100%; animation-delay: 0s; font-size: 4rem; }
+    .i2 { left: 30%; top: 100%; animation-delay: 3s; font-size: 2rem; }
+    .i3 { left: 60%; top: 100%; animation-delay: 6s; font-size: 5rem; }
+    .i4 { left: 80%; top: 100%; animation-delay: 2s; font-size: 3rem; }
+    .i5 { left: 50%; top: 100%; animation-delay: 9s; font-size: 2.5rem; }
+
+    @keyframes floatUp {
+        0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+        100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+    }
+
+    .arena-container {
+        position: relative;
+        z-index: 2;
+        max-width: 1100px;
+        width: 100%;
+    }
+
+    /* =========================================
+       LOGOS DEL CLIENTE (NUEVO)
+       ========================================= */
+    .logos-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        margin-bottom: 30px;
+        width: 100%;
+        z-index: 10;
+        flex-wrap: wrap;
+    }
+
+    .client-logo {
+        height: 120px;
+        width: auto;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+    .client-logo:hover { transform: scale(1.05); }
+
+
+    /* =========================================
+       3. HEADER Y NOTICIAS
+       ========================================= */
+    .breaking-news { text-align: center; margin-bottom: 50px; }
+
+    .ticker-wrap {
+        width: 100%;
+        overflow: hidden;
+        background-color: var(--purple-main);
+        color: white;
+        border-radius: 5px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(72, 2, 65, 0.2);
+    }
+
+    .ticker {
+        display: flex;
+        white-space: nowrap;
+        animation: ticker 25s infinite linear;
+    }
+
+    .ticker__item {
+        padding: 10px 40px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+
+    @keyframes ticker {
+        0% { transform: translate3d(0, 0, 0); }
+        100% { transform: translate3d(-50%, 0, 0); }
+    }
+
+    .main-headline h1 {
+        font-family: 'Roboto Slab', serif;
+        font-size: clamp(2.5rem, 6vw, 5rem);
+        line-height: 1;
+        margin: 15px 0;
+        color: var(--purple-main);
+        text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+    }
+
+    .date-badge {
+        display: inline-block;
+        background: var(--purple-light);
+        color: white;
+        padding: 6px 15px;
+        border-radius: 4px;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+    }
+
+    .subtitle {
+        font-size: clamp(1.1rem, 3vw, 1.5rem);
+        font-weight: 700;
+        color: var(--purple-dark);
+        margin-bottom: 25px;
+    }
+
+    .alert-box {
+        display: inline-block;
+        background: #FFF3E0; /* Naranja muy claro */
+        border: 2px solid var(--accent-orange);
+        color: #E65100;
+        padding: 12px 25px;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        max-width: 90%;
+        animation: pulseAlert 2s infinite;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    @keyframes pulseAlert { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+
+    /* =========================================
+       4. TARJETAS (FLIP CARDS)
+       ========================================= */
+    .campaign-deck {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 30px;
+        margin-bottom: 60px;
+        perspective: 1000px;
+    }
+
+    .campaign-card {
+        background-color: transparent;
+        width: 100%;
+        max-width: 320px;
+        height: 420px;
+        perspective: 1000px;
+        cursor: pointer;
+    }
+
+    .card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        border-radius: 20px;
+    }
+
+    .campaign-card.flipped .card-inner { transform: rotateY(180deg); }
+
+    .card-front, .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 25px;
+        border: 1px solid #eee;
+    }
+
+    .card-front {
+        background: white;
+        color: var(--text-slate);
+        border-bottom: 5px solid var(--purple-main);
+    }
+
+    .card-back {
+        background: var(--purple-main);
+        color: white;
+        transform: rotateY(180deg);
+        border: 4px solid var(--accent-yellow);
+    }
+
+    .icon-circle {
+        width: 90px; height: 90px;
+        background: var(--accent-yellow);
+        color: var(--purple-main);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2.5rem;
+        margin-bottom: 25px;
+    }
+
+    .tap-hint {
+        margin-top: auto;
+        padding-top: 20px;
+        font-size: 0.8rem;
+        color: #888;
+        animation: bounce 1s infinite;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+    }
+
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+    .card-back h3 { font-family: 'Roboto Slab', serif; font-size: 1.4rem; margin-bottom: 10px; color: var(--accent-yellow); }
+    .card-back p { line-height: 1.6; font-size: 0.95rem; }
+    .goal-tag { background: white; color: var(--purple-main); padding: 5px 12px; border-radius: 5px; font-weight: 800; font-size: 0.75rem; margin-top: 15px; text-transform: uppercase;}
+    .contrast-box { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; margin-top: 15px; font-weight: 700; font-size: 0.85rem; width: 100%; border: 1px dashed rgba(255,255,255,0.3); }
+
+    /* =========================================
+       5. SECCIÓN DE VIOLENCIA (GRID)
+       ========================================= */
+    .battle-section {
+        background: white;
+        padding: 40px 25px;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        text-align: center;
+        margin-bottom: 60px;
+        border: 1px solid #e0e0e0;
+    }
+
+    .battle-title { font-family: 'Roboto Slab', serif; font-size: clamp(1.5rem, 4vw, 2rem); color: var(--purple-main); margin-top: 0; }
+    .battle-desc { margin-bottom: 30px; color: #666; font-size: 1rem; }
+
+    .violence-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .v-item {
+        position: relative;
+        aspect-ratio: 1 / 1; 
+        border-radius: 15px;
+        overflow: hidden;
+        cursor: pointer;
+        width: 100%;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .v-cover {
+        position: absolute;
+        width: 100%; height: 100%;
+        color: white;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        transition: 0.3s;
+        z-index: 2;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .v-cover i { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 10px; }
+    .v-cover span { font-weight: 800; font-size: 0.8rem; letter-spacing: 0.5px; }
+
+    /* Colores Específicos */
+    .v-cover.verbal { background: #E53935; } /* Rojo */
+    .v-cover.physical { background: #8E24AA; } /* Morado */
+    .v-cover.digital { background: #1E88E5; } /* Azul */
+    .v-cover.economic { background: #FDD835; color: #333; } /* Amarillo */
+    .v-cover.symbolic { background: #FB8C00; } /* Naranja */
+
+    .v-reveal {
+        position: absolute;
+        width: 100%; height: 100%;
+        background: var(--purple-main);
+        color: white;
+        display: flex; align-items: center; justify-content: center;
+        padding: 15px;
+        font-size: 0.85rem;
+        z-index: 1;
+        line-height: 1.4;
+    }
+
+    .v-item:hover .v-cover {
+        transform: translateY(-100%) rotate(5deg);
+        opacity: 0;
+    }
+
+    .source-center { margin-top: 30px; font-size: 0.75rem; color: #888; font-style: italic; }
+
+    /* =========================================
+       6. VOTACIÓN Y BOTONES
+       ========================================= */
+    .voting-booth {
+        display: flex; justify-content: center;
+        width: 100%;
+    }
+
+    .ballot-box {
+        background: var(--purple-main);
+        color: white;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 15px 30px rgba(72, 2, 65, 0.3);
+        width: 100%;
+        max-width: 650px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Detalle decorativo */
+    .ballot-box::before {
+        content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .ballot-box p { font-size: 1.2rem; margin-bottom: 25px; font-weight: 700; position: relative; z-index: 2; }
+
+    .vote-btn {
+        background: var(--accent-yellow);
+        color: var(--purple-main);
+        border: none;
+        padding: 18px 40px;
+        font-size: 1.1rem;
+        font-weight: 900;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        transition: 0.2s;
+        max-width: 100%;
+        white-space: normal;
+        position: relative; z-index: 2;
+    }
+
+    .vote-btn:hover {
+        transform: translateY(-2px);
+        background: #fff;
+    }
+
+    .vote-btn:active {
+        transform: translateY(2px);
+    }
+
+    .vote-confirmation {
+        margin-top: 20px;
+        font-size: 1.1rem;
+        font-weight: 800;
+        display: none;
+        color: var(--accent-yellow);
+        animation: popIn 0.5s ease;
+        position: relative; z-index: 2;
+    }
+
+    @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+    /* =========================================
+       7. MEDIA QUERIES
+       ========================================= */
+    @media (max-width: 600px) {
+        .political-arena-wrapper { padding: 20px 10px; }
+        .logos-header { gap: 15px; margin-bottom: 20px; }
+        .client-logo { height: 85px; }
+        .alert-box { font-size: 0.85rem; text-align: left; }
+        .campaign-card { height: 380px; }
+        .battle-section { padding: 25px 15px; }
+        .ballot-box { padding: 30px 20px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="political-arena-wrapper">
+    <!-- Fondo Animado -->
+    <div class="arena-bg">
+        <i class="fas fa-venus float-icon i1"></i>
+        <i class="fas fa-check-to-slot float-icon i2"></i>
+        <i class="fas fa-bullhorn float-icon i3"></i>
+        <i class="fas fa-venus float-icon i4"></i>
+        <i class="fas fa-gavel float-icon i5"></i>
+    </div>
+
+    <!-- LOGOS DEL CLIENTE -->
+    <div class="logos-header">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+        <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo">
+    </div>
+
+    <div class="arena-container">
+        
+        <!-- HEADER -->
+        <header class="breaking-news">
+            <div class="ticker-wrap">
+                <div class="ticker">
+                    <div class="ticker__item">📢 LEY 2453 DE 2025: NUEVO HITO DEMOCRÁTICO</div>
+                    <div class="ticker__item">🛑 SANCIÓN A LA VIOLENCIA POLÍTICA</div>
+                    <div class="ticker__item">🗳️ PARTICIPACIÓN EN IGUALDAD</div>
+                    <!-- Repetición para loop -->
+                    <div class="ticker__item">📢 LEY 2453 DE 2025: NUEVO HITO DEMOCRÁTICO</div>
+                    <div class="ticker__item">🛑 SANCIÓN A LA VIOLENCIA POLÍTICA</div>
+                    <div class="ticker__item">🗳️ PARTICIPACIÓN EN IGUALDAD</div>
+                </div>
+            </div>
+            <div class="main-headline">
+                <span class="date-badge">Sancionada: 02 de Abril de 2025</span>
+                <h1>LEY 2453</h1>
+                <p class="subtitle">Violencia contra las mujeres en política</p>
+                <div class="alert-box">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span><strong>ATENCIÓN:</strong> Objeto totalmente distinto a la Ley 2365.</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ZONA DE CAMPAÑA -->
+        <div class="campaign-deck">
+            
+            <!-- TARJETA 1 -->
+            <div class="campaign-card" onclick="flipCard(this)">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <div class="icon-circle"><i class="fas fa-bullseye"></i></div>
+                        <h2>El Objetivo</h2>
+                        <p class="tap-hint"><i class="fas fa-hand-pointer"></i> Toca para revelar</p>
+                    </div>
+                    <div class="card-back">
+                        <h3>Participación Segura</h3>
+                        <p>Busca <strong>prevenir, atender, seguir y sancionar</strong> la violencia contra las mujeres en el ejercicio de sus derechos políticos.</p>
+                        <div class="goal-tag">META: IGUALDAD SIN VIOLENCIA</div>
+                        <span class="source-text" style="font-size:0.7rem; margin-top:10px; display:block; opacity:0.8;">Fuente: Función Pública</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TARJETA 2 -->
+            <div class="campaign-card" onclick="flipCard(this)">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <div class="icon-circle"><i class="fas fa-map-marked-alt"></i></div>
+                        <h2>El Escenario</h2>
+                        <p class="tap-hint"><i class="fas fa-hand-pointer"></i> Toca para revelar</p>
+                    </div>
+                    <div class="card-back">
+                        <h3>Ámbito Exclusivo</h3>
+                        <p>Su ámbito es la <strong>participación política y electoral</strong>.</p>
+                        <div class="contrast-box">
+                            <i class="fas fa-ban"></i> NO es Laboral<br>
+                            <i class="fas fa-ban"></i> NO es Educativo
+                        </div>
+                        <span class="source-text" style="font-size:0.7rem; margin-top:10px; display:block; opacity:0.8;">Fuente: Función Pública</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SECCIÓN DE VIOLENCIAS -->
+        <div class="battle-section">
+            <h2 class="battle-title">Identifica las Barreras</h2>
+            <p class="battle-desc">Pasa el cursor (o toca) sobre los cuadros para ver las conductas:</p>
+            
+            <div class="violence-grid">
+                <!-- Items -->
+                <div class="v-item">
+                    <div class="v-cover verbal">
+                        <i class="fas fa-comment-slash"></i>
+                        <span>VERBAL</span>
+                    </div>
+                    <div class="v-reveal">
+                        <p>Discursos de odio, difamación o descrédito público.</p>
+                    </div>
+                </div>
+                <div class="v-item">
+                    <div class="v-cover physical">
+                        <i class="fas fa-user-injured"></i>
+                        <span>FÍSICA/SEXUAL</span>
+                    </div>
+                    <div class="v-reveal">
+                        <p>Agresiones directas al cuerpo o integridad sexual.</p>
+                    </div>
+                </div>
+                <div class="v-item">
+                    <div class="v-cover digital">
+                        <i class="fas fa-wifi"></i>
+                        <span>DIGITAL</span>
+                    </div>
+                    <div class="v-reveal">
+                        <p>Ciberacoso, doxing o violencia en redes sociales.</p>
+                    </div>
+                </div>
+                <div class="v-item">
+                    <div class="v-cover economic">
+                        <i class="fas fa-coins"></i>
+                        <span>ECONÓMICA</span>
+                    </div>
+                    <div class="v-reveal">
+                        <p>Restricción de recursos para campañas.</p>
+                    </div>
+                </div>
+                <div class="v-item">
+                    <div class="v-cover symbolic">
+                        <i class="fas fa-masks-theater"></i>
+                        <span>SIMBÓLICA</span>
+                    </div>
+                    <div class="v-reveal">
+                        <p>Uso de estereotipos para anular su capacidad política.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="source-center">Fuente: Función Pública - Definición de categorías específicas</div>
+        </div>
+
+        <!-- GAMIFICACIÓN FINAL -->
+        <div class="voting-booth">
+            <div class="ballot-box">
+                <p>¿Entendido el alcance de la Ley 2453?</p>
+                <button id="vote-btn" class="vote-btn" onclick="castVote()">
+                    <span class="btn-txt">🗳️ RATIFICAR CONOCIMIENTO</span>
+                </button>
+                <div id="vote-conf" class="vote-confirmation">
+                    <i class="fas fa-check-circle"></i> ¡CONOCIMIENTO REGISTRADO!
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function flipCard(card) {
+    card.classList.toggle('flipped');
+}
+
+function castVote() {
+    const btn = document.getElementById('vote-btn');
+    const msg = document.getElementById('vote-conf');
+    
+    btn.style.transform = "translateY(2px)";
+    btn.style.boxShadow = "none";
+    btn.style.background = "#fff";
+    btn.style.color = "#999";
+    btn.innerHTML = 'Voto Registrado';
+    btn.disabled = true;
+    btn.style.cursor = "default";
+
+    msg.style.display = "block";
+}
+
+// Animación de entrada
+document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = "1";
+                entry.target.style.transform = "translateY(0)";
+            }
+        });
+    });
+
+    document.querySelectorAll('.campaign-card, .battle-section, .ballot-box').forEach(el => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(30px)";
+        el.style.transition = "all 0.8s ease-out";
+        observer.observe(el);
+    });
+});
+</script>
+
+</body>
+</html>

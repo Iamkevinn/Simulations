@@ -1,0 +1,268 @@
+<!-- LIBRERÍAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* --- VARIABLES DE ALTO CONTRASTE (PALETA CLARA 25N) --- */
+:root {
+    /* Fondos */
+    --eco-bg: #F4F6F9;        /* Fondo claro base */
+    --eco-card: #FFFFFF;      /* Tarjetas blancas */
+
+    /* Colores Institucionales */
+    --eco-dark: #333333;      /* Texto principal */
+    --eco-accent: #480241;    /* Morado UNP (Bordes, Títulos) */
+    --eco-highlight: #FF9800; /* Naranja (Resaltados, Iconos) */
+    --eco-flower: #D23B78;    /* Magenta (Badges, Detalles emocionales) */
+    --eco-soil: #480241;      /* Morado oscuro (Fondo sección inferior) */
+    --eco-yellow: #FEC82F;    /* Amarillo (Detalles decorativos) */
+    
+    /* Sombras */
+    --shadow-soft: 0 10px 30px rgba(72, 2, 65, 0.08);
+}
+
+
+#greenhouse-container {
+    width: 100%;
+    height: auto;
+    min-height: 800px;
+    background-color: var(--eco-bg) !important;
+    font-family: 'Nunito', sans-serif;
+    color: var(--eco-dark);
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding-bottom: 40px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+/* --- DECORACIÓN DE FONDO --- */
+.leaf-bg {
+    position: absolute;
+    width: 100%; height: 100%; top: 0; left: 0;
+    /* Patrón de puntos sutil */
+    background-image: radial-gradient(var(--eco-highlight) 10%, transparent 10%);
+    background-size: 30px 30px;
+    opacity: 0.1; pointer-events: none; z-index: 0;
+}
+
+/* --- HEADER DE LOGOS (NUEVO) --- */
+.logos-header {
+    display: flex;
+    justify-content: center; /* Centrados */
+    align-items: center;
+    gap: 30px;
+    padding: 20px;
+    z-index: 20;
+    flex-wrap: wrap;
+}
+
+.client-logo {
+    height: 115px; /* Altura controlada */
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+.client-logo:hover { transform: scale(1.05); }
+
+
+/* --- HEADER TEXTOS --- */
+.gh-header {
+    text-align: center; padding: 20px 20px 40px; z-index: 10; position: relative;
+}
+.gh-badge {
+    background: var(--eco-yellow); color: var(--eco-accent); padding: 5px 15px;
+    border-radius: 20px; font-weight: 800; font-family: 'Fredoka', sans-serif;
+    display: inline-block; margin-bottom: 15px; box-shadow: 0 4px 0 rgba(0,0,0,0.05);
+}
+.gh-title {
+    font-family: 'Fredoka', sans-serif; font-size: clamp(2rem, 5vw, 2.8rem);
+    margin: 0; color: var(--eco-accent); line-height: 1.1;
+}
+.gh-subtitle { 
+    font-size: 1.1rem; margin-top: 10px; color: #666; font-weight: 600;
+}
+
+/* --- GRILLA DE OBJETIVOS (Responsive Avanzado) --- */
+.objectives-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 0 30px;
+    z-index: 10;
+    margin-bottom: 40px;
+}
+
+/* TARJETA DE OBJETIVO */
+.obj-card {
+    background: var(--eco-card);
+    border: 1px solid #eee;
+    border-top: 4px solid var(--eco-highlight); /* Borde superior naranja */
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: var(--shadow-soft);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%; 
+}
+
+.obj-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--eco-accent); /* Cambia borde a morado */
+    box-shadow: 0 15px 30px rgba(72, 2, 65, 0.15);
+}
+
+.obj-icon { 
+    font-size: 2.5rem; margin-bottom: 15px; display: block; 
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+.obj-label { 
+    font-weight: 800; color: var(--eco-accent); text-transform: uppercase; 
+    font-size: 0.85rem; letter-spacing: 0.5px; margin-bottom: 8px;
+}
+.obj-text {
+    font-size: 1rem; line-height: 1.5; color: #444; font-weight: 600;
+}
+
+/* --- JUSTIFICACIÓN (PIE DE PÁGINA) --- */
+.soil-section {
+    background: var(--eco-soil); /* Morado oscuro */
+    color: white;
+    margin: 0 30px;
+    padding: 35px;
+    border-radius: 15px;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 10px 30px rgba(72, 2, 65, 0.25);
+    border-bottom: 5px solid var(--eco-highlight); /* Detalle naranja */
+}
+.soil-title {
+    font-family: 'Fredoka', sans-serif; font-size: 1.4rem; margin-bottom: 15px;
+    border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 10px;
+    color: var(--eco-yellow);
+}
+.soil-content {
+    font-size: 1rem; line-height: 1.7; opacity: 0.95;
+}
+
+/* ANIMACIONES FLOTANTES */
+.leaf {
+    position: absolute; font-size: 20px; opacity: 0.4;
+    animation: fall 12s infinite linear; pointer-events: none;
+    z-index: 1;
+}
+@keyframes fall {
+    0% { transform: translateY(-50px) rotate(0deg); opacity: 0; }
+    20% { opacity: 0.6; }
+    100% { transform: translateY(800px) rotate(360deg); opacity: 0; }
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    #greenhouse-container { padding: 10px; }
+    .objectives-grid { padding: 0 10px; grid-template-columns: 1fr; }
+    .soil-section { margin: 0 10px; padding: 25px; }
+    .client-logo { height: 85px; }
+    .logos-header { gap: 15px; }
+}
+
+</style>
+
+<div id="greenhouse-container">
+    <div class="leaf-bg"></div>
+    
+    <!-- Partículas Decorativas -->
+    <div class="leaf" style="left: 10%; animation-delay: 0s;">🍃</div>
+    <div class="leaf" style="left: 30%; animation-delay: 2s;">🌿</div>
+    <div class="leaf" style="left: 70%; animation-delay: 4s;">🌱</div>
+    <div class="leaf" style="left: 90%; animation-delay: 1s;">🍃</div>
+
+    <!-- Logos del Cliente -->
+    <div class="logos-header">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+        <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo">
+    </div>
+
+    <!-- Encabezado -->
+    <div class="gh-header">
+        <div class="gh-badge">UNIDAD 5</div>
+        <h1 class="gh-title">Políticas Públicas y<br>Transformación Social</h1>
+        <p class="gh-subtitle">Objetivos de Aprendizaje</p>
+    </div>
+
+    <!-- Objetivos (Visible y Grande) -->
+    <div class="objectives-grid">
+        
+        <!-- Obj 1 -->
+        <div class="obj-card">
+            <span class="obj-icon">📊</span>
+            <div class="obj-label">ECONOMÍA FEMINISTA</div>
+            <div class="obj-text">
+                Analizar la crítica a la asignación tradicional de roles laborales por género desde la economía feminista y perspectivas estructurales.
+            </div>
+        </div>
+
+        <!-- Obj 2 -->
+        <div class="obj-card">
+            <span class="obj-icon">⚖️</span>
+            <div class="obj-label">JUSTICIA SOCIAL</div>
+            <div class="obj-text">
+                Reconocer el cuidado como eje de justicia social y su incorporación en políticas institucionales.
+            </div>
+        </div>
+
+        <!-- Obj 3 -->
+        <div class="obj-card">
+            <span class="obj-icon">🤝</span>
+            <div class="obj-label">TRANSFORMACIÓN</div>
+            <div class="obj-text">
+                Identificar las masculinidades corresponsables y estrategias pedagógicas para su transformación.
+            </div>
+        </div>
+
+        <!-- Obj 4 -->
+        <div class="obj-card">
+            <span class="obj-icon">🏠</span>
+            <div class="obj-label">SISTEMA DE CUIDADO</div>
+            <div class="obj-text">
+                Evaluar la invisibilización del trabajo doméstico y los avances del Sistema Nacional del Cuidado en la construcción de equidad.
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Justificación -->
+    <div class="soil-section">
+        <h2 class="soil-title">🌱 JUSTIFICACIÓN</h2>
+        <div class="soil-content">
+            Esta unidad aborda la relación entre cuidado, trabajo y masculinidades como elementos clave para la justicia social y la prevención de violencias. Integra la crítica feminista al capitalismo y la división sexual del trabajo, el reconocimiento del cuidado como derecho, y la necesidad de transformar masculinidades para promover corresponsabilidad. Además, analiza la invisibilización del trabajo doméstico y los retos del Sistema Nacional del Cuidado, fortaleciendo la capacidad institucional para implementar políticas que garanticen bienestar y equidad.
+        </div>
+    </div>
+
+</div>
+
+<script>
+// Animación de entrada suave
+gsap.from(".logos-header", { y: -20, opacity: 0, duration: 0.6 });
+gsap.from(".gh-header", { y: -20, opacity: 0, duration: 0.6, delay: 0.2 });
+
+gsap.from(".obj-card", {
+    y: 30, 
+    duration: 0.8, 
+    stagger: 0.15, 
+    ease: "power2.out",
+    delay: 0.4
+});
+
+gsap.from(".soil-section", {
+    y: 30, 
+    opacity: 0, 
+    duration: 0.8, 
+    delay: 1.2
+});
+</script>

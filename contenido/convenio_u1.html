@@ -1,0 +1,365 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="c190-mission-wrapper">
+    <!-- Fondo de Cuadrícula Dinámica (Ahora sutil en gris/naranja) -->
+    <div class="radar-grid"></div>
+    <div class="scan-line-v"></div>
+
+    <div class="mission-dashboard">
+        
+        <!-- NUEVO: Contenedor de Logos del Cliente -->
+        <div class="header-logos">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo unp-logo">
+            <div class="logo-divider"></div>
+            <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo comision-logo">
+        </div>
+
+        <!-- Encabezado de la Misión -->
+        <header class="dashboard-header">
+            <div class="mission-id">REF: CONVENIO 190 OIT / UNP-COL</div>
+            <h1 class="glitch-title" data-text="ESTRATEGIA LÚDICO-CRÍTICA">ESTRATEGIA LÚDICO-CRÍTICA</h1>
+            <p class="subtitle">Implementación para un mundo del trabajo libre de violencia y acoso</p>
+        </header>
+
+        <!-- Secciones Interactivas (Módulos de Datos) -->
+        <div class="modules-container">
+            
+            <!-- MÓDULO 1: EL DIAGNÓSTICO -->
+            <div class="module-box info-trigger" onclick="toggleDetail('diag')">
+                <div class="module-status">ESTADO: CRÍTICO</div>
+                <div class="module-icon"><i class="fas fa-triangle-exclamation"></i></div>
+                <!-- Nota: Cambié el color inline de blanco a gris oscuro para que se vea en fondo claro -->
+                <h3 style="color:rgba(23, 0, 71, 0.8);">1. Contexto Institucional</h3>
+                <div class="mini-bar"><div class="fill" style="width: 85%;"></div></div>
+                <div id="diag" class="module-detail">
+                    <p>La violencia y el acoso son problemáticas <strong>estructurales y multidimensionales</strong>. En la UNP, la naturaleza de las funciones puede normalizar prácticas autoritarias y violencias simbólicas que debemos desaprender.</p>
+                </div>
+            </div>
+
+            <!-- MÓDULO 2: EL MARCO C190 -->
+            <div class="module-box info-trigger" onclick="toggleDetail('norm')">
+                <div class="module-status">ESTADO: NORMATIVO</div>
+                <div class="module-icon"><i class="fas fa-gavel"></i></div>
+                <!-- Nota: Cambié el color inline de blanco a gris oscuro -->
+                <h3 style="color:rgba(23, 0, 71, 0.8);">2. Marco Convenio 190</h3>
+                <div class="mini-bar"><div class="fill" style="width: 100%; background: var(--c190-orange);"></div></div>
+                <div id="norm" class="module-detail">
+                    <p>Reconoce el derecho a un mundo del trabajo libre de violencia. Incluye espacios físicos, comunicaciones y trayectos. Protege contra la violencia <strong>física, psicológica, sexual, económica y simbólica</strong>.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Panel de Mensaje de Impacto -->
+        <footer class="impact-panel">
+            <div class="alert-box">
+                <i class="fas fa-shield-virus"></i>
+                <div class="alert-text">
+                    <strong>La violencia de género institucional:</strong>  se manifiesta en lenguajes sexistas, invisibilización, deslegitimación de denuncias y abuso del poder jerárquico.
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;700;900&display=swap');
+
+:root {
+    /* Paleta Extraída del Flyer (Tema Claro) */
+    --c190-bg: #FFFFFF;                 /* Fondo Blanco Limpio */
+    --c190-text-main: #333333;          /* Texto Gris Oscuro */
+    --c190-orange: #F7941D;             /* Naranja del flyer */
+    --c190-purple: #662D91;             /* Morado del flyer */
+    --c190-yellow: #FEC82F;             /* Amarillo del flyer */
+    --c190-red: #E44700;                /* Rojo/Naranja fuerte */
+    
+    /* Variables de UI */
+    --c190-glass: rgba(243, 244, 246, 0.9);  /* Gris muy claro semi-transparente */
+    --c190-border: rgba(102, 45, 145, 0.15); /* Borde morado sutil */
+    --c190-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.c190-mission-wrapper {
+    background-color: var(--c190-bg);
+    /* Fondo con degradado sutil inspirado en el flyer */
+    background: linear-gradient(135deg, #ffffff 0%, #fcf5ff 100%);
+    font-family: 'Inter', sans-serif;
+    color: var(--c190-text-main);
+    padding: 60px 20px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 30px;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+/* --- LOGOS CLIENTE --- */
+.header-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.client-logo {
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.unp-logo {
+    max-height: 120px; /* Ajustar según proporciones reales */
+    max-width: 300px;
+}
+
+.comision-logo {
+    max-height: 140px; /* Logo 25N suele ser más cuadrado/alto */
+    max-width: 150px;
+}
+
+.logo-divider {
+    width: 2px;
+    height: 40px;
+    background-color: var(--c190-orange);
+    opacity: 0.3;
+}
+
+.header-logos:hover .client-logo {
+    transform: scale(1.05);
+}
+
+/* Fondo Radar Animado (Adaptado a claro) */
+.radar-grid {
+    position: absolute;
+    top: 0; left: 0; width: 200%; height: 200%;
+    /* Grid gris suave y naranja suave */
+    background-image: 
+        linear-gradient(rgba(102, 45, 145, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(102, 45, 145, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+    transform: perspective(500px) rotateX(60deg);
+    animation: grid-move 20s linear infinite;
+    opacity: 1;
+}
+
+@keyframes grid-move {
+    from { transform: perspective(500px) rotateX(60deg) translateY(0); }
+    to { transform: perspective(500px) rotateX(60deg) translateY(40px); }
+}
+
+.scan-line-v {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 4px;
+    background: linear-gradient(to right, transparent, var(--c190-orange), transparent);
+    box-shadow: 0 0 15px rgba(247, 148, 29, 0.4);
+    z-index: 1;
+    animation: scan-v 4s linear infinite;
+    opacity: 0.6;
+}
+
+@keyframes scan-v {
+    0% { top: -5%; }
+    100% { top: 105%; }
+}
+
+.mission-dashboard {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Header */
+.dashboard-header { text-align: center; margin-bottom: 40px; }
+.mission-id { 
+    font-family: 'Share Tech Mono', monospace; 
+    color: var(--c190-purple); 
+    letter-spacing: 4px; 
+    font-size: 0.8rem; 
+    margin-bottom: 10px; 
+    font-weight: bold;
+}
+
+.subtitle {
+    color: #555;
+    margin-top: 10px;
+}
+
+.glitch-title {
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    font-weight: 900;
+    position: relative;
+    text-transform: uppercase;
+    color: var(--c190-text-main); /* Texto base oscuro */
+}
+
+.glitch-title::before, .glitch-title::after {
+    content: attr(data-text);
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0.8;
+    background: var(--c190-bg); /* Importante para ocultar el texto original */
+}
+
+.glitch-title::before { 
+    color: var(--c190-orange); 
+    left: -2px; 
+    z-index: -1;
+    animation: glitch 3s infinite; 
+}
+.glitch-title::after { 
+    color: var(--c190-purple); 
+    left: 2px; 
+    z-index: -2;
+    animation: glitch 3s infinite reverse; 
+}
+
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+}
+
+/* Modules */
+.modules-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.module-box {
+    background: var(--c190-glass);
+    border: 1px solid var(--c190-border);
+    padding: 25px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--c190-shadow);
+}
+
+.module-box:hover {
+    background: #fff;
+    border-color: var(--c190-orange);
+    box-shadow: 0 5px 20px rgba(247, 148, 29, 0.15);
+}
+
+.module-status {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    position: absolute;
+    top: 15px; right: 20px;
+    color: var(--c190-purple);
+    font-weight: bold;
+    background: rgba(102, 45, 145, 0.05);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.module-icon {
+    font-size: 1.8rem;
+    color: var(--c190-orange);
+    margin-bottom: 15px;
+}
+
+.module-box h3 {
+    font-size: 1.3rem;
+    margin: 10px 0;
+    font-weight: 700;
+}
+
+.mini-bar {
+    width: 100px;
+    height: 4px;
+    background: rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+}
+
+.mini-bar .fill {
+    height: 100%;
+    background: var(--c190-red);
+}
+
+/* Accordion Logic */
+.module-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+    color: #4a4a4a; /* Texto de párrafo oscuro */
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.module-box.active .module-detail {
+    max-height: 1000px;
+    margin-top: 15px;
+    transition: max-height 1s ease-in-out;
+}
+
+/* Footer Impact */
+.impact-panel { margin-top: 50px; }
+.alert-box {
+    /* Degradado morado más elegante y legible */
+    background: linear-gradient(135deg, var(--c190-purple), #8e44ad);
+    border: none;
+    padding: 25px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: white;
+    box-shadow: 0 5px 20px rgba(102, 45, 145, 0.3);
+}
+
+.alert-box i { font-size: 2rem; color: var(--c190-yellow); animation: pulse 2s infinite; }
+.alert-text { font-size: 1.1rem; }
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .c190-mission-wrapper { padding: 40px 15px; }
+    .glitch-title { font-size: 1.5rem; }
+    
+    .header-logos {
+        gap: 15px;
+    }
+    
+    .unp-logo, .comision-logo {
+        max-height: 45px;
+    }
+}
+</style>
+
+<script>
+/**
+ * Lógica de interacción
+ * Se mantiene exacta a la original
+ */
+function toggleDetail(id) {
+    const box = event.currentTarget;
+    box.classList.toggle('active');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("C190 System Booting... (Light Mode)");
+    const boxes = document.querySelectorAll('.module-box');
+    boxes.forEach((box, index) => {
+        setTimeout(() => {
+            box.style.opacity = "1";
+            box.style.transform = "translateX(0)";
+        }, 300 * index);
+    });
+});
+</script>

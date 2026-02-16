@@ -1,0 +1,389 @@
+<!-- LIBRERÍAS (GSAP + Fuentes) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+
+<style>
+/* --- VARIABLES & ESTÉTICA --- */
+:root {
+    --primary-purple: #6f42c1;
+    --light-purple: #e0cffc;
+    --alert-orange: #fd7e14;
+    --success-teal: #20c997;
+    --danger-rose: #e83e8c;
+    --text-dark: #343a40;
+    --bg-gradient: linear-gradient(135deg, #f3f0ff 0%, #e6dbff 100%);
+}
+
+#route-builder-container {
+    width: 100%;
+    /* Altura flexible para móviles */
+    min-height: 700px;
+    height: auto;
+    background: var(--bg-gradient);
+    position: relative;
+    overflow: hidden; /* Mantiene todo dentro del borde */
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+/* --- FONDO ANIMADO --- */
+.wave {
+    position: absolute; width: 150%; padding-bottom: 150%;
+    border-radius: 40%; background: rgba(111, 66, 193, 0.05);
+    animation: rotateWave 25s infinite linear; z-index: 0; pointer-events: none;
+}
+.wave:nth-child(2) { 
+    top: auto; bottom: -50%; right: -25%; 
+    animation-direction: reverse; background: rgba(253, 126, 20, 0.05); 
+}
+@keyframes rotateWave { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* --- HEADER --- */
+.header-box { text-align: center; position: relative; z-index: 10; margin-bottom: 20px; }
+.header-title {
+    font-family: 'Roboto Slab', serif; color: var(--primary-purple);
+    font-size: clamp(1.4rem, 4vw, 1.8rem); margin: 0; line-height: 1.2;
+}
+.header-subtitle { font-size: 0.9rem; color: #666; margin: 10px auto; }
+
+/* --- ÁREA DE JUEGO --- */
+.game-area {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative; z-index: 10; width: 100%;
+}
+
+.reflection-card {
+    background: white; width: 100%; max-width: 500px; min-height: 200px;
+    border-radius: 20px; box-shadow: 0 10px 30px rgba(111, 66, 193, 0.15);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 30px; text-align: center; position: relative;
+    border-top: 5px solid var(--primary-purple); margin-bottom: 30px;
+}
+.card-content h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--text-dark); }
+.card-content p { font-size: 0.95rem; color: #777; margin: 0; line-height: 1.5; }
+
+/* --- CONTROLES --- */
+.decision-controls {
+    display: flex; gap: 15px; width: 100%; max-width: 800px;
+    justify-content: center; flex-wrap: wrap;
+}
+.decision-btn {
+    flex: 1 1 140px; padding: 15px 10px; border: none; border-radius: 12px;
+    font-weight: 600; cursor: pointer; transition: transform 0.2s;
+    font-family: 'Poppins', sans-serif; display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.btn-critical { background: white; color: var(--danger-rose); border: 2px solid var(--danger-rose); }
+.btn-good { background: white; color: var(--success-teal); border: 2px solid var(--success-teal); }
+.btn-improve { background: white; color: var(--alert-orange); border: 2px solid var(--alert-orange); }
+.decision-btn:hover { transform: translateY(-3px); color: white; }
+.btn-critical:hover { background: var(--danger-rose); }
+.btn-good:hover { background: var(--success-teal); }
+.btn-improve:hover { background: var(--alert-orange); }
+
+/* --- RUTA DE PROGRESO --- */
+.route-visualizer {
+    width: 100%; height: 60px; background: white; border-radius: 15px; margin-top: 30px;
+    position: relative; display: flex; align-items: center; padding: 0 20px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.05); z-index: 10; box-sizing: border-box;
+}
+.route-track {
+    width: 100%; height: 6px; background: #eee; border-radius: 3px;
+    position: relative; display: flex; justify-content: space-between; align-items: center;
+}
+.route-node {
+    width: 15px; height: 15px; background: #ccc; border-radius: 50%;
+    position: relative; z-index: 2; transition: 0.5s;
+}
+.route-node.active { background: var(--primary-purple); box-shadow: 0 0 0 4px var(--light-purple); transform: scale(1.3); }
+.route-progress-bar {
+    position: absolute; left: 0; top: 0; height: 100%; background: var(--primary-purple); width: 0%; border-radius: 3px; transition: width 0.5s;
+}
+
+/* --- OVERLAY DE INFORMACIÓN (MODAL) --- */
+.info-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.98); /* Fondo casi sólido para lectura */
+    z-index: 100;
+    display: flex; flex-direction: column;
+    padding: 30px; box-sizing: border-box;
+    overflow-y: auto; /* Scroll si es mucho texto */
+}
+
+.info-content {
+    max-width: 900px; margin: 0 auto;
+    animation: slideUp 0.5s ease-out;
+}
+
+.info-header { text-align: center; margin-bottom: 25px; border-bottom: 2px solid var(--light-purple); padding-bottom: 15px;}
+.info-header h2 { color: var(--primary-purple); margin: 0 0 10px 0; font-size: 1.4rem; }
+.info-lead { font-size: 0.95rem; color: #555; font-weight: 500; }
+
+.info-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;
+}
+.info-card {
+    background: #f8f9fa; border-radius: 12px; padding: 20px;
+    border-left: 4px solid var(--primary-purple);
+}
+.info-card h4 { color: var(--primary-purple); margin: 0 0 15px 0; display: flex; align-items: center; gap: 10px; }
+.info-list { list-style: none; padding: 0; margin: 0; }
+.info-list li {
+    font-size: 0.85rem; margin-bottom: 8px; padding-left: 15px; position: relative; color: #444; line-height: 1.4;
+}
+.info-list li::before { content: '•'; color: var(--alert-orange); position: absolute; left: 0; font-weight: bold; }
+
+.start-btn {
+    display: block; width: 100%; max-width: 250px; margin: 0 auto;
+    padding: 15px; background: var(--primary-purple); color: white;
+    border: none; border-radius: 30px; font-weight: bold; cursor: pointer;
+    font-size: 1rem; box-shadow: 0 5px 15px rgba(111, 66, 193, 0.3);
+    transition: 0.3s;
+}
+.start-btn:hover { transform: scale(1.05); background: #5a32a3; }
+
+/* Botón flotante de info (Toggle) */
+.info-toggle-btn {
+    position: absolute; top: 20px; right: 20px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: white; color: var(--primary-purple);
+    border: 2px solid var(--primary-purple);
+    font-weight: bold; font-family: serif; font-size: 1.2rem;
+    cursor: pointer; z-index: 50;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+.info-toggle-btn:hover { background: var(--primary-purple); color: white; }
+
+/* --- FEEDBACK SCREEN (Correcto/Incorrecto) --- */
+.feedback-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255,255,255,0.96); z-index: 50;
+    display: none; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding: 20px;
+}
+.next-btn {
+    background: var(--primary-purple); color: white; padding: 12px 30px; 
+    border-radius: 30px; border: none; cursor: pointer; font-size: 1rem;
+}
+
+/* MEDIA QUERIES */
+@media (max-width: 768px) {
+    .info-grid { grid-template-columns: 1fr; } /* Info en 1 columna en móvil */
+    .header-title { font-size: 1.3rem; }
+    .decision-controls { flex-direction: column; }
+    .decision-btn { width: 100%; }
+}
+
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+</style>
+
+<div id="route-builder-container">
+    <div class="wave" style="top: -50%; left: -25%;"></div>
+    <div class="wave"></div>
+
+    <!-- BOTÓN FLOTANTE INFO -->
+    <button class="info-toggle-btn" onclick="openInfo()" title="Ver Información Teórica">i</button>
+
+    <!-- OVERLAY DE INFORMACIÓN (INICIO / AYUDA) -->
+    <div class="info-overlay" id="info-modal">
+        <div class="info-content">
+            <div class="info-header">
+                <h2>PREVENCIÓN INTEGRAL</h2>
+                <p class="info-lead">Fortalecimiento de redes de apoyo, espacios seguros, educación en derechos y rutas claras.</p>
+            </div>
+            
+            <div class="info-grid">
+                <!-- Columna Personal/Comunitaria -->
+                <div class="info-card">
+                    <h4>🤝 Ámbito Personal y Comunitario</h4>
+                    <ul class="info-list">
+                        <li>Rutas de apoyo y redes solidarias.</li>
+                        <li>Espacios seguros para mujeres y población LGBTIQ+.</li>
+                        <li>Educación sobre consentimiento y derechos.</li>
+                        <li>Identificación temprana de relaciones de control.</li>
+                    </ul>
+                </div>
+
+                <!-- Columna Institucional -->
+                <div class="info-card">
+                    <h4>🏛️ Ámbito Institucional</h4>
+                    <ul class="info-list">
+                        <li>Protocolos con enfoque de género e interseccionalidad.</li>
+                        <li>Capacitación permanente del personal.</li>
+                        <li>Rutas claras de atención y denuncia.</li>
+                        <li>Evaluaciones de riesgo con enfoque territorial.</li>
+                        <li>Prevención de la violencia institucional y revictimización.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button class="start-btn" onclick="closeInfo()">ENTENDIDO, INICIAR JUEGO</button>
+        </div>
+    </div>
+
+    <!-- JUEGO -->
+    <div class="header-box">
+        <h2 class="header-title">Construcción de Rutas</h2>
+        <p class="header-subtitle">Clasifica los conceptos según lo aprendido para crear una ruta segura.</p>
+    </div>
+
+    <div class="game-area">
+        <div class="reflection-card" id="current-card">
+            <div class="card-content">
+                <h3 id="card-title">...</h3>
+                <p id="card-desc">...</p>
+            </div>
+        </div>
+
+        <div class="decision-controls">
+            <button class="decision-btn btn-critical" onclick="makeDecision('critico')">⚠️ Punto Crítico</button>
+            <button class="decision-btn btn-good" onclick="makeDecision('buena')">✅ Buena Práctica</button>
+            <button class="decision-btn btn-improve" onclick="makeDecision('mejora')">🛠️ Acción de Mejora</button>
+        </div>
+    </div>
+
+    <div class="route-visualizer">
+        <div class="route-track">
+            <div class="route-progress-bar" id="progress-bar"></div>
+            <!-- 6 Nodos -->
+            <div class="route-node" id="node-0"></div>
+            <div class="route-node" id="node-1"></div>
+            <div class="route-node" id="node-2"></div>
+            <div class="route-node" id="node-3"></div>
+            <div class="route-node" id="node-4"></div>
+            <div class="route-node" id="node-5"></div>
+        </div>
+    </div>
+
+    <!-- FEEDBACK -->
+    <div class="feedback-overlay" id="feedback-screen">
+        <div id="fb-icon" style="font-size: 3rem; margin-bottom: 15px;">✨</div>
+        <div class="feedback-text" id="fb-text">Correcto</div>
+        <button class="next-btn" onclick="nextCard()">Continuar</button>
+    </div>
+
+</div>
+
+<script>
+// --- GESTIÓN DE LA INFORMACIÓN ---
+function closeInfo() {
+    gsap.to("#info-modal", { opacity: 0, duration: 0.5, onComplete: () => {
+        document.getElementById("info-modal").style.display = "none";
+    }});
+}
+
+function openInfo() {
+    const modal = document.getElementById("info-modal");
+    modal.style.display = "flex";
+    gsap.to(modal, { opacity: 1, duration: 0.3 });
+}
+
+// --- DATOS DEL JUEGO ---
+const gameData = [
+    {
+        title: "Revictimización",
+        desc: "Hacer que la víctima reviva el trauma innecesariamente durante la atención.",
+        type: "critico",
+        feedback: "Correcto. Es un PUNTO CRÍTICO que daña la confianza en la institución y debe eliminarse."
+    },
+    {
+        title: "Protocolos con enfoque de género",
+        desc: "Guías de atención que reconocen las desigualdades y necesidades específicas.",
+        type: "buena",
+        feedback: "Exacto. Es una BUENA PRÁCTICA fundamental para garantizar derechos."
+    },
+    {
+        title: "Violencia Institucional",
+        desc: "Trato negligente, discriminatorio o deshumanizante por funcionarios.",
+        type: "critico",
+        feedback: "Bien identificado. La violencia institucional es un obstáculo CRÍTICO en la ruta."
+    },
+    {
+        title: "Capacitación permanente",
+        desc: "Formación constante del personal (no solo una vez) en DDHH.",
+        type: "mejora",
+        feedback: "Correcto. Es una ACCIÓN DE MEJORA necesaria para evitar errores en la atención."
+    },
+    {
+        title: "Rutas claras de atención",
+        desc: "Información accesible sobre dónde y cómo denunciar.",
+        type: "buena",
+        feedback: "Sí. La claridad en la información es una BUENA PRÁCTICA que agiliza la protección."
+    },
+    {
+        title: "Enfoque territorial",
+        desc: "Adaptar la evaluación de riesgo al contexto local específico.",
+        type: "mejora",
+        feedback: "Exacto. Superar evaluaciones genéricas es una ACCIÓN DE MEJORA clave."
+    }
+];
+
+let currentIndex = 0;
+
+// INICIO DEL JUEGO
+function loadCard() {
+    const card = document.getElementById('current-card');
+    const title = document.getElementById('card-title');
+    const desc = document.getElementById('card-desc');
+    
+    gsap.fromTo(card, {y: 20, opacity: 0}, {y: 0, opacity: 1, duration: 0.4});
+    title.innerText = gameData[currentIndex].title;
+    desc.innerText = gameData[currentIndex].desc;
+}
+
+function makeDecision(choice) {
+    const correctType = gameData[currentIndex].type;
+    const feedbackScreen = document.getElementById('feedback-screen');
+    const fbText = document.getElementById('fb-text');
+    const fbIcon = document.getElementById('fb-icon');
+
+    if (choice === correctType) {
+        fbIcon.innerText = "✨";
+        fbText.innerText = gameData[currentIndex].feedback;
+        fbText.style.color = "var(--primary-purple)";
+        updateProgress();
+    } else {
+        fbIcon.innerText = "🤔";
+        fbText.innerText = "Revisa la información (botón 'i'). Intenta clasificarlo de nuevo.";
+        fbText.style.color = "#d63384";
+    }
+    
+    feedbackScreen.style.display = 'flex';
+    gsap.from(feedbackScreen, {opacity: 0, duration: 0.2});
+}
+
+function nextCard() {
+    document.getElementById('feedback-screen').style.display = 'none';
+    currentIndex++;
+    if (currentIndex < gameData.length) {
+        loadCard();
+    } else {
+        finishGame();
+    }
+}
+
+function updateProgress() {
+    const percent = ((currentIndex + 1) / gameData.length) * 100;
+    document.getElementById('progress-bar').style.width = percent + "%";
+    document.getElementById(`node-${currentIndex}`).classList.add('active');
+}
+
+function finishGame() {
+    const card = document.getElementById('current-card');
+    card.innerHTML = `<h3 style='color:var(--success-teal)'>¡Ruta Construida!</h3><p>Has aplicado correctamente los conceptos de prevención.</p><div style='font-size:3rem; margin-top:10px'>🛡️</div>`;
+    document.querySelector('.decision-controls').style.display = 'none';
+    gsap.to("#route-builder-container", {background: "linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)", duration: 1});
+}
+
+// Iniciar cargando la primera tarjeta
+loadCard();
+</script>

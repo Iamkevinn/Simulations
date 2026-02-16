@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caso 4: Monitor Táctico</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* =========================================
+       1. VARIABLES Y BASE TÁCTICA (MODO CLARO 25N)
+       ========================================= */
+    * { box-sizing: border-box; }
+
+:root {
+    /* Fondos */
+    --radar-bg: #F4F6F9;          /* Fondo claro base */
+    --radar-card: #FFFFFF;        /* Tarjetas blancas */
+
+    /* Acentos Institucionales */
+    --radar-green: #480241;       /* Morado UNP (Principal) */
+    --radar-dim: rgba(72, 2, 65, 0.1); /* Sombra morada suave */
+    --alert-amber: #FF9800;       /* Naranja (Alertas / Iconos) */
+    --text-color: #333333;        /* Texto principal oscuro */
+    --scan-line: rgba(254, 200, 47, 0.5);  /* Línea de escaneo amarilla */
+    --accent-yellow: #FEC82F;     /* Amarillo (Detalles) */
+    
+    /* Bordes */
+    --border-color: #E0E0E0;
+}
+
+
+    body {
+        margin: 0;
+        font-family: 'Chakra Petch', sans-serif;
+        background-color: var(--radar-bg);
+        color: var(--text-color);
+        overflow-x: hidden;
+        min-height: 100vh;
+        padding-bottom: 50px;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* =========================================
+       2. FONDO ANIMADO (RADAR & TOPOGRAFÍA - CLARO)
+       ========================================= */
+    .tactical-bg {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: -1;
+        background: 
+            radial-gradient(circle at 50% 50%, #ffffff 0%, transparent 60%),
+            repeating-linear-gradient(0deg, transparent, transparent 49px, var(--radar-dim) 50px),
+            repeating-linear-gradient(90deg, transparent, transparent 49px, var(--radar-dim) 50px);
+        background-size: 100% 100%, 50px 50px, 50px 50px;
+    }
+
+    /* Radar de fondo giratorio (Sutil) */
+    .radar-sweep-bg {
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 150vmax; height: 150vmax;
+        transform: translate(-50%, -50%);
+        background: conic-gradient(from 0deg, transparent 0deg, rgba(72, 2, 65, 0.03) 30deg, transparent 60deg);
+        border-radius: 50%;
+        animation: radarSpin 15s infinite linear;
+        pointer-events: none;
+    }
+
+    @keyframes radarSpin {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Movimiento de grilla vertical */
+    .grid-move {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-image: linear-gradient(0deg, transparent 24%, rgba(72, 2, 65, .02) 25%, rgba(72, 2, 65, .02) 26%, transparent 27%, transparent 74%, rgba(72, 2, 65, .02) 75%, rgba(72, 2, 65, .02) 76%, transparent 77%, transparent);
+        background-size: 50px 50px;
+        animation: gridScroll 20s linear infinite;
+    }
+
+    @keyframes gridScroll {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(50px); }
+    }
+
+    /* =========================================
+       3. INTERFAZ DEL MONITOR
+       ========================================= */
+    .monitor-container {
+        width: 100%;
+        max-width: 800px;
+        padding: 20px;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* HEADER DE LOGOS (NUEVO) */
+    .logos-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+    }
+
+    .client-logo {
+        height: 120px; 
+        width: auto;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+    .client-logo:hover { transform: scale(1.05); }
+
+
+    /* HEADER TÁCTICO */
+    .monitor-header {
+        border: 1px solid var(--border-color);
+        border-top: 4px solid var(--radar-green); /* Borde superior morado */
+        background: #FFFFFF;
+        padding: 25px;
+        margin-bottom: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+    }
+
+    /* Línea de escaneo dentro del header */
+    .monitor-header::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 3px;
+        background: var(--scan-line);
+        box-shadow: 0 0 8px var(--scan-line);
+        animation: scanDown 4s infinite linear;
+        opacity: 0.6;
+    }
+
+    @keyframes scanDown {
+        0% { top: -10%; opacity: 0; }
+        10% { opacity: 0.8; }
+        90% { opacity: 0.8; }
+        100% { top: 110%; opacity: 0; }
+    }
+
+    .monitor-header h1 {
+        font-family: 'Share Tech Mono', monospace;
+        margin: 0 0 15px 0;
+        font-size: 1.6rem;
+        color: var(--radar-green);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+    }
+
+    .monitor-header p {
+        margin: 0;
+        font-size: 1rem;
+        color: #555;
+        line-height: 1.6;
+        max-width: 95%;
+    }
+
+    /* =========================================
+       4. CONTEXTO DE ANÁLISIS
+       ========================================= */
+    .analysis-panel {
+        background: #FFF8E1; /* Fondo crema suave */
+        border-left: 5px solid var(--alert-amber); /* Borde naranja */
+        padding: 20px;
+        margin-bottom: 40px;
+        position: relative;
+        border-radius: 0 8px 8px 0;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .panel-label {
+        font-family: 'Share Tech Mono', monospace;
+        color: var(--radar-green); /* Morado */
+        font-size: 0.85rem;
+        margin-bottom: 10px;
+        display: block;
+        font-weight: 700;
+    }
+
+    .typing-effect {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #333;
+        border-right: 2px solid var(--radar-green);
+        animation: blinkCursor 0.75s step-end infinite;
+        font-family: 'Share Tech Mono', monospace;
+    }
+
+    @keyframes blinkCursor { 0%, 100% { border-color: transparent; } 50% { border-color: var(--radar-green); } }
+
+    /* =========================================
+       5. INTERACCIÓN: PREGUNTAS ORIENTADORAS
+       ========================================= */
+    .questions-zone {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .zone-title {
+        font-family: 'Share Tech Mono';
+        color: var(--radar-green);
+        text-align: center;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background: #fff;
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 4px;
+        border: 1px solid #eee;
+        align-self: center;
+    }
+
+    /* TARJETAS DE DATOS ENCRIPTADOS */
+    .data-card {
+        background: #FFFFFF;
+        border: 1px solid var(--border-color);
+        padding: 0; 
+        position: relative;
+        cursor: pointer;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        min-height: 80px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+
+    .data-card:hover {
+        border-color: var(--radar-green);
+        box-shadow: 0 5px 15px rgba(72, 2, 65, 0.1);
+        transform: translateY(-2px);
+    }
+
+    /* ESTADO BLOQUEADO (Overlay) */
+    .card-locked {
+        padding: 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #FAFAFA;
+    }
+
+    .lock-icon { font-size: 1.2rem; color: #999; transition: 0.3s; }
+    .card-title { font-family: 'Share Tech Mono'; color: var(--radar-green); font-size: 1rem; font-weight: 700; }
+    
+    .data-card:hover .lock-icon { color: var(--alert-amber); } /* Icono naranja al hover */
+
+    /* ESTADO REVELADO (Contenido) */
+    .card-content {
+        background: #FFFFFF;
+        padding: 25px;
+        color: #333;
+        font-size: 1rem;
+        line-height: 1.6;
+        font-weight: 500;
+        display: none; 
+        animation: decodeText 0.5s ease-out;
+        border-left: 5px solid var(--radar-green); /* Borde morado */
+    }
+
+    .data-card.active .card-locked { display: none; }
+    .data-card.active .card-content { display: block; }
+    .data-card.active { border-color: var(--radar-green); box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+
+    @keyframes decodeText {
+        0% { opacity: 0; transform: translateX(-10px); }
+        100% { opacity: 1; transform: translateX(0); }
+    }
+
+    /* DECORACIÓN VISUAL (Esquinas) */
+    .corner-decor {
+        position: absolute;
+        width: 0; height: 0; /* Ocultas por defecto para limpieza */
+        border: 2px solid var(--alert-amber); /* Naranja */
+        transition: 0.3s;
+        opacity: 0;
+    }
+    .tl { top: 0; left: 0; border-right: none; border-bottom: none; border-radius: 4px 0 0 0; }
+    .br { bottom: 0; right: 0; border-left: none; border-top: none; border-radius: 0 0 4px 0; }
+
+    .data-card:hover .corner-decor { width: 15px; height: 15px; opacity: 1; }
+
+    /* =========================================
+       6. RESPONSIVE
+       ========================================= */
+    @media (max-width: 600px) {
+        .monitor-header h1 { font-size: 1.3rem; }
+        .monitor-header p { font-size: 0.9rem; }
+        .data-card { min-height: 70px; }
+        .logos-header { gap: 15px; }
+        .client-logo { height: 85px; }
+    }
+</style>
+</head>
+<body>
+
+<!-- Fondo Táctico Animado -->
+<div class="tactical-bg">
+    <div class="grid-move"></div>
+    <div class="radar-sweep-bg"></div>
+</div>
+
+<div class="monitor-container">
+    
+    <!-- LOGOS DEL CLIENTE -->
+    <div class="logos-header">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+        <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo">
+    </div>
+
+    <!-- HEADER CON ESCANEO -->
+    <header class="monitor-header">
+        <h1>CASO 4: Lideresas firmantes y defensoras del Acuerdo de Paz</h1>
+        <p>Se analiza la situación de riesgo de mujeres y personas LGBTIQ+ defensoras de la paz, así como las respuestas institucionales de protección.</p>
+    </header>
+
+    <!-- PANEL DE ANÁLISIS -->
+    <div class="analysis-panel">
+        <span class="panel-label">/// ESTADO DEL SISTEMA:</span>
+        <div class="typing-effect">
+            MONITOREANDO RESPUESTAS INSTITUCIONALES... <br>
+            OBJETIVO DETECTADO: MUJERES Y POBLACIÓN LGBTIQ+ EN RIESGO.
+        </div>
+    </div>
+
+    <!-- ZONA DE PREGUNTAS (GAMIFICACIÓN) -->
+    <div class="questions-zone">
+        <div class="zone-title">/// PREGUNTAS ORIENTADORAS [ACCESO REQUERIDO]</div>
+
+        <!-- Pregunta 1 -->
+        <div class="data-card" onclick="decryptData(this)">
+            <div class="corner-decor tl"></div>
+            <div class="corner-decor br"></div>
+            
+            <div class="card-locked">
+                <span class="card-title">INTERROGANTE 01</span>
+                <i class="fas fa-lock lock-icon"></i>
+            </div>
+            
+            <div class="card-content">
+                ¿Qué riesgos específicos enfrentan?
+            </div>
+        </div>
+
+        <!-- Pregunta 2 -->
+        <div class="data-card" onclick="decryptData(this)">
+            <div class="corner-decor tl"></div>
+            <div class="corner-decor br"></div>
+            
+            <div class="card-locked">
+                <span class="card-title">INTERROGANTE 02</span>
+                <i class="fas fa-lock lock-icon"></i>
+            </div>
+            
+            <div class="card-content">
+                ¿Qué falencias se presentan en la protección?
+            </div>
+        </div>
+
+        <!-- Pregunta 3 -->
+        <div class="data-card" onclick="decryptData(this)">
+            <div class="corner-decor tl"></div>
+            <div class="corner-decor br"></div>
+            
+            <div class="card-locked">
+                <span class="card-title">INTERROGANTE 03</span>
+                <i class="fas fa-lock lock-icon"></i>
+            </div>
+            
+            <div class="card-content">
+                ¿Cómo incorporar el enfoque de género en los esquemas de protección?
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    function decryptData(card) {
+        // Evita volver a ejecutar si ya está abierto
+        if (card.classList.contains('active')) return;
+
+        // Feedback táctil (Vibración en móviles Android)
+        if (navigator.vibrate) navigator.vibrate(50);
+
+        // Sonido UI simulado visualmente (Flash del borde)
+        card.style.borderColor = "#FF9800"; // Flash Naranja
+        setTimeout(() => {
+            card.style.borderColor = ""; 
+        }, 150);
+
+        // Activar clase para mostrar contenido
+        card.classList.add('active');
+    }
+</script>
+
+</body>
+</html>

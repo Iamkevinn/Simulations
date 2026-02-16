@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ley 2365 - Responsive</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           1. RESET Y VARIABLES GLOBALES
+           ========================================= */
+        * {
+            box-sizing: border-box; /* Vital para que el padding no rompa el diseño */
+        }
+:root {
+    --law-blue: #170047;    /* Institucional principal */
+    --law-gold: #FEC82F;    /* Justicia / énfasis */
+    --paper-white: #f8fafc;/* Mantener blanco editorial */
+    --text-dark: #170047;  /* Texto principal */
+    --text-light: #480241; /* Texto secundario */
+    --success: #EE7D4F;    /* Éxito / avance (no error) */
+    --shadow-soft: 0 10px 40px -10px rgba(23, 0, 71, 0.15);
+    --shadow-hover: 0 20px 50px -10px rgba(23, 0, 71, 0.25);
+}
+
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Lato', sans-serif;
+        }
+
+        /* =========================================
+           2. ESTRUCTURA PRINCIPAL
+           ========================================= */
+        .legal-desk-wrapper {
+            position: relative;
+            background: #f1f5f9;
+            color: var(--text-dark);
+            padding: 60px 20px;
+            overflow: hidden;
+            min-height: 100vh; /* Ocupar toda la pantalla */
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Fondo Animado */
+        .wave-bg {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(30, 58, 138, 0.03) 0%, transparent 60%);
+            top: -50%; left: -50%;
+            border-radius: 40%;
+            animation: rotateWave 15s infinite linear;
+            z-index: 0;
+            pointer-events: none; /* Para que no interfiera con clicks */
+        }
+        .w2 { animation-duration: 20s; opacity: 0.5; background: radial-gradient(circle, rgba(217, 119, 6, 0.03) 0%, transparent 50%); }
+        .w3 { animation-duration: 25s; animation-direction: reverse; }
+
+        @keyframes rotateWave {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .desk-container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* =========================================
+           3. HEADER Y PROGRESO
+           ========================================= */
+        .legal-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .badge-law {
+            display: inline-block;
+            background: var(--law-blue);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.2);
+        }
+
+        .legal-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem); /* Tipografía fluida */
+            color: var(--law-blue);
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-top: 10px;
+        }
+
+        .audit-progress {
+            max-width: 500px;
+            margin: 30px auto 0;
+            text-align: left;
+        }
+
+        .audit-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--law-blue);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .track {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--law-blue), var(--law-gold));
+            transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* =========================================
+           4. GRID Y TARJETAS (EL CORAZÓN DEL FIX)
+           ========================================= */
+        .docket-grid {
+            display: grid;
+            /* El minmax(300px) asegura que bajen de línea si no caben */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+            align-items: start; /* Evita que las tarjetas vacías se estiren innecesariamente */
+        }
+
+        .docket-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            cursor: pointer;
+            overflow: hidden; 
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            /* Altura fija solo para escritorio para mantener uniformidad */
+            min-height: 420px; 
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e2e8f0;
+        }
+
+        .docket-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--law-gold);
+        }
+
+        /* --- ESTADO CERRADO (PORTADA) --- */
+        .docket-cover {
+            padding: 40px 20px;
+            text-align: center;
+            background: linear-gradient(to bottom, #fff, #f8fafc);
+            /* Ocupa todo el espacio disponible */
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .folder-tab {
+            position: absolute;
+            top: 0; left: 0;
+            background: #e2e8f0;
+            padding: 5px 15px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-light);
+            border-bottom-right-radius: 10px;
+        }
+
+        .icon-cover {
+            font-size: 4rem;
+            color: var(--law-blue);
+            margin-bottom: 25px;
+            opacity: 0.8;
+        }
+
+        .docket-cover h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin: 0 0 15px 0;
+        }
+
+        .click-hint {
+            font-size: 0.8rem;
+            color: var(--law-gold);
+            font-weight: 700;
+            text-transform: uppercase;
+            animation: pulseText 2s infinite;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* --- ESTADO ABIERTO (CONTENIDO) --- */
+        .docket-content {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            padding: 30px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow-y: auto; /* Scroll interno en escritorio si es necesario */
+            display: flex;
+            flex-direction: column;
+            z-index: 20;
+        }
+
+        /* CLASE 'OPENED' (JS) */
+        .docket-card.opened .docket-cover {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .docket-card.opened .docket-content {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        /* Estilos internos del contenido */
+        .docket-content h4 {
+            color: var(--law-blue);
+            margin-top: 0;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .docket-content p, .docket-content li {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .docket-content ul {
+            padding-left: 20px;
+            margin-top: 0;
+        }
+
+        .note-box {
+            background: #fffbeb;
+            border-left: 4px solid var(--law-gold);
+            padding: 10px;
+            font-size: 0.9rem;
+            margin: 10px 0;
+            color: #92400e;
+        }
+
+        .citation {
+            margin-top: auto; /* Empuja al fondo */
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-style: italic;
+            text-align: right;
+            padding-top: 15px;
+        }
+
+        .stamp-seal {
+            margin-top: 15px;
+            color: var(--success);
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 2px solid var(--success);
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 8px;
+            align-self: flex-start;
+            font-size: 0.8rem;
+            transform: rotate(-5deg);
+            opacity: 0;
+            transition: 0.5s;
+            transition-delay: 0.3s;
+        }
+
+        .docket-card.opened .stamp-seal {
+            opacity: 1;
+            transform: rotate(-2deg) scale(1);
+        }
+
+        /* =========================================
+           5. MENSAJE DE ÉXITO
+           ========================================= */
+        .completion-banner {
+            background: white;
+            border-left: 5px solid var(--success);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: var(--shadow-hover);
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 0.5s;
+            pointer-events: none;
+        }
+
+        .completion-banner.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .banner-icon {
+            font-size: 2.5rem;
+            color: var(--success);
+        }
+
+        .banner-text h3 { margin: 0; color: var(--law-blue); font-size: 1.1rem; }
+        .banner-text p { margin: 5px 0 0 0; color: var(--text-light); font-size: 0.9rem; }
+
+        /* =========================================
+           6. RESPONSIVE (SOLUCIÓN CLAVE)
+           ========================================= */
+        @media (max-width: 992px) {
+            .legal-header h1 { font-size: 2.5rem; }
+            
+            /* Ajuste de grid para móviles */
+            .docket-grid { 
+                grid-template-columns: 1fr; /* Una sola columna */
+                max-width: 500px;
+                margin-left: auto;
+                margin-right: auto;
+            } 
+
+            /* Ajuste de comportamiento de la tarjeta */
+            .docket-card {
+                min-height: auto; /* Ya no forzamos altura fija */
+                height: auto;     /* Dejamos que crezca con el contenido */
+            }
+
+            /* La portada en móvil es relativa, ocupa espacio real */
+            .docket-cover {
+                position: relative; 
+                height: 300px; /* Altura inicial atractiva */
+            }
+
+            /* El contenido en móvil deja de ser absoluto */
+            .docket-content { 
+                position: relative; 
+                opacity: 1; 
+                transform: none; 
+                display: none; /* Oculto inicialmente */
+                padding: 25px;
+                height: auto; /* Crece todo lo que necesite */
+                overflow: visible; /* Sin scroll interno feo */
+            }
+
+            /* Lógica de apertura en móvil */
+            .docket-card.opened .docket-content { 
+                display: flex; /* Aparece y empuja el contenedor */
+                animation: fadeIn 0.5s ease;
+            }
+            
+            .docket-card.opened .docket-cover { 
+                display: none; /* Desaparece por completo */
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* =========================================
+   BARRA DE LOGOS
+   ========================================= */
+.logos-header-bar {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: var(--shadow-soft);
+}
+
+.logos-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+.logos-container img {
+    height: 60px; /* Más grandes para ser predominantes */
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    filter: drop-shadow(0 2px 8px rgba(23, 0, 71, 0.1));
+}
+
+.logos-container img:hover {
+    transform: scale(1.08);
+    filter: drop-shadow(0 4px 12px rgba(23, 0, 71, 0.2));
+}
+
+/* Responsive para logos */
+@media (max-width: 992px) {
+    .logos-container img {
+        height: 50px;
+    }
+    
+    .logos-container {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .logos-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .logos-container img {
+        height: 45px;
+    }
+    
+    .logos-header-bar {
+        padding: 15px;
+    }
+}
+    </style>
+</head>
+<body>
+
+<div class="legal-desk-wrapper">
+    <!-- Fondo Animado -->
+    <div class="wave-bg"></div>
+    <div class="wave-bg w2"></div>
+    <div class="wave-bg w3"></div>
+
+    <div class="desk-container">
+        
+            <!-- BARRA DE LOGOS -->
+    <div class="logos-header-bar">
+        <div class="logos-container">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP">
+            <img src="../Styles/logo.png" alt="Logo Comisión">
+        </div>
+    </div>
+
+        <!-- HEADER -->
+        <header class="legal-header">
+            <div class="badge-law">NORMATIVA VIGENTE</div>
+            <h1>Ley 2365 de 2024</h1>
+            <p class="subtitle">Prevención, Protección y Atención del Acoso Sexual</p>
+            
+            <div class="audit-progress">
+                <div class="audit-label">PROGRESO DE REVISIÓN: <span id="audit-percent">0/3</span> EXPEDIENTES</div>
+                <div class="track">
+                    <div class="bar" id="audit-bar"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- GRID DE EXPEDIENTES -->
+        <div class="docket-grid">
+            
+            <!-- EXPEDIENTE 1 -->
+            <div class="docket-card" onclick="openDocket(this, 1)">
+                <div class="docket-cover">
+                    <div class="folder-tab">EXP-01</div>
+                    <i class="fas fa-scale-balanced icon-cover"></i>
+                    <h3>Propósito y Definición</h3>
+                    <p class="click-hint">Toca para abrir expediente</p>
+                </div>
+                <div class="docket-content">
+                    <h4>¿Qué es y cuál es su propósito?</h4>
+                    <p>La Ley 2365 de 2024 fue promulgada el 20 de junio de 2024 con el objetivo de garantizar el derecho a la igualdad, la no discriminación y una vida libre de violencias, mediante la adopción de medidas de prevención, protección y atención del acoso sexual tanto en el ámbito laboral como en las instituciones de educación superior (IES) en Colombia.</p>
+                    <div class="citation">Fuente: Cancillería</div>
+                    <div class="stamp-seal"><i class="fas fa-check"></i> REVISADO</div>
+                </div>
+            </div>
+
+            <!-- EXPEDIENTE 2 -->
+            <div class="docket-card" onclick="openDocket(this, 2)">
+                <div class="docket-cover">
+                    <div class="folder-tab">EXP-02</div>
+                    <i class="fas fa-map-location-dot icon-cover"></i>
+                    <h3>Ámbitos de Aplicación</h3>
+                    <p class="click-hint">Toca para abrir expediente</p>
+                </div>
+                <div class="docket-content">
+                    <h4>📍 La ley aplica a situaciones de acoso sexual:</h4>
+                    <ul>
+                        <li>En <strong>contextos laborales</strong>, sin importar el tipo de vinculación (empleados, contratistas, practicantes, etc.).</li>
+                        <li>En <strong>instituciones de educación superior</strong> y centros de formación laboral, incluyendo SENA e IETDH.</li>
+                        <li>Incluye interacciones <strong>presenciales y digitales</strong> relacionadas con labores o actividades de la organización.</li>
+                    </ul>
+                    <div class="citation">Fuente: Función Pública</div>
+                    <div class="stamp-seal"><i class="fas fa-check"></i> REVISADO</div>
+                </div>
+            </div>
+
+            <!-- EXPEDIENTE 3 -->
+            <div class="docket-card" onclick="openDocket(this, 3)">
+                <div class="docket-cover">
+                    <div class="folder-tab">EXP-03</div>
+                    <i class="fas fa-gavel icon-cover"></i>
+                    <h3>Definición Legal</h3>
+                    <p class="click-hint">Toca para abrir expediente</p>
+                </div>
+                <div class="docket-content">
+                    <h4>📍 Definición de acoso sexual:</h4>
+                    <p>Todo acto de persecución, hostigamiento o asedio de carácter o connotación sexual, lasciva o libidinosa, que se dé por relaciones de poder (vertical u horizontal) y que se presente una o varias veces contra otra persona en el contexto laboral o educativo.</p>
+                    <div class="note-box">
+                        <strong>Importante:</strong> El acoso no requiere que exista una relación contractual formal entre víctima y agresor para que la ley sea aplicable.
+                    </div>
+                    <div class="citation">Fuente: Cancillería / Función Pública</div>
+                    <div class="stamp-seal"><i class="fas fa-check"></i> REVISADO</div>
+                </div>
+            </div>
+
+        </div>
+        
+        <!-- MENSAJE DE ÉXITO -->
+        <div id="success-message" class="completion-banner">
+            <div class="banner-icon"><i class="fas fa-certificate"></i></div>
+            <div class="banner-text">
+                <h3>NORMATIVA ASIMILADA</h3>
+                <p>Has completado la revisión de los componentes clave de la Ley 2365.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+let openedCount = 0;
+const totalDockets = 3;
+const statusMap = { 1: false, 2: false, 3: false };
+
+function openDocket(card, id) {
+    // Permite alternar (toggle) si se desea, pero en este caso solo abrimos
+    if (card.classList.contains('opened')) return;
+
+    card.classList.add('opened');
+
+    if (!statusMap[id]) {
+        statusMap[id] = true;
+        openedCount++;
+        updateProgress();
+    }
+}
+
+function updateProgress() {
+    const percent = (openedCount / totalDockets) * 100;
+    document.getElementById('audit-bar').style.width = percent + '%';
+    document.getElementById('audit-percent').innerText = `${openedCount}/${totalDockets}`;
+
+    if (openedCount === totalDockets) {
+        setTimeout(() => {
+            document.getElementById('success-message').classList.add('show');
+        }, 500);
+    }
+}
+</script>
+
+</body>
+</html>

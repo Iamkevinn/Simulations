@@ -1,0 +1,574 @@
+<!-- LIBRERÍAS: GSAP y Fuentes -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+/* --- 1. AMBIENTACIÓN INSTITUCIONAL CLARA --- */
+:root {
+    /* Nueva Paleta CLARA */
+    --law-bg: #F4F6F9;       /* Fondo general gris muy claro/azulado */
+    --law-panel: #FFFFFF;    /* Tarjetas blancas (papel) */
+    --law-primary: #003399;  /* Azul Institucional (UNP) - Énfasis principal */
+    --law-accent: #DA291C;   /* Rojo Institucional - Detalles */
+    --law-gold: #B8860B;     /* Dorado oscuro/Bronce - Justicia */
+    --law-text: #333333;     /* Texto gris oscuro para lectura */
+    --law-text-light: #555555;
+    --border-glow: 0 0 10px rgba(0, 51, 153, 0.2); /* Sombra suave azul */
+}
+
+#codex-container {
+    width: 100%;
+    min-height: 850px; /* Aumenté un poco para los logos */
+    /* Degradado claro: Blanco a Gris suave */
+    background: radial-gradient(circle at top, #FFFFFF 0%, #E2E6EA 100%);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Lato', sans-serif;
+    color: var(--law-text);
+    border-radius: 10px;
+    border: 1px solid #d1d1d1;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Cabecera de Logos */
+.header-logos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(255, 255, 255, 0.8);
+    border-bottom: 2px solid var(--law-gold);
+    z-index: 20;
+    backdrop-filter: blur(5px);
+}
+
+.client-logo {
+    height: 120px; /* Altura base */
+    width: auto;
+    max-width: 40%; /* Para que no se choquen en móviles */
+    object-fit: contain;
+    transition: 0.3s;
+}
+
+/* Fondo animado (Símbolos Legales) */
+.legal-symbol {
+    position: absolute;
+    /* Cambio a gris suave para que se vea en fondo blanco */
+    color: rgba(0, 0, 0, 0.04); 
+    font-family: 'Cinzel', serif;
+    font-weight: bold;
+    user-select: none;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* --- 2. NAVEGACIÓN --- */
+.codex-nav {
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+    background: rgba(255,255,255,0.9);
+    border-bottom: 1px solid #e0e0e0;
+    z-index: 10;
+    gap: 20px;
+}
+
+.nav-btn {
+    background: transparent;
+    border: 1px solid var(--law-primary);
+    color: var(--law-primary);
+    padding: 10px 25px;
+    font-family: 'Cinzel', serif;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.4s;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    font-size: 0.9rem;
+}
+
+.nav-btn::after {
+    content: ''; position: absolute; top:0; left:0; width:0; height:100%;
+    background: var(--law-primary); transition: 0.4s; z-index: -1;
+}
+.nav-btn:hover::after, .nav-btn.active::after { width: 100%; }
+.nav-btn:hover, .nav-btn.active { 
+    color: white; 
+    box-shadow: 0 4px 15px rgba(0, 51, 153, 0.3); 
+}
+
+/* --- 3. SECCIONES (PANELES) --- */
+.codex-section {
+    flex: 1;
+    display: none; /* Controlado por JS */
+    padding: 20px;
+    position: relative;
+    z-index: 5;
+    animation: fadeIn 0.8s ease-out;
+    overflow-y: auto;
+}
+.codex-section.active { display: flex; flex-direction: column; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- VISTA 1: EL ARCHIVO (MARCO NORMATIVO) --- */
+.archive-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+    height: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Lista Lateral */
+.law-list {
+    background: var(--law-panel);
+    border: 1px solid #ddd;
+    border-right: 4px solid var(--law-gold);
+    overflow-y: auto;
+    max-height: 600px;
+    padding-right: 0px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+}
+.law-list::-webkit-scrollbar { width: 5px; }
+.law-list::-webkit-scrollbar-thumb { background: var(--law-gold); }
+
+.law-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 0.9rem;
+    color: var(--law-text-light);
+}
+/* Hover suave azulado */
+.law-item:hover { background: rgba(0, 51, 153, 0.05); padding-left: 20px; color: var(--law-primary); }
+.law-item.selected { 
+    background: var(--law-primary); 
+    color: white; 
+    border-left: 5px solid var(--law-gold); 
+}
+.law-item strong { display: block; font-family: 'Cinzel', serif; margin-bottom: 5px; }
+
+/* Visor Holográfico / Documento */
+.law-viewer {
+    background: #FFFFFF;
+    border: 1px solid #ccc;
+    padding: 40px;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-image: linear-gradient(#f1f1f1 1px, transparent 1px);
+    background-size: 100% 30px; /* Efecto hoja rayada sutil */
+}
+
+/* Efecto de escaneo (Color azul ahora) */
+.scan-line {
+    position: absolute; top:0; left:0; width:100%; height:2px;
+    background: var(--law-primary);
+    box-shadow: 0 0 15px var(--law-primary);
+    animation: scanDoc 3s infinite ease-in-out;
+    opacity: 0.3; pointer-events: none;
+}
+@keyframes scanDoc { 0% { top: 0%; opacity: 0; } 50% { opacity: 0.8; } 100% { top: 100%; opacity: 0; } }
+
+.law-title-display {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+    color: var(--law-primary);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--law-gold);
+    padding-bottom: 10px;
+    background: #fff; /* Para tapar las lineas de fondo */
+    display: inline-block;
+}
+.law-content-display { 
+    font-size: 1.1rem; 
+    line-height: 1.8; 
+    background: rgba(255,255,255,0.9);
+    padding: 20px;
+}
+
+/* --- VISTA 2: JUEGO 6 (EL JUEZ) --- */
+.game-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.case-file {
+    background: #fff;
+    color: #000;
+    padding: 40px;
+    width: 100%;
+    max-width: 600px;
+    transform: rotate(-1deg);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Sombra más realista */
+    margin-bottom: 40px;
+    position: relative;
+    font-family: 'Courier New', monospace;
+    border: 1px solid #ccc;
+}
+.case-stamp {
+    position: absolute; top: 20px; right: 20px;
+    border: 3px solid var(--law-accent); /* Rojo */
+    color: var(--law-accent);
+    padding: 5px 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transform: rotate(15deg);
+    opacity: 0.7;
+}
+
+.gavel-area {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+    width: 100%;
+}
+
+.law-chip {
+    background: #fff;
+    border: 1px solid var(--law-primary);
+    color: var(--law-primary);
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    font-weight: bold;
+}
+.law-chip:hover { 
+    background: var(--law-primary); 
+    color: white; 
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 51, 153, 0.2);
+}
+.law-chip.correct { 
+    background: var(--law-gold); 
+    color: white; 
+    border-color: var(--law-gold); 
+    animation: pulseWin 1s infinite; 
+}
+.law-chip.wrong { 
+    background: #ef4444; 
+    color: white;
+    border-color: #ef4444; 
+    animation: shake 0.5s; 
+}
+
+.verdict-modal {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    background: rgba(255,255,255,0.95); /* Fondo blanco semi-transparente */
+    z-index: 50;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+.verdict-title { 
+    font-family: 'Cinzel', serif; 
+    font-size: 2.5rem; 
+    color: var(--law-gold); 
+    margin-bottom: 20px; 
+    text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
+}
+.verdict-text { 
+    font-size: 1.1rem; 
+    max-width: 600px; 
+    margin-bottom: 30px; 
+    color: #333;
+}
+
+/* MEDIA QUERIES */
+@media (max-width: 1200px) {
+    .archive-layout { grid-template-columns: 1fr; }
+    .law-list { max-height: 200px; border-right: none; border-bottom: 4px solid var(--law-gold); }
+    .law-viewer { padding: 20px; }
+    .law-title-display { font-size: 1.5rem; }
+}
+@media (max-width: 600px) {
+    .header-logos { padding: 10px; }
+    .client-logo { height: 85px; }
+}
+
+@keyframes pulseWin { 0% { box-shadow: 0 0 0 0 rgba(184, 134, 11, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(184, 134, 11, 0); } 100% { box-shadow: 0 0 0 0 rgba(184, 134, 11, 0); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+</style>
+
+<div id="codex-container">
+    <!-- Fondo Generado por JS -->
+    <div id="symbol-bg"></div>
+
+    <!-- NUEVO: Cabecera con Logos de Cliente -->
+    <div class="header-logos">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+        <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo">
+    </div>
+
+    <!-- Navegación -->
+    <div class="codex-nav">
+        <button class="nav-btn active" onclick="switchSection('archive')">🏛️ Archivo Normativo</button>
+        <button class="nav-btn" onclick="switchSection('game')">⚖️ Juego 6: El Juez</button>
+    </div>
+
+    <!-- SECCIÓN 1: ARCHIVO NORMATIVO (Contenido Teórico) -->
+    <div id="sec-archive" class="codex-section active">
+        <div class="archive-layout">
+            <!-- Lista de Leyes -->
+            <div class="law-list">
+                <div class="law-item selected" onclick="viewLaw('const', this)">
+                    <strong>Constitución Política 1991</strong>
+                    Arts. 13, 43, 93, 11, 12, 42.
+                </div>
+                <div class="law-item" onclick="viewLaw('1257', this)">
+                    <strong>Ley 1257 de 2008</strong>
+                    Prevención y sanción violencias.
+                </div>
+                <div class="law-item" onclick="viewLaw('1761', this)">
+                    <strong>Ley 1761 de 2015</strong>
+                    Ley Rosa Elvira Cely (Feminicidio).
+                </div>
+                <div class="law-item" onclick="viewLaw('1719', this)">
+                    <strong>Ley 1719 de 2014</strong>
+                    Violencia sexual en conflicto armado.
+                </div>
+                <div class="law-item" onclick="viewLaw('1801', this)">
+                    <strong>Ley 1801 de 2016</strong>
+                    Código Policía: Medidas inmediatas.
+                </div>
+                <div class="law-item" onclick="viewLaw('2175', this)">
+                    <strong>Ley 2175 de 2021</strong>
+                    Paridad de género 50/50.
+                </div>
+                 <div class="law-item" onclick="viewLaw('1542', this)">
+                    <strong>Decreto Ley 1542 de 2012</strong>
+                    Violencia intrafamiliar.
+                </div>
+                <div class="law-item" onclick="viewLaw('1941', this)">
+                    <strong>Ley 1941 de 2018</strong>
+                    Crímenes por prejuicio.
+                </div>
+            </div>
+
+            <!-- Visor de Detalles -->
+            <div class="law-viewer">
+                <div class="scan-line"></div>
+                <div id="law-display-title" class="law-title-display">Constitución Política de 1991</div>
+                <div id="law-display-content" class="law-content-display">
+                    <ul>
+                        <li><strong>Art. 13:</strong> Igualdad y no discriminación.</li>
+                        <li><strong>Art. 43:</strong> Igualdad entre hombres y mujeres.</li>
+                        <li><strong>Art. 93:</strong> Bloque de constitucionalidad.</li>
+                        <li><strong>Art. 11, 12, 42:</strong> Vida, dignidad y familia.</li>
+                    </ul>
+                    <p style="margin-top:20px; color:var(--law-gold); font-weight: bold;">"La actualización normativa permite a la UNP actuar conforme a los estándares internacionales."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 2: JUEGO 6 (CASOS PRÁCTICOS) -->
+    <div id="sec-game" class="codex-section">
+        <div class="game-layout">
+            <h2 style="color: var(--law-primary); font-family:'Cinzel', serif; text-align:center;">Juego 6: "¿Qué norma aplica?"</h2>
+            <p style="text-align:center; margin-bottom:20px; color: #555;">Analiza el caso y dictamina sentencia seleccionando la norma correcta.</p>
+
+            <!-- Expediente -->
+            <div class="case-file">
+                <div class="case-stamp">CONFIDENCIAL</div>
+                <h3 style="border-bottom: 2px solid black; padding-bottom: 5px;">EXPEDIENTE #00<span id="case-num">1</span></h3>
+                <p id="case-text" style="font-size: 1.1rem; line-height: 1.6; margin-top: 20px;">
+                    <!-- El texto se carga via JS -->
+                    Cargando caso...
+                </p>
+            </div>
+
+            <!-- Opciones (Leyes) -->
+            <div class="gavel-area">
+                <div class="law-chip" onclick="judgeCase('1761', this)">Ley 1761 (Feminicidio)</div>
+                <div class="law-chip" onclick="judgeCase('1257', this)">Ley 1257 (Prevención)</div>
+                <div class="law-chip" onclick="judgeCase('1719', this)">Ley 1719 (Conflicto)</div>
+                <div class="law-chip" onclick="judgeCase('1542', this)">Dec. 1542 (Intrafamiliar)</div>
+                <div class="law-chip" onclick="judgeCase('1941', this)">Ley 1941 (Prejuicio)</div>
+                <div class="law-chip" onclick="judgeCase('2175', this)">Ley 2175 (Paridad)</div>
+            </div>
+        </div>
+
+        <!-- Modal de Veredicto -->
+        <div class="verdict-modal" id="verdict-screen">
+            <div class="verdict-title">⚖️ VEREDICTO CORRECTO</div>
+            <div class="verdict-text" id="verdict-details"></div>
+            <button class="nav-btn" onclick="nextCase()">Siguiente Caso</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// --- 1. GENERADOR DE FONDO AMBIENTAL (Ajustado para Tema Claro) ---
+const bgContainer = document.getElementById('symbol-bg');
+const symbols = ['§', '⚖️', '¶', '🏛️', '📜'];
+
+for(let i=0; i<15; i++) {
+    let el = document.createElement('div');
+    el.classList.add('legal-symbol');
+    el.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+    el.style.left = Math.random() * 100 + '%';
+    el.style.top = Math.random() * 100 + '%';
+    el.style.fontSize = (Math.random() * 30 + 20) + 'px';
+    el.style.opacity = Math.random() * 0.15; // Opacidad ajustada para fondo claro
+    bgContainer.appendChild(el);
+    
+    gsap.to(el, {
+        y: -50, 
+        rotation: 20, 
+        duration: Math.random() * 5 + 5, 
+        yoyo: true, 
+        repeat: -1,
+        ease: "sine.inOut"
+    });
+}
+
+// --- 2. BASE DE DATOS DE LEYES ---
+const lawsDB = {
+    'const': {
+        title: "Constitución Política de 1991",
+        content: "<ul><li><strong>Art. 13:</strong> Igualdad y no discriminación.</li><li><strong>Art. 43:</strong> Igualdad entre hombres y mujeres.</li><li><strong>Art. 93:</strong> Bloque de constitucionalidad.</li><li><strong>Art. 11, 12, 42:</strong> Vida, dignidad y familia.</li></ul>"
+    },
+    '1257': {
+        title: "Ley 1257 de 2008",
+        content: "<p>Normas de sensibilización, prevención y sanción de formas de violencia y discriminación contra las mujeres.</p>"
+    },
+    '1761': {
+        title: "Ley 1761 de 2015 (Rosa Elvira Cely)",
+        content: "<p>Por la cual se crea el tipo penal de feminicidio como delito autónomo.</p>"
+    },
+    '1719': {
+        title: "Ley 1719 de 2014",
+        content: "<p>Medidas para garantizar el acceso a la justicia de las víctimas de violencia sexual con ocasión del conflicto armado.</p>"
+    },
+    '1801': {
+        title: "Ley 1801 de 2016",
+        content: "<p>Código Nacional de Policía: Establece medidas inmediatas de protección para evitar daños graves.</p>"
+    },
+    '2175': {
+        title: "Ley 2175 de 2021",
+        content: "<p>Establece medidas para garantizar la participación paritaria de las mujeres (50/50) en las ramas del poder público.</p>"
+    },
+    '1542': {
+        title: "Decreto Ley 1542 de 2012",
+        content: "<p>Establece que la violencia intrafamiliar NO es desistible. Se debe investigar aunque la víctima retire la denuncia.</p>"
+    },
+    '1941': {
+        title: "Ley 1941 de 2018",
+        content: "<p>Prorroga la Ley 418 y establece disposiciones sobre crímenes motivados por prejuicio y discriminación.</p>"
+    }
+};
+
+// --- 3. LÓGICA DE NAVEGACIÓN ---
+function switchSection(sec) {
+    document.querySelectorAll('.codex-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById('sec-' + sec).classList.add('active');
+    event.target.classList.add('active');
+}
+
+function viewLaw(id, element) {
+    // Highlight sidebar
+    document.querySelectorAll('.law-item').forEach(i => i.classList.remove('selected'));
+    element.classList.add('selected');
+    
+    // Update Content
+    const title = document.getElementById('law-display-title');
+    const content = document.getElementById('law-display-content');
+    
+    gsap.to([title, content], {opacity: 0, duration: 0.2, onComplete: () => {
+        title.innerText = lawsDB[id].title;
+        content.innerHTML = lawsDB[id].content;
+        gsap.to([title, content], {opacity: 1, duration: 0.3});
+    }});
+}
+
+// --- 4. LÓGICA DEL JUEGO (CASOS) ---
+const cases = [
+    {
+        text: "CASO: Una mujer ha sido agredida por su pareja. Días después, ella quiere retirar la denuncia por miedo, pero la Fiscalía insiste en continuar el proceso de oficio.",
+        correct: '1542',
+        explanation: "Correcto. El Decreto Ley 1542 de 2012 elimina el carácter de querellable y desistible de la violencia intrafamiliar."
+    },
+    {
+        text: "CASO: Se investiga el asesinato de una mujer, donde existen antecedentes de violencia instrumental y control por parte del agresor. Se busca tipificarlo no como homicidio simple.",
+        correct: '1761',
+        explanation: "Correcto. La Ley 1761 de 2015 tipifica el Feminicidio como delito autónomo cuando existen antecedentes de dominación."
+    },
+    {
+        text: "CASO: Una mujer víctima del conflicto armado denuncia hechos de violencia sexual ocurridos hace 5 años en una zona de combate.",
+        correct: '1719',
+        explanation: "Correcto. La Ley 1719 de 2014 garantiza el acceso a la justicia para víctimas de violencia sexual en el conflicto armado."
+    }
+];
+
+let currentCaseIndex = 0;
+
+function loadCase() {
+    document.getElementById('case-num').innerText = currentCaseIndex + 1;
+    document.getElementById('case-text').innerText = cases[currentCaseIndex].text;
+    
+    // Reset buttons
+    document.querySelectorAll('.law-chip').forEach(c => {
+        c.classList.remove('correct', 'wrong');
+        c.style.pointerEvents = 'all';
+    });
+}
+
+function judgeCase(lawId, btnElement) {
+    if(lawId === cases[currentCaseIndex].correct) {
+        // Acierto
+        btnElement.classList.add('correct');
+        const modal = document.getElementById('verdict-screen');
+        document.getElementById('verdict-details').innerText = cases[currentCaseIndex].explanation;
+        
+        modal.style.display = 'flex';
+        gsap.from(modal, {opacity: 0, scale: 0.9, duration: 0.3});
+        
+    } else {
+        // Error
+        btnElement.classList.add('wrong');
+        gsap.to(btnElement, {x: 10, duration: 0.1, yoyo: true, repeat: 5});
+    }
+}
+
+function nextCase() {
+    document.getElementById('verdict-screen').style.display = 'none';
+    currentCaseIndex++;
+    if(currentCaseIndex < cases.length) {
+        loadCase();
+    } else {
+        document.getElementById('case-text').innerHTML = "<strong style='color:var(--law-primary)'>¡ENTRENAMIENTO JURÍDICO COMPLETADO!</strong><br>Has demostrado dominio del marco normativo.";
+        document.querySelector('.gavel-area').style.display = 'none';
+    }
+}
+
+// Iniciar
+loadCase();
+
+</script>

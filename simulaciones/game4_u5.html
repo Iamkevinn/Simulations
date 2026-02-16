@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- LIBRERÍAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Dosis:wght@600;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* --- PALETA DE COLORES INSTITUCIONAL (CLARA) --- */
+:root {
+    --bg-body: #f4f6f9;
+    --card-bg: #ffffff;
+    --brand-purple: #480241;
+    --brand-orange: #FF8C00;
+    --brand-yellow: #FEC82F;
+    --brand-magenta: #C2185B;
+    --text-main: #333333;
+    --text-light: #666666;
+    --receipt-paper: #fff;
+    --receipt-ink: #333;
+}
+
+body {
+    margin: 0; padding: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg-body);
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(254, 200, 47, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(194, 24, 91, 0.1) 0%, transparent 20%);
+}
+
+#receipt-game {
+    width: 100%; min-height: 100vh;
+    padding: 20px; box-sizing: border-box;
+    display: flex; flex-direction: column; align-items: center;
+}
+
+/* --- HUD GRID --- */
+.hud {
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    align-items: center; gap: 15px; margin-bottom: 20px;
+    width: 100%; max-width: 900px;
+}
+.score-box {
+    background: white; padding: 10px 15px; border-radius: 30px;
+    border: 1px solid rgba(72, 2, 65, 0.1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    font-size: 0.8rem; font-weight: 800; text-transform: uppercase;
+    color: var(--brand-purple); display: flex; justify-content: center;
+    align-items: center; width: 100%; min-width: 0; white-space: nowrap;
+}
+.hud > :first-child { justify-self: start; width: auto; min-width: 120px; }
+.hud > :last-child { justify-self: end; width: auto; min-width: 120px; }
+
+.logos-container { display: flex; align-items: center; justify-content: center; gap: 20px; }
+.logos-container img { height: 75px; width: auto; object-fit: contain; }
+
+/* --- BARRA DE JORNADA (PEDAGOGÍA VISUAL) --- */
+.shift-meter-container {
+    width: 100%; max-width: 800px;
+    background: #e0e0e0; border-radius: 10px;
+    margin-bottom: 30px; position: relative;
+    height: 40px; overflow: hidden;
+    display: flex; border: 1px solid #ccc;
+}
+.bar-rigid {
+    width: 33%; /* Representa 8 horas */
+    background: #999;
+    color: white; font-size: 0.75rem; font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    border-right: 2px solid white;
+}
+.bar-care {
+    width: 0%; /* Crece con clics */
+    background: repeating-linear-gradient(45deg, var(--brand-magenta), var(--brand-magenta) 10px, #D81B60 10px, #D81B60 20px);
+    color: white; font-size: 0.75rem; font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+    transition: width 0.5s ease;
+}
+.limit-marker {
+    position: absolute; left: 80%; top:0; bottom:0; width: 2px; background: red; z-index: 10;
+}
+.limit-label {
+    position: absolute; left: 81%; top: 5px; color: red; font-size: 0.7rem; font-weight: bold;
+}
+
+/* --- TÍTULOS --- */
+.r-title { 
+    font-family: 'Dosis', sans-serif; font-size: 2.2rem; 
+    text-transform: uppercase; margin: 0 0 10px 0; color: var(--brand-purple); text-align: center;
+}
+.r-desc { 
+    color: var(--text-light); margin-bottom: 30px; text-align: center; 
+    max-width: 750px; line-height: 1.5;
+}
+
+/* --- ÁREA DE JUEGO --- */
+.checkout-area {
+    display: flex; flex-wrap: wrap; gap: 40px; 
+    justify-content: center; align-items: flex-start;
+    width: 100%; max-width: 1000px;
+}
+
+/* BOTONES DE TAREAS */
+.tasks-panel {
+    flex: 1; min-width: 300px; display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;
+}
+.task-btn {
+    background: white; border: 2px solid #eee; border-radius: 15px;
+    padding: 20px; cursor: pointer; text-align: center; transition: all 0.2s ease;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02); position: relative; overflow: hidden;
+}
+.task-btn:hover { border-color: var(--brand-orange); transform: translateY(-3px); box-shadow: 0 8px 15px rgba(255, 140, 0, 0.15); }
+.task-btn:active { transform: scale(0.98); }
+.t-icon { font-size: 2.5rem; margin-bottom: 10px; }
+.t-name { font-weight: bold; color: var(--brand-purple); font-size: 1rem; line-height: 1.2; margin-bottom: 5px; }
+.t-time { font-size: 0.8rem; color: var(--text-light); font-weight: bold; background: #eee; padding: 2px 8px; border-radius: 4px;}
+
+/* RECIBO / ANÁLISIS */
+.receipt-wrapper {
+    width: 350px; background: var(--receipt-paper); color: var(--receipt-ink);
+    font-family: 'Courier Prime', monospace; padding: 25px;
+    box-shadow: 0 15px 40px rgba(72, 2, 65, 0.15); position: relative;
+    border-top: 5px solid var(--brand-orange);
+    mask-image: radial-gradient(circle at bottom, transparent 8px, black 9px);
+    mask-size: 20px 100%; mask-position: bottom; mask-repeat: repeat-x;
+    padding-bottom: 40px; min-height: 450px; display: flex; flex-direction: column;
+}
+
+.rec-head { text-align: center; border-bottom: 2px dashed #ccc; padding-bottom: 15px; margin-bottom: 15px; }
+.rec-logo { font-weight: bold; font-size: 1.2rem; display: block; margin-bottom: 8px; color: var(--brand-purple); text-transform: uppercase;}
+.rec-meta { font-size: 0.75rem; color: #666; margin-bottom: 2px;}
+
+.rec-items { flex: 1; display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem; margin-bottom: 20px; }
+.rec-row { display: flex; justify-content: space-between; align-items: center; }
+.rec-name { text-transform: uppercase; font-size: 0.8rem; max-width: 65%; }
+
+.rec-total-line {
+    border-top: 2px solid var(--brand-purple); padding-top: 15px; margin-top: auto;
+    display: flex; flex-direction: column; gap: 5px;
+    font-weight: bold; font-size: 1rem; color: var(--brand-purple);
+}
+
+.checkout-btn {
+    background: linear-gradient(135deg, var(--brand-orange) 0%, #F57C00 100%);
+    color: white; border: none; padding: 15px; font-size: 1rem; font-weight: bold; 
+    border-radius: 8px; cursor: pointer; margin-top: 20px; width: 100%;
+    text-transform: uppercase; letter-spacing: 1px; display: none;
+    box-shadow: 0 5px 15px rgba(255, 140, 0, 0.3); transition: transform 0.2s;
+}
+.checkout-btn:hover { transform: translateY(-2px); }
+
+/* MODAL FINAL */
+.invoice-modal {
+    position: fixed; top:0; left:0; width:100%; height:100%;
+    background: rgba(255,255,255, 0.95); backdrop-filter: blur(5px);
+    z-index: 100; display: none; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding: 20px;
+}
+.im-box {
+    border: 1px solid #ddd; border-top: 5px solid var(--brand-magenta);
+    padding: 40px; background: white; border-radius: 15px; 
+    max-width: 650px; box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+}
+.im-title { color: var(--brand-purple); font-size: 1.8rem; margin-bottom: 15px; font-family: 'Dosis', sans-serif; text-transform: uppercase; }
+.im-concept {
+    font-size: 1.1rem; color: var(--text-main); margin-bottom: 20px; line-height: 1.6;
+}
+.highlight-box {
+    background: rgba(194, 24, 91, 0.08); border-left: 4px solid var(--brand-magenta);
+    padding: 20px; margin: 20px 0; text-align: left; font-family: 'Courier Prime', monospace;
+}
+.hb-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; }
+.hb-total { border-top: 1px dashed var(--brand-magenta); padding-top: 10px; margin-top: 10px; font-weight: bold; color: var(--brand-magenta); font-size: 1.1rem; }
+
+@media (max-width: 768px) {
+    .hud { display: flex; flex-direction: column; gap: 10px; }
+    .logos-container img { height: 60px; }
+    .shift-meter-container { height: 60px; flex-wrap: wrap; }
+    .bar-rigid { width: 100%; height: 50%; border-right: none; border-bottom: 1px solid white;}
+    .bar-care { height: 50%; }
+    .receipt-wrapper { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div id="receipt-game">
+    
+    <!-- HUD -->
+    <div class="hud">
+        <span class="score-box">FASE: ECONOMÍA DEL CUIDADO</span>
+        <div class="logos-container">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP">
+            <img src="../Styles/logo.png" alt="Logo Comisión">
+        </div>
+        <span class="score-box" id="workload-display">⏱️ JORNADA: 8h (PAGA)</span>
+    </div>
+
+    <h1 class="r-title">La Jornada Invisible</h1>
+    <p class="r-desc">
+        Mientras cumples un <strong>horario laboral rígido (8h)</strong>, ¿quién garantiza que tú y tu familia estén alimentados, limpios y cuidados? 
+        Selecciona las tareas para visualizar cómo la "doble jornada" subsidia al sistema.
+    </p>
+
+    <!-- BARRA VISUAL DE JORNADA -->
+    <div class="shift-meter-container">
+        <div class="bar-rigid">EMPLEO (8h) <br> PAGO</div>
+        <div class="bar-care" id="care-bar">TRABAJO DE CUIDADO (NO PAGO)</div>
+        <div class="limit-marker"></div>
+        <div class="limit-label">LÍMITE FÍSICO (24h)</div>
+    </div>
+
+    <div class="checkout-area">
+        
+        <!-- PANEL DE TAREAS -->
+        <div class="tasks-panel">
+            <div class="task-btn" onclick="addTask('Preparar Alimentos', 3, 40000)">
+                <span class="t-icon">🍳</span>
+                <span class="t-name">Cocina (3 comidas)</span>
+                <span class="t-time">+3 Horas</span>
+            </div>
+            <div class="task-btn" onclick="addTask('Limpieza y Ropa', 2, 35000)">
+                <span class="t-icon">🧹</span>
+                <span class="t-name">Aseo y Ropa</span>
+                <span class="t-time">+2 Horas</span>
+            </div>
+            <div class="task-btn" onclick="addTask('Cuidado Niños/Adultos', 4, 60000)">
+                <span class="t-icon">👵</span>
+                <span class="t-name">Cuidado Personas</span>
+                <span class="t-time">+4 Horas</span>
+            </div>
+            <div class="task-btn" onclick="addTask('Carga Mental', 2, 55000)">
+                <span class="t-icon">🧠</span>
+                <span class="t-name">Gerencia del Hogar</span>
+                <span class="t-time">+2 Horas</span>
+            </div>
+            <div class="task-btn" onclick="addTask('Apoyo Escolar/Emocional', 2, 30000)">
+                <span class="t-icon">📚</span>
+                <span class="t-name">Apoyo Escolar</span>
+                <span class="t-time">+2 Horas</span>
+            </div>
+            <div class="task-btn" onclick="addTask('Traslados y Compras', 2, 25000)">
+                <span class="t-icon">🚌</span>
+                <span class="t-name">Logística</span>
+                <span class="t-time">+2 Horas</span>
+            </div>
+        </div>
+
+        <!-- EL ANÁLISIS (FACTURA) -->
+        <div class="receipt-wrapper" id="receipt">
+            <div class="rec-head">
+                <span class="rec-logo">REPORTE DE VALOR</span>
+                <div class="rec-meta">EMPLEADO: MUJER TRABAJADORA</div>
+                <div class="rec-meta">BENEFICIARIO: ENTIDAD/SOCIEDAD</div>
+                <div class="rec-meta">CONCEPTO: SOSTENIBILIDAD DE LA VIDA</div>
+            </div>
+            
+            <div class="rec-items" id="items-list">
+                <!-- Se llena con JS -->
+                <div style="text-align:center; color:#999; padding:20px; font-style:italic;" id="empty-msg">
+                    Registra tu "segundo turno"...
+                </div>
+            </div>
+
+            <div class="rec-total-line">
+                <div style="display:flex; justify-content:space-between; font-size:0.9rem; font-weight:normal;">
+                    <span>Costo Real de Vida:</span>
+                    <span id="total-cost">$0</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; color:var(--brand-orange);">
+                    <span>Salario Cubre:</span>
+                    <span>- (Solo tu tiempo laboral)</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-top:5px; border-top:1px solid #ccc; padding-top:5px;">
+                    <span>PLUSVALÍA EXTRAÍDA:</span>
+                    <span id="surplus-display">$0</span>
+                </div>
+            </div>
+
+            <button class="checkout-btn" id="btn-analyze" onclick="finishGame()">ANALIZAR EXTRACCIÓN</button>
+        </div>
+
+    </div>
+
+    <!-- MODAL FINAL -->
+    <div class="invoice-modal" id="final-modal">
+        <div class="im-box">
+            <div class="im-title">LA EXTRACCIÓN DE PLUSVALÍA</div>
+            
+            <p class="im-concept">
+                Has trabajado <strong>8 horas</strong> para la entidad (pagas) y <strong id="care-hours-total">0 horas</strong> para sostener la vida (no pagas).
+            </p>
+
+            <div class="highlight-box">
+                <div class="hb-row">
+                    <span>Valor generado en cuidados:</span>
+                    <span id="modal-value-generated">$0</span>
+                </div>
+                <div class="hb-row">
+                    <span>Costo asumido por la empresa:</span>
+                    <span>$0</span>
+                </div>
+                <div class="hb-total">
+                    <span>SUBSIDIO INVISIBLE A LA ENTIDAD:</span>
+                    <span id="modal-surplus">$0 / día</span>
+                </div>
+            </div>
+
+            <p style="text-align: left; font-size: 0.95rem; line-height: 1.5; color: var(--text-main);">
+                <strong>Conclusión Pedagógica:</strong> Sin este trabajo gratuito, el trabajador "productivo" no existiría. 
+                Al no remunerar ni flexibilizar tiempos para el cuidado, la institución se está <strong>apropiando de este valor</strong> (plusvalía), convirtiendo el tiempo de vida de las mujeres en ganancia para el sistema.
+            </p>
+            
+            <button onclick="location.reload()" class="checkout-btn" style="display:inline-block; width:auto; margin-top:10px; background: var(--brand-purple);">REINICIAR</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+let unpaidHours = 0;
+let unpaidValue = 0;
+
+function addTask(name, hours, value) {
+    document.getElementById('empty-msg').style.display = 'none';
+
+    // 1. Actualizar Datos
+    unpaidHours += hours;
+    unpaidValue += value;
+
+    // 2. Actualizar Barra Visual (Pedagogía del tiempo)
+    // 8 horas es el 33% del ancho (aprox, en base a 24h). 
+    // Cada hora extra es un porcentaje proporcional.
+    const hoursPercentage = (unpaidHours / 24) * 100;
+    const bar = document.getElementById('care-bar');
+    bar.style.width = `${hoursPercentage}%`;
+    bar.innerHTML = `CUIDADO (${unpaidHours}h)`;
+
+    // 3. Añadir item al recibo
+    const list = document.getElementById('items-list');
+    const row = document.createElement('div');
+    row.className = "rec-row";
+    row.innerHTML = `
+        <span class="rec-name">${name} (${hours}h)</span>
+        <span>$${value.toLocaleString()}</span>
+    `;
+    list.appendChild(row);
+    gsap.from(row, {opacity: 0, x: -10, duration: 0.3});
+
+    // 4. Actualizar Totales del Recibo
+    document.getElementById('total-cost').innerText = "$" + unpaidValue.toLocaleString();
+    document.getElementById('surplus-display').innerText = "$" + unpaidValue.toLocaleString();
+    
+    // Actualizar HUD
+    document.getElementById('workload-display').innerText = `⏱️ JORNADA: 8h + ${unpaidHours}h EXTRA`;
+    document.getElementById('workload-display').style.color = "var(--brand-magenta)";
+
+    // 5. Mostrar Botón
+    const btn = document.getElementById('btn-analyze');
+    if(unpaidValue > 0 && btn.style.display !== 'block') {
+        btn.style.display = 'block';
+        gsap.from(btn, {y: 10, opacity: 0});
+    }
+}
+
+function finishGame() {
+    // Llenar datos del modal
+    document.getElementById('care-hours-total').innerText = `${unpaidHours} horas`;
+    document.getElementById('modal-value-generated').innerText = "$" + unpaidValue.toLocaleString();
+    document.getElementById('modal-surplus').innerText = "$" + unpaidValue.toLocaleString();
+
+    // Mostrar modal
+    const modal = document.getElementById('final-modal');
+    modal.style.display = 'flex';
+    gsap.from(".im-box", {scale: 0.9, opacity: 0, duration: 0.4});
+}
+
+// Intro
+
+</script>
+
+</body>
+</html>

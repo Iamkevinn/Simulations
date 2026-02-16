@@ -1,0 +1,402 @@
+<!-- LIBRERÍAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* --- VARIABLES DE DISEÑO (LIGHT THEME / BRAND) --- */
+:root {
+    --mc-bg: #FFFFFF;          /* Fondo Blanco Puro */
+    --mc-card: #F8FAFC;        /* Superficie gris muy suave */
+    
+    --mc-toxic: #D23B78;       /* Magenta (El pacto / Problema) */
+    --mc-heal: #582C83;        /* Morado (La solución / Institucional) */
+    --mc-accent: #F47920;      /* Naranja (Acción) */
+    
+    --mc-text: #334155;        /* Gris Oscuro (Texto) */
+    --mc-border: #E2E8F0;      /* Bordes suaves */
+}
+
+#masculinity-circle-container {
+    width: 100%;
+    min-height: 900px;
+    height: auto;
+    background-color: var(--mc-bg) !important;
+    font-family: 'Roboto', sans-serif;
+    color: var(--mc-text);
+    border: 1px solid var(--mc-border);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+}
+
+/* --- FONDO ANIMADO (RED DE CONEXIONES SUTIL) --- */
+.network-bg {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    /* Puntos gris suave sobre blanco */
+    background-image: radial-gradient(#CBD5E1 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.5; z-index: 0; pointer-events: none;
+}
+
+/* --- HEADER CON LOGOS --- */
+.mc-header {
+    z-index: 10;
+    border-bottom: 4px solid var(--mc-toxic); 
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+    transition: border-color 1s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    background: rgba(255,255,255,0.9);
+}
+
+.client-logo {
+    height: 120px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.header-text {
+    flex: 1;
+    text-align: center;
+    min-width: 280px;
+}
+
+.mc-title {
+    font-family: 'Anton', sans-serif; font-size: clamp(1.8rem, 4vw, 3rem);
+    text-transform: uppercase; margin: 0; letter-spacing: 1px;
+    color: var(--mc-heal); /* Título Morado */
+}
+.mc-subtitle { color: var(--mc-accent); margin-top: 5px; font-size: 1rem; font-weight: bold; }
+
+/* --- EL CÍRCULO (VISUALIZADOR) --- */
+.circle-stage {
+    position: relative; width: 100%; max-width: 500px; height: 400px;
+    margin: 0 auto 40px auto; z-index: 5;
+    display: flex; justify-content: center; align-items: center;
+}
+
+/* El Núcleo (El Pacto) */
+.core-pact {
+    width: 120px; height: 120px; border-radius: 50%;
+    background: #FFFFFF; 
+    border: 5px solid var(--mc-toxic);
+    display: flex; justify-content: center; align-items: center;
+    text-align: center; font-weight: bold; font-size: 0.9rem;
+    color: var(--mc-toxic);
+    box-shadow: 0 0 30px rgba(210, 59, 120, 0.2);
+    z-index: 2; transition: all 1s;
+}
+
+/* Los Nodos (Hombres) */
+.node-man {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: #FFFFFF; 
+    border: 2px solid var(--mc-border);
+    position: absolute; display: flex; justify-content: center; align-items: center;
+    font-size: 1.8rem; z-index: 2; transition: all 0.5s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+/* Posicionamiento Radial Manual */
+.nm-1 { top: 0; }
+.nm-2 { top: 35%; right: 0; }
+.nm-3 { bottom: 0; right: 20%; }
+.nm-4 { bottom: 0; left: 20%; }
+.nm-5 { top: 35%; left: 0; }
+
+/* Cadenas (Líneas) */
+.chain-line {
+    position: absolute; top: 50%; left: 50%;
+    height: 6px; 
+    background: var(--mc-toxic); /* Magenta = Pacto vigente */
+    transform-origin: 0 50%; z-index: 1;
+    transition: background 1s, width 1s;
+    opacity: 0.6;
+}
+
+/* --- ÁREA DE INTERACCIÓN (SITUACIONES) --- */
+.interaction-zone {
+    background: var(--mc-card); padding: 30px; border-radius: 12px;
+    border: 1px solid var(--mc-border); max-width: 800px; margin: 0 auto; width: 100%;
+    z-index: 10; display: flex; flex-direction: column; gap: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+}
+
+.scenario-box {
+    border-left: 5px solid var(--mc-toxic); padding-left: 20px;
+    margin-bottom: 10px; background: #fff; padding: 20px; border-radius: 0 8px 8px 0;
+}
+.scenario-label { color: var(--mc-toxic); font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; text-transform: uppercase; }
+.scenario-text { font-size: 1.1rem; line-height: 1.6; color: var(--mc-text); font-style: italic; }
+
+/* Botones de Decisión */
+.decisions-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+}
+
+.decision-btn {
+    background: #FFFFFF; color: var(--mc-text); 
+    border: 1px solid var(--mc-border);
+    padding: 18px; border-radius: 8px; cursor: pointer; text-align: left;
+    transition: 0.3s; display: flex; align-items: center; gap: 15px;
+    font-size: 1rem; opacity: 1 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.decision-btn:hover { 
+    background: #F8FAFC; 
+    border-color: var(--mc-accent); 
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.decision-btn.correct { 
+    border-color: var(--mc-heal); 
+    background: #F3E8FF; /* Lila muy claro */
+    color: var(--mc-heal);
+    font-weight: bold;
+}
+.decision-btn.wrong { 
+    border-color: var(--mc-toxic); 
+    background: #FFF1F2; /* Rojo/Rosa muy claro */
+    color: #991B1B;
+    opacity: 0.7 !important; 
+}
+
+/* Icono del botón */
+.d-icon { font-size: 1.5rem; }
+
+/* FEEDBACK FINAL */
+.feedback-msg {
+    text-align: center; font-weight: bold; margin-top: 15px;
+    min-height: 40px; color: var(--mc-heal); font-size: 1.1rem;
+    display: none;
+    border: 1px dashed var(--mc-heal); padding: 15px; border-radius: 8px;
+    background: #FDF4FF;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .mc-header { flex-direction: column; text-align: center; }
+    .client-logo { height: 85px; }
+    .circle-stage { height: 300px; transform: scale(0.9); }
+    .node-man { width: 50px; height: 50px; font-size: 1.5rem; }
+    .core-pact { width: 90px; height: 90px; font-size: 0.75rem; }
+}
+
+</style>
+
+<div id="masculinity-circle-container">
+    <div class="network-bg"></div>
+
+    <!-- HEADER CON LOGOS -->
+    <div class="mc-header">
+        <!-- Logo Izquierdo: UNP -->
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+        
+        <div class="header-text">
+            <h1 class="mc-title">Rompiendo el Pacto</h1>
+            <p class="mc-subtitle">Dinámica 3: Círculo de Masculinidades</p>
+        </div>
+
+        <!-- Logo Derecho: Comisión -->
+        <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo">
+    </div>
+
+    <!-- EL CÍRCULO VISUAL -->
+    <div class="circle-stage">
+        
+        <!-- Líneas (Cadenas) -->
+        <div class="chain-line" id="line-1"></div>
+        <div class="chain-line" id="line-2"></div>
+        <div class="chain-line" id="line-3"></div>
+        <div class="chain-line" id="line-4"></div>
+        <div class="chain-line" id="line-5"></div>
+
+        <!-- Nodos -->
+        <div class="node-man nm-1">👨🏻</div>
+        <div class="node-man nm-2">👨🏾</div>
+        <div class="node-man nm-3">👨🏼</div>
+        <div class="node-man nm-4">👨🏿</div>
+        <div class="node-man nm-5">🧔🏽</div>
+
+        <!-- Centro -->
+        <div class="core-pact" id="core-circle">
+            PACTO DE<br>SILENCIO
+        </div>
+    </div>
+
+    <!-- ZONA DE JUEGO -->
+    <div class="interaction-zone">
+        
+        <div class="scenario-box" id="scenario-ui">
+            <div class="scenario-label">SITUACIÓN 1/3:</div>
+            <div class="scenario-text" id="s-text">
+                "En el grupo de WhatsApp de la oficina, un colega envía un 'meme' sexista sobre las nuevas compañeras. Varios responden con risas."
+            </div>
+        </div>
+
+        <div class="decisions-grid" id="options-box">
+            <!-- Botones JS -->
+        </div>
+
+        <div class="feedback-msg" id="fb-text">...</div>
+        
+        <button id="next-btn" style="display:none; background:var(--mc-accent); color:white; border:none; padding:15px 20px; border-radius:8px; font-weight:bold; cursor:pointer; width:100%; margin-top:10px; font-size:1rem;" onclick="nextLevel()">SIGUIENTE SITUACIÓN</button>
+
+    </div>
+</div>
+
+<script>
+// --- DATOS DEL JUEGO ---
+const situations = [
+    {
+        id: 1,
+        label: "EL CHISTE SEXISTA",
+        text: "En el grupo de WhatsApp, un colega envía un 'meme' sexista sobre las nuevas compañeras. La mayoría ríe.",
+        options: [
+            { text: "No decir nada para no ser el 'aguafiestas'.", icon: "😶", correct: false },
+            { text: "Escribir: 'Oigan, ese chiste no es gracioso, desvaloriza a nuestras compañeras'.", icon: "✋", correct: true, fb: "¡EXACTO! Romper el silencio es el primer paso. No ser cómplice desactiva la validación grupal." }
+        ]
+    },
+    {
+        id: 2,
+        label: "LA JUSTIFICACIÓN",
+        text: "Un compañero fue denunciado por acoso. En el pasillo, otro dice: 'Seguro ella lo provocó, ya sabes cómo son'.",
+        options: [
+            { text: "Responder: 'Hermano, nada justifica el acoso. La responsabilidad es de quien lo hace'.", icon: "🛡️", correct: true, fb: "¡MUY BIEN! Cuestionar la revictimización entre hombres es clave para la transformación." },
+            { text: "Asentir y cambiar de tema rápidamente.", icon: "😒", correct: false }
+        ]
+    },
+    {
+        id: 3,
+        label: "EL CUIDADO",
+        text: "Un compañero pide permiso para llevar a su hijo al médico. El jefe bromea: '¿Y la mamá qué? ¿Ahora eres niñera?'",
+        options: [
+            { text: "Reírse de la broma del jefe.", icon: "😂", correct: false },
+            { text: "Decir: 'Es su responsabilidad como padre, jefe. Eso es corresponsabilidad'.", icon: "👶", correct: true, fb: "CORRECTO. Validar el cuidado como algo masculino rompe el estereotipo del proveedor ausente." }
+        ]
+    }
+];
+
+let currIdx = 0;
+
+// --- CONFIGURACIÓN VISUAL INICIAL ---
+function setupLines() {
+    // Calcular posiciones
+    const lines = [
+        { rot: -90, width: 140 }, // Arriba
+        { rot: -18, width: 140 }, // Der Arriba
+        { rot: 54, width: 140 },  // Der Abajo
+        { rot: 126, width: 140 }, // Izq Abajo
+        { rot: 198, width: 140 }  // Izq Arriba
+    ];
+
+    lines.forEach((l, i) => {
+        const el = document.getElementById(`line-${i+1}`);
+        el.style.width = l.width + 'px';
+        el.style.transform = `translate(0, -50%) rotate(${l.rot}deg)`;
+        el.style.left = "50%";
+        el.style.top = "50%";
+    });
+}
+
+// --- LÓGICA DE JUEGO ---
+function loadSituation() {
+    const data = situations[currIdx];
+    
+    // UI Text
+    document.querySelector('.scenario-label').innerText = `SITUACIÓN ${currIdx + 1}/3: ${data.label}`;
+    document.getElementById('s-text').innerText = data.text;
+    document.getElementById('fb-text').style.display = 'none';
+    document.getElementById('next-btn').style.display = 'none';
+
+    // UI Buttons
+    const box = document.getElementById('options-box');
+    box.innerHTML = '';
+    
+    data.options.forEach(opt => {
+        const btn = document.createElement('div');
+        btn.className = 'decision-btn';
+        btn.innerHTML = `<span class="d-icon">${opt.icon}</span><span>${opt.text}</span>`;
+        btn.onclick = () => makeChoice(opt, btn);
+        box.appendChild(btn);
+    });
+
+    // Animación entrada
+    gsap.from(".decision-btn", {y: 20, opacity: 0, stagger: 0.1});
+}
+
+function makeChoice(opt, btnElement) {
+    if(document.getElementById('next-btn').style.display === 'block') return; // Evitar doble click
+
+    if(opt.correct) {
+        // VISUALIZACIÓN DE ÉXITO
+        btnElement.classList.add('correct');
+        document.getElementById('fb-text').innerText = opt.fb;
+        document.getElementById('fb-text').style.display = 'block';
+        document.getElementById('next-btn').style.display = 'block';
+
+        // Transformar líneas (Magenta -> Morado Institucional)
+        const lineId = currIdx + 1; 
+        const targetLine = document.getElementById(`line-${lineId}`);
+        
+        targetLine.style.background = "var(--mc-heal)";
+        targetLine.style.boxShadow = "0 0 10px rgba(88, 44, 131, 0.5)"; // Sombra morada suave
+        
+        if(currIdx === 2) { // Último nivel
+             document.querySelectorAll('.chain-line').forEach(l => {
+                 l.style.background = "var(--mc-heal)";
+                 l.style.boxShadow = "0 0 15px rgba(88, 44, 131, 0.6)";
+             });
+             
+             // Transformar Núcleo
+             const core = document.getElementById('core-circle');
+             core.style.borderColor = "var(--mc-heal)";
+             core.style.color = "var(--mc-heal)";
+             core.innerHTML = "CÍRCULO<br>SEGURO";
+             
+             document.querySelector('.mc-header').style.borderColor = "var(--mc-heal)";
+        }
+
+    } else {
+        // ERROR
+        btnElement.classList.add('wrong');
+        gsap.to(btnElement, {x: 10, duration: 0.1, yoyo: true, repeat: 3});
+        
+        // El núcleo palpita (Magenta)
+        gsap.from("#core-circle", {scale: 1.1, borderColor: "#D23B78", duration: 0.2});
+    }
+}
+
+function nextLevel() {
+    currIdx++;
+    if(currIdx < situations.length) {
+        loadSituation();
+    } else {
+        // FIN DEL JUEGO
+        document.querySelector('.interaction-zone').innerHTML = `
+            <div style="text-align:center; padding:30px;">
+                <h2 style="color:var(--mc-heal); font-family:'Anton'; font-size:2.5rem;">¡PACTO ROTO!</h2>
+                <p style="font-size:1.2rem; color:var(--mc-text);">Has transformado la complicidad en corresponsabilidad.</p>
+                <p style="color:var(--mc-text);">Ahora este es un espacio seguro para prevenir violencias.</p>
+                <div style="font-size:4rem; margin-top:20px;">🤝✨</div>
+            </div>
+        `;
+    }
+}
+
+// INICIALIZACIÓN
+setupLines();
+loadSituation();
+
+</script>

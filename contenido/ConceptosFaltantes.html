@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNP 2026 - Enfoques de Género y Cuidado</title>
+    <style>
+        /* --- VARIABLES DE COLOR (Basadas en la imagen 25N) --- */
+        :root {
+            --purple-unp: #4a148c;       /* Morado oscuro institucional */
+            --purple-light: #7c43bd;     /* Morado medio */
+            --orange-25n: #ff6f00;       /* Naranja fuerte del logo 25N */
+            --yellow-leaf: #fbc02d;      /* Amarillo de las hojas */
+            --pink-bg: #fdf2f8;          /* Fondo rosado muy pálido */
+            --white: #ffffff;
+            --text-dark: #333333;
+            --text-gray: #555555;
+        }
+
+        /* --- RESET Y BASE --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body {
+            background-color: var(--pink-bg);
+            background-image: linear-gradient(135deg, #fff 0%, #fdf2f8 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- HEADER ANIMADO --- */
+        header {
+            background: linear-gradient(135deg, var(--purple-unp), var(--purple-light));
+            color: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--yellow-leaf);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .badge {
+            background-color: var(--orange-25n);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        h1 { font-size: 2.2rem; margin-bottom: 10px; }
+        .subtitle { font-size: 1.1rem; opacity: 0.9; }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* --- SECCIÓN 1: CONCEPTOS CLAVE (FLIP CARDS) --- */
+        .section-title {
+            text-align: center;
+            color: var(--purple-unp);
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--orange-25n);
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+
+        .cards-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 60px;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            width: 300px;
+            height: 350px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            border-radius: 15px;
+        }
+
+        .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .flip-card-front {
+            background: white;
+            border-top: 5px solid var(--purple-unp);
+        }
+
+        .flip-card-back {
+            background: linear-gradient(135deg, var(--orange-25n), #ff9800);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .icon-large { font-size: 4rem; margin-bottom: 20px; color: var(--purple-unp); }
+        .card-title { font-size: 1.3rem; font-weight: bold; color: var(--purple-unp); }
+        .card-text { font-size: 0.95rem; margin-top: 10px; }
+
+        /* --- SECCIÓN 2: CAUSAS (ACORDEÓN) --- */
+        .accordion-section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            margin-bottom: 60px;
+            border-left: 8px solid var(--yellow-leaf);
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid #eee;
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: 20px;
+            text-align: left;
+            background: none;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .accordion-header:hover { background-color: #fff8e1; color: var(--orange-25n); }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: #fafafa;
+        }
+
+        .accordion-body { padding: 20px; font-size: 0.95rem; color: var(--text-gray); }
+
+        /* --- SECCIÓN 3: IMPACTOS (GRID) --- */
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .impact-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .impact-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 5px; height: 100%;
+            background: var(--purple-light);
+        }
+
+        .impact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .impact-title { font-weight: bold; color: var(--purple-unp); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+
+        /* --- QUIZ --- */
+        .quiz-section {
+            background: linear-gradient(135deg, var(--purple-unp), var(--purple-light));
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .quiz-btn {
+            background-color: var(--yellow-leaf);
+            color: var(--purple-unp);
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .quiz-btn:hover { transform: scale(1.05); background-color: #fff; }
+
+        .result-msg {
+            margin-top: 20px;
+            font-weight: bold;
+            display: none;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        /* --- ANIMACIONES --- */
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-up { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .flip-card { width: 100%; height: 300px; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="badge">UNP 2026 | Colombia Sin Machismo</div>
+        <h1>Feminización del Cuidado</h1>
+        <p class="subtitle">Entendiendo la invisibilización y el impacto en la igualdad de género</p>
+    </header>
+
+    <div class="container">
+
+        <!-- CONCEPTOS (FLIP CARDS) -->
+        <h2 class="section-title animate-up">Conceptos Fundamentales</h2>
+        <div class="cards-container">
+            
+            <!-- Tarjeta 1 -->
+            <div class="flip-card animate-up delay-1">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="icon-large">👩‍🍼</div>
+                        <div class="card-title">Feminización del Cuidado</div>
+                        <p style="margin-top:10px; color:#666;">Pasa el mouse para descubrir</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h3>¿Qué es?</h3>
+                        <p class="card-text">Es la concentración de responsabilidades de cuidado (hijas, madres, abuelas) debido a normas sociales.</p>
+                        <p class="card-text"><strong>Incluye:</strong> Cuidado directo (higiene, alimentos), emocional y gestión del hogar.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta 2 -->
+            <div class="flip-card animate-up delay-2">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="icon-large">🏛️</div>
+                        <div class="card-title">Invisibilización Estatal</div>
+                        <p style="margin-top:10px; color:#666;">Pasa el mouse para descubrir</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h3>El Problema</h3>
+                        <p class="card-text">Ausencia de políticas y presupuestos que reconozcan y redistribuyan este trabajo.</p>
+                        <p class="card-text">El Estado asume que las mujeres cuidarán "gratis" y no regula ni protege esa labor.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CAUSAS (ACORDEÓN) -->
+        <h2 class="section-title animate-up">¿Por qué sucede esto?</h2>
+        <div class="accordion-section animate-up delay-1">
+            
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    1. Normas Culturales y División Sexual del Trabajo
+                    <span>▼</span>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        Los roles tradicionales asignan lo doméstico a las mujeres como algo "natural". Existe una segregación donde se espera que ellas estén siempre disponibles para tareas del hogar, limitando su proyección profesional.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    2. Diseño de Políticas Públicas "Ciegas"
+                    <span>▼</span>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        Los sistemas de protección asumen un "hombre proveedor" a tiempo completo y una "mujer cuidadora" informal. Las prestaciones sociales suelen reforzar el rol de cuidadora familiar sin ofrecer autonomía económica.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    3. Falta de Medición Económica
+                    <span>▼</span>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        Indicadores como el PIB subestiman el trabajo no remunerado. Las estadísticas nacionales a menudo no detallan cómo los horarios de cuidado impactan negativamente en los ingresos y las pensiones de las mujeres.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- IMPACTOS (GRID) -->
+        <h2 class="section-title animate-up">Impactos Sociales y Económicos</h2>
+        <div class="impact-grid animate-up delay-2">
+            <div class="impact-card">
+                <div class="impact-title">📉 Precariedad Económica</div>
+                <p>Menor participación laboral, salarios más bajos y brechas pensionales alarmantes para las mujeres.</p>
+            </div>
+            <div class="impact-card">
+                <div class="impact-title">😫 Sobretrabajo</div>
+                <p>La famosa "Doble Jornada": Empleo remunerado + Trabajo doméstico = Riesgos graves para la salud física y mental.</p>
+            </div>
+            <div class="impact-card">
+                <div class="impact-title">🔄 Desigualdad Cíclica</div>
+                <p>Las mujeres jóvenes limitan sus estudios y oportunidades laborales para cuidar, repitiendo el ciclo de pobreza.</p>
+            </div>
+            <div class="impact-card">
+                <div class="impact-title">💸 Ineficiencia Macro</div>
+                <p>El país pierde potencial productivo al no apoyar el cuidado. Es una externalidad negativa que el Estado ignora.</p>
+            </div>
+        </div>
+
+        <!-- QUIZ INTERACTIVO -->
+        <div class="quiz-section animate-up delay-3">
+            <h2>🧠 Comprobemos lo aprendido</h2>
+            <p style="margin-bottom: 20px;">¿Cuál es una consecuencia principal de la invisibilización del cuidado?</p>
+            
+            <button class="quiz-btn" onclick="checkAnswer(false)">Aumento del PIB nacional</button>
+            <button class="quiz-btn" onclick="checkAnswer(true)">Reproducción de desigualdades y pobreza</button>
+            <button class="quiz-btn" onclick="checkAnswer(false)">Mejora en la salud mental de las mujeres</button>
+
+            <div id="result" class="result-msg"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // Lógica del Acordeón
+        const acc = document.getElementsByClassName("accordion-header");
+        for (let i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                    this.querySelector('span').innerHTML = "▼";
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                    this.querySelector('span').innerHTML = "▲";
+                } 
+            });
+        }
+
+        // Lógica del Quiz
+        function checkAnswer(isCorrect) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            
+            if (isCorrect) {
+                resultDiv.style.backgroundColor = '#d1fae5'; // Verde claro
+                resultDiv.style.color = '#065f46';
+                resultDiv.innerHTML = "✅ ¡Correcto! La falta de apoyo estatal perpetúa la desigualdad intergeneracional.";
+            } else {
+                resultDiv.style.backgroundColor = '#fee2e2'; // Rojo claro
+                resultDiv.style.color = '#991b1b';
+                resultDiv.innerHTML = "❌ Incorrecto. Inténtalo de nuevo. Recuerda los impactos económicos negativos.";
+            }
+        }
+    </script>
+</body>
+</html>

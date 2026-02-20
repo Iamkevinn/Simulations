@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    /* --- CONFIGURACIÓN BASE --- */
+    #unp-workshop-master {
+        font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
+        color: #333;
+        background: linear-gradient(180deg, #fff0f5 0%, #ffffff 100%);
+        max-width: 100%;
+        margin: 0 auto;
+        padding-bottom: 80px;
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    #unp-workshop-master * { box-sizing: border-box; user-select: none; }
+
+    :root {
+        --c-purple: #4a148c;
+        --c-orange: #ff6f00;
+        --c-yellow: #fbc02d;
+        --c-green: #43a047;
+        --c-white: #ffffff;
+        --c-text: #444;
+    }
+
+    /* --- ENCABEZADO --- */
+    .workshop-header {
+        text-align: center;
+        padding: 60px 20px;
+        background: var(--c-purple);
+        color: white;
+        clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 100%, 0 90%);
+        margin-bottom: 50px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .workshop-header h1 { margin: 0; font-size: 2.2rem; text-transform: uppercase; letter-spacing: 1px; }
+    .workshop-header p { opacity: 0.9; margin-top: 10px; font-size: 1.1rem; }
+
+    /* --- TARJETAS DE MISIÓN --- */
+    .mission-card {
+        background: white;
+        max-width: 850px;
+        margin: 0 auto 50px auto;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        overflow: hidden;
+        border-top: 6px solid var(--c-orange);
+        position: relative;
+    }
+
+    .mission-header {
+        padding: 20px 30px;
+        background: #fafafa;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .mission-title { 
+        color: var(--c-purple); 
+        font-weight: 800; 
+        font-size: 1.3rem; 
+        display: flex; 
+        align-items: center; 
+        gap: 15px;
+    }
+    
+    .mission-icon { 
+        font-size: 1.5rem; 
+        background: var(--c-yellow); 
+        width: 45px; height: 45px; 
+        display: flex; align-items: center; justify-content: center; 
+        border-radius: 50%; 
+        color: var(--c-purple); 
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .mission-body { padding: 30px; position: relative; }
+
+    /* --- BOTÓN DE INFORMACIÓN (NUEVO) --- */
+    .info-btn {
+        background: var(--c-purple);
+        color: white;
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        transition: 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .info-btn::before {
+        content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
+        background: rgba(255,255,255,0.2); opacity: 0; transition: opacity 0.3s;
+    }
+
+    .info-btn:hover { background: var(--c-orange); transform: scale(1.1) rotate(90deg); }
+    .info-btn:hover::before { opacity: 1; }
+
+    /* --- MODALES DE TEXTO COMPLETO --- */
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.85);
+        z-index: 9999;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+        opacity: 0; transition: opacity 0.3s;
+    }
+
+    .modal-overlay.active { display: flex; opacity: 1; }
+
+    .modal-content {
+        background: white;
+        width: 90%; max-width: 600px;
+        max-height: 85vh;
+        overflow-y: auto;
+        border-radius: 15px;
+        padding: 30px;
+        position: relative;
+        transform: translateY(20px);
+        transition: transform 0.3s;
+        border-left: 10px solid var(--c-orange);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+    
+    .modal-overlay.active .modal-content { transform: translateY(0); }
+
+    .close-modal {
+        position: absolute; top: 15px; right: 20px;
+        font-size: 2rem; color: #999; background: none; border: none; cursor: pointer; line-height: 1;
+    }
+    .close-modal:hover { color: var(--c-orange); }
+
+    .modal-text h3 { color: var(--c-purple); border-bottom: 2px solid var(--c-yellow); padding-bottom: 10px; margin-top: 0; }
+    .modal-text h4 { color: var(--c-orange); margin-bottom: 5px; margin-top: 20px; }
+    .modal-text ul { padding-left: 20px; color: #555; }
+    .modal-text li { margin-bottom: 8px; }
+    .modal-text p { line-height: 1.6; color: #444; }
+
+    /* --- JUEGO 1: ESCÁNER --- */
+    .scanner-container {
+        position: relative; height: 150px; background: #333; border-radius: 10px; overflow: hidden; cursor: ew-resize; margin-top: 20px;
+    }
+    .blur-text {
+        position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; font-weight: bold; color: rgba(255,255,255,0.1); filter: blur(8px); text-align: center; padding: 10px;
+    }
+    .clear-text {
+        position: absolute; height: 100%; background: var(--c-white); color: var(--c-purple);
+        display: flex; align-items: center; overflow: hidden; white-space: nowrap; font-size: 1.5rem; font-weight: bold;
+        border-right: 4px solid var(--c-orange); padding-left: 20px; width: 0%; transition: 0.05s;
+    }
+    .game-instruction { text-align: center; color: #777; font-size: 0.9rem; margin-bottom: 10px; font-style: italic; }
+
+    /* --- JUEGO 2: BALANZA --- */
+    .scale-wrapper { display: flex; flex-direction: column; align-items: center; margin-top: 20px; }
+    .scale-beam {
+        width: 80%; height: 12px; background: #555; position: relative; transition: transform 0.5s;
+        transform: rotate(-15deg); border-radius: 6px; margin: 20px 0;
+    }
+    .scale-plate {
+        width: 80px; height: 80px; background: #eee; border-radius: 0 0 40px 40px; position: absolute; top: 12px;
+        display: flex; justify-content: center; align-items: flex-end; padding-bottom: 5px; box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    }
+    .plate-left { left: 0; border-top: 2px solid #999; }
+    .plate-right { right: 0; border-top: 2px solid var(--c-orange); }
+    
+    .weights-container { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+    .weight {
+        background: var(--c-orange); color: white; padding: 8px 15px; border-radius: 6px; cursor: pointer;
+        font-weight: bold; box-shadow: 0 3px 0 #e65100; transition: 0.2s;
+    }
+    .weight:active { transform: translateY(3px); box-shadow: none; }
+
+    /* --- JUEGO 3: CONSTRUCCIÓN --- */
+    .city-plot {
+        background: #e0f7fa; height: 180px; border-radius: 10px; border-bottom: 12px solid #81c784;
+        display: flex; justify-content: space-around; align-items: flex-end; padding-bottom: 15px; margin-top: 20px;
+    }
+    .plot-placeholder {
+        width: 60px; height: 60px; border: 2px dashed #aaa; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        color: #aaa; font-weight: bold; cursor: pointer; background: rgba(255,255,255,0.6); transition: 0.3s;
+    }
+    .plot-placeholder:hover { background: white; transform: scale(1.1); color: var(--c-orange); border-color: var(--c-orange); }
+    .building { animation: popBuilding 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center; color: var(--c-purple); font-size: 0.8rem; font-weight: bold; }
+    .building span { font-size: 2.2rem; display: block; }
+    @keyframes popBuilding { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+
+    /* --- JUEGO 4: NIEBLA --- */
+    .fog-container {
+        position: relative; height: 200px; background: linear-gradient(135deg, var(--c-purple), #222); border-radius: 10px;
+        display: flex; align-items: center; justify-content: center; overflow: hidden; margin-top: 20px;
+    }
+    .fog-overlay {
+        position: absolute; width: 100%; height: 100%; background: rgb(123, 123, 123);
+        display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 15px; transition: opacity 1s;
+    }
+    .stereotype {
+        background: #ddd; padding: 8px 12px; border-radius: 4px; color: #666; font-size: 0.9rem; cursor: crosshair; transition: 0.3s;
+    }
+    .stereotype:hover { transform: scale(1.5); opacity: 0; }
+    .hidden-message { color: rgb(255, 255, 255); text-align: center; padding: 20px; }
+    .hidden-message h3 { color: var(--c-yellow); }
+
+    /* --- FEEDBACK INMEDIATO --- */
+    .success-msg {
+        background: #e8f5e9; color: #2e7d32; padding: 15px; border-radius: 8px; margin-top: 15px;
+        display: none; animation: fadeIn 0.5s; border-left: 5px solid #43a047;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* --- CONCLUSIÓN FINAL --- */
+    .final-card {
+        background: var(--c-yellow); color: var(--c-purple); padding: 40px; text-align: center; border-radius: 20px;
+        margin: 40px 20px; display: none; animation: popBuilding 0.8s;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+        .mission-header { padding: 15px; }
+        .mission-title { font-size: 1rem; }
+        .info-btn { width: 35px; height: 35px; }
+    }
+</style>
+</head>
+<body>
+
+<div id="unp-workshop-master">
+
+    <header class="workshop-header">
+        <h1>Diseño de Políticas Públicas</h1>
+        <p>Interactúa para implementar soluciones y haz clic en <strong>➕</strong> para ver la política detallada.</p>
+        <div style="font-size: 2rem; margin-top: 10px; animation: bounce 2s infinite;">👇</div>
+    </header>
+
+    <!-- MISIÓN 1 -->
+    <div class="mission-card">
+        <div class="mission-header">
+            <div class="mission-title"><span class="mission-icon">🔍</span> 1. Reconocimiento y Medición</div>
+            <button class="info-btn" onclick="openModal('modal1')" title="Ver texto completo">➕</button>
+        </div>
+        <div class="mission-body">
+            <p class="game-instruction">Desliza (o arrastra el dedo) sobre la barra negra para revelar los datos.</p>
+            <div class="scanner-container" onmousemove="updateScanner(event)" ontouchmove="updateScanner(event)">
+                <div class="blur-text">TRABAJO NO REMUNERADO - PIB - CUENTAS SATÉLITE</div>
+                <div class="clear-text" id="scannerClear">VISIBILIZAR VALOR ECONÓMICO</div>
+            </div>
+            <div id="success1" class="success-msg">
+                <strong>¡Dato Revelado!</strong> Se requiere incorporar el cuidado en estadísticas nacionales y medir su aporte al PIB.
+            </div>
+        </div>
+    </div>
+
+    <!-- MISIÓN 2 -->
+    <div class="mission-card">
+        <div class="mission-header">
+            <div class="mission-title"><span class="mission-icon">⚖️</span> 2. Redistribución</div>
+            <button class="info-btn" onclick="openModal('modal2')" title="Ver texto completo">➕</button>
+        </div>
+        <div class="mission-body">
+            <p class="game-instruction">Haz clic en las pesas naranjas para equilibrar la carga. Esta acción redistribuye el trabajo no remunerado en las mujeres.</p>
+            <div class="scale-wrapper">
+                <div class="scale-beam" id="scaleBeam">
+                    <div class="scale-plate plate-left" style="background:#ffcdd2; display:flex; align-items:center;">🚫 Carga</div>
+                    <div class="scale-plate plate-right" id="targetPlate"></div>
+                </div>
+            </div>
+            <div class="weights-container" id="weightsPool">
+                <div class="weight" onclick="addWeight(this)">Licencias Paternidad</div>
+                <div class="weight" onclick="addWeight(this)">Horarios Flexibles</div>
+                <div class="weight" onclick="addWeight(this)">Corresponsabilidad</div>
+            </div>
+            <div id="success2" class="success-msg">
+                <strong>¡Equilibrio Logrado!</strong> Las licencias equitativas y la flexibilidad laboral redistribuyen la carga.
+            </div>
+        </div>
+    </div>
+
+    <!-- MISIÓN 3 -->
+    <div class="mission-card">
+        <div class="mission-header">
+            <div class="mission-title"><span class="mission-icon">🏗️</span> 3. Reducción y Servicios</div>
+            <button class="info-btn" onclick="openModal('modal3')" title="Ver texto completo">➕</button>
+        </div>
+        <div class="mission-body">
+            <p class="game-instruction">Haz clic en los círculos vacíos para construir infraestructura.</p>
+            <div class="city-plot">
+                <div class="plot-placeholder" onclick="build(this, '🏫', 'Guarderías')">+</div>
+                <div class="plot-placeholder" onclick="build(this, '👵', 'Atención Mayor')">+</div>
+                <div class="plot-placeholder" onclick="build(this, '🏥', 'Centros Día')">+</div>
+            </div>
+            <div id="success3" class="success-msg">
+                <strong>¡Infraestructura Lista!</strong> Invertir en servicios públicos de calidad reduce el trabajo en el hogar.
+            </div>
+        </div>
+    </div>
+
+    <!-- MISIÓN 4 -->
+    <div class="mission-card">
+        <div class="mission-header">
+            <div class="mission-title"><span class="mission-icon">🧹</span> 4. Cambio Cultural y Protección</div>
+            <button class="info-btn" onclick="openModal('modal4')" title="Ver texto completo">➕</button>
+        </div>
+        <div class="mission-body">
+            <p class="game-instruction">Pasa el mouse rápido (o toca) sobre las palabras grises para borrar los estereotipos.</p>
+            <div class="fog-container" id="Hi">
+                <div class="hidden-message">
+                    <h1>¡Visión Clara!</h1>
+                    <p>Formalización • Salarios Dignos • Financiamiento Sostenible • Educación</p>
+                </div>
+                <div class="fog-overlay" id="fogLayer">
+                    <!-- JS generará esto -->
+                </div>
+            </div>
+            <div id="success4" class="success-msg">
+                <strong>¡Estereotipos Eliminados!</strong> Se necesita formalizar el empleo, financiamiento justo y cambio cultural.
+            </div>
+        </div>
+    </div>
+
+    <!-- CONCLUSIÓN -->
+    <div class="final-card" id="finalConclusion">
+        <h2>🎉 ¡Módulo Completado!</h2>
+        <p>Has recorrido los pilares fundamentales: Reconocer, Redistribuir, Reducir y Remunerar.</p>
+        <p style="font-size:0.9rem; margin-top:20px;">Recuerda revisar los textos completos en los botones ➕ para profundizar en las políticas.</p>
+    </div>
+
+</div>
+
+<!-- --- MODALES (CONTENIDO COMPLETO) --- -->
+
+<!-- Modal 1 -->
+<div class="modal-overlay" id="modal1">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeModal('modal1')">×</button>
+        <div class="modal-text">
+            <h3>Reconocimiento y Medición</h3>
+            <ul>
+                <li><strong>Incorporar el trabajo de cuidado en estadísticas nacionales:</strong> (cuentas satélite del trabajo no remunerado, encuestas de uso del tiempo).</li>
+                <li><strong>Medir su contribución al PIB</strong> y al bienestar para visibilizar su valor económico.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 2 -->
+<div class="modal-overlay" id="modal2">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeModal('modal2')">×</button>
+        <div class="modal-text">
+            <h3>Redistribución</h3>
+            <ul>
+                <li><strong>Implementar licencias de cuidado pagadas:</strong> equitativas y transferibles (paternidad y cuidado) para promover la corresponsabilidad.</li>
+                <li><strong>Fomentar horarios de trabajo flexibles</strong> y jornadas laborales reducidas con protección salarial.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 3 -->
+<div class="modal-overlay" id="modal3">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeModal('modal3')">×</button>
+        <div class="modal-text">
+            <h3>Reducción</h3>
+            <ul>
+                <li><strong>Invertir en servicios públicos y comunitarios:</strong> de cuidado (guarderías, atención a personas mayores, centros de día) de calidad y accesibles.</li>
+                <li><strong>Subsidios y transferencias:</strong> condicionadas a la disponibilidad de servicios, no para perpetuar cuidado no remunerado.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 4 -->
+<div class="modal-overlay" id="modal4">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeModal('modal4')">×</button>
+        <div class="modal-text">
+            <h3>Políticas Estructurales</h3>
+            
+            <h4>Remuneración y protección laboral</h4>
+            <ul>
+                <li><strong>Formalizar y regular el empleo:</strong> salario mínimo, seguridad social, derechos para trabajadoras del hogar.</li>
+                <li><strong>Salarios y condiciones decentes:</strong> para profesionales del cuidado (enfermería, auxiliares), reconociendo su valor.</li>
+            </ul>
+
+            <h4>Financiamiento sostenible</h4>
+            <ul>
+                <li>Presupuestos públicos adecuados y fuentes progresivas (impuestos redistributivos).</li>
+                <li>Evaluación costo-beneficio de inversiones en cuidado.</li>
+            </ul>
+
+            <h4>Cambio cultural y educación</h4>
+            <ul>
+                <li>Campañas para desmontar estereotipos de género.</li>
+                <li>Incluir perspectiva de género en formación profesional.</li>
+            </ul>
+
+            <h4>Participación</h4>
+            <p>Incluir a mujeres cuidadoras y organizaciones en el diseño de políticas.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* --- FUNCIONES DE MODALES --- */
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+        document.body.style.overflow = 'hidden'; 
+    }
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+    // Cerrar al dar click fuera
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === this) closeModal(this.id);
+        });
+    });
+
+    /* --- LÓGICA JUEGO 1 (ESCÁNER) --- */
+    function updateScanner(e) {
+        const container = e.currentTarget;
+        const clearText = document.getElementById('scannerClear');
+        const rect = container.getBoundingClientRect();
+        
+        let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        let percentage = ((clientX - rect.left) / rect.width) * 100;
+
+        if (percentage < 0) percentage = 0;
+        if (percentage > 100) percentage = 100;
+        
+        clearText.style.width = percentage + "%";
+        
+        if(percentage > 90) {
+            document.getElementById('success1').style.display = 'block';
+            container.style.border = "2px solid var(--c-green)";
+        }
+    }
+
+    /* --- LÓGICA JUEGO 2 (BALANZA) --- */
+    let weightsCount = 0;
+    function addWeight(element) {
+        if(element.style.opacity === '0.5') return; // Ya usado
+        
+        // Mover visualmente
+        element.style.opacity = '0.5';
+        element.style.cursor = 'default';
+        
+        // Crear copia en la balanza
+        const clone = document.createElement('div');
+        clone.className = 'weight';
+        clone.innerText = element.innerText;
+        clone.style.fontSize = '0.7rem';
+        clone.style.padding = '5px';
+        clone.style.margin = '2px';
+        clone.style.cursor = 'default';
+        document.getElementById('targetPlate').appendChild(clone);
+        
+        weightsCount++;
+        const beam = document.getElementById('scaleBeam');
+        
+        if(weightsCount === 1) beam.style.transform = "rotate(-5deg)";
+        if(weightsCount === 2) beam.style.transform = "rotate(0deg)";
+        if(weightsCount === 3) {
+            beam.style.transform = "rotate(0deg)";
+            document.getElementById('success2').style.display = 'block';
+            checkGlobalWin();
+        }
+    }
+
+    /* --- LÓGICA JUEGO 3 (CONSTRUCCIÓN) --- */
+    let builtCount = 0;
+    function build(el, icon, text) {
+        if(el.classList.contains('done')) return;
+        el.classList.add('done');
+        el.innerHTML = `<div class="building"><span>${icon}</span>${text}</div>`;
+        el.style.border = "none";
+        el.style.background = "transparent";
+        builtCount++;
+        if(builtCount === 3) {
+            document.getElementById('success3').style.display = 'block';
+            checkGlobalWin();
+        }
+    }
+
+    /* --- LÓGICA JUEGO 4 (NIEBLA) --- */
+    const fogLayer = document.getElementById('fogLayer');
+    const words = ["Estereotipos", "Trabajo Gratis", "Solo Mujeres", "Baja Calificación", "Invisible", "Carga"];
+    
+    words.forEach(w => {
+        let s = document.createElement('div');
+        s.className = 'stereotype';
+        s.innerText = w;
+        // Eventos para desktop y mobile
+        s.onmouseover = function() { removeStereotype(this); };
+        s.ontouchstart = function() { removeStereotype(this); };
+        fogLayer.appendChild(s);
+    });
+
+    let removedCount = 0;
+    function removeStereotype(el) {
+        if(el.style.opacity === '0') return;
+        el.style.transform = "scale(1.5)";
+        el.style.opacity = "0";
+        setTimeout(() => el.remove(), 300);
+        removedCount++;
+        if(removedCount >= words.length) {
+            fogLayer.style.pointerEvents = "none"; // Dejar ver el mensaje
+            document.getElementById('success4').style.display = 'block';
+            checkGlobalWin();
+            fogLayer.style.background = "transparent";
+        }
+    }
+
+    /* --- FINAL --- */
+    function checkGlobalWin() {
+        if (document.getElementById('success2').style.display === 'block' &&
+            document.getElementById('success3').style.display === 'block' &&
+            document.getElementById('success4').style.display === 'block') {
+            
+            setTimeout(() => {
+                const final = document.getElementById('finalConclusion');
+                final.style.display = 'block';
+                final.scrollIntoView({behavior: 'smooth'});
+            }, 1000);
+        }
+    }
+
+    // Animación Bounce Header CSS
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = "@keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} }";
+    document.head.appendChild(styleSheet);
+</script>
+
+</body>
+</html>

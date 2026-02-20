@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    /* --- SCOPED RESET & VARIABLES --- */
+    #unp-game-master {
+        font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
+        color: #333;
+        background: linear-gradient(180deg, #ffffff 0%, #fdf2f8 100%);
+        max-width: 100%;
+        overflow-x: hidden;
+        margin: 0 auto;
+        padding-bottom: 80px;
+    }
+
+    #unp-game-master * { box-sizing: border-box; }
+
+    :root {
+        --unp-purple: #4a148c;
+        --unp-purple-light: #7c43bd;
+        --unp-orange: #ff6f00;
+        --unp-yellow: #fbc02d;
+        --unp-white: #ffffff;
+        --unp-dark: #1a1a1a;
+    }
+
+    /* --- ESTILOS GENERALES --- */
+    .game-header {
+        text-align: center;
+        padding: 50px 20px;
+        background: radial-gradient(circle at top right, var(--unp-purple-light), var(--unp-purple));
+        color: white;
+        border-radius: 0 0 40px 40px;
+        margin-bottom: 50px;
+        box-shadow: 0 10px 30px rgba(74, 20, 140, 0.3);
+        position: relative;
+    }
+
+    .level-container {
+        max-width: 900px;
+        margin: 0 auto 80px auto;
+        padding: 20px;
+        position: relative;
+    }
+
+    .level-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid var(--unp-yellow);
+        padding-bottom: 10px;
+    }
+
+    .level-title {
+        color: var(--unp-purple);
+        font-size: 1.4rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin: 0;
+    }
+
+    /* --- BOTÓN DE INFORMACIÓN (NUEVO) --- */
+    .info-btn {
+        background: var(--unp-purple);
+        color: white;
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        transition: 0.3s;
+        animation: pulse-btn 2s infinite;
+        z-index: 5;
+    }
+
+    .info-btn:hover {
+        background: var(--unp-orange);
+        transform: scale(1.1);
+    }
+
+    @keyframes pulse-btn {
+        0% { box-shadow: 0 0 0 0 rgba(74, 20, 140, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(74, 20, 140, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(74, 20, 140, 0); }
+    }
+
+    /* --- MODAL (POP-UP DE TEXTO) --- */
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.85);
+        z-index: 9999;
+        display: none; /* Oculto por defecto */
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .modal-content {
+        background: white;
+        width: 90%;
+        max-width: 600px;
+        max-height: 80vh;
+        overflow-y: auto;
+        border-radius: 15px;
+        padding: 30px;
+        position: relative;
+        transform: translateY(20px);
+        transition: transform 0.3s;
+        border-left: 8px solid var(--unp-orange);
+    }
+
+    .modal-overlay.active { display: flex; opacity: 1; }
+    .modal-overlay.active .modal-content { transform: translateY(0); }
+
+    .close-modal {
+        position: absolute;
+        top: 15px; right: 20px;
+        font-size: 1.5rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #999;
+    }
+    .close-modal:hover { color: var(--unp-orange); }
+
+    .modal-text h3 { color: var(--unp-purple); margin-top: 0; }
+    .modal-text p { font-size: 1rem; line-height: 1.6; color: #444; margin-bottom: 15px; }
+    .modal-text strong { color: var(--unp-orange); }
+
+    /* --- JUEGOS ESTILOS (Mantenemos los previos mejorados) --- */
+    
+    /* Drag & Drop */
+    .drag-area { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 20px; }
+    .drop-zone { flex: 1; min-width: 280px; background: white; border: 2px dashed #ccc; border-radius: 15px; padding: 20px; min-height: 200px; transition: 0.3s; }
+    .drop-zone.hovered { border-color: var(--unp-orange); background: #fff8e1; }
+    .drag-item { background: var(--unp-orange); color: white; padding: 10px; border-radius: 8px; cursor: grab; margin: 5px; display: inline-block; }
+    .drag-item.correct { background: #4caf50; pointer-events: none; }
+
+    /* Myths */
+    .myth-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-top: 20px;}
+    .myth-card { background: #eee; height: 160px; border-radius: 15px; display: flex; align-items: center; justify-content: center; padding: 15px; cursor: pointer; position: relative; overflow: hidden; text-align: center; font-weight: bold; color: #555; transition: 0.2s; border-bottom: 4px solid #ccc; }
+    .myth-card:hover { transform: translateY(-3px); }
+    .truth-content { position: absolute; top:0; left:0; width:100%; height:100%; background: var(--unp-purple); color: white; display:flex; flex-direction:column; justify-content:center; align-items:center; opacity:0; transition:0.4s; padding: 10px; font-size: 0.9rem;}
+    .myth-card.broken .truth-content { opacity: 1; }
+
+    /* Spotlight */
+    .spotlight-container { position: relative; background: #222; color: #ddd; padding: 30px; border-radius: 15px; cursor: none; overflow: hidden; min-height: 300px;}
+    .spotlight-mask { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle 120px at var(--x) var(--y), transparent 0%, rgba(0,0,0,0.96) 100%); z-index: 3; pointer-events: none; }
+    .flashlight-icon { position: absolute; top: var(--y); left: var(--x); transform: translate(-50%, -50%); pointer-events: none; font-size: 24px; z-index: 4; opacity: 0.7; }
+    .hidden-text { font-size: 1.1rem; line-height: 1.8; position: relative; z-index: 2; }
+    .highlight { color: var(--unp-yellow); font-weight: bold; text-shadow: 0 0 10px var(--unp-orange); }
+
+    /* Slider */
+    .slider-box { background: white; padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+    input[type=range] { width: 100%; max-width: 400px; accent-color: var(--unp-orange); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .spotlight-mask { background: rgba(0,0,0,0.5); } /* Menos oscuro en móvil */
+        .spotlight-container { cursor: auto; background: #333; }
+        .modal-content { width: 95%; padding: 20px; }
+    }
+</style>
+</head>
+<body>
+
+<div id="unp-game-master">
+
+    <!-- HEADER -->
+    <header class="game-header">
+        <h1>Interacción y Conceptos: El Cuidado</h1>
+        <p>Juega para descubrir las dinámicas y haz clic en el botón ➕ para leer la teoría completa.</p>
+        <div style="margin-top:20px; font-size:2rem; animation: bounce 2s infinite;">👇</div>
+    </header>
+
+    <!-- NIVEL 1: DOBLE DESIGUALDAD -->
+    <section class="level-container">
+        <div class="level-header-row">
+            <h2 class="level-title">1. La Doble Desigualdad</h2>
+            <button class="info-btn" onclick="openModal('modal1')" title="Leer concepto completo">➕</button>
+        </div>
+        
+        <p style="margin-bottom: 15px;">Arrastra el problema hacia quien lo sufre:</p>
+        
+        <div id="drag-items-container" style="text-align: center;">
+            <span class="drag-item" draggable="true" id="d1" ondragstart="drag(event)">Esquema solo físico</span>
+            <span class="drag-item" draggable="true" id="d2" ondragstart="drag(event)">Carga invisibilizada</span>
+            <span class="drag-item" draggable="true" id="d3" ondragstart="drag(event)">Desgaste personal</span>
+            <span class="drag-item" draggable="true" id="d4" ondragstart="drag(event)">Sin dimensión emocional</span>
+        </div>
+
+        <div class="drag-area">
+            <div class="drop-zone" ondrop="drop(event, 'protected')" ondragover="allowDrop(event)">
+                <h3 style="color:var(--unp-purple)">Hacia Personas Protegidas 👤</h3>
+            </div>
+            <div class="drop-zone" ondrop="drop(event, 'staff')" ondragover="allowDrop(event)">
+                <h3 style="color:var(--unp-purple)">Hacia Personal Institucional 🏢</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- NIVEL 2: DESNATURALIZAR -->
+    <section class="level-container">
+        <div class="level-header-row">
+            <h2 class="level-title">2. Desnaturalizar el Cuidado</h2>
+            <button class="info-btn" onclick="openModal('modal2')" title="Leer concepto completo">➕</button>
+        </div>
+
+        <p>Los prejuicios ocultan el valor real. <strong>Haz clic varias veces</strong> en los bloques para romper los mitos:</p>
+
+        <div class="myth-grid">
+            <div class="myth-card" onclick="breakMyth(this)">
+                "Es disposición biológica"
+                <div class="truth-content">🚫 NO ES BIOLÓGICO<br><small>Es trabajo con valor político.</small></div>
+            </div>
+            <div class="myth-card" onclick="breakMyth(this)">
+                "Es un atributo femenino"
+                <div class="truth-content">🏛️ ES ESTRUCTURAL<br><small>Garantía de derechos.</small></div>
+            </div>
+            <div class="myth-card" onclick="breakMyth(this)">
+                "Es natural y gratuito"
+                <div class="truth-content">💰 REQUIERE RECURSOS<br><small>Formación y presupuesto.</small></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NIVEL 3: INVISIBILIZACIÓN (LINTERNA) -->
+    <section class="level-container">
+        <div class="level-header-row">
+            <h2 class="level-title">3. Feminización e Invisibilización</h2>
+            <button class="info-btn" onclick="openModal('modal3')" title="Leer concepto completo">➕</button>
+        </div>
+
+        <p>Usa tu mouse/dedo como linterna para leer la realidad oculta en la estructura estatal:</p>
+
+        <div class="spotlight-container" id="spotlightArea">
+            <div class="spotlight-mask" id="spotlightMask"></div>
+            <div class="flashlight-icon">🔦</div>
+            <div class="hidden-text">
+                <p>La <span class="highlight">feminización del cuidado</span> es la asignación cultural de estas tareas a las mujeres.</p>
+                <br>
+                <p>Su invisibilización estatal implica que <span class="highlight">no se contabiliza</span> en políticas públicas ni economía formal.</p>
+                <br>
+                <p>Invisibilizarlo perpetúa la explotación. Reconocerlo permite avanzar hacia una institución <span class="highlight">corresponsable</span>.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- NIVEL 4: EVIDENCIAS (SLIDER) -->
+    <section class="level-container">
+        <div class="level-header-row">
+            <h2 class="level-title">4. Evidencias y Datos</h2>
+        </div>
+
+        <div class="slider-box">
+            <p>¿Quién dedica más horas al cuidado no remunerado?</p>
+            <div style="display:flex; justify-content:space-between; margin:10px 0; font-weight:bold; color:#777;">
+                <span>Hombres</span>
+                <span>Mujeres</span>
+            </div>
+            <input type="range" min="0" max="100" value="50" onchange="if(this.value > 60) document.getElementById('sliderRes').style.display='block'">
+            
+            <div id="sliderRes" style="display:none; margin-top:20px; background:#e8f5e9; padding:15px; border-radius:10px; border:1px solid #4caf50;">
+                <h3 style="color:#2e7d32; margin:0;">📊 ¡Exacto!</h3>
+                <p>Encuestas de uso del tiempo muestran que <strong>las mujeres dedican más horas al trabajo de cuidado no remunerado comparadas con hombres.</strong> <br><br>
+El mercado laboral del cuidado suele caracterizarse por <strong>salarios bajos, informalidad y ausencia de protección social</strong> (por ejemplo, trabajo doméstico).
+</p>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<!-- --- MODALES CON TEXTO COMPLETO (OCULTOS) --- -->
+
+<!-- Modal 1 -->
+<div class="modal-overlay" id="modal1" onclick="closeModal('modal1')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="close-modal" onclick="closeModal('modal1')">×</button>
+        <div class="modal-text">
+            <h3>Doble Desigualdad</h3>
+            <p>Esta lógica reproduce una doble desigualdad:</p>
+            <p>1. <strong>Hacia las personas protegidas:</strong> cuando se reduce la protección a un esquema físico sin comprender sus dimensiones sociales y emocionales.</p>
+            <p>2. <strong>Hacia el propio personal institucional:</strong> cuando el trabajo de cuidado se vuelve una carga invisibilizada y desproporcionada.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 2 -->
+<div class="modal-overlay" id="modal2" onclick="closeModal('modal2')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="close-modal" onclick="closeModal('modal2')">×</button>
+        <div class="modal-text">
+            <h3>Desnaturalizar el Cuidado</h3>
+            <p>Desnaturalizar el cuidado implica reconocer que:</p>
+            <ul>
+                <li>No es una disposición biológica ni un atributo femenino.</li>
+                <li>Es trabajo con <strong>valor político, social y económico</strong>.</li>
+                <li>Constituye una condición estructural para la garantía de derechos.</li>
+                <li>Requiere formación, recursos, distribución equitativa y reconocimiento institucional.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 3 -->
+<div class="modal-overlay" id="modal3" onclick="closeModal('modal3')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="close-modal" onclick="closeModal('modal3')">×</button>
+        <div class="modal-text">
+            <h3>Feminización e Invisibilización</h3>
+            <p>La <strong>feminización del cuidado</strong> se refiere al predominio de las mujeres en las tareas de cuidado —tanto remuneradas como no remuneradas— y a la asignación social y cultural de roles de cuidado como “femeninos”.</p>
+            <p>Su invisibilización dentro de la estructura estatal implica que estas tareas y su valor no se reconocen, no se contabilizan adecuadamente en políticas públicas ni en la economía formal, lo que reproduce desigualdades de género y limita derechos sociales y económicos.</p>
+            <p>Desde esta perspectiva, el cuidado no puede seguir siendo entendido como un complemento opcional de la protección, sino como su <strong>núcleo sustantivo</strong>. Invisibilizarlo perpetúa una forma de explotación estructural que sostiene tanto al mercado como al Estado.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 4 -->
+<div class="modal-overlay" id="modal4" onclick="closeModal('modal4')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="close-modal" onclick="closeModal('modal4')">×</button>
+        <div class="modal-text">
+            <h3>Evidencias y Ejemplos</h3>
+            <p><strong>Encuestas de uso del tiempo:</strong> muestran que las mujeres dedican más horas al trabajo de cuidado no remunerado comparadas con hombres.</p>
+            <p><strong>Mercado laboral del cuidado:</strong> suele caracterizarse por salarios bajos, informalidad y ausencia de protección social (por ejemplo, trabajo doméstico).</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- FUNCIONES MODALES ---
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+        document.body.style.overflow = 'hidden'; // Evitar scroll de fondo
+    }
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    // --- DRAG & DROP ---
+    function allowDrop(ev) { ev.preventDefault(); }
+    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+    function drop(ev, zone) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        var item = document.getElementById(data);
+        
+        // Validación simplificada para demostración
+        if ((zone === 'protected' && (data === 'd1' || data === 'd4')) || 
+            (zone === 'staff' && (data === 'd2' || data === 'd3'))) {
+            ev.target.appendChild(item);
+            item.style.backgroundColor = "#4caf50"; // Verde al acertar
+            item.innerHTML += " ✓";
+        } else {
+            alert("Intenta de nuevo. ¿A quién afecta más directamente?");
+        }
+    }
+    // Mobile click fallback
+    let selectedItem = null;
+    document.querySelectorAll('.drag-item').forEach(i => {
+        i.addEventListener('click', function() { selectedItem = this; this.style.border = "2px solid blue"; });
+    });
+    document.querySelectorAll('.drop-zone').forEach(z => {
+        z.addEventListener('click', function() {
+            if(selectedItem) { /* Logic similar to drop */ this.appendChild(selectedItem); selectedItem.style.border="none"; selectedItem=null; }
+        });
+    });
+
+    // --- BREAK MYTHS ---
+    function breakMyth(el) {
+        el.classList.add('broken');
+        // Pequeña vibración visual
+        el.style.transform = "rotate(2deg)";
+        setTimeout(() => el.style.transform = "rotate(0deg)", 100);
+    }
+
+    // --- SPOTLIGHT ---
+    const area = document.getElementById('spotlightArea');
+    area.addEventListener('mousemove', e => {
+        const rect = area.getBoundingClientRect();
+        area.style.setProperty('--x', (e.clientX - rect.left) + 'px');
+        area.style.setProperty('--y', (e.clientY - rect.top) + 'px');
+    });
+
+    // Animación Bounce Header
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = "@keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} }";
+    document.head.appendChild(styleSheet);
+
+</script>
+
+</body>
+</html>

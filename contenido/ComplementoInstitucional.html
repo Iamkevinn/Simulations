@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    /* --- SCOPED CSS: #unp-lesson-wrapper --- */
+    #unp-lesson-wrapper {
+        font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
+        line-height: 1.7;
+        color: #444;
+        background: linear-gradient(180deg, #ffffff 0%, #fdf2f8 100%);
+        max-width: 900px;
+        margin: 0 auto;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+        padding-bottom: 50px;
+    }
+
+    /* --- PALETA DE COLORES (Variables) --- */
+    #unp-lesson-wrapper {
+        --c-purple: #4a148c;       /* Institucional */
+        --c-purple-light: #7c43bd; /* Acento suave */
+        --c-orange: #ff6f00;       /* Acción / 25N */
+        --c-yellow: #fbc02d;       /* Resaltado */
+        --c-bg-card: #ffffff;
+        --c-text-head: #2c1a4d;
+    }
+
+    /* --- TYPOGRAPHY --- */
+    #unp-lesson-wrapper h1, 
+    #unp-lesson-wrapper h2, 
+    #unp-lesson-wrapper h3 {
+        color: var(--c-purple);
+        margin-top: 0;
+    }
+
+    .lesson-badge {
+        background: var(--c-orange);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        display: inline-block;
+        margin-bottom: 10px;
+        box-shadow: 0 4px 10px rgba(255, 111, 0, 0.3);
+    }
+
+    /* --- HERO SECTION & SCROLL INDICATOR --- */
+    .hero-section {
+        padding: 60px 30px;
+        text-align: center;
+        position: relative;
+        min-height: 80vh; /* Ocupa casi toda la pantalla inicial */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .hero-title {
+        font-size: 2.2rem;
+        background: -webkit-linear-gradient(45deg, var(--c-purple), var(--c-orange));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+        line-height: 1.2;
+    }
+
+    .scroll-indicator-box {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0.8;
+        cursor: pointer;
+        transition: opacity 0.3s;
+    }
+    
+    .scroll-text {
+        font-size: 0.8rem;
+        color: var(--c-purple-light);
+        margin-bottom: 5px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .mouse-icon {
+        width: 24px;
+        height: 38px;
+        border: 2px solid var(--c-purple);
+        border-radius: 15px;
+        position: relative;
+    }
+
+    .wheel {
+        width: 4px;
+        height: 8px;
+        background: var(--c-orange);
+        border-radius: 2px;
+        position: absolute;
+        top: 6px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: scrollWheel 1.5s infinite;
+    }
+
+    /* --- CONTENT BLOCKS --- */
+    .content-block {
+        padding: 40px 30px;
+        margin: 20px auto;
+        max-width: 800px;
+        opacity: 0; /* Para animación de entrada */
+        transform: translateY(30px);
+        transition: all 0.8s ease-out;
+    }
+
+    .content-block.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* --- INTERACTIVE: COMPARISON CARDS (Section 1) --- */
+    .comparison-container {
+        display: flex;
+        gap: 20px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+    }
+
+    .compare-card {
+        flex: 1;
+        min-width: 280px;
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        border-top: 5px solid #ddd;
+        transition: 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card-male { border-color: #546e7a; }
+    .card-female { border-color: var(--c-purple-light); }
+
+    .compare-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .icon-big { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+
+    /* --- INTERACTIVE: REVEAL BOX (Section 2) --- */
+    .reveal-box {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        position: relative;
+        border-left: 6px solid var(--c-yellow);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        cursor: pointer;
+    }
+
+    .reveal-blur {
+        filter: blur(5px);
+        opacity: 0.6;
+        transition: all 0.6s ease;
+        user-select: none;
+    }
+
+    .reveal-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(255,255,255,0.6);
+        z-index: 2;
+        transition: opacity 0.4s;
+    }
+
+    .reveal-btn {
+        background: var(--c-purple);
+        color: white;
+        padding: 10px 25px;
+        border: none;
+        border-radius: 30px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(74, 20, 140, 0.4);
+        animation: pulse 2s infinite;
+    }
+
+    .reveal-box.active .reveal-blur { filter: blur(0); opacity: 1; user-select: auto; }
+    .reveal-box.active .reveal-overlay { opacity: 0; pointer-events: none; }
+
+    /* --- INTERACTIVE: UNP GRID (Section 3) --- */
+    .unp-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    .manifest-item {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid rgba(0,0,0,0.05);
+        cursor: pointer;
+        transition: 0.3s;
+        position: relative;
+    }
+
+    .manifest-item:hover {
+        background: #fafafa;
+        border-color: var(--c-orange);
+    }
+
+    .manifest-check {
+        position: absolute;
+        top: 15px; right: 15px;
+        width: 20px; height: 20px;
+        border: 2px solid #ddd;
+        border-radius: 50%;
+        transition: 0.3s;
+    }
+
+    .manifest-item.read .manifest-check {
+        background: var(--c-orange);
+        border-color: var(--c-orange);
+        box-shadow: 0 0 8px var(--c-orange);
+    }
+
+    .manifest-item.read .manifest-check::after {
+        content: '✓';
+        color: white;
+        font-size: 12px;
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .manifest-text {
+        font-size: 0.95rem;
+        color: #555;
+    }
+    
+    .manifest-title {
+        font-weight: bold;
+        color: var(--c-purple);
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    /* --- ANIMATIONS --- */
+    @keyframes scrollWheel {
+        0% { top: 6px; opacity: 1; }
+        100% { top: 20px; opacity: 0; }
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    /* Responsive Font Adjustments */
+    @media (max-width: 600px) {
+        .hero-title { font-size: 1.6rem; }
+        .content-block { padding: 20px; }
+    }
+
+</style>
+</head>
+<body>
+
+<div id="unp-lesson-wrapper">
+
+    <!-- HERO SECTION -->
+    <div class="hero-section">
+        <span class="lesson-badge">UNP</span>
+        <h1 class="hero-title">La feminización del cuidado y su invisibilización dentro de la estructura estatal</h1>
+        <p style="max-width: 600px; margin: 0 auto; color: #666;">
+            Analizaremos cómo las lógicas históricas de género permean la estructura del Estado y la protección.
+        </p>
+        
+        <!-- SCROLL ANIMATION -->
+        <div class="scroll-indicator-box" onclick="scrollToContent()">
+            <span class="scroll-text">Desliza para comenzar</span>
+            <div class="mouse-icon">
+                <div class="wheel"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 1: CONTEXTO HISTÓRICO -->
+    <div class="content-block" id="start-content">
+        <h2>1. La Jerarquización Histórica</h2>
+        <p>El cuidado ha sido históricamente asignado a las mujeres como una extensión “natural” de su rol social, vinculado a la maternidad, la domesticidad y la disposición emocional hacia otras personas.</p>
+        <p>Esta asignación no solo produjo una división sexual del trabajo, sino también una <strong>jerarquización</strong>:</p>
+
+        <div class="comparison-container">
+            <!-- Tarjeta 1 -->
+            <div class="compare-card card-male">
+                <span class="icon-big">🏭</span>
+                <h3 style="font-size: 1.1rem; color: #546e7a;">Trabajo Productivo</h3>
+                <p style="font-size: 0.9rem;">Asociado a lo masculino y al mercado.</p>
+                <div style="margin-top: 15px; padding: 5px; background: #eceff1; border-radius: 5px; text-align: center; font-weight: bold; font-size: 0.8rem; color: #546e7a;">
+                    RECONOCIDO Y REMUNERADO
+                </div>
+            </div>
+
+            <!-- Tarjeta 2 -->
+            <div class="compare-card card-female">
+                <span class="icon-big">🤱</span>
+                <h3 style="font-size: 1.1rem; color: var(--c-purple-light);">Trabajo de Cuidado</h3>
+                <p style="font-size: 0.9rem;">Asociado a lo femenino.</p>
+                <div style="margin-top: 15px; padding: 5px; background: #f3e5f5; border-radius: 5px; text-align: center; font-weight: bold; font-size: 0.8rem; color: var(--c-purple);">
+                    INVISIBILIZADO O SUBVALORADO
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 2: EL ESTADO (REVEAL INTERACTION) -->
+    <div class="content-block">
+        <h2>2. La Ilusión de Neutralidad del Estado</h2>
+        <p style="margin-bottom: 20px;">¿Es el Estado realmente una estructura técnica y neutral? Haz clic para ver la realidad:</p>
+
+        <div class="reveal-box" id="revealSection" onclick="activateReveal()">
+            <div class="reveal-overlay">
+                <button class="reveal-btn">👆 Revelar Realidad Institucional</button>
+            </div>
+            
+            <div class="reveal-blur">
+                <p>Aunque el Estado moderno se presenta como una estructura racional, neutral y técnica, <strong>no está exento de estas lógicas históricas.</strong></p>
+                <p>Las instituciones públicas también se sostienen sobre formas de cuidado que rara vez se reconocen como tales. La atención diferencial, la escucha activa, el acompañamiento psicosocial, la mediación de conflictos y la contención emocional son dimensiones esenciales del servicio público, pero frecuentemente son consideradas secundarias frente a funciones operativas, logísticas o de control.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 3: CONTEXTO UNP (CHECKLIST INTERACTIVO) -->
+    <div class="content-block">
+        <h2>3. En el contexto de la UNP</h2>
+        <p>Esta invisibilización se manifiesta en prácticas cotidianas. <br><strong>Haz clic en cada tarjeta</strong> para identificar las manifestaciones:</p>
+
+        <div class="unp-grid">
+            
+            <div class="manifest-item" onclick="markRead(this)">
+                <div class="manifest-check"></div>
+                <span class="manifest-title">La Prioridad</span>
+                <p class="manifest-text">Se prioriza la dimensión armada o material de la protección sobre el acompañamiento integral.</p>
+            </div>
+
+            <div class="manifest-item" onclick="markRead(this)">
+                <div class="manifest-check"></div>
+                <span class="manifest-title">El Análisis</span>
+                <p class="manifest-text">Se minimiza la importancia del análisis psicosocial del riesgo.</p>
+            </div>
+
+            <div class="manifest-item" onclick="markRead(this)">
+                <div class="manifest-check"></div>
+                <span class="manifest-title">Las "Habilidades Blandas"</span>
+                <p class="manifest-text">Se asume que la contención emocional o la atención empática no son competencias institucionales estratégicas.</p>
+            </div>
+
+            <div class="manifest-item" onclick="markRead(this)">
+                <div class="manifest-check"></div>
+                <span class="manifest-title">La Carga Informal</span>
+                <p class="manifest-text">Se distribuyen tareas de cuidado de manera informal, recargando a determinadas personas sin reconocimiento ni respaldo estructural.</p>
+            </div>
+
+        </div>
+        
+        <div id="completion-msg" style="text-align: center; margin-top: 30px; opacity: 0; transition: opacity 1s;">
+            <p style="color: var(--c-orange); font-weight: bold; font-size: 1.2rem;">✨ ¡Lección Completada!</p>
+            <p style="font-size: 0.9rem;">Has identificado las dinámicas de invisibilización.</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // 1. SCROLL FUNCTION
+    function scrollToContent() {
+        const content = document.getElementById('start-content');
+        content.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // 2. ANIMACIÓN AL HACER SCROLL (INTERSECTION OBSERVER)
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.content-block').forEach(block => {
+        observer.observe(block);
+    });
+
+    // 3. REVEAL INTERACTION
+    function activateReveal() {
+        const box = document.getElementById('revealSection');
+        box.classList.add('active');
+    }
+
+    // 4. CHECKLIST LOGIC
+    let itemsClicked = 0;
+    const totalItems = 4;
+
+    function markRead(element) {
+        if (!element.classList.contains('read')) {
+            element.classList.add('read');
+            // Efecto de feedback visual
+            element.style.transform = "scale(1.02)";
+            setTimeout(() => {
+                element.style.transform = "scale(1)";
+            }, 200);
+
+            itemsClicked++;
+            checkCompletion();
+        }
+    }
+
+    function checkCompletion() {
+        if (itemsClicked === totalItems) {
+            document.getElementById('completion-msg').style.opacity = '1';
+        }
+    }
+</script>
+
+</body>
+</html>

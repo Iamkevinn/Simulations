@@ -3,417 +3,443 @@
 <head>
 <meta charset="UTF-8">
 <style>
-    /* --- ESTILOS SCOPED (Para que no rompa tu WordPress) --- */
-    #unp-ova-container {
+    /* --- SCOPED CONTAINER --- */
+    #unp-ova-master {
         font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         line-height: 1.6;
         color: #333;
-        background: linear-gradient(180deg, #ffffff 0%, #fff5f8 100%); /* Fondo rosado muy pálido */
-        max-width: 800px;
+        background: linear-gradient(180deg, #ffffff 0%, #fff0f5 100%);
+        max-width: 900px; /* Un poco más ancho para mejor lectura */
         margin: 0 auto;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        position: relative;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(74, 20, 140, 0.1);
         overflow: hidden;
+        position: relative;
     }
 
-    /* Variables de Color (Basadas en tu imagen) */
-    #unp-ova-container {
-        --unp-purple: #4a148c;
-        --unp-purple-light: #7c43bd;
-        --campaign-orange: #ff6f00;
-        --campaign-yellow: #fbc02d;
-        --text-dark: #2d2d2d;
+    /* --- PALETA DE COLORES --- */
+    #unp-ova-master {
+        --purple-main: #4a148c;
+        --purple-light: #7c43bd;
+        --orange-acc: #ff6f00;
+        --yellow-leaf: #fbc02d;
+        --soft-pink: #fdf2f8;
+        --text-gray: #4a4a4a;
         --white: #ffffff;
     }
 
-    /* Tipografía y Títulos */
-    .unp-header {
+    /* --- HEADER & PROGRESS BAR --- */
+    .ova-header {
+        background: var(--purple-main);
+        color: white;
+        padding: 30px 20px;
         text-align: center;
-        margin-bottom: 40px;
-        animation: fadeInDown 1s ease-out;
+        position: relative;
     }
 
-    .unp-badge {
-        background-color: var(--unp-purple);
-        color: var(--white);
-        padding: 5px 15px;
-        border-radius: 50px;
-        font-size: 0.8rem;
+    .progress-track {
+        background: rgba(255,255,255,0.2);
+        height: 6px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
+    
+    .progress-fill {
+        background: var(--yellow-leaf);
+        height: 100%;
+        width: 33%; /* Empieza en la sección 1 */
+        transition: width 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 0 10px var(--yellow-leaf);
+    }
+
+    .badge {
+        background: var(--orange-acc);
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 1px;
-        font-weight: bold;
-        display: inline-block;
-        margin-bottom: 10px;
     }
 
-    .unp-title {
-        font-size: 2rem;
-        color: var(--campaign-orange);
-        line-height: 1.2;
-        margin-bottom: 10px;
-    }
-
-    .unp-subtitle {
-        font-size: 1.1rem;
-        color: var(--unp-purple-light);
-        font-weight: 500;
-    }
-
-    /* --- SCROLL INDICATOR (Animación de bajar) --- */
-    .scroll-cue {
-        position: fixed; /* Ojo: en WP a veces mejor relative o absolute si está en iframe */
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--campaign-yellow);
-        color: var(--unp-purple);
-        padding: 10px 20px;
-        border-radius: 30px;
-        font-weight: bold;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        z-index: 100;
-        animation: bounce 2s infinite;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        opacity: 0.9;
-        transition: opacity 0.3s;
-    }
+    h1 { margin: 10px 0 5px; font-size: 1.8rem; }
     
-    /* Hack para que el fixed no moleste en previsualización WP, 
-       usamos sticky dentro del contenedor */
-    .scroll-cue-wrapper {
-        position: sticky;
-        bottom: 20px;
+    /* --- NAVIGATION TABS --- */
+    .nav-tabs {
         display: flex;
-        justify-content: center;
-        pointer-events: none; /* Click through */
-        z-index: 99;
-    }
-    .scroll-cue-inner {
-        pointer-events: auto;
-        background: var(--campaign-yellow);
-        color: var(--unp-purple);
-        padding: 8px 20px;
-        border-radius: 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        font-weight: bold;
-        animation: bounce 2s infinite;
-        font-size: 0.9rem;
-    }
-
-    /* --- INTERACTIVIDAD 1: TOGGLE SWITCH (Comparativa) --- */
-    .toggle-section {
+        justify-content: space-around;
         background: white;
-        padding: 25px;
-        border-radius: 15px;
-        border-left: 5px solid var(--campaign-orange);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        margin-bottom: 40px;
-        text-align: center;
-    }
-
-    .switch-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 20px 0;
-        gap: 15px;
-    }
-
-    .switch-label { font-weight: bold; color: #888; transition: 0.3s; }
-    .switch-label.active { color: var(--unp-purple); transform: scale(1.1); }
-
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 60px;
-        height: 34px;
-    }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background-color: #ccc;
-        transition: .4s;
-        border-radius: 34px;
-    }
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
-    input:checked + .slider { background-color: var(--campaign-orange); }
-    input:checked + .slider:before { transform: translateX(26px); }
-
-    .dynamic-content {
-        min-height: 100px;
-        padding: 15px;
-        background: #f9f9f9;
-        border-radius: 10px;
-        transition: all 0.5s ease;
-    }
-
-    /* --- INTERACTIVIDAD 2: DETAILS/SUMMARY (Acordeón Animado) --- */
-    .insight-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
-        margin-bottom: 40px;
-    }
-
-    details.custom-card {
-        background: #fff;
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid #eee;
-        transition: transform 0.3s, box-shadow 0.3s;
-        cursor: pointer;
-    }
-
-    details.custom-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(74, 20, 140, 0.15);
-    }
-
-    details.custom-card summary {
-        padding: 20px;
-        font-weight: bold;
-        color: var(--unp-purple);
-        list-style: none; /* Ocultar flecha por defecto */
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: linear-gradient(90deg, #fff 90%, #fdf2f8 100%);
-    }
-
-    details.custom-card summary::-webkit-details-marker { display: none; }
-    
-    details.custom-card summary::after {
-        content: '+';
-        font-size: 1.5rem;
-        color: var(--campaign-orange);
-        font-weight: bold;
-        transition: transform 0.3s;
-    }
-
-    details.custom-card[open] summary::after {
-        transform: rotate(45deg);
-    }
-
-    details.custom-card[open] summary {
-        border-bottom: 2px solid var(--campaign-yellow);
-    }
-
-    .card-content {
-        padding: 20px;
-        color: #555;
-        font-size: 0.95rem;
-        background-color: #fff;
-        animation: fadeIn 0.5s;
-    }
-
-    /* --- GAMIFICACIÓN: SELECTOR DE CONCEPTOS --- */
-    .gamification-area {
-        background: var(--unp-purple);
-        color: white;
-        padding: 30px;
-        border-radius: 20px;
-        text-align: center;
-        margin-top: 40px;
-    }
-    
-    .game-options {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
         flex-wrap: wrap;
-        margin-top: 20px;
+        gap: 10px;
     }
 
-    .game-btn {
-        background: rgba(255,255,255,0.1);
-        border: 2px solid var(--campaign-yellow);
-        color: white;
+    .tab-btn {
+        background: none;
+        border: none;
         padding: 10px 20px;
-        border-radius: 30px;
+        font-weight: 600;
+        color: var(--text-gray);
         cursor: pointer;
+        border-radius: 50px;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+        flex: 1 1 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .tab-btn:hover { background: var(--soft-pink); color: var(--purple-main); }
+    
+    .tab-btn.active {
+        background: var(--purple-light);
+        color: white;
+        box-shadow: 0 4px 10px rgba(124, 67, 189, 0.3);
+    }
+
+    /* --- CONTENT SECTIONS --- */
+    .content-area {
+        padding: 30px;
+        min-height: 400px;
+        position: relative;
+    }
+
+    .tab-content {
+        display: none; /* Ocultos por defecto */
+        animation: slideIn 0.6s ease-out;
+    }
+    
+    .tab-content.active { display: block; }
+
+    /* --- SCROLL CUE --- */
+    .scroll-cue {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.9rem;
+        color: var(--purple-light);
+        animation: float 2s infinite;
+        opacity: 0.8;
+    }
+
+    /* --- COMPONENTS: SECTION 1 (PROTECTION) --- */
+    .toggle-box {
+        background: white;
+        border: 2px solid #eee;
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 20px;
         transition: 0.3s;
     }
+    .toggle-box:hover { border-color: var(--orange-acc); }
 
-    .game-btn:hover { background: var(--campaign-yellow); color: var(--unp-purple); }
-    .game-btn.correct { background: #4caf50; border-color: #4caf50; }
-    .game-btn.wrong { background: #f44336; border-color: #f44336; }
-
-    #feedback-msg { margin-top: 15px; font-weight: bold; min-height: 20px; }
-
-    /* Animaciones */
-    @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-        40% {transform: translateY(-10px);}
-        60% {transform: translateY(-5px);}
+    /* --- COMPONENTS: SECTION 2 (FEMINIZATION) --- */
+    .card-reveal-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
     }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .reveal-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        border-bottom: 4px solid var(--purple-light);
+        transition: transform 0.3s;
+    }
+    
+    .reveal-card:hover { transform: translateY(-5px); }
 
+    .reveal-icon { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+    
+    .blur-text {
+        filter: blur(4px);
+        opacity: 0.5;
+        transition: 0.5s;
+        user-select: none;
+    }
+    
+    .reveal-card:hover .blur-text, .reveal-card.revealed .blur-text {
+        filter: blur(0);
+        opacity: 1;
+        color: var(--purple-main);
+    }
+
+    .click-hint {
+        font-size: 0.7rem;
+        color: var(--orange-acc);
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+
+    /* --- COMPONENTS: SECTION 3 (HIERARCHY) --- */
+    .split-view {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .path-card {
+        flex: 1;
+        padding: 20px;
+        border-radius: 15px;
+        min-width: 280px;
+    }
+    
+    .path-bad {
+        background: #fff0f0;
+        border-left: 5px solid #e57373;
+    }
+    
+    .path-good {
+        background: #e8f5e9;
+        border-left: 5px solid #66bb6a;
+    }
+
+    .checklist-item {
+        background: white;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    
+    .checklist-item:hover { background: var(--soft-pink); }
+    .checklist-check {
+        width: 24px; height: 24px;
+        border: 2px solid var(--purple-light);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        color: white;
+    }
+    .checklist-item.checked .checklist-check {
+        background: var(--orange-acc);
+        border-color: var(--orange-acc);
+    }
+
+    /* --- ANIMATIONS --- */
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(5px); }
+    }
+    
+    /* Responsive tweaks */
+    @media (max-width: 600px) {
+        .nav-tabs { flex-direction: column; }
+        h1 { font-size: 1.4rem; }
+    }
 </style>
 </head>
 <body>
 
-<div id="unp-ova-container">
+<div id="unp-ova-master">
 
-    <!-- Header -->
-    <header class="unp-header">
-        <span class="unp-badge">UNP 2026 | Formación</span>
-        <h1 class="unp-title">Protección, Cuidado y Jerarquía</h1>
-        <p class="unp-subtitle">Redefiniendo el rol institucional</p>
+    <!-- HEADER -->
+    <header class="ova-header">
+        <span class="badge">Módulo Género y Cuidado</span>
+        <h1>Relación entre protección, cuidado y jerarquía institucional</h1>
+        <p style="opacity: 0.9;">Haz clic en las pestañas para navegar el contenido</p>
+        
+        <!-- Barra de Progreso Gamificada -->
+        <div class="progress-track">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
     </header>
 
-    <!-- Indicador de Scroll (Se oculta al bajar) -->
-    <div class="scroll-cue-wrapper" id="scrollIndicator">
-        <div class="scroll-cue-inner">
-            👇 Desliza para aprender
-        </div>
-    </div>
+    <!-- NAVEGACIÓN -->
+    <nav class="nav-tabs">
+        <button class="tab-btn active" onclick="openTab(0)">1. Protección = Cuidado</button>
+        <button class="tab-btn" onclick="openTab(1)">2. Feminización e Invisibilidad</button>
+        <button class="tab-btn" onclick="openTab(2)">3. Jerarquía y Ética</button>
+    </nav>
 
-    <!-- Introducción Animada -->
-    <div style="margin-bottom: 40px;">
-        <p><strong>La protección ejercida por la UNP constituye una forma específica de cuidado institucional.</strong> No es solo asignar escoltas o chalecos; es la garantía efectiva de la vida y la dignidad de quienes enfrentan riesgos extraordinarios.</p>
-    </div>
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div class="content-area">
 
-    <!-- Interactive Toggle: El cambio de paradigma -->
-    <section class="toggle-section">
-        <h3>🔄 Cambio de Paradigma</h3>
-        <p style="font-size: 0.9rem; margin-bottom: 15px;">Mueve el interruptor para ver la diferencia de enfoque.</p>
-        
-        <div class="switch-container">
-            <span class="switch-label active" id="label-tech">Visión Técnica</span>
-            <label class="switch">
-                <input type="checkbox" id="viewToggle">
-                <span class="slider"></span>
-            </label>
-            <span class="switch-label" id="label-care">Visión de Cuidado</span>
-        </div>
-
-        <div class="dynamic-content" id="toggleContent">
-            <!-- El contenido cambia con JS -->
-            <h4 style="color:#777;">La Visión Técnica (Tradicional)</h4>
-            <p>La protección se ve como un proceso operativo y administrativo. Se enfoca en "recursos" y "esquemas". Es neutra y procedimental.</p>
-        </div>
-    </section>
-
-    <!-- Cards Accordion: Los 3 Pilares -->
-    <h3 style="color: var(--unp-purple); text-align: center; margin-bottom: 20px;">¿Qué implica comprender la protección como cuidado?</h3>
-    <div class="insight-grid">
-        
-        <details class="custom-card">
-            <summary>1. Dimensión Ética y Relacional</summary>
-            <div class="card-content">
-                <p>El cuidado no es un acto neutro. Implica una relación de poder. Al reconocer esto, entendemos que proteger es un acto político que puede reproducir jerarquías o <strong>transformarlas</strong>.</p>
+        <!-- SECCIÓN 1: PROTECCIÓN -->
+        <div id="tab-0" class="tab-content active">
+            <h2 style="color: var(--purple-main);">🛡️ La protección como cuidado institucional</h2>
+            <p>La protección en la UNP no es solo un acto operativo. Al garantizar la vida de líderes, lideresas y defensores de DDHH, la institución ejerce una forma de <strong>cuidado politizado</strong>.</p>
+            
+            <div style="margin: 30px 0;">
+                <div class="toggle-box">
+                    <h3 style="color: var(--orange-acc);">¿Cuál es la diferencia?</h3>
+                    <p>Haz clic en los conceptos para expandir</p>
+                    
+                    <details style="text-align: left; margin-top: 15px; cursor: pointer;">
+                        <summary style="font-weight: bold; color: var(--text-gray);">⚙️ Visión Tradicional (Operativa)</summary>
+                        <p style="padding: 10px; color: #666;">Se limita a esquemas, armas y vehículos. Es procedimental y asume neutralidad.</p>
+                    </details>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0;">
+                    <details open style="text-align: left; margin-top: 15px; cursor: pointer;">
+                        <summary style="font-weight: bold; color: var(--purple-main);">💜 Visión de Cuidado (Transformadora)</summary>
+                        <p style="padding: 10px;">Reconoce el impacto humano. Entiende que proteger es cuidar la vida y el tejido social de sujetos históricamente vulnerados.</p>
+                    </details>
+                </div>
             </div>
-        </details>
-
-        <details class="custom-card">
-            <summary>2. Superar lo Operativo</summary>
-            <div class="card-content">
-                <p>La protección deja de ser un "trámite" o la asignación de un vehículo. Se convierte en una responsabilidad sustantiva frente a sujetos históricamente vulnerabilizados (líderes, lideresas, etnias).</p>
-            </div>
-        </details>
-
-        <details class="custom-card">
-            <summary>3. Impacto Humano Directo</summary>
-            <div class="card-content">
-                <p>Cada decisión en el análisis de riesgo afecta vidas reales. Reconocemos que el cuidado institucional se ejerce desde estructuras formales, a diferencia del cuidado doméstico.</p>
-            </div>
-        </details>
-
-    </div>
-
-    <!-- Gamificación Final -->
-    <div class="gamification-area">
-        <h3>🧠 Check Rápido</h3>
-        <p>¿Qué característica diferencia al Cuidado Institucional (UNP) del Cuidado Doméstico?</p>
-        
-        <div class="game-options">
-            <button class="game-btn" onclick="checkAnswer(this, false)">Es realizado por mujeres</button>
-            <button class="game-btn" onclick="checkAnswer(this, true)">Se ejerce desde estructuras de poder</button>
-            <button class="game-btn" onclick="checkAnswer(this, false)">Es un acto privado</button>
+            
+            <div class="scroll-cue">👇 Continúa a la siguiente pestaña</div>
         </div>
-        <div id="feedback-msg"></div>
-    </div>
 
+        <!-- SECCIÓN 2: FEMINIZACIÓN -->
+        <div id="tab-1" class="tab-content">
+            <h2 style="color: var(--purple-main);">📉 Feminización e Invisibilización</h2>
+            <p>Históricamente, el cuidado se ha considerado "natural" de las mujeres. En la UNP, esto se traduce en desvalorizar ciertas tareas esenciales.</p>
+            
+            <h4 style="margin-top: 20px; color: var(--orange-acc);">Manifestaciones en la Estructura Estatal</h4>
+            <p style="font-size: 0.9rem;">Pasa el mouse (o toca) las tarjetas para revelar la realidad oculta:</p>
+
+            <div class="card-reveal-grid">
+                <!-- Tarjeta 1 -->
+                <div class="reveal-card" onclick="this.classList.toggle('revealed')">
+                    <span class="click-hint">Click para revelar</span>
+                    <span class="reveal-icon">⚔️ vs 🤝</span>
+                    <strong>Lo que se ve:</strong> Prioridad a lo armado.
+                    <div class="blur-text">
+                        <br><strong>Realidad Invisible:</strong> Se desvaloriza el acompañamiento integral y la escucha activa, considerándolos "blandos".
+                    </div>
+                </div>
+
+                <!-- Tarjeta 2 -->
+                <div class="reveal-card" onclick="this.classList.toggle('revealed')">
+                    <span class="click-hint">Click para revelar</span>
+                    <span class="reveal-icon">🧠</span>
+                    <strong>Lo que se ve:</strong> Riesgo físico.
+                    <div class="blur-text">
+                        <br><strong>Realidad Invisible:</strong> Se ignora el componente psicosocial del riesgo y el impacto emocional en el protegido/a.
+                    </div>
+                </div>
+
+                <!-- Tarjeta 3 -->
+                <div class="reveal-card" onclick="this.classList.toggle('revealed')">
+                    <span class="click-hint">Click para revelar</span>
+                    <span class="reveal-icon">🎁</span>
+                    <strong>Lo que se ve:</strong> "Vocación".
+                    <div class="blur-text">
+                        <br><strong>Realidad Invisible:</strong> Se asume el cuidado como obligación implícita, sin formación ni recursos asignados.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: JERARQUÍA Y ÉTICA -->
+        <div id="tab-2" class="tab-content">
+            <h2 style="color: var(--purple-main);">⚖️ Jerarquía y Ética del Cuidado</h2>
+            <p>El poder institucional puede usarse de dos formas. ¿Cómo decidimos ejercer la protección?</p>
+
+            <div class="split-view">
+                <div class="path-card path-bad">
+                    <h3 style="color: #c62828;">⛔ Reproducir Jerarquías</h3>
+                    <p>Se impone de manera vertical.</p>
+                    <p>No se escucha a la persona protegida.</p>
+                    <p>Decisiones basadas solo en "eficiencia".</p>
+                </div>
+                <div class="path-card path-good">
+                    <h3 style="color: #2e7d32;">✅ Transformar el Poder</h3>
+                    <p>Se ejerce desde la corresponsabilidad.</p>
+                    <p>Enfoque diferencial y respeto.</p>
+                    <p>Orientado a la dignidad humana.</p>
+                </div>
+            </div>
+
+            <h3 style="text-align: center; margin-bottom: 20px;">Checklist: Ética del Cuidado en la Función Pública</h3>
+            <p style="text-align: center; font-size: 0.9rem; margin-bottom: 20px;">Marca las afirmaciones que representan una verdadera ética del cuidado:</p>
+
+            <div id="quiz-area">
+                <div class="checklist-item" onclick="toggleCheck(this, true)">
+                    <div class="checklist-check">✔</div>
+                    <span>Reconocer que el protocolo formal no es suficiente.</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this, false)">
+                    <div class="checklist-check">✔</div>
+                    <span>Aplicar medidas estandarizadas a todos por igual para ahorrar tiempo.</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this, true)">
+                    <div class="checklist-check">✔</div>
+                    <span>Garantizar la participación de la persona protegida en las decisiones.</span>
+                </div>
+            </div>
+            
+            <div id="feedback-final" style="margin-top:20px; text-align:center; font-weight:bold; color: var(--purple-main); display:none;">
+                🎉 ¡Excelente! Has identificado los pilares del cuidado transformador.
+            </div>
+
+        </div>
+
+    </div>
 </div>
 
 <script>
-    // 1. Lógica del Toggle (Cambio de Visión)
-    const toggle = document.getElementById('viewToggle');
-    const content = document.getElementById('toggleContent');
-    const labelTech = document.getElementById('label-tech');
-    const labelCare = document.getElementById('label-care');
+    // CONTROL DE PESTAÑAS Y BARRA DE PROGRESO
+    function openTab(tabIndex) {
+        // 1. Ocultar todos los contenidos
+        const contents = document.querySelectorAll('.tab-content');
+        contents.forEach(content => content.classList.remove('active'));
 
-    toggle.addEventListener('change', function() {
-        // Efecto de desvanecimiento
-        content.style.opacity = 0;
+        // 2. Desactivar todos los botones
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+
+        // 3. Activar el seleccionado
+        document.getElementById('tab-' + tabIndex).classList.add('active');
+        buttons[tabIndex].classList.add('active');
+
+        // 4. Actualizar barra de progreso (33%, 66%, 100%)
+        const progressBar = document.getElementById('progressBar');
+        const progressValues = ['33%', '66%', '100%'];
+        progressBar.style.width = progressValues[tabIndex];
         
-        setTimeout(() => {
-            if(this.checked) {
-                // Estado: Visión de Cuidado
-                content.innerHTML = '<h4 style="color: var(--campaign-orange);">🌿 La Visión de Cuidado (Transformadora)</h4><p>La protección garantiza vida y dignidad. Es una práctica política que busca transformar jerarquías y reconoce el impacto humano.</p>';
-                content.style.borderLeft = "5px solid var(--campaign-orange)";
-                labelTech.classList.remove('active');
-                labelCare.classList.add('active');
-            } else {
-                // Estado: Visión Técnica
-                content.innerHTML = '<h4 style="color:#777;">⚙️ La Visión Técnica (Tradicional)</h4><p>La protección se ve como un proceso operativo y administrativo. Se enfoca en "recursos" y "esquemas". Es neutra y procedimental.</p>';
-                content.style.borderLeft = "5px solid #ccc";
-                labelTech.classList.add('active');
-                labelCare.classList.remove('active');
-            }
-            content.style.opacity = 1;
-        }, 300);
-    });
-
-    // 2. Lógica del Indicador de Scroll
-    window.addEventListener('scroll', function() {
-        const indicator = document.getElementById('scrollIndicator');
-        if (window.scrollY > 100) {
-            indicator.style.opacity = '0';
-        } else {
-            indicator.style.opacity = '0.9';
+        // Scroll suave al inicio del contenido en móviles
+        if(window.innerWidth < 600) {
+            document.querySelector('.content-area').scrollIntoView({behavior: 'smooth'});
         }
-    });
+    }
 
-    // 3. Lógica de Gamificación
-    function checkAnswer(btn, isCorrect) {
-        const feedback = document.getElementById('feedback-msg');
-        
-        // Reset styles
-        const allBtns = document.querySelectorAll('.game-btn');
-        allBtns.forEach(b => {
-            b.classList.remove('correct', 'wrong');
-            b.style.opacity = '0.5';
-        });
+    // MICROINTERACCIÓN DEL CHECKLIST
+    function toggleCheck(element, isCorrect) {
+        // Evitar doble click si ya está resuelto
+        if(element.classList.contains('checked') || element.classList.contains('wrong')) return;
 
-        btn.style.opacity = '1';
-
-        if(isCorrect) {
-            btn.classList.add('correct');
-            feedback.innerHTML = "✅ ¡Correcto! La protección institucional opera desde estructuras formales y públicas.";
-            feedback.style.color = "#a5d6a7"; // Verde claro
+        if (isCorrect) {
+            element.classList.add('checked');
+            element.style.background = "#e8f5e9"; // Verde claro
+            element.querySelector('.checklist-check').innerHTML = "✓";
         } else {
-            btn.classList.add('wrong');
-            feedback.innerHTML = "❌ Intenta de nuevo. Recuerda el texto sobre 'Jerarquía Institucional'.";
-            feedback.style.color = "#ef9a9a"; // Rojo claro
+            element.classList.add('wrong');
+            element.style.background = "#ffebee"; // Rojo claro
+            element.querySelector('span').style.textDecoration = "line-through";
+            element.querySelector('span').innerHTML += " (Incorrecto: Esto es violencia institucional)";
+            element.querySelector('.checklist-check').innerHTML = "X";
+            element.querySelector('.checklist-check').style.borderColor = "red";
+            element.querySelector('.checklist-check').style.background = "red";
+        }
+
+        // Verificar si completó los correctos para mostrar mensaje final
+        const correctItems = document.querySelectorAll('.checklist-item.checked');
+        if(correctItems.length >= 2) {
+            document.getElementById('feedback-final').style.display = 'block';
+            document.getElementById('feedback-final').classList.add('slideIn');
         }
     }
 </script>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+    /* --- ESTILOS SCOPED (Para que no rompa tu WordPress) --- */
+    #unp-ova-container {
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(180deg, #ffffff 0%, #fff5f8 100%); /* Fondo rosado muy pálido */
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Variables de Color (Basadas en tu imagen) */
+    #unp-ova-container {
+        --unp-purple: #4a148c;
+        --unp-purple-light: #7c43bd;
+        --campaign-orange: #ff6f00;
+        --campaign-yellow: #fbc02d;
+        --text-dark: #2d2d2d;
+        --white: #ffffff;
+    }
+
+    /* Tipografía y Títulos */
+    .unp-header {
+        text-align: center;
+        margin-bottom: 40px;
+        animation: fadeInDown 1s ease-out;
+    }
+
+    .unp-badge {
+        background-color: var(--unp-purple);
+        color: var(--white);
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: bold;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+
+    .unp-title {
+        font-size: 2rem;
+        color: var(--campaign-orange);
+        line-height: 1.2;
+        margin-bottom: 10px;
+    }
+
+    .unp-subtitle {
+        font-size: 1.1rem;
+        color: var(--unp-purple-light);
+        font-weight: 500;
+    }
+
+    /* --- SCROLL INDICATOR (Animación de bajar) --- */
+    .scroll-cue {
+        position: fixed; /* Ojo: en WP a veces mejor relative o absolute si está en iframe */
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--campaign-yellow);
+        color: var(--unp-purple);
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        z-index: 100;
+        animation: bounce 2s infinite;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        opacity: 0.9;
+        transition: opacity 0.3s;
+    }
+    
+    /* Hack para que el fixed no moleste en previsualización WP, 
+       usamos sticky dentro del contenedor */
+    .scroll-cue-wrapper {
+        position: sticky;
+        bottom: 20px;
+        display: flex;
+        justify-content: center;
+        pointer-events: none; /* Click through */
+        z-index: 99;
+    }
+    .scroll-cue-inner {
+        pointer-events: auto;
+        background: var(--campaign-yellow);
+        color: var(--unp-purple);
+        padding: 8px 20px;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        font-weight: bold;
+        animation: bounce 2s infinite;
+        font-size: 0.9rem;
+    }
+
+    /* --- INTERACTIVIDAD 1: TOGGLE SWITCH (Comparativa) --- */
+    .toggle-section {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        border-left: 5px solid var(--campaign-orange);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+    .switch-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+        gap: 15px;
+    }
+
+    .switch-label { font-weight: bold; color: #888; transition: 0.3s; }
+    .switch-label.active { color: var(--unp-purple); transform: scale(1.1); }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+    input:checked + .slider { background-color: var(--campaign-orange); }
+    input:checked + .slider:before { transform: translateX(26px); }
+
+    .dynamic-content {
+        min-height: 100px;
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 10px;
+        transition: all 0.5s ease;
+    }
+
+    /* --- INTERACTIVIDAD 2: DETAILS/SUMMARY (Acordeón Animado) --- */
+    .insight-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    details.custom-card {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #eee;
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+    }
+
+    details.custom-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(74, 20, 140, 0.15);
+    }
+
+    details.custom-card summary {
+        padding: 20px;
+        font-weight: bold;
+        color: var(--unp-purple);
+        list-style: none; /* Ocultar flecha por defecto */
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(90deg, #fff 90%, #fdf2f8 100%);
+    }
+
+    details.custom-card summary::-webkit-details-marker { display: none; }
+    
+    details.custom-card summary::after {
+        content: '+';
+        font-size: 1.5rem;
+        color: var(--campaign-orange);
+        font-weight: bold;
+        transition: transform 0.3s;
+    }
+
+    details.custom-card[open] summary::after {
+        transform: rotate(45deg);
+    }
+
+    details.custom-card[open] summary {
+        border-bottom: 2px solid var(--campaign-yellow);
+    }
+
+    .card-content {
+        padding: 20px;
+        color: #555;
+        font-size: 0.95rem;
+        background-color: #fff;
+        animation: fadeIn 0.5s;
+    }
+
+    /* --- GAMIFICACIÓN: SELECTOR DE CONCEPTOS --- */
+    .gamification-area {
+        background: var(--unp-purple);
+        color: white;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        margin-top: 40px;
+    }
+    
+    .game-options {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .game-btn {
+        background: rgba(255,255,255,0.1);
+        border: 2px solid var(--campaign-yellow);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .game-btn:hover { background: var(--campaign-yellow); color: var(--unp-purple); }
+    .game-btn.correct { background: #4caf50; border-color: #4caf50; }
+    .game-btn.wrong { background: #f44336; border-color: #f44336; }
+
+    #feedback-msg { margin-top: 15px; font-weight: bold; min-height: 20px; }
+
+    /* Animaciones */
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+        40% {transform: translateY(-10px);}
+        60% {transform: translateY(-5px);}
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+</style>
+</head>
+<body>
+
+<div id="unp-ova-container">
+
+    <!-- Header -->
+    <header class="unp-header">
+        <span class="unp-badge">UNP 2026 | Formación</span>
+        <h1 class="unp-title">Protección, Cuidado y Jerarquía</h1>
+        <p class="unp-subtitle">Redefiniendo el rol institucional</p>
+    </header>
+
+    <!-- Indicador de Scroll (Se oculta al bajar) -->
+    <div class="scroll-cue-wrapper" id="scrollIndicator">
+        <div class="scroll-cue-inner">
+            👇 Desliza para aprender
+        </div>
+    </div>
+
+    <!-- Introducción Animada -->
+    <div style="margin-bottom: 40px;">
+        <p><strong>La protección ejercida por la UNP constituye una forma específica de cuidado institucional.</strong> No es solo asignar escoltas o chalecos; es la garantía efectiva de la vida y la dignidad de quienes enfrentan riesgos extraordinarios.</p>
+    </div>
+
+    <!-- Interactive Toggle: El cambio de paradigma -->
+    <section class="toggle-section">
+        <h3>🔄 Cambio de Paradigma</h3>
+        <p style="font-size: 0.9rem; margin-bottom: 15px;">Mueve el interruptor para ver la diferencia de enfoque.</p>
+        
+        <div class="switch-container">
+            <span class="switch-label active" id="label-tech">Visión Técnica</span>
+            <label class="switch">
+                <input type="checkbox" id="viewToggle">
+                <span class="slider"></span>
+            </label>
+            <span class="switch-label" id="label-care">Visión de Cuidado</span>
+        </div>
+
+        <div class="dynamic-content" id="toggleContent">
+            <!-- El contenido cambia con JS -->
+            <h4 style="color:#777;">La Visión Técnica (Tradicional)</h4>
+            <p>La protección se ve como un proceso operativo y administrativo. Se enfoca en "recursos" y "esquemas". Es neutra y procedimental.</p>
+        </div>
+    </section>
+
+    <!-- Cards Accordion: Los 3 Pilares -->
+    <h3 style="color: var(--unp-purple); text-align: center; margin-bottom: 20px;">¿Qué implica comprender la protección como cuidado?</h3>
+    <div class="insight-grid">
+        
+        <details class="custom-card">
+            <summary>1. Dimensión Ética y Relacional</summary>
+            <div class="card-content">
+                <p>El cuidado no es un acto neutro. Implica una relación de poder. Al reconocer esto, entendemos que proteger es un acto político que puede reproducir jerarquías o <strong>transformarlas</strong>.</p>
+            </div>
+        </details>
+
+        <details class="custom-card">
+            <summary>2. Superar lo Operativo</summary>
+            <div class="card-content">
+                <p>La protección deja de ser un "trámite" o la asignación de un vehículo. Se convierte en una responsabilidad sustantiva frente a sujetos históricamente vulnerabilizados (líderes, lideresas, etnias).</p>
+            </div>
+        </details>
+
+        <details class="custom-card">
+            <summary>3. Impacto Humano Directo</summary>
+            <div class="card-content">
+                <p>Cada decisión en el análisis de riesgo afecta vidas reales. Reconocemos que el cuidado institucional se ejerce desde estructuras formales, a diferencia del cuidado doméstico.</p>
+            </div>
+        </details>
+
+    </div>
+
+    <!-- Gamificación Final -->
+    <div class="gamification-area">
+        <h3>🧠 Check Rápido</h3>
+        <p>¿Qué característica diferencia al Cuidado Institucional (UNP) del Cuidado Doméstico?</p>
+        
+        <div class="game-options">
+            <button class="game-btn" onclick="checkAnswer(this, false)">Es realizado por mujeres</button>
+            <button class="game-btn" onclick="checkAnswer(this, true)">Se ejerce desde estructuras de poder</button>
+            <button class="game-btn" onclick="checkAnswer(this, false)">Es un acto privado</button>
+        </div>
+        <div id="feedback-msg"></div>
+    </div>
+
+</div>
+
+<script>
+    // 1. Lógica del Toggle (Cambio de Visión)
+    const toggle = document.getElementById('viewToggle');
+    const content = document.getElementById('toggleContent');
+    const labelTech = document.getElementById('label-tech');
+    const labelCare = document.getElementById('label-care');
+
+    toggle.addEventListener('change', function() {
+        // Efecto de desvanecimiento
+        content.style.opacity = 0;
+        
+        setTimeout(() => {
+            if(this.checked) {
+                // Estado: Visión de Cuidado
+                content.innerHTML = '<h4 style="color: var(--campaign-orange);">🌿 La Visión de Cuidado (Transformadora)</h4><p>La protección garantiza vida y dignidad. Es una práctica política que busca transformar jerarquías y reconoce el impacto humano.</p>';
+                content.style.borderLeft = "5px solid var(--campaign-orange)";
+                labelTech.classList.remove('active');
+                labelCare.classList.add('active');
+            } else {
+                // Estado: Visión Técnica
+                content.innerHTML = '<h4 style="color:#777;">⚙️ La Visión Técnica (Tradicional)</h4><p>La protección se ve como un proceso operativo y administrativo. Se enfoca en "recursos" y "esquemas". Es neutra y procedimental.</p>';
+                content.style.borderLeft = "5px solid #ccc";
+                labelTech.classList.add('active');
+                labelCare.classList.remove('active');
+            }
+            content.style.opacity = 1;
+        }, 300);
+    });
+
+    // 2. Lógica del Indicador de Scroll
+    window.addEventListener('scroll', function() {
+        const indicator = document.getElementById('scrollIndicator');
+        if (window.scrollY > 100) {
+            indicator.style.opacity = '0';
+        } else {
+            indicator.style.opacity = '0.9';
+        }
+    });
+
+    // 3. Lógica de Gamificación
+    function checkAnswer(btn, isCorrect) {
+        const feedback = document.getElementById('feedback-msg');
+        
+        // Reset styles
+        const allBtns = document.querySelectorAll('.game-btn');
+        allBtns.forEach(b => {
+            b.classList.remove('correct', 'wrong');
+            b.style.opacity = '0.5';
+        });
+
+        btn.style.opacity = '1';
+
+        if(isCorrect) {
+            btn.classList.add('correct');
+            feedback.innerHTML = "✅ ¡Correcto! La protección institucional opera desde estructuras formales y públicas.";
+            feedback.style.color = "#a5d6a7"; // Verde claro
+        } else {
+            btn.classList.add('wrong');
+            feedback.innerHTML = "❌ Intenta de nuevo. Recuerda el texto sobre 'Jerarquía Institucional'.";
+            feedback.style.color = "#ef9a9a"; // Rojo claro
+        }
+    }
+</script>
+
+</body>
+</html>

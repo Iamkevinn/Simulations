@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    /* --- CONFIGURACIÓN BASE --- */
+    #unp-module-qualitative {
+        font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
+        color: #333;
+        background: linear-gradient(180deg, #ffffff 0%, #fff5f8 100%);
+        max-width: 100%;
+        margin: 0 auto;
+        padding-bottom: 100px;
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    #unp-module-qualitative * { box-sizing: border-box; user-select: none; }
+
+    :root {
+        --unp-purple: #4a148c;
+        --unp-orange: #ff6f00;
+        --unp-yellow: #fbc02d;
+        --unp-gray: #f5f5f5;
+        --unp-text: #444;
+    }
+
+    /* --- HEADER --- */
+    .module-header {
+        text-align: center;
+        padding: 70px 20px;
+        background: var(--unp-purple);
+        color: white;
+        border-radius: 0 0 60px 60px;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(74, 20, 140, 0.4);
+        margin-bottom: 60px;
+    }
+    
+    .module-header h1 { font-size: 2.2rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+    .module-header p { font-size: 1.1rem; opacity: 0.9; margin-top: 10px; }
+
+    /* Scroll Cue Animado */
+    .scroll-mouse {
+        position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
+        width: 30px; height: 50px; border: 2px solid var(--unp-yellow); border-radius: 20px;
+        background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .scroll-wheel {
+        position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+        width: 6px; height: 6px; background: var(--unp-orange); border-radius: 50%;
+        animation: scroll-anim 1.5s infinite;
+    }
+    @keyframes scroll-anim { 0% { top: 10px; opacity: 1; } 100% { top: 35px; opacity: 0; } }
+
+    /* --- CONTENEDORES --- */
+    .activity-card {
+        max-width: 900px; margin: 0 auto 80px auto;
+        background: white; border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        overflow: hidden; border-left: 10px solid var(--unp-orange);
+    }
+
+    .card-top {
+        padding: 20px 30px; background: #fafafa; border-bottom: 1px solid #eee;
+        display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    }
+    .card-title { color: var(--unp-purple); font-weight: 800; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+    
+    /* BOTÓN TEORÍA (MODAL TRIGGER) */
+    .theory-btn {
+        background: white; color: var(--unp-purple); border: 2px solid var(--unp-purple);
+        padding: 8px 16px; border-radius: 30px; cursor: pointer; font-weight: bold;
+        transition: 0.3s; display: flex; align-items: center; gap: 8px;
+    }
+    .theory-btn:hover { background: var(--unp-purple); color: white; }
+    .theory-btn span { font-size: 1.2rem; }
+
+    .card-content { padding: 40px 20px; position: relative; text-align: center; }
+    .instruction { font-style: italic; color: #666; margin-bottom: 20px; font-size: 0.95rem; }
+
+    /* --- ACTIVIDAD 1: RUEDA DE JORNADA --- */
+    .wheel-container {
+        width: 280px; height: 280px; margin: 0 auto;
+        border-radius: 50%; border: 10px solid #eee;
+        position: relative; cursor: grab;
+        background: conic-gradient(
+            from 0deg, 
+            #e1bee7 0deg 60deg,    /* 5-8am */
+            #ce93d8 60deg 180deg,  /* 8am-5pm */
+            #ba68c8 180deg 210deg, /* 5-7pm */
+            #ab47bc 210deg 270deg, /* 7-10pm */
+            #4a148c 270deg 360deg  /* Madrugada */
+        );
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        transition: transform 0.1s linear;
+    }
+    .wheel-container:active { cursor: grabbing; }
+    
+    .wheel-pointer {
+        position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+        width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent;
+        border-top: 20px solid var(--unp-orange); z-index: 5;
+    }
+
+    .time-label {
+        margin-top: 20px; font-size: 1.5rem; font-weight: bold; color: var(--unp-purple); min-height: 80px;
+    }
+
+    /* --- ACTIVIDAD 2: MURO DE BRECHA (SALUD MENTAL) --- */
+    .burden-container {
+        display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 20px;
+    }
+    .stat-box {
+        width: 150px; padding: 20px; border-radius: 15px; background: #f5f5f5;
+        transition: 0.3s; cursor: pointer; position: relative;
+    }
+    .stat-box:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .stat-percent { font-size: 2.5rem; font-weight: 800; color: var(--unp-orange); }
+    .stat-label { font-size: 0.9rem; font-weight: bold; }
+    
+    .hidden-fact {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: var(--unp-purple); color: white; border-radius: 15px;
+        display: flex; align-items: center; justify-content: center; padding: 10px; font-size: 0.8rem;
+        opacity: 0; transition: opacity 0.3s; pointer-events: none;
+    }
+    .stat-box.revealed .hidden-fact { opacity: 1; pointer-events: auto; }
+
+    /* --- ACTIVIDAD 3: COMPARADOR PRESUPUESTO --- */
+    .budget-visualizer {
+        margin-top: 30px; position: relative; height: 150px; background: #e0e0e0; border-radius: 10px; overflow: hidden;
+    }
+    .bar-education {
+        height: 100%; width: 6.8%; background: #4caf50; position: absolute; left: 0; top: 0;
+        display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.8rem;
+        transition: width 1s; cursor: help;
+    }
+    .bar-care {
+        height: 100%; width: 0.09%; background: var(--unp-orange); position: absolute; left: 0; bottom: 0; z-index: 2;
+        transition: width 1s;
+    }
+    
+    .magnifying-glass {
+        position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+        background: white; padding: 10px; border: 2px solid var(--unp-orange); border-radius: 50%;
+        display: none; animation: popIn 0.5s; cursor: pointer;
+    }
+    .comparison-text { margin-top: 15px; text-align: left; font-size: 0.9rem; }
+
+    /* --- ACTIVIDAD 4: INTERRUPTORES (INSTITUCIONES) --- */
+    .switchboard {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;
+    }
+    .switch-panel {
+        background: #eee; padding: 20px; border-radius: 10px; border: 2px solid #ddd;
+    }
+    .ministry-name { font-weight: bold; margin-bottom: 10px; display: block; }
+    
+    .toggle-switch {
+        position: relative; display: inline-block; width: 60px; height: 34px;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+        position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+        background-color: #ccc; transition: .4s; border-radius: 34px;
+    }
+    .slider:before {
+        position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px;
+        background-color: white; transition: .4s; border-radius: 50%;
+    }
+    input:checked + .slider { background-color: var(--unp-orange); }
+    input:checked + .slider:before { transform: translateX(26px); }
+    
+    .status-light {
+        width: 15px; height: 15px; border-radius: 50%; background: #555; margin: 10px auto; transition: 0.3s;
+    }
+    .status-text { font-size: 0.8rem; color: #d32f2f; min-height: 40px; display: none; }
+
+    /* --- MODALES --- */
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.9); z-index: 9999;
+        display: none; justify-content: center; align-items: center;
+        opacity: 0; transition: opacity 0.3s;
+    }
+    .modal-overlay.active { display: flex; opacity: 1; }
+    
+    .modal-box {
+        background: white; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto;
+        border-radius: 15px; padding: 30px; position: relative;
+        transform: scale(0.9); transition: transform 0.3s; border-top: 8px solid var(--unp-purple);
+    }
+    .modal-overlay.active .modal-box { transform: scale(1); }
+    
+    .close-modal {
+        position: absolute; top: 15px; right: 20px; font-size: 2rem;
+        background: none; border: none; cursor: pointer; color: #aaa;
+    }
+    .close-modal:hover { color: var(--unp-orange); }
+
+    .modal-content h3 { color: var(--unp-purple); border-bottom: 2px solid var(--unp-yellow); padding-bottom: 10px; }
+    .modal-content h4 { color: var(--unp-orange); margin-top: 20px; margin-bottom: 5px; }
+    .modal-content ul { padding-left: 20px; color: #444; }
+    .modal-content li { margin-bottom: 8px; }
+
+    /* Animations */
+    @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+    @keyframes short { 0% { background: #555; } 50% { background: red; } 100% { background: #555; } }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+        .card-top { flex-direction: column; align-items: flex-start; }
+        .wheel-container { width: 220px; height: 220px; }
+    }
+</style>
+</head>
+<body>
+
+<div id="unp-module-qualitative">
+
+    <header class="module-header">
+        <h1>Datos Cualitativos: Lo que las mujeres viven</h1>
+        <p>Una mirada a la sobrecarga, la salud mental y la desconexión institucional.</p>
+        <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+    </header>
+
+    <!-- ACTIVIDAD 1: RUEDA -->
+    <div class="activity-card">
+        <div class="card-top">
+            <div class="card-title">⏰ 1. La "Jornada de 24 Horas"</div>
+            <button class="theory-btn" onclick="openModal('modal1')"><span>📖</span> Ver Teoría</button>
+        </div>
+        <div class="card-content">
+            <p class="instruction">Arrastra la rueda para girar las horas. Descubre qué tarea nunca termina.</p>
+            
+            <div class="wheel-container" id="dailyWheel" onmousedown="startDrag(event)" ontouchstart="startDrag(event)">
+                <div class="wheel-pointer"></div>
+            </div>
+            
+            <div class="time-label" id="wheelText">Gira la rueda...</div>
+        </div>
+    </div>
+
+    <!-- ACTIVIDAD 2: SALUD MENTAL -->
+    <div class="activity-card">
+        <div class="card-top">
+            <div class="card-title">🧠 2. Impacto en Salud y Carrera</div>
+            <button class="theory-btn" onclick="openModal('modal2')"><span>📖</span> Ver Teoría</button>
+        </div>
+        <div class="card-content">
+            <p class="instruction">Haz clic en las estadísticas para revelar la causa subyacente.</p>
+            
+            <div class="burden-container">
+                <div class="stat-box" onclick="revealStat(this)">
+                    <div class="stat-percent">30%</div>
+                    <div class="stat-label">Depresión en Mujeres</div>
+                    <div class="hidden-fact">Doble que en hombres (OMS)</div>
+                </div>
+                
+                <div class="stat-box" onclick="revealStat(this)">
+                    <div class="stat-percent">-35%</div>
+                    <div class="stat-label">Salario con Hijos</div>
+                    <div class="hidden-fact">Penalización por maternidad</div>
+                </div>
+                
+                <div class="stat-box" onclick="revealStat(this)">
+                    <div class="stat-percent">24/7</div>
+                    <div class="stat-label">Estrés Crónico</div>
+                    <div class="hidden-fact">Vinculado a sobrecarga de cuidado</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTIVIDAD 3: PRESUPUESTO -->
+    <div class="activity-card">
+        <div class="card-top">
+            <div class="card-title">💰 3. Presupuesto: La Realidad</div>
+            <button class="theory-btn" onclick="openModal('modal3')"><span>📖</span> Ver Teoría</button>
+        </div>
+        <div class="card-content">
+            <p class="instruction">Haz clic en el botón "Comparar Inversión" para ver la desproporción.</p>
+            
+            <button class="theory-btn" style="margin: 0 auto 20px auto; background: var(--unp-yellow); color:black; border:none;" onclick="showBudget()">COMPARAR INVERSIÓN</button>
+
+            <div class="budget-visualizer">
+                <div style="position:absolute; width:100%; top:50%; text-align:center; z-index:1; opacity:0.3; font-weight:bold;">PIB NACIONAL</div>
+                <div class="bar-education" id="eduBar">Educación General</div>
+                <div class="bar-care" id="careBar"></div>
+                <div class="magnifying-glass" id="magGlass" onclick="alert('¡Es solo el 0.09% del PIB! Equivale a menos de 35 USD por niño al año.')">🔍 0.09%</div>
+            </div>
+            
+            <div class="comparison-text">
+                <p><strong>Verde:</strong> Inversión Educación (6.8%)</p>
+                <p><strong>Naranja:</strong> Educación Inicial/Cuidado (0.09%) - <em>¡Casi invisible!</em></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTIVIDAD 4: INSTITUCIONES -->
+    <div class="activity-card">
+        <div class="card-top">
+            <div class="card-title">🏛️ 4. Instituciones sin Poder</div>
+            <button class="theory-btn" onclick="openModal('modal4')"><span>📖</span> Ver Teoría</button>
+        </div>
+        <div class="card-content">
+            <p class="instruction">Intenta encender los interruptores de los Ministerios para activar la política de cuidado.</p>
+            
+            <div class="switchboard">
+                <!-- Min Trabajo -->
+                <div class="switch-panel">
+                    <span class="ministry-name">Min. Trabajo</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" onchange="trySwitch(this, 'msg1')">
+                        <span class="slider"></span>
+                    </label>
+                    <div class="status-light"></div>
+                    <div class="status-text" id="msg1">Presupuesto mínimo. No coordina.</div>
+                </div>
+
+                <!-- Min Educación -->
+                <div class="switch-panel">
+                    <span class="ministry-name">Min. Educación</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" onchange="trySwitch(this, 'msg2')">
+                        <span class="slider"></span>
+                    </label>
+                    <div class="status-light"></div>
+                    <div class="status-text" id="msg2">Política secundaria (Solo 6% presp.)</div>
+                </div>
+
+                <!-- Min Salud -->
+                <div class="switch-panel">
+                    <span class="ministry-name">Min. Salud</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" onchange="trySwitch(this, 'msg3')">
+                        <span class="slider"></span>
+                    </label>
+                    <div class="status-light"></div>
+                    <div class="status-text" id="msg3">Cuidado privatizado. Sin política vejez.</div>
+                </div>
+
+                <!-- DNP -->
+                <div class="switch-panel">
+                    <span class="ministry-name">DNP (Planeación)</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" onchange="trySwitch(this, 'msg4')">
+                        <span class="slider"></span>
+                    </label>
+                    <div class="status-light"></div>
+                    <div class="status-text" id="msg4">Datos existen pero NO se usan.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- --- MODALES DE TEORÍA COMPLETA --- -->
+
+<div class="modal-overlay" id="modal1" onclick="closeModal(event, 'modal1')">
+    <div class="modal-box">
+        <button class="close-modal" onclick="closeModal(null, 'modal1')">×</button>
+        <div class="modal-content">
+            <h3>Testimonios de Sobrecarga: "Jornada de 24 horas"</h3>
+            <p><strong>La rutina invisible:</strong></p>
+            <ul>
+                <li><strong>5am:</strong> Levantarse, preparar desayuno, alistar niños.</li>
+                <li><strong>8am-5pm:</strong> Trabajo formal o informal.</li>
+                <li><strong>5-7pm:</strong> Recoger niños, tareas, cocina.</li>
+                <li><strong>7-10pm:</strong> Limpieza, preparación día siguiente.</li>
+                <li><strong>Madrugadas:</strong> Interrupciones por emergencias de niños/as o mayores.</li>
+            </ul>
+            <p><em>El fin de semana "descanso" implica más trabajo doméstico.</em></p>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal2" onclick="closeModal(event, 'modal2')">
+    <div class="modal-box">
+        <button class="close-modal" onclick="closeModal(null, 'modal2')">×</button>
+        <div class="modal-content">
+            <h3>Impacto en Salud Mental y Carrera</h3>
+            <h4>Salud Mental</h4>
+            <ul>
+                <li><strong>Depresión:</strong> 30% de mujeres reportan síntomas (vs. 15% hombres).</li>
+                <li><strong>Estrés crónico:</strong> Vinculado a sobrecarga.</li>
+                <li><strong>Violencia:</strong> Aumenta con dependencia económica.</li>
+            </ul>
+            <h4>Carrera Laboral</h4>
+            <ul>
+                <li>Mujeres con hijos: salarios 25-35% menores.</li>
+                <li>Acceso limitado a empleos de tiempo completo.</li>
+            </ul>
+            <h4>Interseccionalidad</h4>
+            <p>Mujeres rurales, indígenas, afro y pobres cargan con la mayor parte. Cadenas globales de cuidado reproducen desigualdad.</p>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal3" onclick="closeModal(event, 'modal3')">
+    <div class="modal-box">
+        <button class="close-modal" onclick="closeModal(null, 'modal3')">×</button>
+        <div class="modal-content">
+            <h3>Presupuesto Público: Inversión Insuficiente</h3>
+            <h4>Educación Inicial (2023)</h4>
+            <ul>
+                <li>Presupuesto: 2.5 billones COP (aprox. 625 millones USD).</li>
+                <li>Para 18 millones de niños/as.</li>
+                <li>Equivale a: <strong>139 mil pesos por niño/año</strong> (< 35 USD).</li>
+                <li>Comparación PIB: Colombia 0.09% vs OCDE 2%.</li>
+            </ul>
+            <h4>Personas Mayores</h4>
+            <p>Presupuesto prácticamente inexistente. Solo asistencialismo para pobreza extrema.</p>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal4" onclick="closeModal(event, 'modal4')">
+    <div class="modal-box">
+        <button class="close-modal" onclick="closeModal(null, 'modal4')">×</button>
+        <div class="modal-content">
+            <h3>Instituciones del Estado sin Poder Real</h3>
+            <ul>
+                <li><strong>Min. Trabajo:</strong> Dirección de Género con presupuesto mínimo. No coordina políticas de cuidado.</li>
+                <li><strong>Min. Educación:</strong> Educación inicial es secundaria. Solo 6% del presupuesto.</li>
+                <li><strong>Min. Salud:</strong> Sin política de cuidado para vejez. Sistema privatizado.</li>
+                <li><strong>Prosperidad Social (DAPS):</strong> "Familias en Acción" refuerza que las madres son las responsables (condiciona dinero a citas médicas).</li>
+                <li><strong>DNP (Planeación):</strong> Realiza encuestas (ENUT) pero no usa la info para planeación económica.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* --- LÓGICA RUEDA --- */
+    const wheel = document.getElementById('dailyWheel');
+    const textDiv = document.getElementById('wheelText');
+    let isDragging = false;
+    let startAngle = 0;
+    let currentAngle = 0;
+
+    function startDrag(e) {
+        isDragging = true;
+        const event = e.touches ? e.touches[0] : e;
+        const rect = wheel.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const x = event.clientX - centerX;
+        const y = event.clientY - centerY;
+        startAngle = Math.atan2(y, x) * (180 / Math.PI) - currentAngle;
+        
+        document.addEventListener('mousemove', rotateWheel);
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchmove', rotateWheel);
+        document.addEventListener('touchend', stopDrag);
+    }
+
+    function rotateWheel(e) {
+        if (!isDragging) return;
+        e.preventDefault(); // Prevenir scroll en móvil
+        const event = e.touches ? e.touches[0] : e;
+        const rect = wheel.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const x = event.clientX - centerX;
+        const y = event.clientY - centerY;
+        let angle = Math.atan2(y, x) * (180 / Math.PI);
+        currentAngle = angle - startAngle;
+        
+        wheel.style.transform = `rotate(${currentAngle}deg)`;
+        updateText(currentAngle);
+    }
+
+    function stopDrag() {
+        isDragging = false;
+        document.removeEventListener('mousemove', rotateWheel);
+        document.removeEventListener('mouseup', stopDrag);
+        document.removeEventListener('touchmove', rotateWheel);
+        document.removeEventListener('touchend', stopDrag);
+    }
+
+    function updateText(deg) {
+        // Normalizar grados 0-360
+        let normDeg = (deg % 360 + 360) % 360;
+        
+        if (normDeg >= 0 && normDeg < 60) textDiv.innerHTML = "🌄 5 AM: Levantar, Desayuno, Niños...";
+        else if (normDeg >= 60 && normDeg < 180) textDiv.innerHTML = "💼 8 AM - 5 PM: Jornada Laboral";
+        else if (normDeg >= 180 && normDeg < 210) textDiv.innerHTML = "🚌 5 PM - 7 PM: Recoger niños, Tareas";
+        else if (normDeg >= 210 && normDeg < 270) textDiv.innerHTML = "🧹 7 PM - 10 PM: Limpieza, Preparar mañana";
+        else textDiv.innerHTML = "🌙 Madrugada: Emergencias, Cuidado mayores";
+    }
+
+    /* --- LÓGICA ESTADÍSTICAS --- */
+    function revealStat(el) {
+        el.classList.toggle('revealed');
+    }
+
+    /* --- LÓGICA PRESUPUESTO --- */
+    function showBudget() {
+        // Simular carga de barra
+        document.getElementById('eduBar').style.width = '100%'; 
+        // La barra de cuidado es tan pequeña que apenas se ve
+        setTimeout(() => {
+            document.getElementById('magGlass').style.display = 'block';
+        }, 1000);
+    }
+
+    /* --- LÓGICA INTERRUPTORES --- */
+    function trySwitch(checkbox, msgId) {
+        const panel = checkbox.closest('.switch-panel');
+        const light = panel.querySelector('.status-light');
+        const msg = document.getElementById(msgId);
+
+        if (checkbox.checked) {
+            // Simular intento de encendido
+            light.style.background = "#ffeb3b"; // Amarillo (intentando)
+            light.style.boxShadow = "0 0 10px yellow";
+            
+            setTimeout(() => {
+                // FALLA
+                checkbox.checked = false;
+                light.style.background = "#d32f2f"; // Rojo (falla)
+                light.style.boxShadow = "none";
+                light.style.animation = "short 0.2s 3"; // Parpadeo corto
+                
+                msg.style.display = "block";
+                msg.style.color = "#d32f2f";
+            }, 600);
+        } else {
+            light.style.background = "#555";
+            msg.style.display = "none";
+        }
+    }
+
+    /* --- MODALES --- */
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal(e, id) {
+        if(e && e.target !== e.currentTarget) return;
+        document.getElementById(id).classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    /* --- CONFIGURACIÓN BASE & PALETA --- */
+    #unp-legal-module {
+        font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
+        color: #333;
+        background: linear-gradient(180deg, #fff0f5 0%, #ffffff 100%);
+        max-width: 100%;
+        margin: 0 auto;
+        padding-bottom: 100px;
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    #unp-legal-module * { box-sizing: border-box; user-select: none; }
+
+    :root {
+        --purple-unp: #4a148c;
+        --purple-light: #7c43bd;
+        --orange-25n: #ff6f00;
+        --yellow-leaf: #fbc02d;
+        --gray-bg: #f5f5f5;
+        --text-dark: #2c2c2c;
+    }
+
+    /* --- ENCABEZADO --- */
+    .legal-header {
+        text-align: center;
+        padding: 60px 20px;
+        background: var(--purple-unp);
+        color: white;
+        border-radius: 0 0 50px 50px;
+        box-shadow: 0 10px 25px rgba(74, 20, 140, 0.3);
+        margin-bottom: 50px;
+        position: relative;
+    }
+
+    .legal-header h1 { margin: 0; font-size: 2.2rem; letter-spacing: 1px; text-transform: uppercase; }
+    .legal-header p { font-size: 1.1rem; opacity: 0.9; margin-top: 10px; }
+
+    /* Indicador de Scroll */
+    .scroll-indicator {
+        position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%);
+        width: 50px; height: 50px; background: var(--yellow-leaf);
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; color: var(--purple-unp);
+        animation: float-bounce 2s infinite;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 10;
+    }
+    @keyframes float-bounce { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -10px); } }
+
+    /* --- CONTENEDORES DE MISIÓN --- */
+    .section-card {
+        max-width: 850px; margin: 0 auto 60px auto;
+        background: white; border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+        overflow: hidden; border-left: 8px solid var(--orange-25n);
+        position: relative;
+    }
+
+    .card-header {
+        padding: 20px 30px; background: #fafafa; border-bottom: 1px solid #eee;
+        display: flex; justify-content: space-between; align-items: center;
+    }
+    .card-title { font-size: 1.4rem; color: var(--purple-unp); font-weight: 800; display: flex; align-items: center; gap: 10px; }
+    .card-body { padding: 30px; }
+
+    /* --- BOTONES DE TEORÍA (MODALES) --- */
+    .theory-btn {
+        background: var(--purple-unp); color: white; border: none;
+        padding: 8px 16px; border-radius: 30px; cursor: pointer;
+        font-weight: bold; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;
+        transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .theory-btn:hover { background: var(--orange-25n); transform: translateY(-2px); }
+    .theory-btn span { background: white; color: var(--purple-unp); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+
+    /* --- ACTIVIDAD 1: LUPA CONSTITUCIONAL --- */
+    .constitution-wrapper {
+        position: relative; height: 250px; border-radius: 10px; overflow: hidden;
+        background: #eee; cursor: crosshair; margin-top: 20px; border: 2px solid #ddd;
+    }
+    .layer-visible {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: white; color: #333; padding: 30px;
+        display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+    }
+    .layer-hidden {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: var(--purple-unp); color: white; padding: 30px;
+        display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+        /* Máscara mágica CSS */
+        mask-image:radial-gradient(circle 90px at var(--x) var(--y), black 60%, transparent 100%)
+;
+        -webkit-mask-image: radial-gradient(circle 80px at var(--x) var(--y), black 100%, transparent 100%);
+        pointer-events: none; /* Dejar pasar eventos al wrapper */
+    }
+    .card-wrapper {
+  --x: -300px;
+  --y: -300px;
+}
+
+
+    .instruction-text { text-align: center; color: #666; font-style: italic; font-size: 0.9rem; margin-bottom: 10px; }
+
+    /* --- ACTIVIDAD 2: CARRERA DE PENSIONES --- */
+    .race-track {
+        margin-top: 20px; background: #f0f0f0; border-radius: 10px; padding: 20px; position: relative;
+    }
+    .runner-lane { margin-bottom: 20px; position: relative; }
+    .lane-label { font-weight: bold; margin-bottom: 5px; display: block; font-size: 0.9rem; }
+    .progress-bg { width: 100%; height: 20px; background: #ccc; border-radius: 10px; overflow: hidden; }
+    .progress-bar { height: 100%; width: 0%; transition: width 2s cubic-bezier(0.25, 1, 0.5, 1); border-radius: 10px; position: relative; }
+    
+    .bar-men { background: #4caf50; }
+    .bar-women { background: var(--orange-25n); }
+
+    .gap-marker {
+        position: absolute; right: 0; top: -25px; color: red; font-weight: bold; font-size: 0.8rem;
+        display: none; animation: popIn 0.5s;
+    }
+    .start-btn {
+        display: block; width: 100%; padding: 12px; background: var(--yellow-leaf); color: var(--purple-unp);
+        border: none; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 1rem;
+        transition: 0.2s; margin-top: 10px;
+    }
+    .start-btn:hover { background: #ffd740; transform: scale(1.02); }
+
+    /* --- ACTIVIDAD 3: DRAG & DROP RESPONSABILIDAD --- */
+    .transfer-game { display: flex; gap: 20px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+    .draggable-box {
+        width: 120px; height: 120px; background: var(--orange-25n); color: white;
+        border-radius: 10px; display: flex; align-items: center; justify-content: center; text-align: center;
+        padding: 10px; cursor: grab; font-weight: bold; box-shadow: 0 5px 15px rgba(255,111,0,0.4);
+        z-index: 10; font-size: 0.9rem;
+    }
+    .target-zone {
+        width: 150px; height: 150px; border: 3px dashed #ccc; border-radius: 15px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        transition: 0.3s; color: #777; font-weight: bold; position: relative;
+    }
+    .target-icon { font-size: 2rem; margin-bottom: 5px; }
+    
+    .rebound-anim { animation: shake 0.5s; border-color: red; background: #ffebee; }
+    .success-anim { border-color: var(--purple-unp); background: #e1bee7; }
+
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+
+    /* --- ACTIVIDAD 4: MAPA RADAR --- */
+    .radar-container {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-top: 20px;
+    }
+    .country-card {
+        background: white; border: 2px solid #eee; padding: 15px; border-radius: 10px;
+        text-align: center; cursor: pointer; transition: 0.3s; position: relative;
+    }
+    .country-card:hover { transform: translateY(-3px); border-color: var(--purple-light); }
+    
+    .status-badge {
+        display: block; margin-top: 10px; font-size: 0.8rem; padding: 5px; border-radius: 4px;
+        font-weight: bold; opacity: 0; transition: opacity 0.5s;
+    }
+    .has-law .status-badge { background: #e8f5e9; color: #2e7d32; opacity: 1; }
+    .no-law .status-badge { background: #ffebee; color: #c62828; opacity: 1; }
+    
+    .flag { font-size: 2rem; display: block; margin-bottom: 5px; }
+
+    /* --- MODALES --- */
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.85); z-index: 9999;
+        display: none; justify-content: center; align-items: center;
+        backdrop-filter: blur(5px); opacity: 0; transition: opacity 0.3s;
+    }
+    .modal-overlay.active { display: flex; opacity: 1; }
+    
+    .modal-content {
+        background: white; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto;
+        border-radius: 15px; padding: 30px; position: relative; border-top: 10px solid var(--purple-unp);
+        transform: translateY(20px); transition: transform 0.3s;
+    }
+    .modal-overlay.active .modal-content { transform: translateY(0); }
+    
+    .close-modal {
+        position: absolute; top: 15px; right: 20px; font-size: 2rem; color: #999;
+        background: none; border: none; cursor: pointer; line-height: 1;
+    }
+    .close-modal:hover { color: var(--orange-25n); }
+
+    .modal-text h3 { color: var(--purple-unp); border-bottom: 2px solid var(--yellow-leaf); padding-bottom: 5px; }
+    .modal-text ul { padding-left: 20px; color: #444; }
+    .modal-text li { margin-bottom: 8px; line-height: 1.5; }
+    .alert-text { color: #d32f2f; font-weight: bold; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+        .card-header { flex-direction: column; gap: 15px; align-items: flex-start; }
+        .transfer-game { flex-direction: column; align-items: center; }
+    }
+</style>
+</head>
+<body>
+
+<div id="unp-legal-module">
+
+    <header class="legal-header">
+        <h1>Vacíos Legales Clave</h1>
+        <p>Una estructura normativa incompleta que perpetúa la desigualdad.</p>
+        <div class="scroll-indicator">⬇</div>
+    </header>
+
+    <!-- SECCIÓN 1: CONSTITUCIÓN -->
+    <div class="section-card">
+        <div class="card-header">
+            <div class="card-title">📜 1. Constitución Política (1991)</div>
+            <button class="theory-btn" onclick="openModal('modal1')"><span>+</span> Ver Teoría</button>
+        </div>
+        <div class="card-body">
+            <p class="instruction-text">Mueve el mouse (o dedo) sobre el documento para usar la "Luz Ultravioleta" y revelar lo que la ley NO dice.</p>
+            
+            <div class="constitution-wrapper" onmousemove="moveLens(event)" ontouchmove="moveLens(event)">
+                
+                
+                <!-- Capa Visible (Lo que dice) -->
+                <div   class="layer-visible" >
+                    <h2 style="color:#555">ARTÍCULO 42</h2>
+                    <p>"La familia es el núcleo fundamental de la sociedad"</p>
+                    <h2 style="color:#555; margin-top:20px;">ARTÍCULO 13</h2>
+                    <p>"Igualdad ante la ley"</p>
+                </div>
+
+                <!-- Capa Oculta (Vacíos) - Revelada con máscara -->
+                <div class="layer-hidden card-wrapper" id="hiddenLayer" >
+                    <h2 style="color:var(--yellow-leaf)">⚠️ EL VACÍO LEGAL</h2>
+                    <p style="font-weight:bold; font-size:1.1rem;">NO reconoce el derecho al cuidado.</p>
+                    <p style="font-weight:bold; font-size:1.1rem;">NO establece responsabilidad estatal.</p>
+                    <p style="font-weight:bold; font-size:1.1rem;">NO menciona el trabajo doméstico.</p>
+                </div>
+
+                
+
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 2: CÓDIGO SUSTANTIVO -->
+    <div class="section-card">
+        <div class="card-header">
+            <div class="card-title">⚖️ 2. Código Sustantivo del Trabajo</div>
+            <button class="theory-btn" onclick="openModal('modal2')"><span>+</span> Ver Teoría</button>
+        </div>
+        <div class="card-body">
+            <p class="instruction-text">Presiona "Iniciar Carrera Pensional" para ver la disparidad causada por las brechas de cuidado.</p>
+            
+            <div class="race-track">
+                <div class="runner-lane">
+                    <span class="lane-label">Hombres (Carrera Continua)</span>
+                    <div class="progress-bg">
+                        <div class="progress-bar bar-men" id="barMen"></div>
+                    </div>
+                </div>
+                <div class="runner-lane">
+                    <span class="lane-label">Mujeres (Interrupción por Cuidado)</span>
+                    <div class="progress-bg">
+                    <span class="gap-marker" id="gapMsg">⚠️</span>
+
+                        <div class="progress-bar bar-women" id="barWomen"></div>
+
+                    </div>
+                </div>
+                
+                <button class="start-btn" onclick="runRace()">▶ Iniciar Simulación</button>
+                <div id="raceFeedback" style="display:none; margin-top:15px; padding:10px; background:#ffebee; color:#c62828; border-radius:5px;">
+                    <strong>¡ALERTA!</strong> Las mujeres pierden años de cotización por cuidar, resultando en pensiones 30-40% menores.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 3: LEY DE INFANCIA -->
+    <div class="section-card">
+        <div class="card-header">
+            <div class="card-title">👶 3. Ley 1098 (Infancia)</div>
+            <button class="theory-btn" onclick="openModal('modal3')"><span>+</span> Ver Teoría</button>
+        </div>
+        <div class="card-body">
+            <p class="instruction-text">Intenta arrastrar la "Responsabilidad de Cuidado" hacia el Estado. Observa qué sucede.</p>
+            
+            <div class="transfer-game">
+                <div class="target-zone" id="familyZone">
+                    <span class="target-icon">🏠</span> Familia
+                </div>
+                
+                <div class="draggable-box" id="careBox" draggable="true" ondragstart="drag(event)" onclick="mobileSelect(this)">
+                    Responsabilidad de Cuidado 📦
+                </div>
+                
+                <div class="target-zone" id="stateZone" ondrop="dropState(event)" ondragover="allowDrop(event)" onclick="mobileDropState()">
+                    <span class="target-icon">🏛️</span> Estado
+                </div>
+            </div>
+            
+            <p id="dragMsg" style="text-align:center; min-height:20px; margin-top:15px; font-weight:bold; color:var(--purple-unp);"></p>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 4: AUSENCIA DE LEY -->
+    <div class="section-card">
+        <div class="card-header">
+            <div class="card-title">🗺️ 4. Ausencia de Ley Nacional</div>
+            <button class="theory-btn" onclick="openModal('modal4')"><span>+</span> Ver Teoría</button>
+        </div>
+        <div class="card-body">
+            <p class="instruction-text">Haz clic en Colombia</p>
+            
+            <div class="radar-container">
+                <div class="country-card has-law" onclick="checkCountry(this, true)">
+                    <span class="flag">🇦🇷</span> Argentina
+                    <span class="status-badge">✅ Ley 2023</span>
+                </div>
+                <div class="country-card has-law" onclick="checkCountry(this, true)">
+                    <span class="flag">🇺🇾</span> Uruguay
+                    <span class="status-badge">✅ Ley 2015</span>
+                </div>
+                <div class="country-card no-law" onclick="checkCountry(this, false)">
+                    <span class="flag">🇨🇴</span> Colombia
+                    <span class="status-badge">❌ SIN LEY</span>
+                </div>
+                <div class="country-card has-law" onclick="checkCountry(this, true)">
+                    <span class="flag">🇨🇱</span> Chile
+                    <span class="status-badge">✅ En desarrollo</span>
+                </div>
+            </div>
+            <div id="colombiaAlert" style="display:none; margin-top:20px; padding:15px; background:#fff3e0; border-left:5px solid var(--orange-25n);">
+                <strong>Brecha Regional:</strong> Colombia no tiene una Ley Nacional de Cuidado, a diferencia de sus vecinos que ya avanzan en sistemas integrales.
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- --- MODALES DE TEORÍA (TEXTO COMPLETO) --- -->
+
+<div class="modal-overlay" id="modal1" onclick="closeModal(event, 'modal1')">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeModal(null, 'modal1')">×</button>
+        <div class="modal-text">
+            <h3>Constitución Política (1991)</h3>
+            <p><strong>✅ Lo que dice:</strong><br>
+            Artículo 42: "La familia es el núcleo fundamental de la sociedad" y el Estado debe protegerla.<br>
+            Artículo 13: Igualdad ante la ley.</p>
+            <p class="alert-text">❌ Lo que NO dice:</p>
+            <ul>
+                <li>No reconoce el derecho al cuidado como derecho fundamental.</li>
+                <li>No establece responsabilidad estatal en provisión de cuidado.</li>
+                <li>No menciona trabajo doméstico no remunerado.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal2" onclick="closeModal(event, 'modal2')">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeModal(null, 'modal2')">×</button>
+        <div class="modal-text">
+            <h3>Código Sustantivo del Trabajo</h3>
+            <p><strong>Problemas Clave:</strong></p>
+            <ul>
+                <li><strong>No protege empleadas domésticas adecuadamente:</strong> Pueden trabajar 12+ horas diarias, sin límites específicos y con salarios que pueden estar por debajo del mínimo (discriminación legal).</li>
+                <li><strong>Penaliza discontinuidad laboral:</strong> La afiliación a pensiones requiere 1.300 semanas (25 años).</li>
+                <li>Las mujeres que interrumpen carrera por cuidado pierden años de cotización.</li>
+                <li><strong class="alert-text">Resultado:</strong> Pensiones femeninas resultan 30-40% menores que las masculinas.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal3" onclick="closeModal(event, 'modal3')">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeModal(null, 'modal3')">×</button>
+        <div class="modal-text">
+            <h3>Ley 1098 de 2006 (Código de Infancia)</h3>
+            <ul>
+                <li>Reconoce derechos de niños/as.</li>
+                <li>Pero <strong class="alert-text">no establece políticas activas de cuidado</strong> (educación inicial, apoyo familiar).</li>
+                <li>Traslada la responsabilidad casi exclusivamente a las familias sin dar herramientas ni soporte estatal.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal4" onclick="closeModal(event, 'modal4')">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeModal(null, 'modal4')">×</button>
+        <div class="modal-text">
+            <h3>Ausencia de Ley de Cuidado</h3>
+            <p>Colombia <strong class="alert-text">NO tiene una Ley Nacional de Cuidado</strong> como sí tienen otros países de la región:</p>
+            <ul>
+                <li><strong>Argentina:</strong> Ley de Economía del Cuidado (2023).</li>
+                <li><strong>Uruguay:</strong> Ley Nacional del Cuidado (2015).</li>
+                <li><strong>Costa Rica:</strong> Ley de Promoción de la Igualdad Social de las Personas Adultas Mayores.</li>
+                <li><strong>Chile:</strong> Sistema de cuidado en desarrollo desde 2022.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* --- LÓGICA ACTIVIDAD 1: LUPA --- */
+    function moveLens(e) {
+        const wrapper = e.currentTarget;
+        const rect = wrapper.getBoundingClientRect();
+        const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+        const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+        
+        const hiddenLayer = wrapper.querySelector('#hiddenLayer');
+        hiddenLayer.style.setProperty('--x', x + 'px');
+        hiddenLayer.style.setProperty('--y', y + 'px');
+    }
+
+    /* --- LÓGICA ACTIVIDAD 2: CARRERA --- */
+    function runRace() {
+        const barM = document.getElementById('barMen');
+        const barW = document.getElementById('barWomen');
+        
+        // Reset
+        barM.style.width = '0%';
+        barW.style.width = '0%';
+        document.getElementById('gapMsg').style.display = 'none';
+        document.getElementById('raceFeedback').style.display = 'none';
+        
+        setTimeout(() => {
+            barM.style.width = '100%'; // Hombre llega al final
+            barW.style.width = '65%';  // Mujer se queda corta
+            
+            setTimeout(() => {
+                document.getElementById('gapMsg').style.display = 'block';
+                document.getElementById('raceFeedback').style.display = 'block';
+            }, 2000); // Aparece mensaje al terminar animación
+        }, 100);
+    }
+
+    /* --- LÓGICA ACTIVIDAD 3: DRAG & DROP (RESPONSABILIDAD) --- */
+    function allowDrop(ev) { ev.preventDefault(); }
+    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+    
+    function dropState(ev) {
+        ev.preventDefault();
+        const stateZone = document.getElementById('stateZone');
+        
+        // Efecto de REBOTE (Rechazo)
+        stateZone.classList.add('rebound-anim');
+        document.getElementById('dragMsg').innerText = "⛔ ¡Error! La ley actual no da herramientas al Estado. La carga vuelve a la familia.";
+        document.getElementById('dragMsg').style.color = "red";
+        
+        setTimeout(() => {
+            stateZone.classList.remove('rebound-anim');
+        }, 500);
+    }
+
+    // Soporte Móvil (Click to Move)
+    let selectedBox = null;
+    function mobileSelect(el) { selectedBox = el; el.style.border = "2px solid blue"; }
+    function mobileDropState() {
+        if(selectedBox) {
+            dropState({preventDefault:()=>{}}); // Simular evento
+            selectedBox.style.border = "none";
+            selectedBox = null;
+        }
+    }
+
+    /* --- LÓGICA ACTIVIDAD 4: MAPA --- */
+    function checkCountry(card, hasLaw) {
+        // Reset visual simple
+        card.querySelector('.status-badge').style.opacity = '1';
+        
+        if (!hasLaw) {
+            document.getElementById('colombiaAlert').style.display = 'block';
+            card.style.borderColor = 'red';
+        }
+    }
+
+    /* --- MODALES --- */
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal(e, id) {
+        if(e && e.target !== e.currentTarget) return; // Si clickea el contenido, no cerrar
+        document.getElementById(id).classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    // Bounce Animation CSS Inject
+    const style = document.createElement('style');
+    style.innerHTML = `
+        @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+    `;
+    document.head.appendChild(style);
+
+</script>
+
+</body>
+</html>

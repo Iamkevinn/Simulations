@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prevención de Violencias de Género</title>
     
-    <!-- Fuentes de Google Fonts para un diseño más llamativo y amigable -->
+    <!-- Fuentes de Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -24,8 +24,8 @@
             --color-fondo-app: #F4EFF6;
             --color-texto: #2D2D2D; 
             
-            --font-titulos: 'Montserrat', sans-serif; /* Llama la atención, profesional */
-            --font-textos: 'Nunito', sans-serif; /* Amigable, legible, accesible */
+            --font-titulos: 'Montserrat', sans-serif;
+            --font-textos: 'Nunito', sans-serif;
             
             --transicion: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -47,7 +47,6 @@
 
         h1, h2, h3 { font-family: var(--font-titulos); }
 
-        /* Accesibilidad: Foco claro */
         *:focus-visible {
             outline: 4px solid var(--color-a1);
             outline-offset: 4px;
@@ -64,6 +63,23 @@
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(72, 2, 65, 0.1);
             overflow: hidden;
+        }
+
+        /* ESTILOS PARA LOS LOGOS CLIENTE */
+        .logo-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+            padding: 2rem;
+            background-color: var(--color-bg);
+            border-bottom: 2px solid #E6E0EB;
+            flex-wrap: wrap;
+        }
+
+        .logo-img {
+            max-width: 100%;
+            object-fit: contain;
         }
 
         header {
@@ -100,7 +116,6 @@
             padding: 3rem 2rem;
         }
 
-        /* Cartel de Instrucción muy claro */
         .alerta-instruccion {
             background-color: rgba(251, 165, 17, 0.15);
             border-left: 6px solid var(--color-a1);
@@ -119,7 +134,6 @@
 
         .alerta-instruccion svg { width: 28px; height: 28px; color: var(--color-a1); }
 
-        /* Contenedor de Botones (Línea de tiempo obvia) */
         .navegacion-pasos {
             display: flex;
             justify-content: space-between;
@@ -128,11 +142,10 @@
             position: relative;
         }
 
-        /* Línea conectora de fondo */
         .navegacion-pasos::before {
             content: '';
             position: absolute;
-            top: 40px; /* Mitad del botón circular */
+            top: 40px;
             left: 5%;
             right: 5%;
             height: 4px;
@@ -182,7 +195,6 @@
             transition: var(--transicion);
         }
 
-        /* Hover y estado activo */
         .btn-paso:hover .circulo {
             border-color: var(--color-p2);
             color: var(--color-p2);
@@ -202,16 +214,14 @@
             opacity: 1;
         }
 
-        /* Animación para indicar dónde hacer clic (Latido) */
         @keyframes latido {
             0% { box-shadow: 0 0 0 0 rgba(251, 165, 17, 0.7); }
             70% { box-shadow: 0 0 0 15px rgba(251, 165, 17, 0); }
             100% { box-shadow: 0 0 0 0 rgba(251, 165, 17, 0); }
         }
         .animar-clic .circulo { animation: latido 2s infinite; }
-        .btn-paso.activo.animar-clic .circulo { animation: none; } /* Se apaga al hacer clic */
+        .btn-paso.activo.animar-clic .circulo { animation: none; }
 
-        /* Panel de Lectura */
         .panel-lectura {
             background-color: #FAFAFA;
             border: 2px solid #E6E0EB;
@@ -226,14 +236,13 @@
 
         .panel-lectura.activo { display: block; }
 
-        /* Estilos llamativos para el texto dentro del panel */
         .panel-lectura p { margin-bottom: 1rem; }
         .panel-lectura p:last-child { margin-bottom: 0; }
         
         .panel-lectura strong {
             color: var(--color-p1);
             font-weight: 800;
-            background-color: rgba(251, 165, 17, 0.15); /* Resaltado sutil tipo marcador */
+            background-color: rgba(251, 165, 17, 0.15);
             padding: 0 4px;
             border-radius: 4px;
         }
@@ -244,7 +253,7 @@
         }
 
         /* =========================================================
-           5. TARJETAS DE OBJETIVOS (Flashcards elegantes)
+           5. TARJETAS DE OBJETIVOS
            ========================================================= */
         .seccion-objetivos {
             background-color: var(--color-p1);
@@ -316,10 +325,21 @@
             font-weight: 600;
         }
 
-        /* Responsive */
+        /* =========================================================
+           6. RESPONSIVE (ADAPTACIÓN A MÓVILES)
+           ========================================================= */
         @media (max-width: 768px) {
+            /* Adaptación de los logos en móviles */
+            .logo-header {
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+            .logo-img {
+                height: 100px !important; /* Evita que queden gigantes en celular */
+            }
+
             .navegacion-pasos { flex-direction: column; gap: 20px; }
-            .navegacion-pasos::before { display: none; } /* Oculta línea en móviles */
+            .navegacion-pasos::before { display: none; } 
             .btn-paso { width: 100%; flex-direction: row; justify-content: flex-start; gap: 15px; }
             .btn-paso .circulo { width: 60px; height: 60px; font-size: 1.5rem; margin-bottom: 0; }
             .panel-lectura { padding: 1.5rem; font-size: 1rem; }
@@ -331,6 +351,12 @@
 
 <main class="modulo-curso">
     
+    <!-- SECCIÓN DE LOGOS (NUEVO) -->
+    <div class="logo-header">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="logo-img" style="height:160px; width:auto;">
+        <img src="../Styles/logo.png" alt="Logo Comisión" class="logo-img" style="height:160px; width:auto;">
+    </div>
+    
     <!-- ENCABEZADO -->
     <header>
         <h1>Presentación de la Unidad</h1>
@@ -341,13 +367,13 @@
     <section class="seccion-interactiva" aria-labelledby="titulo-intro">
         <h2 id="titulo-intro" style="display: none;">Introducción interactiva</h2>
 
-        <!-- Cartel de instrucción MUY obvio -->
+        <!-- Cartel de instrucción -->
         <div class="alerta-instruccion" role="alert">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v2h-2v-2zm0-10h2v8h-2V7z"/></svg>
             Haz clic en los botones numerados (1, 2 y 3) para descubrir la lectura paso a paso.
         </div>
 
-        <!-- Botones con diseño de "Botón" real y animación de latido en el inactivo sugerido -->
+        <!-- Botones con diseño de "Botón" real y animación -->
         <nav class="navegacion-pasos" aria-label="Pasos de lectura">
             <button class="btn-paso activo animar-clic" id="btn-1" onclick="mostrarPaso(1)" aria-expanded="true" aria-controls="paso-1">
                 <div class="circulo">1</div>
@@ -365,7 +391,7 @@
             </button>
         </nav>
 
-        <!-- Contenidos de Texto (Mismo texto 100%, con negritas estratégicas para guiar el ojo) -->
+        <!-- Contenidos de Texto -->
         <article class="panel-lectura activo" id="paso-1" tabindex="0">
             <p>La comprensión de las violencias basadas en género exige reconocer que no son <strong>hechos aislados ni exclusivamente individuales</strong>, sino <strong>fenómenos históricos y estructurales</strong> relacionados con desigualdades sociales, políticas, económicas y culturales. Las luchas de los movimientos feministas, de mujeres, indígenas, afrodescendientes, campesinos y de personas con orientaciones e identidades diversas han sido fundamentales para transformar el derecho, ampliar el reconocimiento de los derechos humanos y <strong>exigir responsabilidades a los Estados.</strong></p>
         </article>
@@ -380,7 +406,7 @@
 
     </section>
 
-    <!-- OBJETIVOS (Fondo morado para máximo contraste e impacto visual) -->
+    <!-- OBJETIVOS -->
     <section class="seccion-objetivos" aria-labelledby="titulo-obj">
         <h2 id="titulo-obj">Objetivos de Aprendizaje</h2>
         <p>Al finalizar esta unidad, la persona participante estará en capacidad de:</p>
@@ -418,7 +444,6 @@
             btn.setAttribute('aria-expanded', 'false');
             
             // Si el botón ya fue clickeado, le quitamos la animación de latido
-            // Para que se entienda que ya se completó esa acción.
             if(btn.id === `btn-${numPaso}`) {
                 btn.classList.remove('animar-clic');
             }
@@ -436,12 +461,12 @@
         btnActivo.classList.add('activo');
         btnActivo.setAttribute('aria-expanded', 'true');
         
-        // Cambiar el texto de la etiqueta para dar retroalimentación
+        // Cambiar el texto de la etiqueta
         btnActivo.querySelector('.etiqueta-clic').innerText = `Párrafo ${numPaso}`;
 
         panelActivo.classList.add('activo');
         
-        // Foco de accesibilidad para lectores de pantalla
+        // Foco de accesibilidad
         panelActivo.focus();
     }
 </script>

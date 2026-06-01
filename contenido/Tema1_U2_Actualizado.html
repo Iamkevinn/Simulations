@@ -143,7 +143,6 @@
             transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
         }
 
-        /* Efecto de botón físico al hacer hover */
         .flat-box:hover {
             transform: translate(6px, 6px);
             box-shadow: 4px 4px 0px var(--color-3);
@@ -162,7 +161,7 @@
 
         /* --- SECCIÓN 2: FEMINIZACIÓN DEL CUIDADO --- */
         .module-section {
-            max-width: 1000px; 
+            max-width: 1100px; /* Un poco más ancho para el flujo visual */
             margin: 100px auto;
             padding: 0 5%;
         }
@@ -187,153 +186,246 @@
             margin-top: 15px;
         }
 
-        /* 2.1 PESTAÑAS INTERACTIVAS TÁCTILES */
-        .tabs-container {
-            margin-bottom: 80px;
+        /* 2.1 MAPA MENTAL (Feminización del Cuidado) */
+        .mindmap-container {
+            position: relative;
+            margin: 40px auto 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 35px;
+            z-index: 10;
+        }
+
+        .mindmap-center {
+            background-color: var(--color-3);
+            color: var(--color-1);
+            border: 4px solid var(--color-1);
+            padding: 15px 35px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            border-radius: 50px;
+            box-shadow: 6px 6px 0px var(--color-1);
+            z-index: 2;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mindmap-center::after {
+            content: '';
+            position: absolute;
+            bottom: -39px;
+            left: 50%;
+            width: 4px;
+            height: 39px;
+            background-color: var(--color-1);
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .mindmap-nodes {
+            display: flex;
+            gap: 40px;
+            width: 100%;
             position: relative;
         }
 
-        .tabs-buttons {
+        .mindmap-nodes::before {
+            content: '';
+            position: absolute;
+            top: -35px;
+            left: 25%;
+            right: 25%;
+            height: 35px;
+            border-top: 4px solid var(--color-1);
+            border-left: 4px solid var(--color-1);
+            border-right: 4px solid var(--color-1);
+            border-radius: 10px 10px 0 0;
+            border-bottom: none;
+            z-index: 1;
+        }
+
+        .mindmap-node {
+            flex: 1;
+            background: var(--color-5);
+            border: 4px solid var(--color-1);
+            box-shadow: 8px 8px 0px var(--color-2);
             display: flex;
-            gap: 10px;
-            margin-bottom: -4px; 
+            flex-direction: column;
             position: relative;
             z-index: 2;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .tab-btn {
-            flex: 1;
-            padding: 20px 15px;
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 800;
-            background: var(--bg-body);
-            color: var(--color-1);
-            border: 4px solid var(--color-1);
-            border-bottom: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            border-radius: 10px 10px 0 0;
-            box-shadow: inset 0 -10px 10px rgba(0,0,0,0.02);
-        }
-
-        .tab-btn i { font-size: 1.5rem; transition: transform 0.3s ease; }
-
-        .tab-btn:hover:not(.active) {
-            background: var(--color-3);
-            transform: translateY(-5px);
-        }
-
-        .tab-btn:hover i {
-            transform: scale(1.2);
-        }
-
-        /* Pestaña Activa (Se fusiona y resalta) */
-        .tab-btn.active {
-            background: var(--color-5);
-            padding-top: 25px; 
-            border-bottom: 4px solid var(--color-5); 
-            box-shadow: none;
-        }
-
-        .tabs-content {
-            background: var(--color-5);
-            border: 4px solid var(--color-1);
-            box-shadow: 10px 10px 0px var(--color-2);
-            padding: 40px;
-            position: relative;
-            z-index: 1;
-            min-height: 250px;
-            transition: box-shadow 0.3s ease;
-        }
-
-        .tabs-container:hover .tabs-content {
-            box-shadow: 12px 12px 0px var(--color-3);
-        }
-
-        .tab-panel {
-            display: none;
-            animation: slideInTab 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            opacity: 0;
-        }
-
-        .tab-panel.active { display: block; }
-
-        .tab-panel h3 {
-            font-size: 2rem;
-            color: var(--color-4);
-            margin-bottom: 20px;
-            border-bottom: 3px solid var(--bg-body);
-            padding-bottom: 10px;
-        }
-
-        @keyframes slideInTab {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* 2.2 Acordeón Neo-Brutalista Mejorado */
-        .accordion-section { margin-bottom: 80px; }
-
-        .accordion-item { margin-bottom: 20px; }
-
-        .accordion-header {
-            width: 100%;
-            padding: 20px 30px;
-            background: var(--color-5);
-            border: 4px solid var(--color-1);
-            box-shadow: 6px 6px 0px var(--color-1);
-            text-align: left;
-            font-size: 1.2rem;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 700;
-            color: var(--color-1);
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, background-color 0.3s;
-        }
-
-        .accordion-header span i {
-            transition: transform 0.4s ease;
-        }
-
-        /* Efecto botón al presionar o hover */
-        .accordion-header:hover {
-            background-color: var(--color-3);
-            transform: translate(2px, 2px);
+        .mindmap-node:hover {
+            transform: translate(4px, 4px);
             box-shadow: 4px 4px 0px var(--color-1);
         }
 
-        .accordion-header.active {
-            background-color: var(--color-2);
+        .node-header {
+            background: var(--color-1);
             color: var(--color-5);
-            border-bottom: 4px solid var(--color-5);
-            transform: translate(4px, 4px);
-            box-shadow: 2px 2px 0px var(--color-1);
+            padding: 15px 20px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            border-bottom: 4px solid var(--color-1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .accordion-header.active span i {
-            transform: rotate(180deg);
+        .mindmap-node:nth-child(2) .node-header {
+            background: var(--color-4);
+            border-bottom-color: var(--color-1);
         }
 
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            background-color: var(--color-5);
+        .node-body {
+            padding: 30px;
+            font-size: 1.1rem;
+        }
+
+        .node-body h3 {
+            font-size: 1.8rem;
+            color: var(--color-1);
+            margin-bottom: 15px;
+            border-bottom: 4px solid var(--color-3);
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+
+        .mindmap-node:nth-child(2) .node-body h3 {
+            color: var(--color-4);
+            border-bottom-color: var(--color-4);
+        }
+
+        /* 2.2 DIAGRAMA DE FLUJO VISUAL CAUSAL (Nuevo Recurso Pedagógico) */
+        .visual-flow-section { margin-bottom: 100px; padding: 20px 0; }
+        
+        .visual-flow-container {
+            display: flex;
+            align-items: stretch;
+            justify-content: space-between;
+            gap: 15px;
+            position: relative;
+            margin-top: 50px;
+        }
+
+        .flow-node {
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .node-number {
+            position: absolute;
+            top: -25px;
+            left: -20px;
+            width: 50px;
+            height: 50px;
+            background: var(--color-1);
+            color: var(--color-5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            border: 4px solid var(--color-5);
+            z-index: 5;
+            box-shadow: 4px 4px 0px var(--color-1);
+        }
+
+        /* Colores específicos para los números */
+        .flow-node:nth-child(1) .node-number { background: var(--color-2); }
+        .flow-node:nth-child(3) .node-number { background: var(--color-4); }
+        .flow-node:nth-child(5) .node-number { background: var(--color-3); }
+
+        .flow-card {
+            background: var(--color-5);
             border: 4px solid var(--color-1);
-            border-top: none;
-            margin-top: -4px; 
-            box-shadow: 6px 6px 0px var(--color-1);
+            padding: 35px 25px 25px;
+            height: 100%;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .accordion-body { padding: 30px; font-weight: 500; }
+        .flow-node:nth-child(1) .flow-card { box-shadow: 8px 8px 0px var(--color-2); }
+        .flow-node:nth-child(3) .flow-card { box-shadow: 8px 8px 0px var(--color-4); }
+        .flow-node:nth-child(5) .flow-card { box-shadow: 8px 8px 0px var(--color-3); }
+
+        .flow-card:hover {
+            transform: translate(4px, 4px);
+            box-shadow: 4px 4px 0px var(--color-1) !important;
+        }
+
+        .flow-icon {
+            width: 55px;
+            height: 55px;
+            color: var(--color-5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            border-radius: 12px;
+            border: 4px solid var(--color-1);
+            margin-bottom: 20px;
+            box-shadow: 4px 4px 0px var(--color-1);
+        }
+
+        .flow-node:nth-child(1) .flow-icon { background: var(--color-2); }
+        .flow-node:nth-child(3) .flow-icon { background: var(--color-4); }
+        .flow-node:nth-child(5) .flow-icon { background: var(--color-3); }
+
+        .flow-card h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            color: var(--color-1);
+            margin-bottom: 15px;
+            line-height: 1.2;
+            min-height: 60px; /* Alineación visual */
+        }
+
+        .flow-card p {
+            font-size: 1.05rem;
+        }
+
+        /* Conectores lógicos del flujo */
+        .flow-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 80px;
+            z-index: 2;
+        }
+
+        .connector-tag {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 800;
+            background: var(--color-5);
+            color: var(--color-1);
+            border: 3px solid var(--color-1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            text-align: center;
+            box-shadow: 3px 3px 0px var(--color-1);
+            transform: rotate(-5deg);
+            white-space: nowrap;
+        }
+
+        .flow-connector:nth-child(4) .connector-tag {
+            transform: rotate(5deg);
+        }
+
+        .desktop-arrow { font-size: 3rem; color: var(--color-1); }
+        .mobile-arrow { display: none; font-size: 3rem; color: var(--color-1); }
 
         /* 2.3 Grid de Impactos (Táctiles) */
         .impact-grid {
@@ -405,7 +497,6 @@
             box-shadow: 0px 0px 0px rgba(0,0,0,0.3);
         }
 
-        /* Clases de Animación para el Feedback del Quiz */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-8px); }
@@ -429,6 +520,11 @@
             border: 4px solid transparent;
             font-size: 1.3rem;
             animation: slideInTab 0.3s ease-out;
+        }
+
+        @keyframes slideInTab {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* --- SECCIÓN 3: ROADMAP INTERACTIVO (Scroll Activo) --- */
@@ -455,7 +551,6 @@
             padding-bottom: 20px;
         }
         
-        /* Línea base estática */
         .roadmap-container::before {
             content: ''; 
             position: absolute; 
@@ -465,7 +560,6 @@
             background-color: var(--color-2);
         }
 
-        /* Línea de progreso dinámica (Se llena con JS al hacer scroll) */
         .roadmap-progress {
             position: absolute;
             top: 0; left: 24px;
@@ -487,7 +581,7 @@
             opacity: 0.3; 
             transform: translateX(-20px);
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 2; /* Para que quede sobre la línea */
+            z-index: 2; 
         }
 
         .step-icon {
@@ -510,7 +604,7 @@
             color: var(--color-1);
             transform: translateY(-50%) scale(1.2); 
             border-color: var(--color-5);
-            box-shadow: 0 0 0 4px var(--color-3); /* Halo sólido */
+            box-shadow: 0 0 0 4px var(--color-3); 
         }
 
         .step p { font-weight: 800; font-size: 1.2rem; margin: 0; }
@@ -550,12 +644,6 @@
         }
         .scroll-message.visible { opacity: 1; transform: translateX(0); }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
-
         /* --- RESPONSIVE --- */
         @media (max-width: 900px) {
             .editorial-container { grid-template-columns: 1fr; gap: 30px; margin-top: 40px; }
@@ -568,11 +656,23 @@
             header { flex-direction: row; }
             .logo-img { height: 85px; } 
             
-            /* Ajuste de pestañas para móvil */
-            .tabs-buttons { flex-direction: column; gap: 0; margin-bottom: 0; }
-            .tab-btn { border-radius: 0; border-bottom: 4px solid var(--color-1); }
-            .tab-btn.active { border-bottom: 4px solid var(--color-1); padding-top: 20px;}
-            .tabs-content { border-top: none; }
+            /* Mapa Mental Responsive */
+            .mindmap-nodes { flex-direction: column; gap: 40px; }
+            .mindmap-nodes::before { display: none; }
+            .mindmap-center::after { display: none; }
+            .mindmap-container::before {
+                content: ''; position: absolute; top: 40px; bottom: 50%; left: 50%;
+                width: 4px; background-color: var(--color-1); transform: translateX(-50%); z-index: 0;
+            }
+
+            /* Flujo Causal Responsive */
+            .visual-flow-container { flex-direction: column; gap: 0; margin-top: 30px; }
+            .flow-card { min-height: auto; }
+            .flow-card h4 { min-height: auto; }
+            .flow-connector { margin: 30px 0; }
+            .desktop-arrow { display: none; }
+            .mobile-arrow { display: block; }
+            .connector-tag { transform: rotate(0) !important; font-size: 1rem; padding: 8px 15px; }
         }
     </style>
 </head>
@@ -612,77 +712,93 @@
             </div>
         </section>
 
-        <!-- SECCIÓN 2: Feminización del Cuidado -->
+        <!-- SECCIÓN 2: FEMINIZACIÓN DEL CUIDADO -->
         <section class="module-section">
             <div class="module-header reveal">
                 <h2 class="module-title">Feminización del Cuidado</h2>
                 <p class="module-subtitle">Entendiendo la invisibilización y el impacto en la igualdad de género</p>
             </div>
 
-            <!-- Conceptos (Pestañas Interactivas tipo Carpeta Física) -->
-            <div class="tabs-container reveal">
-                <div class="tabs-buttons">
-                    <button class="tab-btn active" onclick="openTab(event, 'tab1')">
-                        <i class="fa-solid fa-person-breastfeeding"></i> Feminización del Cuidado
-                    </button>
-                    <button class="tab-btn" onclick="openTab(event, 'tab2')">
-                        <i class="fa-solid fa-building-columns"></i> Invisibilización Estatal
-                    </button>
+            <!-- Mapa Mental Interactivo -->
+            <div class="mindmap-container reveal">
+                <div class="mindmap-center">
+                    <i class="fa-solid fa-people-carry-box"></i> Dinámica del Cuidado
                 </div>
-                
-                <div class="tabs-content">
-                    <div id="tab1" class="tab-panel active">
-                        <h3>¿Qué es?</h3>
-                        <p>Es la <mark class="marker">concentración de responsabilidades de cuidado</mark> (hijas, madres, abuelas) debido a normas sociales históricas.</p>
-                        <p style="margin-top: 15px;"><strong>Incluye:</strong> Cuidado directo (higiene, alimentos), apoyo emocional y gestión integral del hogar.</p>
+                <div class="mindmap-nodes">
+                    <div class="mindmap-node">
+                        <div class="node-header">
+                            <i class="fa-solid fa-person-breastfeeding"></i> Feminización del Cuidado
+                        </div>
+                        <div class="node-body">
+                            <h3>¿Qué es?</h3>
+                            <p>Es la <mark class="marker">concentración de responsabilidades de cuidado</mark> (hijas, madres, abuelas) debido a normas sociales históricas.</p>
+                            <p style="margin-top: 15px;"><strong>Incluye:</strong> Cuidado directo (higiene, alimentos), apoyo emocional y gestión integral del hogar.</p>
+                        </div>
                     </div>
-                    
-                    <div id="tab2" class="tab-panel">
-                        <h3 style="color: var(--color-1);">El Problema</h3>
-                        <p>Existe una <mark class="marker-red">ausencia de políticas y presupuestos</mark> que reconozcan y redistribuyan equitativamente este trabajo.</p>
-                        <p style="margin-top: 15px;">El Estado asume que las mujeres cuidarán "gratis" y no regula ni protege esa labor, perpetuando la desigualdad.</p>
+                    <div class="mindmap-node">
+                        <div class="node-header">
+                            <i class="fa-solid fa-building-columns"></i> Invisibilización Estatal
+                        </div>
+                        <div class="node-body">
+                            <h3>El Problema</h3>
+                            <p>Existe una <mark class="marker-red">ausencia de políticas y presupuestos</mark> que reconozcan y redistribuyan equitativamente este trabajo.</p>
+                            <p style="margin-top: 15px;">El Estado asume que las mujeres cuidarán "gratis" y no regula ni protege esa labor, perpetuando la desigualdad.</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Causas (Acordeón Táctil) -->
-            <div class="accordion-section reveal">
-                <h3 class="highlight-text" style="font-size: 2rem; color: var(--color-1); margin-bottom: 20px;">¿Por qué sucede esto?</h3>
+            <!-- NUEVO RECURSO: DIAGRAMA DE FLUJO CAUSAL -->
+            <div class="visual-flow-section reveal">
+                <h3 class="highlight-text" style="font-size: 2.2rem; color: var(--color-1); text-align: center; margin-bottom: 10px;">¿Por qué sucede esto?</h3>
+                <p style="text-align: center; font-weight: 700; color: var(--color-2); font-size: 1.2rem; margin-bottom: 20px;">Ruta Estructural de la Desigualdad</p>
                 
-                <div class="accordion-item">
-                    <button class="accordion-header">
-                        1. Normas Culturales y División Sexual del Trabajo
-                        <span><i class="fa-solid fa-plus"></i></span>
-                    </button>
-                    <div class="accordion-content">
-                        <div class="accordion-body">
-                            Los roles tradicionales asignan lo doméstico a las mujeres como <mark class="marker">algo "natural"</mark>. Existe una segregación donde se espera que ellas estén siempre disponibles para tareas del hogar, limitando su proyección profesional.
+                <div class="visual-flow-container">
+                    
+                    <!-- NODO 1: CULTURA -->
+                    <div class="flow-node">
+                        <div class="node-number">1</div>
+                        <div class="flow-card">
+                            <div class="flow-icon"><i class="fa-solid fa-masks-theater"></i></div>
+                            <h4>Normas Culturales y División Sexual</h4>
+                            <p>Los roles tradicionales asignan lo doméstico a las mujeres como <mark class="marker">algo "natural"</mark>. Existe una segregación donde se espera que ellas estén siempre disponibles para tareas del hogar, limitando su proyección profesional.</p>
                         </div>
                     </div>
-                </div>
 
-                <div class="accordion-item">
-                    <button class="accordion-header">
-                        2. Diseño de Políticas Públicas "Ciegas"
-                        <span><i class="fa-solid fa-plus"></i></span>
-                    </button>
-                    <div class="accordion-content">
-                        <div class="accordion-body">
-                            Los sistemas de protección asumen un <mark class="marker-red">"hombre proveedor" a tiempo completo</mark> y una "mujer cuidadora" informal. Las prestaciones sociales suelen reforzar el rol de cuidadora familiar sin ofrecer autonomía económica.
-                        </div>
+                    <!-- CONECTOR 1 -->
+                    <div class="flow-connector">
+                        <div class="connector-tag">Institucionalizado en...</div>
+                        <i class="fa-solid fa-arrow-right-long desktop-arrow"></i>
+                        <i class="fa-solid fa-arrow-down-long mobile-arrow"></i>
                     </div>
-                </div>
 
-                <div class="accordion-item">
-                    <button class="accordion-header">
-                        3. Falta de Medición Económica
-                        <span><i class="fa-solid fa-plus"></i></span>
-                    </button>
-                    <div class="accordion-content">
-                        <div class="accordion-body">
-                            Indicadores como el PIB <mark class="marker">subestiman el trabajo no remunerado</mark>. Las estadísticas nacionales a menudo no detallan cómo los horarios de cuidado impactan negativamente en los ingresos y las pensiones de las mujeres.
+                    <!-- NODO 2: ESTADO -->
+                    <div class="flow-node">
+                        <div class="node-number">2</div>
+                        <div class="flow-card">
+                            <div class="flow-icon"><i class="fa-solid fa-landmark-dome"></i></div>
+                            <h4>Diseño de Políticas Públicas "Ciegas"</h4>
+                            <p>Los sistemas de protección asumen un <mark class="marker-red">"hombre proveedor" a tiempo completo</mark> y una "mujer cuidadora" informal. Las prestaciones sociales suelen reforzar el rol de cuidadora familiar sin ofrecer autonomía económica.</p>
                         </div>
                     </div>
+
+                    <!-- CONECTOR 2 -->
+                    <div class="flow-connector">
+                        <div class="connector-tag">Cuyo resultado es...</div>
+                        <i class="fa-solid fa-arrow-right-long desktop-arrow"></i>
+                        <i class="fa-solid fa-arrow-down-long mobile-arrow"></i>
+                    </div>
+
+                    <!-- NODO 3: ECONOMÍA -->
+                    <div class="flow-node">
+                        <div class="node-number">3</div>
+                        <div class="flow-card">
+                            <div class="flow-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                            <h4>Falta de Medición Económica</h4>
+                            <p>Indicadores como el PIB <mark class="marker">subestiman el trabajo no remunerado</mark>. Las estadísticas nacionales a menudo no detallan cómo los horarios de cuidado impactan negativamente en los ingresos y las pensiones de las mujeres.</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -768,58 +884,18 @@
                 if (entry.isIntersecting) {
                     setTimeout(() => {
                         entry.target.classList.add('active');
-                    }, index * 50); // Pequeño delay secuencial
+                    }, index * 50); 
                 }
             });
         }, { threshold: 0.1 });
         revealElements.forEach(el => revealObserver.observe(el));
 
-        // 2. LÓGICA DE PESTAÑAS (TABS)
-        function openTab(evt, tabId) {
-            const tabPanels = document.querySelectorAll('.tab-panel');
-            tabPanels.forEach(panel => panel.classList.remove('active'));
-
-            const tabBtns = document.querySelectorAll('.tab-btn');
-            tabBtns.forEach(btn => btn.classList.remove('active'));
-
-            document.getElementById(tabId).classList.add('active');
-            evt.currentTarget.classList.add('active');
-        }
-
-        // 3. ACORDEÓN (Neo-Brutalista)
-        const accHeaders = document.querySelectorAll(".accordion-header");
-        accHeaders.forEach(header => {
-            header.addEventListener("click", function() {
-                // Cerrar otros abiertos 
-                accHeaders.forEach(other => {
-                    if (other !== this) {
-                        other.classList.remove("active");
-                        other.nextElementSibling.style.maxHeight = null;
-                        other.querySelector('span').innerHTML = '<i class="fa-solid fa-plus"></i>';
-                    }
-                });
-
-                this.classList.toggle("active");
-                const panel = this.nextElementSibling;
-                const icon = this.querySelector('span');
-                
-                if (panel.style.maxHeight) {
-                    panel.style.maxHeight = null;
-                    icon.innerHTML = '<i class="fa-solid fa-plus"></i>';
-                } else {
-                    panel.style.maxHeight = panel.scrollHeight + "px";
-                    icon.innerHTML = '<i class="fa-solid fa-minus"></i>';
-                } 
-            });
-        });
-
-        // 4. QUIZ (Con animaciones cognitivas)
+        // 2. QUIZ (Con animaciones cognitivas)
         function checkAnswer(isCorrect, btn) {
             const resultDiv = document.getElementById('result');
             
-            // Reiniciar animaciones
             btn.classList.remove('anim-shake', 'anim-pop');
-            void btn.offsetWidth; // Forzar reflow para reiniciar animación
+            void btn.offsetWidth; 
             
             resultDiv.style.display = 'block';
             
@@ -843,7 +919,7 @@
             }
         }
 
-        // 5. ROADMAP INTERACTIVO (Scroll Fill y Nodos activos)
+        // 3. ROADMAP INTERACTIVO (Scroll Fill y Nodos activos)
         const steps = document.querySelectorAll('.roadmap-item');
         const stepObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -863,16 +939,14 @@
             const rect = roadmapContainer.getBoundingClientRect();
             const windowHeight = window.innerHeight;
             
-            // Si el contenedor está en pantalla
             if (rect.top < windowHeight && rect.bottom > 0) {
-                // Calcular porcentaje de scroll dentro del contenedor
                 let scrolled = (windowHeight - rect.top) / (rect.height + windowHeight / 2);
-                scrolled = Math.max(0, Math.min(1, scrolled)); // Restringir entre 0 y 1
+                scrolled = Math.max(0, Math.min(1, scrolled)); 
                 roadmapProgress.style.height = (scrolled * 100) + '%';
             }
         });
 
-        // 6. FLECHA DE ACCESIBILIDAD INTELIGENTE
+        // 4. FLECHA DE ACCESIBILIDAD INTELIGENTE
         const scrollArrow = document.getElementById('scrollArrow');
         const endMessage = document.getElementById('endMessage');
 

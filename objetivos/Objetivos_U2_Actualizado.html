@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prevención de Violencias de Género</title>
+    
+    <!-- Fuentes tipográficas -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Iconos vectoriales -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Variables - Diseño Plano y Sólido */
+        :root {
+            --color-1: #480241; /* Morado Oscuro */
+            --color-2: #7235A8; /* Morado Claro */
+            --color-3: #FBA511; /* Naranja/Amarillo */
+            --color-4: #CE4651; /* Rojo/Rosa */
+            --color-5: #FFFFFF; /* Blanco */
+            --bg-body: #FDFDFD;
+            --text-dark: #1A1A1A;
+            --border-color: #E2E2E2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.8;
+            font-size: 18px;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--color-1);
+        }
+
+        /* --- HEADER Y LOGOS INSTITUCIONALES (Corregidos) --- */
+        header {
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            padding: 20px 5%; /* Más espacio vertical para que los logos respiren */
+            background-color: var(--color-5);
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-img {
+            height: 110px; /* Tamaño mucho más grande e institucional */
+            max-width: 45%; /* Límite para que no choquen entre sí en pantallas raras */
+            object-fit: contain; /* Evita que el logo se deforme, se adapta a su propio ancho */
+        }
+
+        /* BARRA DE PROGRESO DE LECTURA (Ahora anclada dentro del header) */
+        .progress-container {
+            position: absolute;
+            bottom: -2px; /* Se apoya exactamente sobre la línea divisoria inferior */
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: var(--border-color);
+            z-index: 99;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--color-3);
+            transition: width 0.1s linear;
+        }
+
+        /* --- CONTENIDO PRINCIPAL --- */
+        main {
+            max-width: 900px; 
+            margin: 0 auto;
+            padding: 60px 5%;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--color-1);
+        }
+
+        .section-title i {
+            color: var(--color-4);
+        }
+
+        /* --- PRESENTACIÓN: FLUJO DE LECTURA --- */
+        .presentation-article {
+            margin-bottom: 70px;
+        }
+
+        .reading-focus {
+            padding-left: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            color: #4A4A4A; 
+        }
+
+        .reading-focus.active-focus {
+            border-left-color: var(--color-3);
+            color: var(--text-dark);
+            font-weight: 600;
+            background-color: rgba(251, 165, 17, 0.05);
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* --- OBJETIVOS (Tarjetas Planas) --- */
+        .subtitle-obj {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-1);
+            margin-bottom: 30px;
+        }
+
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .objective-flat-card {
+            background-color: var(--color-5);
+            border: 2px solid var(--border-color);
+            padding: 30px 25px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .objective-flat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--color-2);
+        }
+
+        .icon-flat {
+            width: 50px;
+            height: 50px;
+            background-color: var(--color-1);
+            color: var(--color-5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .objective-flat-card:hover .icon-flat {
+            background-color: var(--color-4);
+        }
+
+        .objective-flat-card p {
+            margin: 0;
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+
+        /* --- CLASES DE ANIMACIÓN --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+
+        /* --- FLECHA INTELIGENTE DE ACCESIBILIDAD --- */
+        .smart-scroll-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .scroll-arrow {
+            width: 55px;
+            height: 55px;
+            background-color: var(--color-5);
+            color: var(--color-1);
+            border: 3px solid var(--color-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        .scroll-arrow:hover {
+            background-color: var(--color-3);
+            border-color: var(--color-3);
+            color: var(--color-1);
+        }
+
+        .scroll-arrow.hidden {
+            opacity: 0;
+            transform: scale(0.5) translateY(20px);
+            pointer-events: none;
+        }
+
+        .scroll-message {
+            background-color: var(--color-1);
+            color: var(--color-5);
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: auto;
+        }
+
+        .scroll-message.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* --- RESPONSIVE OPTIMIZADO PARA LOGOS GRANDES --- */
+        @media (max-width: 768px) {
+            header { 
+                flex-direction: row; 
+                padding: 15px 5%;
+            }
+            .logo-img { 
+                height: 80px; /* En móviles también aumentan su tamaño considerablemente */
+            } 
+            .section-title { font-size: 1.8rem; }
+            .smart-scroll-container { bottom: 20px; right: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CABECERA: Logos Institucionales con gran presencia -->
+    <header id="header">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="logo-img">
+        <img src="../Styles/logo.png" alt="Logo Institucional" class="logo-img">
+        
+        <!-- BARRA DE LECTURA (Ahora anclada inteligentemente dentro del header) -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </header>
+
+    <main>
+        <!-- PRESENTACIÓN: Flujo continuo de lectura -->
+        <section class="presentation-article">
+            <h2 class="section-title reveal">
+                <i class="fa-solid fa-book-open-reader"></i> Presentación de la Unidad
+            </h2>
+            
+            <p class="reading-focus reveal">
+                La prevención de las violencias basadas en género requiere comprender que las desigualdades no afectan a todas las personas de la misma manera. Factores como género, raza, etnia, orientación sexual, identidad de género, discapacidad, edad, territorio y condición socioeconómica producen experiencias diferenciadas de discriminación y riesgo.
+            </p>
+            
+            <p class="reading-focus reveal">
+                Por ello, los enfoques contemporáneos de derechos humanos han incorporado herramientas analíticas como la interseccionalidad, el enfoque diferencial y las perspectivas transformadoras, que permiten comprender cómo operan las violencias estructurales dentro de las instituciones y en la sociedad.
+            </p>
+            
+            <p class="reading-focus reveal">
+                Esta unidad aborda los fundamentos conceptuales y jurídicos necesarios para identificar discriminaciones estructurales, comprender las distintas formas de violencia basada en género y aplicar marcos normativos nacionales e internacionales en contextos institucionales de seguridad y protección.
+            </p>
+            
+            <p class="reading-focus reveal">
+                Asimismo, se estudian aportes de los feminismos comunitarios y decoloniales, que cuestionan las limitaciones del derecho tradicional y proponen nuevas formas de comprender justicia, cuidado y reparación.
+            </p>
+        </section>
+
+        <!-- OBJETIVOS: Tarjetas Planas Profesionales -->
+        <section>
+            <h2 class="section-title reveal">
+                <i class="fa-solid fa-bullseye"></i> Objetivos de Aprendizaje
+            </h2>
+            <p class="subtitle-obj reveal">Al finalizar esta unidad, la persona participante estará en capacidad de:</p>
+            
+            <div class="objectives-grid">
+                
+                <div class="objective-flat-card reveal delay-1">
+                    <div class="icon-flat"><i class="fa-solid fa-brain"></i></div>
+                    <p>Comprender la diversidad de enfoques de género y su aplicación práctica en la toma de decisiones institucionales.</p>
+                </div>
+
+                <div class="objective-flat-card reveal delay-2">
+                    <div class="icon-flat"><i class="fa-solid fa-scale-balanced"></i></div>
+                    <p>Analizar los aportes de los feminismos comunitarios y decoloniales en la crítica al derecho y la transformación social.</p>
+                </div>
+
+                <div class="objective-flat-card reveal delay-3">
+                    <div class="icon-flat"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                    <p>Identificar discriminaciones estructurales en entornos institucionales y proponer estrategias para su desmontaje.</p>
+                </div>
+
+                <div class="objective-flat-card reveal delay-4">
+                    <div class="icon-flat"><i class="fa-solid fa-shield-halved"></i></div>
+                    <p>Reconocer las tipologías de violencia de género y los marcos normativos vigentes para su prevención y atención.</p>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- FLECHA INTELIGENTE DE ACCESIBILIDAD -->
+    <div class="smart-scroll-container">
+        <div class="scroll-message" id="endMessage">
+            ¡Has completado esta sección!
+        </div>
+        <div class="scroll-arrow" id="scrollArrow" aria-label="Bajar" onclick="window.scrollBy({top: 400, behavior: 'smooth'})">
+            <i class="fa-solid fa-arrow-down"></i>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        // 1. BARRA DE PROGRESO DE LECTURA
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + "%";
+        });
+
+        // 2. APARICIÓN LIMPIA (Scroll Reveal)
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // 3. FOCO DE LECTURA ACTIVO (Interacción Inmersiva sin romper el texto)
+        const paragraphs = document.querySelectorAll('.reading-focus');
+        const focusObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                // El párrafo se activa cuando pasa por el centro de la pantalla
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active-focus');
+                } else {
+                    entry.target.classList.remove('active-focus');
+                }
+            });
+        }, { 
+            rootMargin: "-25% 0px -25% 0px" // Rango de lectura en pantalla
+        });
+        paragraphs.forEach(p => focusObserver.observe(p));
+
+        // 4. FLECHA DE ACCESIBILIDAD (Detectar final del contenido)
+        const scrollArrow = document.getElementById('scrollArrow');
+        const endMessage = document.getElementById('endMessage');
+
+        window.addEventListener('scroll', () => {
+            const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = window.scrollY;
+            
+            if (Math.ceil(scrolled) >= scrollableHeight - 30) {
+                scrollArrow.classList.add('hidden');
+                endMessage.classList.add('visible');
+            } else {
+                scrollArrow.classList.remove('hidden');
+                endMessage.classList.remove('visible');
+            }
+        });
+    </script>
+</body>
+</html>

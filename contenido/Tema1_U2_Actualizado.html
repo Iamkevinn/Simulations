@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNP 2026 - Prevención de Violencias y Cuidado</title>
+    
+    <!-- Fuentes tipográficas -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+    
+    <!-- Iconos vectoriales -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Variables - Paleta de Colores (Estilo Flat / Editorial / Neo-Brutalista) */
+        :root {
+            --color-1: #480241; /* Morado Oscuro */
+            --color-2: #7235A8; /* Morado Claro */
+            --color-3: #FBA511; /* Naranja */
+            --color-4: #CE4651; /* Rojo */
+            --color-5: #FFFFFF; /* Blanco */
+            --bg-body: #F4F4F4; /* Gris ultra claro */
+            --text-dark: #111111;
+            --color-success: #198754; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.7;
+            font-size: 19px; 
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 { font-family: 'Outfit', sans-serif; }
+
+        /* --- HEADER Y LOGOS --- */
+        header {
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            padding: 15px 5%;
+            background-color: var(--color-5);
+            border-bottom: 4px solid var(--color-1); 
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            gap: 20px;
+            box-shadow: 0px 6px 0px rgba(72, 2, 65, 0.1);
+        }
+
+        .logo-img {
+            height: 125px; 
+            width: auto;
+            max-width: 48%; 
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.02);
+        }
+
+        .logo-img:last-child {
+            filter: drop-shadow(0px 2px 0px rgba(0,0,0,0.06));
+        }
+
+        /* --- TEXTOS RESALTADOS (MARCADORES EDITORIALES) --- */
+        mark.marker {
+            background-color: rgba(251, 165, 17, 0.25);
+            color: var(--color-1);
+            border-bottom: 3px solid var(--color-3);
+            padding: 2px 6px;
+            font-weight: 800; 
+            border-radius: 3px;
+            transition: background-color 0.3s ease, transform 0.2s;
+            display: inline-block;
+        }
+
+        mark.marker:hover { 
+            background-color: rgba(251, 165, 17, 0.5); 
+            transform: translateY(-2px);
+        }
+
+        mark.marker-red {
+            background-color: rgba(206, 70, 81, 0.15);
+            border-bottom: 3px solid var(--color-4);
+        }
+
+        mark.marker-red:hover { 
+            background-color: rgba(206, 70, 81, 0.3); 
+        }
+
+        /* --- SECCIÓN 1: LAYOUT EDITORIAL (Interseccionalidad) --- */
+        .editorial-container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 5%;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr; 
+            gap: 60px;
+            align-items: start;
+        }
+
+        .sticky-sidebar { position: sticky; top: 170px; }
+
+        .main-title {
+            font-size: 3.2rem;
+            color: var(--color-1);
+            line-height: 1.1;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 0px rgba(72, 2, 65, 0.1);
+        }
+
+        .main-title span { color: var(--color-4); }
+
+        .sidebar-icon {
+            font-size: 4rem;
+            color: var(--color-3);
+            margin-bottom: 20px;
+            display: inline-block;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .sticky-sidebar:hover .sidebar-icon {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .flat-box {
+            background-color: var(--color-5);
+            border: 4px solid var(--color-1);
+            box-shadow: 10px 10px 0px var(--color-2); 
+            padding: 35px;
+            margin-bottom: 40px;
+            cursor: default;
+            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+        }
+
+        /* Efecto de botón físico al hacer hover */
+        .flat-box:hover {
+            transform: translate(6px, 6px);
+            box-shadow: 4px 4px 0px var(--color-3);
+            border-color: var(--color-1);
+        }
+
+        .highlight-text {
+            color: var(--color-4);
+            font-weight: 800;
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- SECCIÓN 2: FEMINIZACIÓN DEL CUIDADO --- */
+        .module-section {
+            max-width: 1000px; 
+            margin: 100px auto;
+            padding: 0 5%;
+        }
+
+        .module-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .module-title {
+            font-size: 2.8rem;
+            color: var(--color-1);
+            display: inline-block;
+            border-bottom: 6px solid var(--color-3);
+            padding-bottom: 10px;
+        }
+
+        .module-subtitle {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-2);
+            margin-top: 15px;
+        }
+
+        /* 2.1 PESTAÑAS INTERACTIVAS TÁCTILES */
+        .tabs-container {
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .tabs-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: -4px; 
+            position: relative;
+            z-index: 2;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 20px 15px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            background: var(--bg-body);
+            color: var(--color-1);
+            border: 4px solid var(--color-1);
+            border-bottom: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border-radius: 10px 10px 0 0;
+            box-shadow: inset 0 -10px 10px rgba(0,0,0,0.02);
+        }
+
+        .tab-btn i { font-size: 1.5rem; transition: transform 0.3s ease; }
+
+        .tab-btn:hover:not(.active) {
+            background: var(--color-3);
+            transform: translateY(-5px);
+        }
+
+        .tab-btn:hover i {
+            transform: scale(1.2);
+        }
+
+        /* Pestaña Activa (Se fusiona y resalta) */
+        .tab-btn.active {
+            background: var(--color-5);
+            padding-top: 25px; 
+            border-bottom: 4px solid var(--color-5); 
+            box-shadow: none;
+        }
+
+        .tabs-content {
+            background: var(--color-5);
+            border: 4px solid var(--color-1);
+            box-shadow: 10px 10px 0px var(--color-2);
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+            min-height: 250px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .tabs-container:hover .tabs-content {
+            box-shadow: 12px 12px 0px var(--color-3);
+        }
+
+        .tab-panel {
+            display: none;
+            animation: slideInTab 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
+        }
+
+        .tab-panel.active { display: block; }
+
+        .tab-panel h3 {
+            font-size: 2rem;
+            color: var(--color-4);
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--bg-body);
+            padding-bottom: 10px;
+        }
+
+        @keyframes slideInTab {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* 2.2 Acordeón Neo-Brutalista Mejorado */
+        .accordion-section { margin-bottom: 80px; }
+
+        .accordion-item { margin-bottom: 20px; }
+
+        .accordion-header {
+            width: 100%;
+            padding: 20px 30px;
+            background: var(--color-5);
+            border: 4px solid var(--color-1);
+            box-shadow: 6px 6px 0px var(--color-1);
+            text-align: left;
+            font-size: 1.2rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: var(--color-1);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, background-color 0.3s;
+        }
+
+        .accordion-header span i {
+            transition: transform 0.4s ease;
+        }
+
+        /* Efecto botón al presionar o hover */
+        .accordion-header:hover {
+            background-color: var(--color-3);
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0px var(--color-1);
+        }
+
+        .accordion-header.active {
+            background-color: var(--color-2);
+            color: var(--color-5);
+            border-bottom: 4px solid var(--color-5);
+            transform: translate(4px, 4px);
+            box-shadow: 2px 2px 0px var(--color-1);
+        }
+
+        .accordion-header.active span i {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background-color: var(--color-5);
+            border: 4px solid var(--color-1);
+            border-top: none;
+            margin-top: -4px; 
+            box-shadow: 6px 6px 0px var(--color-1);
+        }
+
+        .accordion-body { padding: 30px; font-weight: 500; }
+
+        /* 2.3 Grid de Impactos (Táctiles) */
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        .impact-card {
+            background: var(--color-5);
+            border: 4px solid var(--color-1);
+            padding: 25px;
+            box-shadow: 8px 8px 0px var(--color-4);
+            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+        }
+
+        .impact-card:hover { 
+            transform: translate(4px, 4px);
+            box-shadow: 4px 4px 0px var(--color-1);
+        }
+        
+        .impact-title { 
+            font-family: 'Outfit'; 
+            font-size: 1.3rem; 
+            color: var(--color-1); 
+            margin-bottom: 15px; 
+            font-weight: 800; 
+            border-bottom: 3px solid var(--color-3); 
+            padding-bottom: 10px; 
+            display: flex; 
+            gap: 10px; 
+            align-items: center; 
+        }
+
+        /* 2.4 Quiz Flat Design Interactivo */
+        .quiz-section {
+            background-color: var(--color-1);
+            border: 5px solid var(--color-2);
+            padding: 50px;
+            text-align: center;
+            color: var(--color-5);
+            box-shadow: 12px 12px 0px var(--color-3);
+        }
+
+        .quiz-btn {
+            background-color: var(--color-5);
+            color: var(--color-1);
+            border: 4px solid var(--color-5);
+            padding: 15px 25px;
+            margin: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Nunito';
+            cursor: pointer;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.3);
+            transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.2s;
+        }
+
+        .quiz-btn:hover {
+            background-color: var(--color-3);
+            border-color: var(--color-3);
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.3);
+        }
+
+        .quiz-btn:active {
+            transform: translate(6px, 6px);
+            box-shadow: 0px 0px 0px rgba(0,0,0,0.3);
+        }
+
+        /* Clases de Animación para el Feedback del Quiz */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            50% { transform: translateX(8px); }
+            75% { transform: translateX(-8px); }
+        }
+        .anim-shake { animation: shake 0.4s ease-in-out; }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .anim-pop { animation: pop 0.4s ease-in-out; }
+
+        .result-msg {
+            margin-top: 30px;
+            font-weight: 800;
+            display: none;
+            padding: 20px;
+            border: 4px solid transparent;
+            font-size: 1.3rem;
+            animation: slideInTab 0.3s ease-out;
+        }
+
+        /* --- SECCIÓN 3: ROADMAP INTERACTIVO (Scroll Activo) --- */
+        .roadmap-section {
+            max-width: 1000px;
+            margin: 80px auto;
+            padding: 60px 5%;
+            background-color: var(--color-1);
+            color: var(--color-5);
+            border-top: 5px solid var(--color-3);
+            border-bottom: 5px solid var(--color-3);
+        }
+
+        .roadmap-title {
+            font-size: 2.5rem;
+            color: var(--color-5);
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .roadmap-container { 
+            position: relative; 
+            padding-left: 60px; 
+            padding-bottom: 20px;
+        }
+        
+        /* Línea base estática */
+        .roadmap-container::before {
+            content: ''; 
+            position: absolute; 
+            top: 0; bottom: 0; 
+            left: 24px; 
+            width: 6px; 
+            background-color: var(--color-2);
+        }
+
+        /* Línea de progreso dinámica (Se llena con JS al hacer scroll) */
+        .roadmap-progress {
+            position: absolute;
+            top: 0; left: 24px;
+            width: 6px;
+            background-color: var(--color-3);
+            height: 0%;
+            transition: height 0.1s linear;
+            z-index: 1;
+        }
+
+        .step {
+            position: relative;
+            margin-bottom: 50px;
+            padding: 20px 30px;
+            background-color: var(--color-5);
+            color: var(--color-1);
+            border: 4px solid var(--color-5);
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.3);
+            opacity: 0.3; 
+            transform: translateX(-20px);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2; /* Para que quede sobre la línea */
+        }
+
+        .step-icon {
+            position: absolute; left: -69px; top: 50%; transform: translateY(-50%);
+            width: 54px; height: 54px; background-color: var(--color-1);
+            border: 4px solid var(--color-2); color: var(--color-5); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            z-index: 3;
+        }
+
+        .step.active-step { 
+            opacity: 1; 
+            transform: translateX(0); 
+            border-color: var(--color-3); 
+        }
+        
+        .step.active-step .step-icon {
+            background-color: var(--color-3); 
+            color: var(--color-1);
+            transform: translateY(-50%) scale(1.2); 
+            border-color: var(--color-5);
+            box-shadow: 0 0 0 4px var(--color-3); /* Halo sólido */
+        }
+
+        .step p { font-weight: 800; font-size: 1.2rem; margin: 0; }
+
+        /* --- UTILIDADES --- */
+        .reveal {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- FLECHA INTELIGENTE --- */
+        .smart-scroll-container {
+            position: fixed; bottom: 30px; right: 30px;
+            display: flex; flex-direction: column; align-items: flex-end;
+            z-index: 1000; pointer-events: none;
+        }
+
+        .scroll-arrow {
+            width: 60px; height: 60px; background-color: var(--color-3); color: var(--color-1);
+            border: 4px solid var(--color-1); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; animation: bounce 2s infinite; transition: all 0.3s ease; pointer-events: auto; cursor: pointer;
+            box-shadow: 4px 4px 0px var(--color-1);
+        }
+
+        .scroll-arrow:hover {
+            background-color: var(--color-5);
+            transform: scale(1.1);
+        }
+
+        .scroll-arrow.hidden { opacity: 0; transform: scale(0.5) translateY(20px); pointer-events: none; }
+        .scroll-message {
+            background-color: var(--color-1); color: var(--color-5); padding: 10px 15px; border: 3px solid var(--color-5);
+            font-family: 'Outfit', sans-serif; font-size: 1rem; margin-bottom: 10px; opacity: 0; transform: translateX(10px);
+            transition: all 0.3s ease; pointer-events: auto;
+            box-shadow: 4px 4px 0px var(--color-3);
+        }
+        .scroll-message.visible { opacity: 1; transform: translateX(0); }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            .editorial-container { grid-template-columns: 1fr; gap: 30px; margin-top: 40px; }
+            .sticky-sidebar { position: static; text-align: center; }
+            .sidebar-icon { display: none; }
+            .roadmap-container { padding-left: 40px; }
+            .roadmap-container::before { left: 14px; }
+            .roadmap-progress { left: 14px; }
+            .step-icon { left: -46px; width: 40px; height: 40px; font-size: 1rem; }
+            header { flex-direction: row; }
+            .logo-img { height: 85px; } 
+            
+            /* Ajuste de pestañas para móvil */
+            .tabs-buttons { flex-direction: column; gap: 0; margin-bottom: 0; }
+            .tab-btn { border-radius: 0; border-bottom: 4px solid var(--color-1); }
+            .tab-btn.active { border-bottom: 4px solid var(--color-1); padding-top: 20px;}
+            .tabs-content { border-top: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CABECERA -->
+    <header>
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="logo-img">
+        <img src="../Styles/logo.png" alt="Logo Institucional" class="logo-img">
+    </header>
+
+    <main>
+        <!-- SECCIÓN 1: Interseccionalidad y Enfoques -->
+        <section class="editorial-container">
+            <aside class="sticky-sidebar reveal">
+                <i class="fa-solid fa-shapes sidebar-icon"></i>
+                <h1 class="main-title">Interseccionalidad<br><span>y Enfoques</span></h1>
+            </aside>
+
+            <div class="content-blocks">
+                <div class="flat-box reveal">
+                    <span class="highlight-text">Concepto Base</span>
+                    <p>El concepto de interseccionalidad fue desarrollado inicialmente por Kimberlé Crenshaw para explicar cómo <mark class="marker">distintas formas de discriminación pueden operar simultáneamente</mark>, especialmente sobre mujeres racializadas.</p>
+                </div>
+                <div class="flat-box reveal">
+                    <span class="highlight-text">Aplicación Jurídica</span>
+                    <p>La Corte Constitucional colombiana ha incorporado progresivamente esta perspectiva en decisiones relacionadas con <mark class="marker">mujeres víctimas del conflicto armado, personas LGBTIQ+, pueblos indígenas y comunidades afrodescendientes</mark>.</p>
+                </div>
+                <div class="flat-box reveal" style="border-color: var(--color-4); box-shadow: 10px 10px 0px var(--color-1);">
+                    <span class="highlight-text" style="color: var(--color-1);">Enfoque Diferencial</span>
+                    <p>El enfoque diferencial reconoce que determinadas poblaciones enfrentan <mark class="marker marker-red">riesgos específicos debido a desigualdades históricas y estructurales</mark>. En contextos institucionales de protección, esto implica ajustar procedimientos, medidas y respuestas conforme a las necesidades particulares de cada persona.</p>
+                </div>
+                <div class="flat-box reveal">
+                    <span class="highlight-text">Enfoque Transformador</span>
+                    <p>El enfoque transformador va más allá de atender hechos de violencia; busca <mark class="marker">modificar las estructuras institucionales y culturales</mark> que permiten su reproducción.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: Feminización del Cuidado -->
+        <section class="module-section">
+            <div class="module-header reveal">
+                <h2 class="module-title">Feminización del Cuidado</h2>
+                <p class="module-subtitle">Entendiendo la invisibilización y el impacto en la igualdad de género</p>
+            </div>
+
+            <!-- Conceptos (Pestañas Interactivas tipo Carpeta Física) -->
+            <div class="tabs-container reveal">
+                <div class="tabs-buttons">
+                    <button class="tab-btn active" onclick="openTab(event, 'tab1')">
+                        <i class="fa-solid fa-person-breastfeeding"></i> Feminización del Cuidado
+                    </button>
+                    <button class="tab-btn" onclick="openTab(event, 'tab2')">
+                        <i class="fa-solid fa-building-columns"></i> Invisibilización Estatal
+                    </button>
+                </div>
+                
+                <div class="tabs-content">
+                    <div id="tab1" class="tab-panel active">
+                        <h3>¿Qué es?</h3>
+                        <p>Es la <mark class="marker">concentración de responsabilidades de cuidado</mark> (hijas, madres, abuelas) debido a normas sociales históricas.</p>
+                        <p style="margin-top: 15px;"><strong>Incluye:</strong> Cuidado directo (higiene, alimentos), apoyo emocional y gestión integral del hogar.</p>
+                    </div>
+                    
+                    <div id="tab2" class="tab-panel">
+                        <h3 style="color: var(--color-1);">El Problema</h3>
+                        <p>Existe una <mark class="marker-red">ausencia de políticas y presupuestos</mark> que reconozcan y redistribuyan equitativamente este trabajo.</p>
+                        <p style="margin-top: 15px;">El Estado asume que las mujeres cuidarán "gratis" y no regula ni protege esa labor, perpetuando la desigualdad.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Causas (Acordeón Táctil) -->
+            <div class="accordion-section reveal">
+                <h3 class="highlight-text" style="font-size: 2rem; color: var(--color-1); margin-bottom: 20px;">¿Por qué sucede esto?</h3>
+                
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        1. Normas Culturales y División Sexual del Trabajo
+                        <span><i class="fa-solid fa-plus"></i></span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            Los roles tradicionales asignan lo doméstico a las mujeres como <mark class="marker">algo "natural"</mark>. Existe una segregación donde se espera que ellas estén siempre disponibles para tareas del hogar, limitando su proyección profesional.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        2. Diseño de Políticas Públicas "Ciegas"
+                        <span><i class="fa-solid fa-plus"></i></span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            Los sistemas de protección asumen un <mark class="marker-red">"hombre proveedor" a tiempo completo</mark> y una "mujer cuidadora" informal. Las prestaciones sociales suelen reforzar el rol de cuidadora familiar sin ofrecer autonomía económica.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        3. Falta de Medición Económica
+                        <span><i class="fa-solid fa-plus"></i></span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            Indicadores como el PIB <mark class="marker">subestiman el trabajo no remunerado</mark>. Las estadísticas nacionales a menudo no detallan cómo los horarios de cuidado impactan negativamente en los ingresos y las pensiones de las mujeres.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Impactos (Grid Activo) -->
+            <h3 class="highlight-text reveal" style="font-size: 2rem; color: var(--color-1); margin-bottom: 20px;">Impactos Sociales y Económicos</h3>
+            <div class="impact-grid">
+                <div class="impact-card reveal">
+                    <div class="impact-title"><i class="fa-solid fa-chart-line-down"></i> Precariedad Económica</div>
+                    <p>Menor participación laboral, <mark class="marker">salarios más bajos y brechas pensionales</mark> alarmantes para las mujeres.</p>
+                </div>
+                <div class="impact-card reveal">
+                    <div class="impact-title"><i class="fa-solid fa-battery-quarter"></i> Sobretrabajo</div>
+                    <p>La famosa "Doble Jornada": Empleo remunerado + Trabajo doméstico = <mark class="marker-red">Riesgos graves para la salud física y mental</mark>.</p>
+                </div>
+                <div class="impact-card reveal">
+                    <div class="impact-title"><i class="fa-solid fa-arrows-spin"></i> Desigualdad Cíclica</div>
+                    <p>Las mujeres jóvenes limitan sus estudios y oportunidades laborales para cuidar, repitiendo el <mark class="marker">ciclo de pobreza</mark>.</p>
+                </div>
+                <div class="impact-card reveal">
+                    <div class="impact-title"><i class="fa-solid fa-money-bill-trend-up"></i> Ineficiencia Macro</div>
+                    <p>El país pierde potencial productivo al no apoyar el cuidado. Es una <mark class="marker-red">externalidad negativa</mark> que el Estado ignora.</p>
+                </div>
+            </div>
+
+            <!-- Quiz Interactivo con Feedback Cognitivo -->
+            <div class="quiz-section reveal">
+                <h2 style="font-size: 2.5rem; margin-bottom: 10px;"><i class="fa-solid fa-brain"></i> Comprobemos lo aprendido</h2>
+                <p style="margin-bottom: 30px; font-size: 1.2rem;">¿Cuál es una consecuencia principal de la invisibilización del cuidado?</p>
+                
+                <button class="quiz-btn" onclick="checkAnswer(false, this)">Aumento del PIB nacional</button>
+                <button class="quiz-btn" onclick="checkAnswer(true, this)">Reproducción de desigualdades y pobreza</button>
+                <button class="quiz-btn" onclick="checkAnswer(false, this)">Mejora en la salud mental de las mujeres</button>
+
+                <div id="result" class="result-msg"></div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: ROADMAP INTERACTIVO (Scroll Progreso) -->
+        <section class="roadmap-section" id="roadmapContainer">
+            <h2 class="roadmap-title reveal">Aplicación Institucional en Seguridad y Protección</h2>
+            
+            <div class="roadmap-container">
+                <div class="roadmap-progress" id="roadmapProgress"></div>
+                
+                <div class="step reveal roadmap-item">
+                    <div class="step-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                    <p>Mejorar análisis de riesgo.</p>
+                </div>
+                <div class="step reveal roadmap-item">
+                    <div class="step-icon"><i class="fa-solid fa-door-open"></i></div>
+                    <p>Identificar barreras institucionales.</p>
+                </div>
+                <div class="step reveal roadmap-item">
+                    <div class="step-icon"><i class="fa-solid fa-hands-holding-circle"></i></div>
+                    <p>Evitar revictimización.</p>
+                </div>
+                <div class="step reveal roadmap-item">
+                    <div class="step-icon"><i class="fa-solid fa-user-shield"></i></div>
+                    <p>Diseñar medidas de protección adecuadas.</p>
+                </div>
+                <div class="step reveal roadmap-item">
+                    <div class="step-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                    <p>Garantizar atención con enfoque de derechos.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FLECHA INTELIGENTE -->
+    <div class="smart-scroll-container">
+        <div class="scroll-message" id="endMessage">Has llegado al final</div>
+        <div class="scroll-arrow" id="scrollArrow" aria-label="Bajar" onclick="window.scrollBy({top: 400, behavior: 'smooth'})">
+            <i class="fa-solid fa-arrow-down"></i>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        // 1. ANIMACIONES DE APARICIÓN (Scroll Reveal secuencial)
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('active');
+                    }, index * 50); // Pequeño delay secuencial
+                }
+            });
+        }, { threshold: 0.1 });
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // 2. LÓGICA DE PESTAÑAS (TABS)
+        function openTab(evt, tabId) {
+            const tabPanels = document.querySelectorAll('.tab-panel');
+            tabPanels.forEach(panel => panel.classList.remove('active'));
+
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // 3. ACORDEÓN (Neo-Brutalista)
+        const accHeaders = document.querySelectorAll(".accordion-header");
+        accHeaders.forEach(header => {
+            header.addEventListener("click", function() {
+                // Cerrar otros abiertos 
+                accHeaders.forEach(other => {
+                    if (other !== this) {
+                        other.classList.remove("active");
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('span').innerHTML = '<i class="fa-solid fa-plus"></i>';
+                    }
+                });
+
+                this.classList.toggle("active");
+                const panel = this.nextElementSibling;
+                const icon = this.querySelector('span');
+                
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                    icon.innerHTML = '<i class="fa-solid fa-plus"></i>';
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                    icon.innerHTML = '<i class="fa-solid fa-minus"></i>';
+                } 
+            });
+        });
+
+        // 4. QUIZ (Con animaciones cognitivas)
+        function checkAnswer(isCorrect, btn) {
+            const resultDiv = document.getElementById('result');
+            
+            // Reiniciar animaciones
+            btn.classList.remove('anim-shake', 'anim-pop');
+            void btn.offsetWidth; // Forzar reflow para reiniciar animación
+            
+            resultDiv.style.display = 'block';
+            
+            if (isCorrect) {
+                btn.classList.add('anim-pop');
+                resultDiv.style.backgroundColor = 'var(--color-5)'; 
+                resultDiv.style.color = 'var(--color-success)';
+                resultDiv.style.borderColor = 'var(--color-success)';
+                resultDiv.innerHTML = "<i class='fa-solid fa-circle-check'></i> ¡Correcto! La falta de apoyo estatal perpetúa la desigualdad intergeneracional.";
+                btn.style.backgroundColor = 'var(--color-success)';
+                btn.style.color = 'var(--color-5)';
+                btn.style.borderColor = 'var(--color-success)';
+            } else {
+                btn.classList.add('anim-shake');
+                resultDiv.style.backgroundColor = 'var(--color-5)'; 
+                resultDiv.style.color = 'var(--color-4)';
+                resultDiv.style.borderColor = 'var(--color-4)';
+                resultDiv.innerHTML = "<i class='fa-solid fa-circle-xmark'></i> Incorrecto. Inténtalo de nuevo. Recuerda los impactos económicos negativos.";
+                btn.style.backgroundColor = 'var(--color-4)';
+                btn.style.color = 'var(--color-5)';
+            }
+        }
+
+        // 5. ROADMAP INTERACTIVO (Scroll Fill y Nodos activos)
+        const steps = document.querySelectorAll('.roadmap-item');
+        const stepObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active-step');
+                }
+            });
+        }, { rootMargin: "-30% 0px -30% 0px" });
+        
+        steps.forEach(step => stepObserver.observe(step));
+
+        // Línea de progreso que se llena
+        const roadmapContainer = document.getElementById('roadmapContainer');
+        const roadmapProgress = document.getElementById('roadmapProgress');
+        
+        window.addEventListener('scroll', () => {
+            const rect = roadmapContainer.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            
+            // Si el contenedor está en pantalla
+            if (rect.top < windowHeight && rect.bottom > 0) {
+                // Calcular porcentaje de scroll dentro del contenedor
+                let scrolled = (windowHeight - rect.top) / (rect.height + windowHeight / 2);
+                scrolled = Math.max(0, Math.min(1, scrolled)); // Restringir entre 0 y 1
+                roadmapProgress.style.height = (scrolled * 100) + '%';
+            }
+        });
+
+        // 6. FLECHA DE ACCESIBILIDAD INTELIGENTE
+        const scrollArrow = document.getElementById('scrollArrow');
+        const endMessage = document.getElementById('endMessage');
+
+        window.addEventListener('scroll', () => {
+            const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = window.scrollY;
+            
+            if (Math.ceil(scrolled) >= scrollableHeight - 30) {
+                scrollArrow.classList.add('hidden');
+                endMessage.classList.add('visible');
+            } else {
+                scrollArrow.classList.remove('hidden');
+                endMessage.classList.remove('visible');
+            }
+        });
+    </script>
+</body>
+</html>

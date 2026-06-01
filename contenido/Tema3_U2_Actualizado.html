@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Violencias, Cuidado y Jerarquía - Aprendizaje Activo</title>
+    
+    <!-- Tipografías -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Iconos vectoriales -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           VARIABLES GLOBALES (NEO-BRUTALISMO)
+           ========================================= */
+        :root {
+            --color-1: #480241; /* Morado Oscuro */
+            --color-2: #7235A8; /* Morado Claro */
+            --color-3: #FBA511; /* Naranja */
+            --color-4: #CE4651; /* Rojo */
+            --color-5: #FFFFFF; /* Blanco */
+            --bg-body: #F4F4F4; /* Gris ultra claro */
+            --text-dark: #111111;
+            --color-disabled: #cccccc;
+            --color-success: #198754; /* Verde Éxito */
+            --border-thick: 4px solid var(--color-1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.6;
+            font-size: 19px; 
+            overflow-x: hidden;
+            padding-bottom: 100px;
+        }
+
+        h1, h2, h3 { font-family: 'Outfit', sans-serif; }
+
+        /* --- HEADER Y LOGOS --- */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 5%; background-color: var(--color-5);
+            border-bottom: var(--border-thick); position: sticky;
+            top: 0; z-index: 100; box-shadow: 0px 6px 0px rgba(72, 2, 65, 0.1);
+        }
+        .logo-img { height: 90px; width: auto; max-width: 48%; object-fit: contain; }
+
+        /* --- ESTRUCTURA GENERAL --- */
+        main { max-width: 1200px; margin: 0 auto; padding: 50px 5%; }
+        .center-wrapper { text-align: center; }
+        .hero-title {
+            font-size: 3rem; color: var(--color-1); line-height: 1.1;
+            margin-bottom: 20px; text-shadow: 3px 3px 0px rgba(72, 2, 65, 0.1);
+            text-align: center;
+        }
+        .subtitle {
+            font-size: 1.6rem; color: var(--color-4); text-align: center;
+            margin-bottom: 30px; font-weight: 800; border-bottom: 4px solid var(--color-3);
+            display: inline-block; padding-bottom: 5px;
+        }
+        .context-box {
+            background-color: var(--color-5); border: var(--border-thick);
+            padding: 30px; font-size: 1.25rem; font-weight: 700; color: var(--color-1);
+            box-shadow: 8px 8px 0px var(--color-2); margin-bottom: 40px;
+        }
+        .instruction-badge {
+            display: inline-block; background-color: var(--color-3); color: var(--color-1);
+            font-family: 'Outfit'; font-weight: 900; padding: 10px 20px; border: 3px solid var(--color-1);
+            margin-bottom: 30px; box-shadow: 4px 4px 0px var(--color-1); text-transform: uppercase; letter-spacing: 1px;
+            font-size: 1.1rem;
+        }
+
+        /* =========================================
+           PARTE 1: CLASIFICACIÓN (DISEÑO 2 INTACTO)
+           ========================================= */
+        .dealer-zone {
+            position: sticky; top: 124px; z-index: 90;
+            background-color: var(--color-1); border: var(--border-thick);
+            padding: 30px; box-shadow: 10px 10px 0px var(--color-3);
+            margin-bottom: 60px; text-align: center; transition: all 0.5s ease;
+        }
+        .dealer-zone.completed { display: none; }
+        .card-counter { color: var(--color-5); font-family: 'Outfit'; font-weight: 800; font-size: 1.1rem; margin-bottom: 15px; letter-spacing: 2px; }
+        .active-concept-card {
+            background-color: var(--color-5); border: 4px solid var(--color-3);
+            padding: 25px 40px; font-size: 1.5rem; font-weight: 800; color: var(--text-dark);
+            display: inline-block; min-width: 300px; max-width: 100%; box-shadow: inset -6px -6px 0px rgba(0,0,0,0.05);
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .sorting-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 80px; }
+        .drop-column {
+            background-color: var(--bg-body); border: var(--border-thick);
+            display: flex; flex-direction: column; cursor: pointer; transition: all 0.2s ease; position: relative; box-shadow: 6px 6px 0px rgba(0,0,0,0.1);
+        }
+        .drop-column:hover { transform: translateY(-5px); box-shadow: 8px 8px 0px var(--color-2); border-color: var(--color-2); }
+        .drop-column:active { transform: translateY(0); box-shadow: 2px 2px 0px var(--color-2); }
+        .col-header {
+            background-color: var(--color-5); padding: 25px; font-family: 'Outfit'; font-weight: 800; font-size: 1.3rem; color: var(--color-1); border-bottom: var(--border-thick); text-align: center; line-height: 1.3; flex-grow: 0; min-height: 160px; display: flex; align-items: center; justify-content: center;
+        }
+        .col-list { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; gap: 15px; min-height: 200px; background-color: var(--color-5); }
+        .list-item {
+            background-color: var(--bg-body); border: 3px solid var(--color-1);
+            padding: 15px; font-family: 'Nunito'; font-weight: 700; font-size: 1.1rem; color: var(--text-dark); box-shadow: 4px 4px 0px var(--color-disabled); animation: slideIn 0.3s ease-out; display: flex; align-items: center; gap: 10px;
+        }
+        .list-item i { color: var(--color-success); font-size: 1.2rem; }
+        .sorting-board.completed .drop-column { cursor: default; transform: none; box-shadow: 8px 8px 0px var(--color-1); }
+        .sorting-board.completed .drop-column:hover { transform: none; border-color: var(--color-1); }
+        .success-banner {
+            display: none; background-color: var(--color-3); color: var(--color-1);
+            border: var(--border-thick); padding: 30px; font-family: 'Outfit'; font-weight: 900; font-size: 2rem; text-align: center; box-shadow: 10px 10px 0px var(--color-1); margin-bottom: 40px; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* =========================================
+           PARTE 2: PROTECCIÓN Y CUIDADO
+           ========================================= */
+        #section-2 {
+            border-top: 6px dashed var(--color-1);
+            padding-top: 80px;
+            margin-top: 40px;
+        }
+
+        /* NAVEGACIÓN Y BARRA DE PROGRESO DE PESTAÑAS */
+        .tabs-wrapper { position: relative; margin-bottom: 50px; }
+        
+        .nav-tabs { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+        .tab-btn {
+            flex: 1; min-width: 250px; padding: 20px; background: var(--color-5); border: var(--border-thick); font-family: 'Outfit'; font-size: 1.2rem; font-weight: 800; color: var(--color-1); cursor: pointer; transition: all 0.2s; box-shadow: 6px 6px 0px var(--color-2); text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .tab-btn:hover { transform: translate(-4px, -4px); box-shadow: 10px 10px 0px var(--color-3); }
+        .tab-btn.active {
+            background: var(--color-3); color: var(--color-1); box-shadow: 2px 2px 0px var(--color-1); transform: translate(4px, 4px); border-color: var(--color-1);
+        }
+        
+        .progress-track { width: 100%; height: 10px; background-color: var(--color-5); border: 3px solid var(--color-1); border-radius: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 33.33%; background-color: var(--color-3); transition: width 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); border-right: 3px solid var(--color-1); }
+
+        .tab-content { display: none; animation: slideIn 0.4s ease-out; }
+        .tab-content.active { display: block; }
+
+        /* --- CUADRO COMPARATIVO LADO A LADO --- */
+        .comparison-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px; position: relative; margin-top: 50px;
+        }
+        
+        .comp-box {
+            background-color: var(--color-5); border: var(--border-thick); padding: 40px 30px;
+            box-shadow: 8px 8px 0px var(--color-disabled); position: relative; transition: transform 0.3s;
+        }
+        .comp-box:hover { transform: translateY(-5px); }
+        
+        .comp-box.tradicional { box-shadow: 8px 8px 0px var(--color-4); border-color: var(--color-4); }
+        .comp-box.cuidado { box-shadow: 8px 8px 0px var(--color-success); border-color: var(--color-success); }
+        
+        .comp-header { font-family: 'Outfit'; font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; }
+        .comp-box.tradicional .comp-header { color: var(--color-4); }
+        .comp-box.cuidado .comp-header { color: var(--color-success); }
+        
+        .comp-text { font-size: 1.15rem; font-weight: 700; color: var(--text-dark); line-height: 1.6; }
+        
+        .vs-badge {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: var(--color-3); color: var(--color-1); border: 4px solid var(--color-1);
+            font-family: 'Outfit'; font-weight: 900; font-size: 1.5rem; padding: 15px; border-radius: 50%;
+            z-index: 10; box-shadow: 4px 4px 0px var(--color-1); display: flex; align-items: center; justify-content: center;
+        }
+
+        /* TARJETAS BORROSAS REVELABLES (Neo-Brutalistas) */
+        .reveal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
+        .reveal-card {
+            background: var(--color-5); border: var(--border-thick); padding: 35px 25px; box-shadow: 8px 8px 0px var(--color-1); cursor: pointer; transition: all 0.2s; position: relative; text-align: center;
+        }
+        .reveal-card:hover { transform: translate(-4px, -4px); box-shadow: 12px 12px 0px var(--color-3); }
+        .reveal-badge {
+            display: inline-block; background: var(--color-3); border: 2px solid var(--color-1); padding: 5px 12px; font-weight: 900; font-family: 'Outfit'; font-size: 0.8rem; margin-bottom: 20px; box-shadow: 3px 3px 0px var(--color-1); text-transform: uppercase;
+        }
+        .visible-text { font-size: 1.3rem; font-family: 'Outfit'; font-weight: 800; color: var(--color-1); border-bottom: 3px solid var(--color-2); padding-bottom: 10px; margin-bottom: 15px; }
+        .blur-layer { filter: blur(8px); opacity: 0.4; transition: all 0.5s ease; user-select: none; font-weight: 700; font-size: 1.1rem; color: var(--text-dark); }
+        .reveal-card.revealed .blur-layer { filter: blur(0); opacity: 1; color: var(--color-4); }
+        .reveal-card.revealed .reveal-badge { background: var(--color-5); color: var(--color-disabled); box-shadow: none; border-color: var(--color-disabled); text-decoration: line-through; }
+
+        /* JERARQUÍA SPLIT & CHECKLIST GAMIFICADO */
+        .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 50px; }
+        .path-box { border: var(--border-thick); padding: 35px; background: var(--color-5); box-shadow: 8px 8px 0px var(--color-1); }
+        .path-bad { box-shadow: 8px 8px 0px var(--color-4); border-color: var(--color-4); }
+        .path-bad h3 { color: var(--color-4); border-bottom: 4px solid var(--color-4); padding-bottom: 10px; margin-bottom: 20px; }
+        .path-good { box-shadow: 8px 8px 0px var(--color-success); border-color: var(--color-success); }
+        .path-good h3 { color: var(--color-success); border-bottom: 4px solid var(--color-success); padding-bottom: 10px; margin-bottom: 20px; }
+
+        .checklist-item {
+            display: flex; align-items: center; gap: 20px; background: var(--color-5); border: var(--border-thick); padding: 25px; margin-bottom: 20px; cursor: pointer; box-shadow: 6px 6px 0px var(--color-disabled); font-weight: 800; font-size: 1.1rem; transition: all 0.2s;
+        }
+        .checklist-item:hover { transform: translate(-4px, -4px); box-shadow: 10px 10px 0px var(--color-2); }
+        .check-box { width: 35px; height: 35px; border: 3px solid var(--color-1); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 900; background: var(--color-5); font-size: 1.2rem; }
+        
+        .checklist-item.checked { background: #d1fae5; border-color: var(--color-success); box-shadow: 6px 6px 0px var(--color-success); }
+        .checklist-item.checked .check-box { background: var(--color-success); color: var(--color-5); border-color: var(--color-success); }
+        .checklist-item.wrong { background: #fee2e2; border-color: var(--color-4); box-shadow: 6px 6px 0px var(--color-4); }
+        .checklist-item.wrong .check-box { background: var(--color-4); color: var(--color-5); border-color: var(--color-4); }
+        .wrong-text { text-decoration: line-through; opacity: 0.6; }
+        .feedback-text { color: var(--color-4); font-weight: 900; display: block; margin-top: 5px; font-size: 0.95rem; }
+
+        .success-checklist {
+            display: none; background-color: var(--color-2); color: var(--color-5); border: var(--border-thick); padding: 30px; font-family: 'Outfit'; font-weight: 900; font-size: 1.5rem; text-align: center; box-shadow: 10px 10px 0px var(--color-1); margin-top: 40px; animation: slideIn 0.5s ease;
+        }
+
+        /* =========================================
+           ANIMACIONES Y FLECHA ACCESIBILIDAD
+           ========================================= */
+        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } }
+        .error-shake { animation: shake 0.4s ease-in-out; border-color: var(--color-4) !important; background-color: #ffeaea !important; }
+        .success-flash { background-color: var(--color-success) !important; color: var(--color-5) !important; border-color: var(--color-1) !important; }
+
+        .smart-scroll-container { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; align-items: flex-end; z-index: 1000; pointer-events: none; }
+        .scroll-arrow { width: 60px; height: 60px; background-color: var(--color-3); color: var(--color-1); border: 4px solid var(--color-1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; animation: bounce 2s infinite; transition: all 0.3s; pointer-events: auto; cursor: pointer; box-shadow: 4px 4px 0px var(--color-1); }
+        .scroll-arrow:hover { background-color: var(--color-5); transform: scale(1.1); }
+        .scroll-arrow.hidden { opacity: 0; transform: scale(0.5) translateY(20px); pointer-events: none; }
+        .scroll-message { background-color: var(--color-1); color: var(--color-5); padding: 10px 15px; border: 3px solid var(--color-5); font-family: 'Outfit'; font-weight: 700; font-size: 1rem; margin-bottom: 10px; opacity: 0; transform: translateX(20px); transition: all 0.3s; box-shadow: 4px 4px 0px var(--color-3); }
+        .scroll-message.visible { opacity: 1; transform: translateX(0); pointer-events: auto; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
+
+        @media (max-width: 1000px) {
+            .sorting-board { grid-template-columns: 1fr; }
+            .col-header { min-height: auto; padding: 20px; }
+            .dealer-zone { top: 90px; padding: 20px; }
+            .active-concept-card { font-size: 1.2rem; padding: 15px 20px; }
+            .hero-title { font-size: 2.2rem; }
+            header { flex-direction: row; }
+            .logo-img { height: 70px; }
+            .nav-tabs { flex-direction: column; gap: 10px; }
+            .split-grid { grid-template-columns: 1fr; }
+            .tab-btn { margin-bottom: 0; }
+            
+            /* Ajustes para Cuadro Comparativo en móvil */
+            .comparison-grid { display: flex; flex-direction: column; gap: 0; margin-top: 30px; }
+            .vs-badge { position: static; transform: none; margin: -25px auto; width: 60px; height: 60px; z-index: 10; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CABECERA -->
+    <header>
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="logo-img">
+        <img src="../Styles/logo.png" alt="Logo Institucional" class="logo-img">
+    </header>
+
+    <main>
+        <!-- ==========================================
+             SECCIÓN 1: CLASIFICACIÓN ESTRUCTURAL
+             ========================================== -->
+        <div class="center-wrapper">
+            <h1 class="hero-title">Discriminaciones estructurales en entornos institucionales</h1>
+            <span class="subtitle">Análisis Activo</span>
+        </div>
+
+        <div class="context-box">
+            Las discriminaciones estructurales son formas persistentes de desigualdad que se reproducen a través de normas, prácticas, lenguajes y dinámicas institucionales.
+        </div>
+        
+        <div class="context-box" style="border-color: var(--color-2); box-shadow: 8px 8px 0px var(--color-1);">
+            La CIDH ha señalado que los Estados tienen obligaciones reforzadas para prevenir discriminaciones institucionales contra mujeres y personas LGBTIQ+.
+        </div>
+
+        <div class="center-wrapper">
+            <span class="instruction-badge"><i class="fa-solid fa-layer-group"></i> Construye el mapa estructural</span>
+            <p style="font-weight: 700; font-size: 1.15rem; margin-bottom: 30px;">
+                Lee el concepto en pantalla y haz clic en la columna a la que pertenece.
+            </p>
+        </div>
+
+        <div class="dealer-zone" id="dealer-zone">
+            <div class="card-counter">Concepto <span id="current-count">1</span> de 16</div>
+            <div class="active-concept-card" id="active-card">Cargando concepto...</div>
+        </div>
+
+        <div class="success-banner" id="success-banner">
+            <i class="fa-solid fa-circle-check"></i> ¡Mapa Estructural Completado! <br>
+            <span style="font-size: 1.2rem;">Desplázate hacia abajo para el siguiente módulo.</span>
+        </div>
+
+        <div class="sorting-board" id="sorting-board">
+            <div class="drop-column" onclick="checkAnswer('operan')">
+                <div class="col-header">No siempre se manifiestan mediante actos explícitos; también operan mediante:</div>
+                <div class="col-list" id="list-operan"></div>
+            </div>
+            <div class="drop-column" onclick="checkAnswer('afectan')">
+                <div class="col-header">En entidades de seguridad y protección, estas discriminaciones pueden afectar:</div>
+                <div class="col-list" id="list-afectan"></div>
+            </div>
+            <div class="drop-column" onclick="checkAnswer('estrategias')">
+                <div class="col-header">Estrategias institucionales para su desmontaje:</div>
+                <div class="col-list" id="list-estrategias"></div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             SECCIÓN 2: PROTECCIÓN, CUIDADO Y JERARQUÍA
+             ========================================== -->
+        <div id="section-2">
+            <div class="center-wrapper">
+                <h1 class="hero-title" style="color: var(--color-2);">Relación entre protección, cuidado y jerarquía institucional</h1>
+                <span class="subtitle" style="color: var(--color-3); border-color: var(--color-4);">Módulo: Género y Cuidado</span>
+            </div>
+
+            <!-- TABS & PROGRESS BAR -->
+            <div class="tabs-wrapper">
+                <nav class="nav-tabs">
+                    <button class="tab-btn active" onclick="openTab(0)"><i class="fa-solid fa-shield-heart"></i> 1. Protección = Cuidado</button>
+                    <button class="tab-btn" onclick="openTab(1)"><i class="fa-solid fa-eye-slash"></i> 2. Feminización e Invisibilidad</button>
+                    <button class="tab-btn" onclick="openTab(2)"><i class="fa-solid fa-scale-balanced"></i> 3. Jerarquía y Ética</button>
+                </nav>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressBarTabs"></div>
+                </div>
+            </div>
+
+            <!-- TAB 1: PROTECCIÓN (CUADRO COMPARATIVO) -->
+            <div id="tab-0" class="tab-content active">
+                <div class="context-box" style="border-color: var(--color-4); box-shadow: 8px 8px 0px var(--color-1);">
+                    <h2 style="margin-bottom: 15px;"><i class="fa-solid fa-shield-halved"></i> La protección como cuidado institucional</h2>
+                    La protección en la UNP no es solo un acto operativo. Al garantizar la vida de líderes, lideresas y defensores de DDHH, la institución ejerce una forma de <span style="color: var(--color-4); font-weight: 900; text-transform: uppercase;">cuidado politizado</span>.
+                </div>
+
+                <div class="center-wrapper">
+                    <span class="instruction-badge" style="background: var(--color-1); color: var(--color-5);"><i class="fa-solid fa-scale-balanced"></i> Compara las visiones</span>
+                </div>
+
+                <!-- NUEVO: CUADRO COMPARATIVO LADO A LADO -->
+                <div class="comparison-grid">
+                    <div class="vs-badge">VS</div>
+                    
+                    <div class="comp-box tradicional">
+                        <div class="comp-header"><i class="fa-solid fa-gear"></i> Visión Tradicional (Operativa)</div>
+                        <div class="comp-text">Se limita a esquemas, armas y vehículos. Es un enfoque puramente procedimental que asume una falsa neutralidad frente a las realidades de la persona.</div>
+                    </div>
+                    
+                    <div class="comp-box cuidado">
+                        <div class="comp-header"><i class="fa-solid fa-heart-circle-check"></i> Visión de Cuidado (Transformadora)</div>
+                        <div class="comp-text">Reconoce el impacto humano directo. Entiende que proteger es cuidar la vida y el tejido social de sujetos históricamente vulnerados, integrando empatía y contexto.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: FEMINIZACIÓN E INVISIBILIDAD -->
+            <div id="tab-1" class="tab-content">
+                <div class="context-box">
+                    <h2 style="margin-bottom: 15px;"><i class="fa-solid fa-chart-line-down"></i> Feminización e Invisibilización</h2>
+                    Históricamente, el cuidado se ha considerado "natural" de las mujeres. En la UNP, esto se traduce en desvalorizar ciertas tareas esenciales.
+                </div>
+                
+                <div class="center-wrapper" style="margin-top: 40px;">
+                    <h2 style="font-size: 2.2rem; color: var(--color-1); margin-bottom: 10px;">Manifestaciones en la Estructura Estatal</h2>
+                    <span class="instruction-badge"><i class="fa-solid fa-eye"></i> Haz clic en las tarjetas para revelar la realidad</span>
+                </div>
+
+                <div class="reveal-grid">
+                    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
+                        <span class="reveal-badge">Click para revelar</span>
+                        <div class="visible-text"><i class="fa-solid fa-gun"></i> Prioridad a lo armado</div>
+                        <div class="blur-layer">
+                            <strong style="color: var(--color-1);">Realidad Invisible:</strong> Se desvaloriza el acompañamiento integral y la escucha activa, considerándolos elementos "blandos" o secundarios.
+                        </div>
+                    </div>
+
+                    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
+                        <span class="reveal-badge">Click para revelar</span>
+                        <div class="visible-text"><i class="fa-solid fa-person-falling-burst"></i> Riesgo Físico Exclusivo</div>
+                        <div class="blur-layer">
+                            <strong style="color: var(--color-1);">Realidad Invisible:</strong> Se ignora el componente psicosocial del riesgo y el impacto emocional devastador en la persona protegida.
+                        </div>
+                    </div>
+
+                    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
+                        <span class="reveal-badge">Click para revelar</span>
+                        <div class="visible-text"><i class="fa-solid fa-hand-holding-heart"></i> Falsa "Vocación"</div>
+                        <div class="blur-layer">
+                            <strong style="color: var(--color-1);">Realidad Invisible:</strong> Se asume el cuidado como una obligación implícita, exigiendo esta labor sin formación, pago ni recursos.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: JERARQUÍA Y ÉTICA -->
+            <div id="tab-2" class="tab-content">
+                <div class="context-box" style="border-color: var(--color-3); box-shadow: 8px 8px 0px var(--color-1);">
+                    <h2 style="margin-bottom: 15px;"><i class="fa-solid fa-scale-balanced"></i> Jerarquía y Ética del Cuidado</h2>
+                    El poder institucional puede usarse de dos formas diametralmente opuestas. ¿Cómo decidimos ejercer la protección diaria?
+                </div>
+
+                <div class="split-grid">
+                    <div class="path-box path-bad">
+                        <h3><i class="fa-solid fa-sitemap"></i> Reproducir Jerarquías</h3>
+                        <ul style="list-style-position: inside; font-weight: 700;">
+                            <li style="margin-bottom: 10px;">Se impone de manera vertical.</li>
+                            <li style="margin-bottom: 10px;">No se escucha a la persona protegida.</li>
+                            <li>Decisiones basadas solo en "eficiencia".</li>
+                        </ul>
+                    </div>
+                    <div class="path-box path-good">
+                        <h3><i class="fa-solid fa-people-arrows"></i> Transformar el Poder</h3>
+                        <ul style="list-style-position: inside; font-weight: 700;">
+                            <li style="margin-bottom: 10px;">Se ejerce desde la corresponsabilidad.</li>
+                            <li style="margin-bottom: 10px;">Enfoque diferencial y respeto activo.</li>
+                            <li>Orientado siempre a la dignidad humana.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="center-wrapper" style="margin: 60px 0 30px 0;">
+                    <h2 style="font-size: 2.2rem; color: var(--color-1);">Checklist: Ética de la Función Pública</h2>
+                    <span class="instruction-badge"><i class="fa-solid fa-list-check"></i> Marca las afirmaciones de cuidado ético</span>
+                </div>
+
+                <div id="quiz-area">
+                    <div class="checklist-item" onclick="toggleCheck(this, true)">
+                        <div class="check-box"></div>
+                        <div><span>Reconocer que el protocolo formal no es suficiente para la protección integral.</span></div>
+                    </div>
+                    
+                    <div class="checklist-item" onclick="toggleCheck(this, false)">
+                        <div class="check-box"></div>
+                        <div><span class="item-text">Aplicar medidas estandarizadas a todos por igual para ahorrar tiempo institucional.</span></div>
+                    </div>
+                    
+                    <div class="checklist-item" onclick="toggleCheck(this, true)">
+                        <div class="check-box"></div>
+                        <div><span>Garantizar la participación activa de la persona protegida en las decisiones.</span></div>
+                    </div>
+                </div>
+                
+                <div class="success-checklist" id="feedback-final">
+                    <i class="fa-solid fa-champagne-glasses"></i> ¡Excelente! Has identificado los pilares del cuidado transformador en la institución.
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FLECHA INTELIGENTE DE ACCESIBILIDAD -->
+    <div class="smart-scroll-container">
+        <div class="scroll-message" id="endMessage">Continúa explorando</div>
+        <button class="scroll-arrow" id="scrollArrow" aria-label="Bajar" onclick="window.scrollBy({top: 400, behavior: 'smooth'})">
+            <i class="fa-solid fa-arrow-down"></i>
+        </button>
+    </div>
+
+    <!-- SCRIPTS UNIFICADOS -->
+    <script>
+        /* =========================================================
+           LÓGICA SECCIÓN 1: JUEGO DE CLASIFICACIÓN
+           ========================================================= */
+        const rawItems = [
+            { id: 1, type: 'operan', text: 'Estereotipos de género.' },
+            { id: 2, type: 'operan', text: 'Exclusión en toma de decisiones.' },
+            { id: 3, type: 'operan', text: 'Lenguaje discriminatorio.' },
+            { id: 4, type: 'operan', text: 'Revictimización.' },
+            { id: 5, type: 'operan', text: 'Desconfianza hacia víctimas.' },
+            { id: 6, type: 'operan', text: 'Falta de acceso efectivo a derechos.' },
+            { id: 7, type: 'afectan', text: 'Evaluación de riesgos.' },
+            { id: 8, type: 'afectan', text: 'Credibilidad otorgada a denuncias.' },
+            { id: 9, type: 'afectan', text: 'Acceso a rutas institucionales.' },
+            { id: 10, type: 'afectan', text: 'Medidas de protección.' },
+            { id: 11, type: 'afectan', text: 'Seguimiento de casos.' },
+            { id: 12, type: 'estrategias', text: 'Formación permanente.' },
+            { id: 13, type: 'estrategias', text: 'Protocolos con enfoque diferencial.' },
+            { id: 14, type: 'estrategias', text: 'Lenguaje institucional inclusivo.' },
+            { id: 15, type: 'estrategias', text: 'Monitoreo y evaluación.' },
+            { id: 16, type: 'estrategias', text: 'Mecanismos confidenciales de denuncia.' }
+        ];
+
+        function shuffleArray(array) {
+            let curId = array.length;
+            while (0 !== curId) {
+                let randId = Math.floor(Math.random() * curId);
+                curId -= 1;
+                let tmp = array[curId];
+                array[curId] = array[randId];
+                array[randId] = tmp;
+            }
+            return array;
+        }
+
+        let playDeck = shuffleArray([...rawItems]);
+        let currentIndex = 0;
+        let isProcessing = false;
+
+        const activeCardUI = document.getElementById('active-card');
+        const counterUI = document.getElementById('current-count');
+        const dealerZone = document.getElementById('dealer-zone');
+        const sortingBoard = document.getElementById('sorting-board');
+        const successBanner = document.getElementById('success-banner');
+
+        function renderNextCard() {
+            if (currentIndex < playDeck.length) {
+                activeCardUI.innerText = playDeck[currentIndex].text;
+                counterUI.innerText = currentIndex + 1;
+                
+                activeCardUI.style.animation = 'none';
+                activeCardUI.offsetHeight; 
+                activeCardUI.style.animation = 'popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                isProcessing = false;
+            } else {
+                finishActivity();
+            }
+        }
+
+        function checkAnswer(selectedType) {
+            if (isProcessing || currentIndex >= playDeck.length) return;
+            isProcessing = true;
+
+            const currentItem = playDeck[currentIndex];
+
+            if (currentItem.type === selectedType) {
+                activeCardUI.classList.add('success-flash');
+                
+                const targetList = document.getElementById(`list-${selectedType}`);
+                const newItem = document.createElement('div');
+                newItem.className = 'list-item';
+                newItem.innerHTML = `<i class="fa-solid fa-check"></i> ${currentItem.text}`;
+                targetList.appendChild(newItem);
+
+                setTimeout(() => {
+                    activeCardUI.classList.remove('success-flash');
+                    currentIndex++;
+                    renderNextCard();
+                }, 300);
+
+            } else {
+                activeCardUI.classList.add('error-shake');
+                setTimeout(() => {
+                    activeCardUI.classList.remove('error-shake');
+                    isProcessing = false;
+                }, 400);
+            }
+        }
+
+        function finishActivity() {
+            dealerZone.classList.add('completed');
+            sortingBoard.classList.add('completed');
+            successBanner.style.display = 'block';
+            checkScroll(); 
+            
+            setTimeout(() => {
+                document.getElementById('section-2').scrollIntoView({behavior: 'smooth'});
+            }, 1000);
+        }
+
+        renderNextCard();
+
+        /* =========================================================
+           LÓGICA SECCIÓN 2: PESTAÑAS Y CHECKLIST GAMIFICADO
+           ========================================================= */
+        function openTab(tabIndex) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById('tab-' + tabIndex).classList.add('active');
+            buttons[tabIndex].classList.add('active');
+
+            const progressBar = document.getElementById('progressBarTabs');
+            const progressValues = ['33.33%', '66.66%', '100%'];
+            progressBar.style.width = progressValues[tabIndex];
+            
+            if(window.innerWidth < 900) {
+                document.querySelector('.nav-tabs').scrollIntoView({behavior: 'smooth', block: 'start'});
+            }
+            setTimeout(checkScroll, 300);
+        }
+
+        function toggleCheck(element, isCorrect) {
+            if(element.classList.contains('checked') || element.classList.contains('wrong')) return;
+
+            const textSpan = element.querySelector('span:not(.feedback-text)');
+
+            if (isCorrect) {
+                element.classList.add('checked');
+                element.querySelector('.check-box').innerHTML = '<i class="fa-solid fa-check"></i>';
+            } else {
+                element.classList.add('wrong');
+                element.querySelector('.check-box').innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                textSpan.classList.add('wrong-text');
+                
+                const feedback = document.createElement('span');
+                feedback.className = 'feedback-text';
+                feedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Incorrecto: Esto genera violencia institucional.';
+                textSpan.parentNode.appendChild(feedback);
+            }
+
+            const correctItems = document.querySelectorAll('.checklist-item.checked');
+            if(correctItems.length >= 2) {
+                const banner = document.getElementById('feedback-final');
+                banner.style.display = 'block';
+                setTimeout(() => {
+                    banner.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+                }, 100);
+            }
+        }
+
+        /* =========================================================
+           FLECHA INTELIGENTE Y ACCESIBILIDAD GENERAL
+           ========================================================= */
+        const scrollArrow = document.getElementById('scrollArrow');
+        const endMessage = document.getElementById('endMessage');
+
+        function checkScroll() {
+            const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = window.scrollY;
+            
+            if (Math.ceil(scrolled) >= scrollableHeight - 40) {
+                scrollArrow.classList.add('hidden');
+                
+                if(currentIndex >= playDeck.length){
+                    endMessage.innerHTML = "Has finalizado esta unidad";
+                    endMessage.classList.add('visible');
+                }
+            } else {
+                scrollArrow.classList.remove('hidden');
+                endMessage.classList.remove('visible');
+            }
+        }
+
+        window.addEventListener('scroll', checkScroll);
+        window.addEventListener('resize', checkScroll);
+        setTimeout(checkScroll, 500);
+    </script>
+</body>
+</html>

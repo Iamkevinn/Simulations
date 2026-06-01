@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clasificación de las Violencias de Género - Aprendizaje Activo</title>
+    
+    <!-- Tipografías -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Iconos vectoriales -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           VARIABLES GLOBALES (NEO-BRUTALISMO)
+           ========================================= */
+        :root {
+            --color-1: #480241; /* Morado Oscuro */
+            --color-2: #7235A8; /* Morado Claro */
+            --color-3: #FBA511; /* Naranja (Riesgo) */
+            --color-4: #CE4651; /* Rojo/Rosa (Violencia) */
+            --color-5: #FFFFFF; /* Blanco */
+            --bg-body: #F4F4F4; /* Gris ultra claro */
+            --text-dark: #111111;
+            --color-success: #198754; /* Verde (Sano / Correcto) */
+            --color-disabled: #cccccc;
+            --border-thick: 4px solid var(--color-1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.6;
+            font-size: 19px; 
+            overflow-x: hidden;
+            padding-bottom: 100px;
+        }
+
+        h1, h2, h3 { font-family: 'Outfit', sans-serif; }
+
+        /* --- HEADER Y LOGOS --- */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 5%; background-color: var(--color-5);
+            border-bottom: var(--border-thick); position: sticky;
+            top: 0; z-index: 100; box-shadow: 0px 6px 0px rgba(72, 2, 65, 0.1);
+        }
+        .logo-img { height: 90px; width: auto; max-width: 48%; object-fit: contain; }
+
+        /* --- ESTRUCTURA GENERAL --- */
+        main { max-width: 1000px; margin: 0 auto; padding: 50px 5%; }
+        .center-wrapper { text-align: center; margin-bottom: 40px; }
+        
+        .hero-title {
+            font-size: 3rem; color: var(--color-1); line-height: 1.1;
+            margin-bottom: 15px; text-shadow: 3px 3px 0px rgba(72, 2, 65, 0.1);
+        }
+        .subtitle {
+            font-size: 1.5rem; color: var(--color-1); font-weight: 800; 
+            background-color: var(--color-3); padding: 5px 20px; 
+            display: inline-block; border: 3px solid var(--color-1);
+            box-shadow: 4px 4px 0px var(--color-1);
+        }
+
+        .context-box {
+            background-color: var(--color-5); border: var(--border-thick);
+            padding: 30px; font-size: 1.3rem; font-weight: 800; color: var(--color-1);
+            box-shadow: 8px 8px 0px var(--color-2); margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .instruction-badge {
+            display: inline-block; background-color: var(--color-1); color: var(--color-5);
+            font-family: 'Outfit'; font-weight: 900; padding: 10px 20px; border: 3px solid var(--color-1);
+            margin-bottom: 20px; box-shadow: 4px 4px 0px var(--color-3); text-transform: uppercase; letter-spacing: 1px;
+            font-size: 1.1rem;
+        }
+
+        /* =========================================
+           FASE 1: JUEGO DE EMPAREJAMIENTO (LEY 1257)
+           ========================================= */
+        .match-container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 60px;
+        }
+        .match-column { display: flex; flex-direction: column; gap: 15px; }
+        .match-header { font-family: 'Outfit'; font-size: 1.5rem; text-align: center; color: var(--color-1); margin-bottom: 10px; border-bottom: 3px solid var(--color-3); padding-bottom: 10px;}
+        
+        .match-btn {
+            background-color: var(--color-5); border: 3px solid var(--color-1);
+            padding: 20px; font-family: 'Nunito'; font-weight: 800; font-size: 1.1rem;
+            color: var(--text-dark); cursor: pointer; text-align: left;
+            box-shadow: 4px 4px 0px var(--color-disabled); transition: all 0.2s;
+            display: flex; align-items: center; gap: 10px;
+        }
+        
+        .match-btn:hover:not(.matched):not(.selected) {
+            transform: translate(-2px, -2px); box-shadow: 6px 6px 0px var(--color-2);
+        }
+
+        /* Estados del emparejamiento */
+        .match-btn.selected {
+            background-color: var(--color-3); color: var(--color-1);
+            border-color: var(--color-1); box-shadow: inset 4px 4px 0px rgba(0,0,0,0.1);
+            transform: translate(2px, 2px);
+        }
+        .match-btn.matched {
+            background-color: #d1fae5; color: var(--color-success);
+            border-color: var(--color-success); box-shadow: 2px 2px 0px var(--color-success);
+            cursor: default; pointer-events: none;
+        }
+
+        /* =========================================
+           FASE 2: PANEL DE DESCUBRIMIENTO
+           ========================================= */
+        .discovery-grid {
+            display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 40px;
+        }
+        
+        .discovery-node {
+            background-color: var(--color-1); border: 3px solid var(--color-1);
+            padding: 20px 30px; font-family: 'Outfit'; font-weight: 800; font-size: 1.2rem;
+            color: var(--color-5); box-shadow: 6px 6px 0px var(--color-2);
+            transition: all 0.3s; cursor: pointer; text-align: center;
+        }
+        
+        .discovery-node:hover:not(.revealed) {
+            transform: translate(-3px, -3px); box-shadow: 9px 9px 0px var(--color-3);
+        }
+
+        .discovery-node.revealed {
+            background-color: var(--color-5); color: var(--color-1);
+            box-shadow: 2px 2px 0px var(--color-1); transform: translate(2px, 2px);
+            cursor: default; pointer-events: none; border-color: var(--color-1);
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .banner-app {
+            background-color: var(--color-2); color: var(--color-5); border: var(--border-thick);
+            padding: 35px; text-align: center; font-size: 1.3rem; font-weight: 800;
+            box-shadow: 10px 10px 0px var(--color-1); margin-bottom: 80px;
+            display: none; /* Se revela al terminar el discovery */
+            animation: slideIn 0.5s ease-out;
+        }
+        .banner-app h2 { color: var(--color-3); margin-bottom: 15px; font-size: 2rem; text-transform: uppercase; }
+
+        /* =========================================
+           FASE 3: JUEGO DEL SEMÁFORO
+           ========================================= */
+        #phase3 {
+            position: relative; max-width: 800px; margin: 0 auto;
+            border: var(--border-thick); background-color: var(--color-5);
+            padding: 40px; box-shadow: 12px 12px 0px var(--color-1);
+            overflow: hidden; min-height: 550px; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            border-top: 10px solid var(--color-3);
+        }
+
+        .game-title {
+            font-size: 2.2rem; color: var(--color-1); text-align: center;
+            margin-bottom: 30px; font-family: 'Outfit'; font-weight: 900;
+            width: 100%; position: absolute; top: 30px;
+        }
+
+        /* Indicadores de zona */
+        .zone-indicator {
+            position: absolute; padding: 15px 30px; font-family: 'Outfit'; font-weight: 900;
+            font-size: 1.5rem; color: var(--color-5); border: 3px solid var(--color-1);
+            opacity: 0; transition: opacity 0.3s; z-index: 10; pointer-events: none;
+            box-shadow: 6px 6px 0px var(--color-1); text-transform: uppercase;
+        }
+        .zone-left { left: -20px; top: 50%; transform: translateY(-50%) rotate(-90deg); background-color: var(--color-4); }
+        .zone-top { top: 120px; left: 50%; transform: translateX(-50%); background-color: var(--color-3); color: var(--color-1); }
+        .zone-right { right: -20px; top: 50%; transform: translateY(-50%) rotate(90deg); background-color: var(--color-success); } /* AHORA ES VERDE */
+
+        /* Tarjeta Swipe */
+        .game-zone {
+            position: relative; width: 100%; height: 300px; 
+            display: flex; justify-content: center; align-items: center;
+            z-index: 20; margin-top: 50px;
+        }
+
+        .swipe-card {
+            background-color: var(--color-5); border: 4px solid var(--color-1);
+            width: 100%; max-width: 380px; height: 320px; padding: 30px;
+            box-shadow: 8px 8px 0px var(--color-1); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            cursor: grab; position: absolute; touch-action: none; user-select: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .swipe-card:active { cursor: grabbing; transition: none; }
+        
+        .scenario-text { font-size: 1.3rem; font-weight: 800; color: var(--text-dark); line-height: 1.4; }
+
+        /* Controles Manuales */
+        .game-controls { display: flex; gap: 20px; margin-top: 40px; z-index: 30; }
+        .btn-game {
+            width: 70px; height: 70px; border-radius: 50%; border: 4px solid var(--color-1);
+            font-size: 1.5rem; cursor: pointer; transition: all 0.2s; box-shadow: 4px 4px 0px var(--color-1);
+            display: flex; align-items: center; justify-content: center; font-weight: 900;
+        }
+        .btn-game:hover { transform: translate(-3px, -3px); box-shadow: 7px 7px 0px var(--color-1); }
+        .btn-game:active { transform: translate(0, 0); box-shadow: 2px 2px 0px var(--color-1); }
+        
+        .btn-red { background-color: var(--color-4); color: var(--color-5); }
+        .btn-yellow { background-color: var(--color-3); color: var(--color-1); }
+        .btn-green { background-color: var(--color-success); color: var(--color-5); } /* AHORA ES VERDE */
+
+        /* Modal de Retroalimentación */
+        .feedback-modal {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--color-5); z-index: 50; display: none;
+            flex-direction: column; justify-content: center; align-items: center;
+            padding: 40px; text-align: center; border: 8px solid var(--color-1);
+            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .feed-icon { font-size: 4rem; margin-bottom: 15px; }
+        .feed-type { font-size: 2rem; font-family: 'Outfit'; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; }
+        .feed-context { font-size: 1.2rem; font-weight: 800; margin-bottom: 10px; background-color: var(--bg-body); padding: 10px; border: 3px solid var(--color-1); }
+        .feed-action { font-size: 1.2rem; font-weight: 700; color: var(--color-1); margin-bottom: 30px; }
+        
+        .btn-next {
+            background-color: var(--color-3); color: var(--color-1); border: 4px solid var(--color-1);
+            padding: 15px 40px; font-family: 'Outfit'; font-size: 1.4rem; font-weight: 900;
+            cursor: pointer; box-shadow: 6px 6px 0px var(--color-1); transition: all 0.2s;
+            text-transform: uppercase;
+        }
+        .btn-next:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0px var(--color-1); }
+
+        .game-completed { display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 100%; z-index: 60; }
+
+        /* --- ANIMACIONES Y FLECHA --- */
+        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } }
+        .error-shake { animation: shake 0.4s ease-in-out; border-color: var(--color-4) !important; background-color: #ffeaea !important; color: var(--color-4) !important;}
+        
+        .smart-scroll-container { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; align-items: flex-end; z-index: 1000; pointer-events: none; }
+        .scroll-arrow { width: 60px; height: 60px; background-color: var(--color-3); color: var(--color-1); border: 4px solid var(--color-1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; animation: bounce 2s infinite; transition: all 0.3s; pointer-events: auto; cursor: pointer; box-shadow: 4px 4px 0px var(--color-1); }
+        .scroll-arrow:hover { background-color: var(--color-5); transform: scale(1.1); }
+        .scroll-arrow.hidden { opacity: 0; transform: scale(0.5) translateY(20px); pointer-events: none; }
+        .scroll-message { background-color: var(--color-1); color: var(--color-5); padding: 10px 15px; border: 3px solid var(--color-5); font-family: 'Outfit'; font-weight: 700; font-size: 1rem; margin-bottom: 10px; opacity: 0; transform: translateX(20px); transition: all 0.3s; box-shadow: 4px 4px 0px var(--color-3); }
+        .scroll-message.visible { opacity: 1; transform: translateX(0); pointer-events: auto; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
+
+        @media (max-width: 800px) {
+            header { flex-direction: row; }
+            .logo-img { height: 60px; }
+            .hero-title { font-size: 2.2rem; }
+            .match-container { grid-template-columns: 1fr; gap: 20px; }
+            #phase3 { padding: 30px 20px; }
+            .game-title { font-size: 1.6rem; position: relative; top: 0; margin-bottom: 10px;}
+            .game-zone { margin-top: 20px; }
+            .swipe-card { width: 90%; height: 260px; padding: 20px; }
+            .scenario-text { font-size: 1.1rem; }
+            .discovery-node { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="logo-img">
+        <img src="../Styles/logo.png" alt="Logo Institucional" class="logo-img">
+    </header>
+
+    <main>
+        <!-- TÍTULO PRINCIPAL -->
+        <div class="center-wrapper">
+            <h1 class="hero-title">Clasificación de las violencias de género: manifestaciones y contextos</h1>
+        </div>
+
+        <!-- ==========================================
+             RETO 1: EMPAREJAMIENTO LEY 1257
+             ========================================== -->
+        <div class="context-box">
+            La Ley 1257 de 2008 reconoce distintas formas de violencia contra las mujeres en Colombia. <br>
+            <span style="color: var(--color-4);">Entre ellas:</span>
+        </div>
+
+        <div class="center-wrapper">
+            <span class="instruction-badge"><i class="fa-solid fa-link"></i> Empareja el tipo de violencia con su definición <br> <span style="font-size: 13px;font-style: italic;color: #666;">(Haz clic en los botones para emparejar)</span> </span>
+        </div>
+
+        <div class="match-container">
+            <!-- Columna de Tipos -->
+            <div class="match-column" id="terms-col">
+                <div class="match-header">Tipo de Violencia</div>
+                <!-- Botones generados por JS -->
+            </div>
+            <!-- Columna de Definiciones -->
+            <div class="match-column" id="defs-col">
+                <div class="match-header">Definición</div>
+                <!-- Botones generados por JS -->
+            </div>
+        </div>
+
+        <!-- ==========================================
+             RETO 2: PANEL DE DESCUBRIMIENTO INTERNACIONAL
+             ========================================== -->
+        <div class="context-box" style="border-color: var(--color-2); box-shadow: 8px 8px 0px var(--color-1);">
+            Actualmente, organismos internacionales también reconocen:
+        </div>
+
+        <div class="center-wrapper">
+            <span class="instruction-badge" style="background: var(--color-2);"><i class="fa-solid fa-unlock-keyhole"></i> Haz clic para revelar los 5 reconocimientos</span>
+        </div>
+
+        <div class="discovery-grid" id="discovery-grid">
+            <!-- Nodos generados por JS -->
+        </div>
+
+        <div class="banner-app" id="banner-app">
+            <h2>Aplicación institucional</h2>
+            La identificación temprana de estas violencias permite fortalecer medidas preventivas y mecanismos de protección.
+        </div>
+
+        <!-- ==========================================
+             RETO 3: JUEGO SEMÁFORO (CON ZONA VERDE)
+             ========================================== -->
+        <div id="phase3">
+            <h3 class="game-title">Juego del Semáforo: Clasifica la situación</h3>
+            
+            <div class="zone-indicator zone-left" id="ind-left">VIOLENCIA (ROSA)</div>
+            <div class="zone-indicator zone-top" id="ind-top">RIESGO (NARANJA)</div>
+            <div class="zone-indicator zone-right" id="ind-right">SANO (VERDE)</div>
+
+            <div class="game-zone" id="card-stack">
+                <div class="swipe-card" id="active-card">
+                    <div style="font-size:3.5rem; margin-bottom:15px; color: var(--color-1);"><i class="fa-solid fa-traffic-light"></i></div>
+                    <div class="scenario-text" id="card-text">Cargando situación...</div>
+                    <div style="color: var(--color-1); font-size:0.9rem; margin-top:25px; font-family: 'Outfit'; font-weight: 900; background: #eee; padding: 5px 10px; border: 2px solid var(--color-1);">
+                        ⬅ Rosa | ⬆ Naranja | ➡ Verde
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-controls">
+                <button class="btn-game btn-red" onclick="manualSwipe('red')" aria-label="Violencia">🔴</button>
+                <button class="btn-game btn-yellow" onclick="manualSwipe('yellow')" aria-label="Riesgo">🟡</button>
+                <button class="btn-game btn-green" onclick="manualSwipe('green')" aria-label="Sano">🟢</button>
+            </div>
+
+            <div class="feedback-modal" id="feedback-modal">
+                <div class="feed-icon" id="feed-icon">✅</div>
+                <div class="feed-type" id="feed-type">Tipo</div>
+                <div class="feed-context" id="feed-context">Contexto</div>
+                <div class="feed-action" id="feed-action">Acción</div>
+                <button class="btn-next" onclick="nextCard()">Siguiente Situación <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+
+            <div class="game-completed" id="game-completed">
+                <i class="fa-solid fa-trophy" style="font-size: 5rem; color: var(--color-3); margin-bottom: 20px;"></i>
+                <h2 style="font-size: 2.5rem; color: var(--color-1); font-family: 'Outfit'; text-transform: uppercase;">¡Módulo Completado!</h2>
+                <p style="font-size: 1.3rem; font-weight: 800; margin-top: 15px;">Has identificado correctamente los contextos y manifestaciones de las violencias.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FLECHA INTELIGENTE DE ACCESIBILIDAD -->
+    <div class="smart-scroll-container">
+        <div class="scroll-message" id="endMessage">Sigue bajando</div>
+        <button class="scroll-arrow" id="scrollArrow" aria-label="Bajar" onclick="window.scrollBy({top: 500, behavior: 'smooth'})">
+            <i class="fa-solid fa-arrow-down"></i>
+        </button>
+    </div>
+
+    <script>
+        // =========================================================
+        // LÓGICA 1: JUEGO DE EMPAREJAMIENTO (LEY 1257)
+        // =========================================================
+        const leyData = [
+            { id: "f", term: "Violencia física", def: "Cualquier acción que cause daño corporal.", icon: "fa-hand-fist" },
+            { id: "p", term: "Violencia psicológica", def: "Conductas orientadas a degradar, controlar o afectar emocionalmente.", icon: "fa-brain" },
+            { id: "s", term: "Violencia sexual", def: "Acciones que vulneran la libertad, integridad o formación sexual.", icon: "fa-person-harassing" },
+            { id: "e", term: "Violencia económica o patrimonial", def: "Control abusivo de recursos económicos o afectación patrimonial.", icon: "fa-money-bill-transfer" },
+            { id: "m", term: "Violencia simbólica", def: "Mensajes, patrones culturales o prácticas que reproducen subordinación o discriminación.", icon: "fa-masks-theater" }
+        ];
+
+        let selectedTerm = null;
+        let selectedDef = null;
+        let matchesFound = 0;
+
+        function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
+
+        function initMatchGame() {
+            const termsCol = document.getElementById('terms-col');
+            const defsCol = document.getElementById('defs-col');
+            
+            const terms = shuffle([...leyData]);
+            const defs = shuffle([...leyData]);
+
+            terms.forEach(item => {
+                let btn = document.createElement('button');
+                btn.className = 'match-btn term-btn';
+                btn.innerHTML = `<i class="fa-solid ${item.icon}"></i> ${item.term}`;
+                btn.onclick = () => selectItem(btn, item.id, 'term');
+                termsCol.appendChild(btn);
+            });
+
+            defs.forEach(item => {
+                let btn = document.createElement('button');
+                btn.className = 'match-btn def-btn';
+                btn.innerHTML = item.def;
+                btn.onclick = () => selectItem(btn, item.id, 'def');
+                defsCol.appendChild(btn);
+            });
+        }
+
+        function selectItem(btn, id, type) {
+            if(btn.classList.contains('matched')) return;
+
+            // Deseleccionar previos del mismo tipo
+            document.querySelectorAll(`.${type}-btn`).forEach(el => el.classList.remove('selected'));
+            btn.classList.add('selected');
+
+            if(type === 'term') selectedTerm = { btn, id };
+            if(type === 'def') selectedDef = { btn, id };
+
+            // Comprobar match
+            if(selectedTerm && selectedDef) {
+                if(selectedTerm.id === selectedDef.id) {
+                    // Correcto
+                    selectedTerm.btn.classList.replace('selected', 'matched');
+                    selectedTerm.btn.innerHTML += ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                    selectedDef.btn.classList.replace('selected', 'matched');
+                    selectedDef.btn.innerHTML += ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                    matchesFound++;
+                    selectedTerm = null; selectedDef = null;
+                } else {
+                    // Incorrecto
+                    selectedTerm.btn.classList.add('error-shake');
+                    selectedDef.btn.classList.add('error-shake');
+                    setTimeout(() => {
+                        selectedTerm.btn.classList.remove('error-shake', 'selected');
+                        selectedDef.btn.classList.remove('error-shake', 'selected');
+                        selectedTerm = null; selectedDef = null;
+                    }, 400);
+                }
+            }
+        }
+        initMatchGame();
+
+        // =========================================================
+        // LÓGICA 2: PANEL DE DESCUBRIMIENTO INTERNACIONAL
+        // =========================================================
+        const intViolences = [
+            "Violencia institucional.",
+            "Violencia política basada en género.",
+            "Violencia digital.",
+            "Acoso laboral y sexual.",
+            "Microviolencias y prácticas discriminatorias cotidianas."
+        ];
+        
+        let revealedNodes = 0;
+        const grid = document.getElementById('discovery-grid');
+        
+        intViolences.forEach((text, i) => {
+            let btn = document.createElement('button');
+            btn.className = 'discovery-node';
+            btn.innerHTML = `<i class="fa-solid fa-lock"></i> Reconocimiento ${i+1}`;
+            btn.onclick = function() {
+                if(!this.classList.contains('revealed')) {
+                    this.classList.add('revealed');
+                    this.innerHTML = `<i class="fa-solid fa-check-double"></i> ${text}`;
+                    revealedNodes++;
+                    if(revealedNodes === intViolences.length) {
+                        document.getElementById('banner-app').style.display = 'block';
+                        setTimeout(checkScroll, 300);
+                    }
+                }
+            };
+            grid.appendChild(btn);
+        });
+
+        // =========================================================
+        // LÓGICA 3: JUEGO SEMÁFORO (SWIPE Y BOTONES)
+        // =========================================================
+        const situations = [
+            {
+                text: "Tu pareja controla cuánto dinero gastas y te pide recibos de todo.",
+                correct: "red",
+                type: "Violencia Económica",
+                context: "Ámbito doméstico / Relación de pareja",
+                action: "Activar ruta de atención, fortalecer autonomía económica."
+            },
+            {
+                text: "Un compañero hace chistes sexistas sobre las mujeres en la oficina.",
+                correct: "yellow",
+                type: "Violencia Simbólica",
+                context: "Entorno Laboral / Institucional",
+                action: "Sanción social, pedagogía, revisión de códigos de conducta."
+            },
+            {
+                text: "Se toman decisiones conjuntas respetando la opinión de ambos.",
+                correct: "green", // Este ahora activará el diseño SANO (VERDE)
+                type: "Relación Sana",
+                context: "Convivencia",
+                action: "Fortalecer la comunicación asertiva."
+            },
+            {
+                text: "Amenazas con dañar a tus seres queridos si no haces lo que se te pide.",
+                correct: "red",
+                type: "Violencia Psicológica",
+                context: "Coacción / Intimidación",
+                action: "Medida de protección inmediata, denuncia penal."
+            }
+        ];
+
+        let currentCardIndex = 0;
+        const cardEl = document.getElementById('active-card');
+        const cardText = document.getElementById('card-text');
+        const indLeft = document.getElementById('ind-left');
+        const indTop = document.getElementById('ind-top');
+        const indRight = document.getElementById('ind-right');
+        const feedbackModal = document.getElementById('feedback-modal');
+
+        let startX = 0, startY = 0, currentX = 0, currentY = 0;
+        let isDragging = false;
+        let threshold = 80;
+
+        function loadCard() {
+            if (currentCardIndex >= situations.length) {
+                document.getElementById('card-stack').style.display = 'none';
+                document.querySelector('.game-controls').style.display = 'none';
+                document.querySelector('.game-title').style.display = 'none';
+                document.getElementById('game-completed').style.display = 'flex';
+                checkScroll(); 
+                return;
+            }
+            cardText.innerText = situations[currentCardIndex].text;
+            resetCardPosition();
+        }
+
+        function resetCardPosition() {
+            cardEl.style.transition = "transform 0.3s ease, box-shadow 0.3s ease";
+            cardEl.style.transform = "translate(0px, 0px) rotate(0deg)";
+            indLeft.style.opacity = 0; indRight.style.opacity = 0; indTop.style.opacity = 0;
+        }
+
+        function onDragStart(e) {
+            isDragging = true;
+            startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+            cardEl.style.transition = "none"; 
+        }
+
+        function onDragMove(e) {
+            if (!isDragging) return;
+            currentX = (e.type.includes('mouse') ? e.clientX : e.touches[0].clientX) - startX;
+            currentY = (e.type.includes('mouse') ? e.clientY : e.touches[0].clientY) - startY;
+
+            let rotation = currentX * 0.05;
+            cardEl.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotation}deg)`;
+
+            indLeft.style.opacity = currentX < -threshold ? 1 : 0;
+            indRight.style.opacity = currentX > threshold ? 1 : 0;
+            indTop.style.opacity = (currentY < -threshold && Math.abs(currentX) < threshold) ? 1 : 0;
+        }
+
+        function onDragEnd() {
+            if (!isDragging) return;
+            isDragging = false;
+            if (currentX < -threshold) handleSwipe('red');
+            else if (currentX > threshold) handleSwipe('green');
+            else if (currentY < -threshold) handleSwipe('yellow');
+            else resetCardPosition();
+        }
+
+        cardEl.addEventListener('mousedown', onDragStart);
+        document.addEventListener('mousemove', onDragMove);
+        document.addEventListener('mouseup', onDragEnd);
+        cardEl.addEventListener('touchstart', onDragStart, {passive: true});
+        document.addEventListener('touchmove', onDragMove, {passive: false});
+        document.addEventListener('touchend', onDragEnd);
+
+        function manualSwipe(colorChoice) {
+            cardEl.style.transition = "transform 0.4s ease";
+            if(colorChoice === 'red') cardEl.style.transform = "translate(-300px, 0) rotate(-15deg)";
+            if(colorChoice === 'green') cardEl.style.transform = "translate(300px, 0) rotate(15deg)";
+            if(colorChoice === 'yellow') cardEl.style.transform = "translate(0, -300px) rotate(0deg)";
+            setTimeout(() => { handleSwipe(colorChoice); }, 300);
+        }
+
+        function handleSwipe(colorChoice) {
+            const currentObj = situations[currentCardIndex];
+            const isCorrect = (colorChoice === currentObj.correct);
+
+            document.getElementById('feed-type').innerText = currentObj.type;
+            document.getElementById('feed-context').innerHTML = `<strong>Contexto:</strong> ${currentObj.context}`;
+            document.getElementById('feed-action').innerHTML = `<strong>Acción:</strong> ${currentObj.action}`;
+            
+            const iconEl = document.getElementById('feed-icon');
+            if(isCorrect) {
+                iconEl.innerHTML = '🎉';
+                feedbackModal.style.borderColor = 'var(--color-success)';
+                document.getElementById('feed-type').style.color = 'var(--color-success)';
+            } else {
+                iconEl.innerHTML = '⚠️';
+                feedbackModal.style.borderColor = 'var(--color-4)';
+                document.getElementById('feed-type').style.color = 'var(--color-4)';
+            }
+
+            feedbackModal.style.display = 'flex';
+        }
+
+        function nextCard() {
+            feedbackModal.style.display = 'none';
+            currentCardIndex++;
+            loadCard();
+        }
+
+        loadCard();
+
+        /* =========================================================
+           FLECHA INTELIGENTE DE ACCESIBILIDAD
+           ========================================================= */
+        const scrollArrow = document.getElementById('scrollArrow');
+        const endMessage = document.getElementById('endMessage');
+
+        function checkScroll() {
+            const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = window.scrollY;
+            
+            if (Math.ceil(scrolled) >= scrollableHeight - 40) {
+                scrollArrow.classList.add('hidden');
+                
+                if (currentCardIndex >= situations.length) {
+                    endMessage.innerText = "Unidad finalizada";
+                }
+                endMessage.classList.add('visible');
+            } else {
+                scrollArrow.classList.remove('hidden');
+                endMessage.classList.remove('visible');
+            }
+        }
+
+        window.addEventListener('scroll', checkScroll);
+        window.addEventListener('resize', checkScroll);
+        setTimeout(checkScroll, 500);
+
+    </script>
+</body>
+</html>

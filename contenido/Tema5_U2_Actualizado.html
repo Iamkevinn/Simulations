@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualización Normativa - Aprendizaje Activo</title>
+    
+    <!-- Tipografías -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Iconos vectoriales -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           VARIABLES GLOBALES (CLEAN MODERN UI)
+           ========================================= */
+        :root {
+            --color-1: #480241; /* Morado Oscuro - Títulos y Textos principales */
+            --color-2: #7235A8; /* Morado Claro - Acentos interactivos */
+            --color-3: #FBA511; /* Naranja - Alertas y botones activos */
+            --color-4: #CE4651; /* Rojo/Rosa - Errores y destacados */
+            --color-5: #FFFFFF; /* Blanco */
+            --bg-body: #FDFBFD; /* Blanco con un levísimo tono morado para no cansar la vista */
+            --bg-card: #FFFFFF;
+            --text-dark: #2A1F2A; /* Gris muy oscuro, mejor contraste que el negro puro */
+            --shadow-soft: 0 8px 24px rgba(72, 2, 65, 0.06);
+            --shadow-hover: 0 12px 32px rgba(72, 2, 65, 0.12);
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.6;
+            font-size: 18px; 
+            overflow-x: hidden;
+            padding-bottom: 100px;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; color: var(--color-1); }
+
+        /* --- HEADER Y LOGOS --- */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 5%; background-color: var(--color-5);
+            position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-soft);
+        }
+        .logo-img { height: 75px; width: auto; max-width: 48%; object-fit: contain; }
+
+        /* --- ESTRUCTURA GENERAL --- */
+        main { max-width: 1000px; margin: 0 auto; padding: 50px 5%; }
+        .text-center { text-align: center; }
+        
+        .hero-title { font-size: 2.8rem; line-height: 1.2; margin-bottom: 15px; }
+        .hero-subtitle { font-size: 1.3rem; color: var(--color-2); font-weight: 700; margin-bottom: 30px; }
+        
+        .intro-box {
+            background-color: var(--color-5); border-left: 5px solid var(--color-3);
+            padding: 25px 30px; font-size: 1.15rem; box-shadow: var(--shadow-soft);
+            border-radius: 0 var(--radius) var(--radius) 0; margin-bottom: 50px;
+        }
+
+        .section-title {
+            display: flex; align-items: center; gap: 15px; font-size: 2rem;
+            margin: 60px 0 20px 0; color: var(--color-1);
+        }
+        .section-title i { color: var(--color-3); }
+
+        .instruction-tag {
+            display: inline-flex; align-items: center; gap: 8px;
+            background-color: rgba(114, 53, 168, 0.1); color: var(--color-2);
+            padding: 8px 16px; border-radius: 50px; font-family: 'Outfit';
+            font-weight: 700; font-size: 1rem; margin-bottom: 30px;
+        }
+
+        .legal-note {
+            background-color: rgba(251, 165, 17, 0.1); border: 1px solid rgba(251, 165, 17, 0.3);
+            padding: 15px 20px; font-weight: 600; font-size: 1rem; color: #9A6200;
+            border-radius: var(--radius); margin-top: 25px; display: none; /* Se muestra al ganar */
+            animation: fadeIn 0.5s ease;
+        }
+        .legal-note.visible { display: block; }
+
+        /* =========================================
+           FASE 1: CONSTRUCTOR DE NORMATIVA (MATCHING)
+           ========================================= */
+        .matching-board {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+        }
+        .matching-column { display: flex; flex-direction: column; gap: 15px; }
+        .col-title { font-family: 'Outfit'; font-size: 1.2rem; color: var(--color-2); margin-bottom: 10px; border-bottom: 2px solid #EEE; padding-bottom: 10px; }
+        
+        .match-item {
+            background: var(--bg-card); padding: 20px; border-radius: var(--radius);
+            box-shadow: var(--shadow-soft); cursor: pointer; transition: var(--transition);
+            border: 2px solid transparent; display: flex; align-items: center; justify-content: space-between;
+            font-weight: 600;
+        }
+        
+        .match-law { font-family: 'Outfit'; font-size: 1.15rem; color: var(--color-1); }
+        .match-def { font-size: 1.05rem; color: var(--text-dark); line-height: 1.4; }
+
+        .match-item:hover:not(.locked) { transform: translateY(-3px); box-shadow: var(--shadow-hover); border-color: rgba(114, 53, 168, 0.3); }
+        
+        /* Estados */
+        .match-item.selected { border-color: var(--color-2); background-color: rgba(114, 53, 168, 0.05); transform: scale(1.02); }
+        .match-item.locked { background-color: rgba(25, 135, 84, 0.05); border-color: rgba(25, 135, 84, 0.4); color: #157347; cursor: default; }
+        .match-item.error { animation: shake 0.4s ease; border-color: var(--color-4); background-color: rgba(206, 70, 81, 0.05); }
+
+        .completion-msg {
+            text-align: center; color: #157347; font-family: 'Outfit'; font-size: 1.5rem;
+            margin-top: 30px; display: none; animation: fadeIn 0.5s ease;
+        }
+
+        /* =========================================
+           FASE 2: MATRIZ INTERNACIONAL (TAP & PLACE)
+           ========================================= */
+        .bank-container {
+            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+            background: rgba(72, 2, 65, 0.03); padding: 20px; border-radius: var(--radius);
+            margin-bottom: 30px; border: 1px dashed rgba(72, 2, 65, 0.2);
+        }
+
+        .instrument-chip {
+            background: var(--color-1); color: var(--color-5); padding: 10px 20px;
+            border-radius: 50px; font-family: 'Outfit'; font-size: 1.1rem;
+            cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-soft);
+        }
+        .instrument-chip:hover { background: var(--color-2); transform: translateY(-2px); }
+        .instrument-chip.selected { background: var(--color-3); transform: scale(1.05); box-shadow: 0 0 0 3px rgba(251, 165, 17, 0.3); }
+        .instrument-chip.placed { display: none; }
+
+        .slots-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+
+        .definition-slot {
+            background: var(--color-5); border-radius: var(--radius); padding: 20px;
+            box-shadow: var(--shadow-soft); display: flex; flex-direction: column; gap: 10px;
+            border-left: 4px solid var(--color-2); cursor: pointer; transition: var(--transition);
+        }
+        .definition-slot:hover { background: rgba(114, 53, 168, 0.02); }
+        
+        .def-text { font-size: 1.1rem; font-weight: 600; color: var(--text-dark); }
+        
+        .slot-target {
+            min-height: 40px; background: rgba(0,0,0,0.03); border-radius: 8px;
+            border: 1px dashed #CCC; display: flex; align-items: center; padding: 5px 15px;
+            font-family: 'Outfit'; color: var(--color-1); font-weight: 700; font-size: 1.1rem;
+        }
+        .definition-slot.filled .slot-target { background: rgba(114, 53, 168, 0.1); border: 1px solid var(--color-2); }
+        .definition-slot.error .slot-target { background: rgba(206, 70, 81, 0.1); border: 1px solid var(--color-4); animation: shake 0.4s ease; }
+
+        /* =========================================
+           FASE 3: CASO PRÁCTICO (ANÁLISIS)
+           ========================================= */
+        .case-container {
+            background: var(--color-5); border-radius: var(--radius); overflow: hidden;
+            box-shadow: var(--shadow-soft); margin-top: 30px;
+        }
+        .case-header {
+            background: var(--color-1); color: var(--color-5); padding: 20px 30px;
+            font-family: 'Outfit'; font-size: 1.4rem; display: flex; align-items: center; gap: 10px;
+        }
+        .case-body { padding: 30px; font-size: 1.15rem; font-weight: 600; line-height: 1.7; border-bottom: 1px solid #EEE; }
+        
+        .questions-area { padding: 30px; background: rgba(251, 165, 17, 0.03); }
+        .q-title { font-family: 'Outfit'; color: var(--color-3); font-size: 1.3rem; margin-bottom: 20px; }
+        
+        .q-list { display: flex; flex-direction: column; gap: 15px; }
+        .q-item {
+            background: var(--color-5); padding: 15px 20px; border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; align-items: center; gap: 15px;
+            cursor: pointer; transition: var(--transition); border: 1px solid transparent;
+        }
+        .q-item:hover { border-color: var(--color-3); transform: translateX(5px); }
+        .q-item.checked { background: rgba(25, 135, 84, 0.05); border-color: #198754; color: #157347; font-weight: 700; }
+        .q-icon { color: #CCC; font-size: 1.2rem; }
+        .q-item.checked .q-icon { color: #198754; }
+
+        /* =========================================
+           FASE 4: JUEGO 6 (EL DICTAMEN)
+           ========================================= */
+        #game6-section {
+            background: linear-gradient(135deg, var(--color-1) 0%, #2A0126 100%);
+            border-radius: var(--radius); padding: 50px 40px; margin-top: 80px;
+            box-shadow: var(--shadow-hover); position: relative; overflow: hidden;
+        }
+        
+        .g-title { color: var(--color-5); font-size: 2.2rem; text-align: center; margin-bottom: 10px; }
+        .g-subtitle { color: var(--color-3); text-align: center; font-size: 1.1rem; margin-bottom: 40px; font-weight: 600; }
+
+        .dossier {
+            background: #FFFDF9; border-radius: 8px; padding: 35px; margin: 0 auto 40px auto;
+            max-width: 700px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative;
+        }
+        .dossier::before {
+            content: 'CONFIDENCIAL'; position: absolute; top: 15px; right: -25px;
+            background: var(--color-4); color: white; font-family: 'Outfit'; font-size: 0.8rem;
+            padding: 5px 30px; transform: rotate(45deg); letter-spacing: 2px;
+        }
+        .dossier h4 { color: var(--color-1); font-size: 1.2rem; border-bottom: 2px solid var(--color-1); padding-bottom: 5px; margin-bottom: 20px; }
+        .dossier p { font-size: 1.2rem; font-weight: 600; color: #333; line-height: 1.6; }
+
+        .laws-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;
+            max-width: 800px; margin: 0 auto;
+        }
+        .law-btn {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            color: var(--color-5); padding: 15px; border-radius: 8px; font-family: 'Outfit';
+            font-size: 1.1rem; cursor: pointer; transition: var(--transition); text-align: center;
+        }
+        .law-btn:hover { background: var(--color-5); color: var(--color-1); transform: translateY(-3px); }
+        
+        .law-btn.correct { background: #198754; border-color: #198754; color: white; pointer-events: none; }
+        .law-btn.wrong { background: var(--color-4); border-color: var(--color-4); color: white; animation: shake 0.4s; pointer-events: none; }
+
+        /* Modal Interno del Juego */
+        .verdict-modal {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(42, 1, 38, 0.95); display: none; flex-direction: column;
+            justify-content: center; align-items: center; padding: 40px; text-align: center;
+            animation: fadeIn 0.3s ease; z-index: 10;
+        }
+        .v-title { color: var(--color-3); font-size: 2.5rem; margin-bottom: 20px; }
+        .v-text { color: var(--color-5); font-size: 1.3rem; max-width: 600px; margin-bottom: 30px; line-height: 1.6; }
+        .btn-next {
+            background: var(--color-3); color: var(--color-1); border: none; padding: 15px 35px;
+            border-radius: 50px; font-family: 'Outfit'; font-size: 1.2rem; font-weight: 800;
+            cursor: pointer; transition: var(--transition);
+        }
+        .btn-next:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(251, 165, 17, 0.2); }
+
+        /* --- FLECHA INTELIGENTE --- */
+        .smart-scroll-container { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; align-items: flex-end; z-index: 1000; pointer-events: none; }
+        .scroll-arrow { width: 50px; height: 50px; background-color: var(--color-3); color: var(--color-1); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; animation: bounce 2s infinite; transition: all 0.3s; pointer-events: auto; cursor: pointer; box-shadow: 0 4px 15px rgba(251, 165, 17, 0.4); }
+        .scroll-arrow:hover { background-color: var(--color-2); color: var(--color-5); transform: scale(1.1); }
+        .scroll-arrow.hidden { opacity: 0; transform: scale(0.5) translateY(20px); pointer-events: none; }
+        .scroll-message { background-color: var(--color-5); color: var(--color-1); padding: 8px 15px; border-radius: 8px; font-family: 'Outfit'; font-weight: 700; font-size: 0.9rem; margin-bottom: 10px; opacity: 0; transform: translateX(20px); transition: all 0.3s; box-shadow: var(--shadow-soft); }
+        .scroll-message.visible { opacity: 1; transform: translateX(0); pointer-events: auto; }
+
+        /* Animaciones Globales */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 50% { transform: translateX(8px); } 75% { transform: translateX(-8px); } }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
+
+        @media (max-width: 768px) {
+            .matching-board { grid-template-columns: 1fr; }
+            .col-title { display: none; } /* En móvil se vuelve una sola lista interactiva */
+            #game6-section { padding: 40px 20px; }
+            .dossier { padding: 25px; }
+            .hero-title { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="logo-img">
+        <img src="../Styles/logo.png" alt="Logo Institucional" class="logo-img">
+    </header>
+
+    <main>
+        <!-- INTRODUCCIÓN -->
+        <div class="text-center">
+            <h1 class="hero-title">Actualización normativa: leyes nacionales y tratados internacionales vigentes</h1>
+        </div>
+
+        <div class="intro-box">
+            El marco jurídico colombiano sobre violencias basadas en género incluye normas nacionales e internacionales vinculantes.
+        </div>
+
+        <!-- ==========================================
+             FASE 1: NORMATIVA NACIONAL (MATCHING)
+             ========================================== -->
+        <h2 class="section-title"><i class="fa-solid fa-book-bookmark"></i> Normativa nacional relevante</h2>
+        
+        <div class="instruction-tag">
+            <i class="fa-solid fa-link"></i> Selecciona una ley y únelo con su alcance correspondiente.
+        </div>
+
+        <div class="matching-board" id="national-board">
+            <!-- Columna Leyes -->
+            <div class="matching-column" id="laws-col">
+                <div class="col-title">Legislación</div>
+                <!-- Inyectado via JS para asegurar mezcla -->
+            </div>
+            <!-- Columna Definiciones -->
+            <div class="matching-column" id="defs-col">
+                <div class="col-title">Alcance Jurídico</div>
+                <!-- Inyectado via JS -->
+            </div>
+        </div>
+
+        <div class="completion-msg" id="nat-success">
+            <i class="fa-solid fa-circle-check"></i> ¡Has estructurado el marco nacional!
+        </div>
+
+        <!-- ==========================================
+             FASE 2: TRATADOS INTERNACIONALES (TAP TO PLACE)
+             ========================================== -->
+        <h2 class="section-title"><i class="fa-solid fa-globe"></i> Instrumentos internacionales</h2>
+
+        <div class="instruction-tag" style="color: var(--color-3); background: rgba(251, 165, 17, 0.1);">
+            <i class="fa-solid fa-hand-pointer"></i> Toca un instrumento y luego toca su definición para ubicarlo.
+        </div>
+
+        <!-- Banco de Instrumentos -->
+        <div class="bank-container" id="instrument-bank">
+            <div class="instrument-chip" onclick="selectInstrument(this, 'cedaw')">CEDAW</div>
+            <div class="instrument-chip" onclick="selectInstrument(this, 'belem')">Convención de Belém do Pará</div>
+            <div class="instrument-chip" onclick="selectInstrument(this, 'oit')">Convenio 190 de la OIT</div>
+            <div class="instrument-chip" onclick="selectInstrument(this, 'yogya')">Principios de Yogyakarta</div>
+        </div>
+
+        <!-- Espacios para ubicar -->
+        <div class="slots-grid">
+            <div class="definition-slot" onclick="placeInstrument(this, 'cedaw')">
+                <div class="def-text">Convención sobre eliminación de discriminación contra la mujer.</div>
+                <div class="slot-target">Toca aquí para ubicar el instrumento</div>
+            </div>
+
+            <div class="definition-slot" onclick="placeInstrument(this, 'belem')">
+                <div class="def-text">Obliga a los Estados a prevenir, investigar y sancionar violencias contra las mujeres.</div>
+                <div class="slot-target">Toca aquí para ubicar el instrumento</div>
+            </div>
+
+            <div class="definition-slot" onclick="placeInstrument(this, 'oit')">
+                <div class="def-text">Reconoce violencia y acoso en el mundo del trabajo.</div>
+                <div class="slot-target">Toca aquí para ubicar el instrumento</div>
+            </div>
+
+            <div class="definition-slot" onclick="placeInstrument(this, 'yogya')">
+                <div class="def-text">Orientan aplicación de derechos humanos en orientación sexual e identidad de género.</div>
+                <div class="slot-target">Toca aquí para ubicar el instrumento</div>
+            </div>
+        </div>
+
+        <div class="legal-note" id="int-note">
+            <i class="fa-solid fa-triangle-exclamation"></i> Aunque son ampliamente citados internacionalmente, los Principios de Yogyakarta no constituyen tratado vinculante.
+        </div>
+
+        <!-- ==========================================
+             FASE 3: CASO PRÁCTICO
+             ========================================== -->
+        <h2 class="section-title"><i class="fa-solid fa-magnifying-glass"></i> Caso práctico</h2>
+
+        <div class="case-container">
+            <div class="case-header">
+                <i class="fa-solid fa-file-signature"></i> Reporte Situacional
+            </div>
+            <div class="case-body">
+                Una funcionaria afrodescendiente denuncia comentarios discriminatorios reiterados y exclusión de espacios de decisión. Durante el proceso institucional se minimizan los hechos y se argumenta que “no existen pruebas suficientes”.
+            </div>
+            <div class="questions-area">
+                <div class="q-title">Preguntas orientadoras (Reflexiona y marca para continuar):</div>
+                <div class="q-list">
+                    <div class="q-item" onclick="this.classList.toggle('checked'); checkAllQuestions();">
+                        <i class="fa-solid fa-circle-check q-icon"></i>
+                        ¿Qué formas de violencia y discriminación aparecen?
+                    </div>
+                    <div class="q-item" onclick="this.classList.toggle('checked'); checkAllQuestions();">
+                        <i class="fa-solid fa-circle-check q-icon"></i>
+                        ¿Cómo opera la interseccionalidad en este caso?
+                    </div>
+                    <div class="q-item" onclick="this.classList.toggle('checked'); checkAllQuestions();">
+                        <i class="fa-solid fa-circle-check q-icon"></i>
+                        ¿Qué obligaciones tiene la institución?
+                    </div>
+                    <div class="q-item" onclick="this.classList.toggle('checked'); checkAllQuestions();">
+                        <i class="fa-solid fa-circle-check q-icon"></i>
+                        ¿Qué medidas preventivas y correctivas deberían adoptarse?
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             FASE 4: JUEGO 6 "¿QUÉ NORMA APLICA?"
+             ========================================== -->
+        <div id="game6-section">
+            <h2 class="g-title">Simulación: "¿Qué norma aplica?"</h2>
+            <div class="g-subtitle">Analiza el caso y dictamina sentencia seleccionando la norma correcta.</div>
+
+            <div class="dossier">
+                <h4>EXPEDIENTE #00<span id="case-num">1</span></h4>
+                <p id="case-text">Cargando caso...</p>
+            </div>
+
+            <div class="laws-grid">
+                <button class="law-btn" onclick="judgeCase('1761', this)">Ley 1761<br>(Feminicidio)</button>
+                <button class="law-btn" onclick="judgeCase('1257', this)">Ley 1257<br>(Prevención)</button>
+                <button class="law-btn" onclick="judgeCase('1719', this)">Ley 1719<br>(Conflicto)</button>
+                <button class="law-btn" onclick="judgeCase('1542', this)">Dec. 1542<br>(Intrafamiliar)</button>
+                <button class="law-btn" onclick="judgeCase('1941', this)">Ley 1941<br>(Prejuicio)</button>
+                <button class="law-btn" onclick="judgeCase('2175', this)">Ley 2175<br>(Paridad)</button>
+            </div>
+
+            <!-- Modal Veredicto -->
+            <div class="verdict-modal" id="verdict-screen">
+                <div class="v-title">⚖️ VEREDICTO CORRECTO</div>
+                <div class="v-text" id="verdict-details">Explicación aquí</div>
+                <button class="btn-next" onclick="nextCase()">Siguiente Caso</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FLECHA INTELIGENTE DE ACCESIBILIDAD -->
+    <div class="smart-scroll-container">
+        <div class="scroll-message" id="endMessage">Continúa explorando</div>
+        <button class="scroll-arrow" id="scrollArrow" aria-label="Bajar" onclick="window.scrollBy({top: 400, behavior: 'smooth'})">
+            <i class="fa-solid fa-arrow-down"></i>
+        </button>
+    </div>
+
+    <script>
+        /* =========================================================
+           LÓGICA 1: CONSTRUCTOR DE NORMATIVA NACIONAL
+           ========================================================= */
+        const nationalData = [
+            { id: "c91", law: "Constitución Política de Colombia (1991)", def: "Reconoce igualdad, dignidad humana y prohibición de discriminación." },
+            { id: "l1257", law: "Ley 1257 de 2008", def: "Establece medidas de prevención, atención y sanción de violencias contra las mujeres." },
+            { id: "l1719", law: "Ley 1719 de 2014", def: "Fortalece acceso a justicia para víctimas de violencia sexual en el conflicto armado." },
+            { id: "l1482", law: "Ley 1482 de 2011", def: "Sanciona actos de discriminación." },
+            { id: "l2453", law: "Ley 2453 de 2025", def: "Establece medidas relacionadas con violencia contra las mujeres en política." }
+        ];
+
+        let selectedLaw = null;
+        let selectedDef = null;
+        let matchedLaws = 0;
+
+        function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
+
+        function initMatching() {
+            const lawsCol = document.getElementById('laws-col');
+            const defsCol = document.getElementById('defs-col');
+            
+            const laws = shuffle([...nationalData]);
+            const defs = shuffle([...nationalData]);
+
+            laws.forEach(item => {
+                let div = document.createElement('div');
+                div.className = 'match-item law-item';
+                div.innerHTML = `<span class="match-law">${item.law}</span>`;
+                div.onclick = () => selectItem(div, item.id, 'law');
+                lawsCol.appendChild(div);
+            });
+
+            defs.forEach(item => {
+                let div = document.createElement('div');
+                div.className = 'match-item def-item';
+                div.innerHTML = `<span class="match-def">${item.def}</span>`;
+                div.onclick = () => selectItem(div, item.id, 'def');
+                defsCol.appendChild(div);
+            });
+        }
+
+        function selectItem(el, id, type) {
+            if(el.classList.contains('locked')) return;
+
+            // Deseleccionar hermanos
+            document.querySelectorAll(`.${type}-item`).forEach(e => e.classList.remove('selected'));
+            el.classList.add('selected');
+
+            if(type === 'law') selectedLaw = { el, id };
+            if(type === 'def') selectedDef = { el, id };
+
+            if(selectedLaw && selectedDef) {
+                if(selectedLaw.id === selectedDef.id) {
+                    // Match Correcto
+                    selectedLaw.el.classList.replace('selected', 'locked');
+                    selectedLaw.el.innerHTML += ' <i class="fa-solid fa-check"></i>';
+                    selectedDef.el.classList.replace('selected', 'locked');
+                    selectedDef.el.innerHTML += ' <i class="fa-solid fa-check"></i>';
+                    matchedLaws++;
+                    selectedLaw = null; selectedDef = null;
+
+                    if(matchedLaws === nationalData.length) {
+                        document.getElementById('nat-success').style.display = 'block';
+                        document.getElementById('nat-note').classList.add('visible');
+                    }
+                } else {
+                    // Match Incorrecto
+                    selectedLaw.el.classList.add('error');
+                    selectedDef.el.classList.add('error');
+                    setTimeout(() => {
+                        selectedLaw.el.classList.remove('error', 'selected');
+                        selectedDef.el.classList.remove('error', 'selected');
+                        selectedLaw = null; selectedDef = null;
+                    }, 500);
+                }
+            }
+        }
+        initMatching();
+
+        /* =========================================================
+           LÓGICA 2: MATRIZ INTERNACIONAL (TAP TO PLACE)
+           ========================================================= */
+        let activeInstrument = null;
+        let placedInstruments = 0;
+
+        function selectInstrument(el, id) {
+            // Deseleccionar previos
+            document.querySelectorAll('.instrument-chip').forEach(chip => chip.classList.remove('selected'));
+            el.classList.add('selected');
+            activeInstrument = { el, id, name: el.innerText };
+        }
+
+        function placeInstrument(slot, correctId) {
+            if(!activeInstrument) return; // Si no ha seleccionado nada arriba
+
+            if(activeInstrument.id === correctId) {
+                // Correcto
+                slot.classList.add('filled');
+                slot.querySelector('.slot-target').innerHTML = `<i class="fa-solid fa-check" style="color:#157347; margin-right:8px;"></i> ${activeInstrument.name}`;
+                slot.style.borderColor = 'var(--color-success)';
+                activeInstrument.el.classList.add('placed');
+                activeInstrument = null;
+                placedInstruments++;
+
+                if(placedInstruments === 4) {
+                    document.getElementById('instrument-bank').style.display = 'none';
+                    document.getElementById('int-note').classList.add('visible');
+                }
+            } else {
+                // Incorrecto
+                slot.classList.add('error');
+                setTimeout(() => slot.classList.remove('error'), 400);
+            }
+        }
+
+        /* =========================================================
+           LÓGICA 3: CASO PRÁCTICO
+           ========================================================= */
+        function checkAllQuestions() {
+            const total = document.querySelectorAll('.q-item').length;
+            const checked = document.querySelectorAll('.q-item.checked').length;
+            if(total === checked) {
+                // Pequeño feedback visual
+                document.querySelector('.questions-area').style.background = 'rgba(25, 135, 84, 0.05)';
+            }
+        }
+
+        /* =========================================================
+           LÓGICA 4: JUEGO 6 (EL DICTAMEN)
+           ========================================================= */
+        const cases = [
+            {
+                text: "CASO: Una mujer ha sido agredida por su pareja. Días después, ella quiere retirar la denuncia por miedo, pero la Fiscalía insiste en continuar el proceso de oficio.",
+                correct: '1542',
+                explanation: "Correcto. El Decreto Ley 1542 de 2012 elimina el carácter de querellable y desistible de la violencia intrafamiliar."
+            },
+            {
+                text: "CASO: Se investiga el asesinato de una mujer, donde existen antecedentes de violencia instrumental y control por parte del agresor. Se busca tipificarlo no como homicidio simple.",
+                correct: '1761',
+                explanation: "Correcto. La Ley 1761 de 2015 tipifica el Feminicidio como delito autónomo cuando existen antecedentes de dominación."
+            },
+            {
+                text: "CASO: Una mujer víctima del conflicto armado denuncia hechos de violencia sexual ocurridos hace 5 años en una zona de combate.",
+                correct: '1719',
+                explanation: "Correcto. La Ley 1719 de 2014 garantiza el acceso a la justicia para víctimas de violencia sexual en el conflicto armado."
+            }
+        ];
+
+        let currentCaseIndex = 0;
+
+        function loadCase() {
+            document.getElementById('case-num').innerText = currentCaseIndex + 1;
+            document.getElementById('case-text').innerText = cases[currentCaseIndex].text;
+            
+            // Reset buttons
+            document.querySelectorAll('.law-btn').forEach(c => {
+                c.classList.remove('correct', 'wrong');
+                c.style.pointerEvents = 'all';
+            });
+        }
+
+        function judgeCase(lawId, btnElement) {
+            if(lawId === cases[currentCaseIndex].correct) {
+                // Acierto
+                btnElement.classList.add('correct');
+                const modal = document.getElementById('verdict-screen');
+                document.getElementById('verdict-details').innerText = cases[currentCaseIndex].explanation;
+                modal.style.display = 'flex';
+            } else {
+                // Error
+                btnElement.classList.add('wrong');
+                setTimeout(() => btnElement.classList.remove('wrong'), 400);
+            }
+        }
+
+        function nextCase() {
+            document.getElementById('verdict-screen').style.display = 'none';
+            currentCaseIndex++;
+            
+            if(currentCaseIndex < cases.length) {
+                loadCase();
+            } else {
+                document.getElementById('case-text').innerHTML = "<strong style='color:var(--color-2); font-size: 1.8rem; display:block; margin-bottom:15px;'>¡ENTRENAMIENTO COMPLETADO!</strong> Has demostrado un excelente dominio del marco normativo nacional aplicable.";
+                document.querySelector('.laws-grid').style.display = 'none';
+                checkScroll(); // Forzar revisión de la flecha
+            }
+        }
+
+        loadCase();
+
+        /* =========================================================
+           FLECHA INTELIGENTE DE ACCESIBILIDAD
+           ========================================================= */
+        const scrollArrow = document.getElementById('scrollArrow');
+        const endMessage = document.getElementById('endMessage');
+
+        function checkScroll() {
+            const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = window.scrollY;
+            
+            if (Math.ceil(scrolled) >= scrollableHeight - 40) {
+                scrollArrow.classList.add('hidden');
+                
+                if (currentCaseIndex >= cases.length) {
+                    endMessage.innerText = "Unidad finalizada";
+                }
+                endMessage.classList.add('visible');
+            } else {
+                scrollArrow.classList.remove('hidden');
+                endMessage.classList.remove('visible');
+            }
+        }
+
+        window.addEventListener('scroll', checkScroll);
+        window.addEventListener('resize', checkScroll);
+        setTimeout(checkScroll, 500);
+
+    </script>
+</body>
+</html>

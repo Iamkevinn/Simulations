@@ -171,7 +171,7 @@
         .radio-label:hover { border-color: var(--color-purple); }
         .radio-label input { margin-top: 4px; accent-color: var(--color-purple); width: 18px; height: 18px; }
 
-        /* --- NUEVO: Estilos de la Actividad 6 (Papel y Lápiz) --- */
+        /* --- Estilos de la Actividad 6 (Papel y Lápiz) --- */
         .instruction-paper {
             background-color: var(--color-dark-purple);
             color: white;
@@ -188,17 +188,15 @@
 
         .notebook-paper {
             background-color: #faf9f6;
-            /* Creación de las líneas rayadas de un cuaderno */
             background-image: repeating-linear-gradient(transparent, transparent 31px, rgba(114, 53, 168, 0.2) 31px, rgba(114, 53, 168, 0.2) 32px);
             padding: 32px 30px 32px 60px;
-            border-left: 4px solid var(--color-red); /* Margen izquierdo del cuaderno */
+            border-left: 4px solid var(--color-red);
             box-shadow: 3px 5px 15px rgba(0,0,0,0.1);
             position: relative;
             margin-bottom: 30px;
             border-radius: 3px 8px 8px 3px;
         }
 
-        /* Línea roja vertical izquierda típica de los cuadernos */
         .notebook-paper::before {
             content: '';
             position: absolute;
@@ -212,7 +210,7 @@
         .handwritten {
             font-family: 'Patrick Hand', 'Comic Sans MS', cursive;
             font-size: 1.4rem;
-            line-height: 32px; /* Debe coincidir con el background-image para que se asiente en las líneas */
+            line-height: 32px; 
             color: var(--color-dark-purple);
             position: relative;
             z-index: 1;
@@ -236,12 +234,60 @@
             color: #333;
         }
 
+        /* --- NUEVO: BOTÓN FLOTANTE INTELIGENTE --- */
+        .sticky-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--color-orange);
+            color: var(--color-dark-purple);
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sticky-btn:hover {
+            transform: translateY(-3px);
+            background-color: #e0930f;
+        }
+
+        .sticky-btn.end-state {
+            background-color: var(--color-purple);
+            color: var(--color-white);
+            cursor: default;
+            transform: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Foco visible para accesibilidad */
+        *:focus-visible {
+            outline: 3px solid var(--color-orange);
+            outline-offset: 3px;
+        }
+
         @media (max-width: 600px) {
             .match-grid { grid-template-columns: 1fr; }
             .results-board { grid-template-columns: 1fr; }
             .sort-buttons { flex-direction: column; }
             .notebook-paper { padding: 32px 20px 32px 40px; }
             .notebook-paper::before { left: 25px; }
+            
+            /* Ajuste del botón flotante en móviles */
+            .sticky-btn {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.8rem 1.2rem;
+                font-size: 0.95rem;
+            }
         }
     </style>
 </head>
@@ -265,9 +311,9 @@
                 <p class="instruction">Instrucción: Lee la siguiente afirmación. Hay <strong>una frase</strong> que contradice los principios del lenguaje institucional inclusivo. Haz clic sobre la parte que consideres incorrecta.</p>
             </div>
             <div class="text-auditor">
-                <span class="clickable-phrase" onclick="evalError(this, false)">El lenguaje inclusivo busca garantizar una comunicación respetuosa,</span> 
-                <span class="clickable-phrase" onclick="evalError(this, true)">siendo el lenguaje institucional completamente neutral y ajeno a las discriminaciones,</span> 
-                <span class="clickable-phrase" onclick="evalError(this, false)">por lo que se deben evitar los estereotipos.</span>
+                <span class="clickable-phrase" tabindex="0" onkeypress="if(event.key==='Enter') evalError(this, false)" onclick="evalError(this, false)">El lenguaje inclusivo busca garantizar una comunicación respetuosa,</span> 
+                <span class="clickable-phrase" tabindex="0" onkeypress="if(event.key==='Enter') evalError(this, true)" onclick="evalError(this, true)">siendo el lenguaje institucional completamente neutral y ajeno a las discriminaciones,</span> 
+                <span class="clickable-phrase" tabindex="0" onkeypress="if(event.key==='Enter') evalError(this, false)" onclick="evalError(this, false)">por lo que se deben evitar los estereotipos.</span>
             </div>
             <div class="feedback" id="feedback1" role="alert"></div>
         </section>
@@ -278,8 +324,8 @@
                 <h2>2. Construye el principio central</h2>
                 <p class="instruction">Instrucción: Toca las palabras en el orden correcto para formar la definición principal del lenguaje inclusivo.</p>
             </div>
-            <div class="builder-zone" id="builderZone"></div>
-            <div class="jumbled-words" id="jumbledWords"></div>
+            <div class="builder-zone" id="builderZone" aria-label="Zona de construcción de frase"></div>
+            <div class="jumbled-words" id="jumbledWords" aria-label="Palabras desordenadas"></div>
             <button class="action-btn" onclick="checkAct2()">Validar oración</button>
             <div class="feedback" id="feedback2" role="alert"></div>
         </section>
@@ -312,7 +358,7 @@
                 <p class="instruction">Clasifica el elemento que aparece en pantalla haciendo clic en "EVITAR" o "PROMOVER".</p>
             </div>
             <div class="classifier-container">
-                <div class="current-item-box" id="currentItemDisplay">Cargando...</div>
+                <div class="current-item-box" id="currentItemDisplay" aria-live="polite">Cargando...</div>
                 <div class="sort-buttons">
                     <button class="sort-btn btn-evitar" onclick="sortItem('evitar')">X EVITAR</button>
                     <button class="sort-btn btn-promover" onclick="sortItem('promover')">✓ PROMOVER</button>
@@ -343,14 +389,14 @@
             <div class="feedback" id="feedback5" role="alert"></div>
         </section>
 
-        <!-- ACTIVIDAD 6: NUEVA - Reflexión de Papel y Lápiz -->
+        <!-- ACTIVIDAD 6: Reflexión de Papel y Lápiz -->
         <section class="activity-card" id="act6">
             <div class="activity-header">
                 <h2>6. Actividad de Aplicación y Reflexión</h2>
             </div>
             
             <div class="instruction-paper">
-                <span>✍️</span>
+                <span aria-hidden="true">✍️</span>
                 <div>
                     <strong>Momento de desconexión: Toma papel y lápiz (o tu cuaderno de notas).</strong><br>
                     Esta última actividad no tiene botones. Está diseñada para que interiorices el conocimiento respondiendo las siguientes preguntas <strong>a mano</strong>, llevando la teoría a tu propia realidad institucional.
@@ -390,6 +436,11 @@
         </section>
 
     </main>
+
+    <!-- NUEVO: Botón Flotante Inteligente -->
+    <button class="sticky-btn" id="sticky-btn" onclick="scrollPage()" aria-label="Sigue bajando para ver más contenido">
+        <span>⬇</span> Sigue bajando
+    </button>
 
     <script>
         // --- ACTIVIDAD 1: Detectar Error ---
@@ -523,6 +574,39 @@
             element.className = `feedback ${type}`;
             element.innerHTML = message;
         }
+
+        // --- NUEVO: BOTÓN FLOTANTE INTELIGENTE (SCROLL) ---
+        const stickyBtn = document.getElementById('sticky-btn');
+        
+        function scrollPage() {
+            if (!stickyBtn.classList.contains('end-state')) {
+                // Hacer scroll suave hacia abajo calculando el 70% del alto de la ventana
+                window.scrollBy({ top: window.innerHeight * 0.7, behavior: 'smooth' });
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            // Calculamos la posición actual sumando lo que se ha bajado + el alto visible
+            const scrollPos = window.scrollY + window.innerHeight;
+            // Evaluamos contra el tamaño total del documento, con un margen de tolerancia (ej: 80px)
+            const bottomThreshold = document.documentElement.scrollHeight - 80;
+
+            if (scrollPos >= bottomThreshold) {
+                // Al llegar al final
+                stickyBtn.innerHTML = '✔ Actividades completadas';
+                stickyBtn.classList.add('end-state');
+                stickyBtn.setAttribute('aria-label', 'Has llegado al final del contenido');
+            } else {
+                // Mientras haya contenido
+                stickyBtn.innerHTML = '<span>⬇</span> Sigue bajando';
+                stickyBtn.classList.remove('end-state');
+                stickyBtn.setAttribute('aria-label', 'Sigue bajando para ver más contenido');
+            }
+        });
+
+        // Ejecutar el evento de scroll una vez al cargar la página por si es una pantalla muy grande
+        window.dispatchEvent(new Event('scroll'));
+
     </script>
 </body>
 </html>

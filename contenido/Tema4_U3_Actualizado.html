@@ -29,6 +29,12 @@
             padding-bottom: 40px;
         }
 
+        /* Foco visible para accesibilidad en toda la página */
+        *:focus-visible {
+            outline: 3px solid var(--color-orange);
+            outline-offset: 3px;
+        }
+
         /* Encabezado y Logos */
         header {
             background-color: var(--color-dark-purple);
@@ -280,11 +286,53 @@
             font-size: 0.95rem;
         }
 
+        /* --- NUEVO: BOTÓN FLOTANTE INTELIGENTE --- */
+        .sticky-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--color-orange);
+            color: var(--color-dark-purple);
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sticky-btn:hover {
+            transform: translateY(-3px);
+            background-color: #e0930f;
+        }
+
+        .sticky-btn.end-state {
+            background-color: var(--color-purple);
+            color: var(--color-white);
+            cursor: default;
+            transform: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
         /* Media Queries */
         @media (max-width: 600px) {
             h1 { font-size: 1.5rem; }
             .activity-card { padding: 15px; }
             .word-bank { justify-content: center; }
+            
+            /* Ajuste del botón flotante en móviles */
+            .sticky-btn {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.8rem 1.2rem;
+                font-size: 0.95rem;
+            }
         }
     </style>
 </head>
@@ -362,7 +410,7 @@
             <div class="feedback" id="feedback3" role="alert"></div>
         </section>
 
-        <!-- ACTIVIDAD 4: Completar flujo/concepto -->
+        <!-- ACTIVIDAD 4: Completar concepto / Decisión -->
         <section class="activity-card" id="act4">
             <div class="activity-header">
                 <h2>4. Vida libre de violencia</h2>
@@ -409,6 +457,11 @@
         </section>
 
     </main>
+
+    <!-- NUEVO: Botón Flotante Inteligente -->
+    <button class="sticky-btn" id="sticky-btn" onclick="scrollPage()" aria-label="Sigue bajando para ver más contenido">
+        <span>⬇</span> Sigue bajando
+    </button>
 
     <script>
         // LOGICA ACTIVIDAD 1: Completar Frase (Click/Tap to fill)
@@ -549,6 +602,38 @@
             element.className = `feedback ${type}`;
             element.innerHTML = message;
         }
+
+        // --- NUEVO: BOTÓN FLOTANTE INTELIGENTE (SCROLL) ---
+        const stickyBtn = document.getElementById('sticky-btn');
+        
+        function scrollPage() {
+            if (!stickyBtn.classList.contains('end-state')) {
+                // Hacer scroll suave hacia abajo calculando el 70% del alto de la ventana
+                window.scrollBy({ top: window.innerHeight * 0.7, behavior: 'smooth' });
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            // Calculamos la posición actual sumando lo que se ha bajado + el alto visible
+            const scrollPos = window.scrollY + window.innerHeight;
+            // Evaluamos contra el tamaño total del documento, con un margen de tolerancia (ej: 80px)
+            const bottomThreshold = document.documentElement.scrollHeight - 80;
+
+            if (scrollPos >= bottomThreshold) {
+                // Al llegar al final
+                stickyBtn.innerHTML = '✔ Actividades completadas';
+                stickyBtn.classList.add('end-state');
+                stickyBtn.setAttribute('aria-label', 'Has llegado al final del contenido');
+            } else {
+                // Mientras haya contenido
+                stickyBtn.innerHTML = '<span>⬇</span> Sigue bajando';
+                stickyBtn.classList.remove('end-state');
+                stickyBtn.setAttribute('aria-label', 'Sigue bajando para ver más contenido');
+            }
+        });
+
+        // Ejecutar el evento de scroll una vez al cargar la página por si es una pantalla muy grande
+        window.dispatchEvent(new Event('scroll'));
     </script>
 </body>
 </html>

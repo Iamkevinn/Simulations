@@ -1,30 +1,27 @@
 <!-- LIBRERÍAS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
-/* --- ESTÉTICA BASADA EN IMAGEN ADJUNTA (CLAROS/VIVOS) --- */
+/* --- ESTÉTICA MEJORADA (ACCESIBILIDAD Y UI) --- */
 :root {
-    /* Paleta extraída de la imagen */
-    --tf-purple: #4B1E7A;          /* Morado Institucional (Texto títulos, botones) */
-    --tf-orange: #E35205;          /* Naranja vibrante (Acentos, botones) */
-    --tf-yellow: #FDB913;          /* Amarillo Oro (Fondos detalles) */
-    --tf-pink: #D12A6A;            /* Rosa/Magenta (Detalles curvos) */
+    --tf-purple: #4B1E7A;          /* Morado Institucional */
+    --tf-orange: #E35205;          /* Naranja vibrante (Acción) */
+    --tf-yellow: #FDB913;          /* Amarillo Oro */
+    --tf-pink: #D12A6A;            /* Rosa/Magenta */
     
-    --tf-bg-light: #F9F9F9;        /* Fondo general claro */
-    --tf-text-main: #333333;       /* Texto principal oscuro para lectura */
-    --tf-text-light: #ffffff;      /* Texto sobre fondos oscuros */
+    --tf-bg-solid: #FAFAFA;        /* Fondo sólido, limpio y sin degradados */
+    --tf-text-main: #2D2D2D;       /* Gris muy oscuro para máximo contraste */
+    --tf-text-muted: #555555;      
     
-    --card-bg: rgba(255, 255, 255, 0.95); /* Tarjeta blanca casi sólida */
-    --shadow: 0 10px 40px rgba(75, 30, 122, 0.15); /* Sombra suave morada */
+    --card-bg: #FFFFFF;            /* Blanco puro para las tarjetas */
 }
 
 #debate-slider-container {
     width: 100%;
-    min-height: 750px; /* Un poco más alto para acomodar logos */
+    min-height: 750px;
     height: auto;
-    /* Degradado sutil claro (Blanco a lila muy suave) */
-    background: linear-gradient(180deg, #FFFFFF 0%, #F3E5F5 100%);
+    background-color: var(--tf-bg-solid); /* Fondo sólido */
     position: relative;
     overflow: hidden;
     font-family: 'Inter', sans-serif;
@@ -32,11 +29,17 @@
     border-radius: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Alineación superior para dar espacio a logos */
+    justify-content: flex-start;
     align-items: center;
-    padding: 20px;
+    padding: 30px 20px;
     box-sizing: border-box;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #E5E7EB;
+}
+
+/* --- ACCESIBILIDAD (Focos de teclado) --- */
+button:focus-visible {
+    outline: 3px solid var(--tf-orange);
+    outline-offset: 4px;
 }
 
 /* --- LOGOS DEL CLIENTE --- */
@@ -47,29 +50,27 @@
     width: 100%;
     max-width: 900px;
     margin-bottom: 20px;
-    padding: 0 10px;
     z-index: 10;
 }
 
 .header-logos img {
-    height: 115px; /* Tamaño base */
+    height: 120px;
     width: auto;
     object-fit: contain;
-    transition: transform 0.3s ease;
 }
 
-/* Fondo Animado (Colores de la marca pero sutiles) */
-.geo-shape { position: absolute; opacity: 0.6; pointer-events: none; }
+/* Fondo Animado (Muy sutil para no afectar lectura) */
+.geo-shape { position: absolute; pointer-events: none; z-index: 0; }
 .shape-1 { 
     top: -5%; left: -5%; width: 400px; height: 400px; 
-    background: var(--tf-yellow); filter: blur(90px); border-radius: 50%; 
-    opacity: 0.3;
+    background: var(--tf-yellow); filter: blur(100px); border-radius: 50%; 
+    opacity: 0.15;
     animation: float 10s infinite alternate; 
 }
 .shape-2 { 
     bottom: 0%; right: -5%; width: 350px; height: 350px; 
-    background: var(--tf-pink); filter: blur(100px); border-radius: 50%; 
-    opacity: 0.2;
+    background: var(--tf-pink); filter: blur(120px); border-radius: 50%; 
+    opacity: 0.1;
     animation: float 15s infinite alternate-reverse; 
 }
 @keyframes float { from {transform: translate(0,0);} to {transform: translate(30px, -30px);} }
@@ -77,32 +78,28 @@
 /* --- TARJETA PRINCIPAL --- */
 .debate-card {
     background: var(--card-bg);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(75, 30, 122, 0.1); /* Borde sutil morado */
-    border-radius: 25px;
-    padding: 40px;
+    border: 1px solid #EAEAEA;
+    border-radius: 20px;
+    padding: 40px 50px;
     width: 100%;
-    max-width: 800px;
-    min-height: 400px;
-    box-shadow: var(--shadow);
+    max-width: 850px;
+    min-height: 350px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    transition: transform 0.3s;
-    margin-top: 10px;
     z-index: 5;
 }
 
-/* Decoración superior tarjeta (referencia a la cinta amarilla/naranja) */
 .debate-card::before {
     content: '';
     position: absolute;
     top: 0;
-    left: 20%;
-    right: 20%;
+    left: 15%;
+    right: 15%;
     height: 6px;
     background: linear-gradient(90deg, var(--tf-yellow), var(--tf-orange));
     border-bottom-left-radius: 10px;
@@ -110,77 +107,112 @@
 }
 
 .card-label {
-    background: var(--tf-orange);
-    color: white;
-    padding: 5px 15px;
+    background: #FFF3E0;
+    color: var(--tf-orange);
+    padding: 6px 18px;
     border-radius: 20px;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(227, 82, 5, 0.3);
+    border: 1px solid rgba(227, 82, 5, 0.2);
 }
 
 .card-title {
     font-family: 'Sora', sans-serif;
-    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
     font-weight: 800;
-    line-height: 1.2;
-    margin: 0 0 20px 0;
-    color: var(--tf-purple); /* Color sólido oscuro */
+    line-height: 1.3;
+    margin: 0 0 15px 0;
+    color: var(--tf-purple);
 }
 
 .card-context {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     line-height: 1.6;
-    color: #555555; /* Gris oscuro para lectura */
-    margin-bottom: 30px;
-    max-width: 90%;
+    color: var(--tf-text-main);
+    margin-bottom: 25px;
+    max-width: 95%;
+    font-weight: 400;
 }
 
-/* --- SECCIÓN DESPLEGABLE (ARGUMENTOS) --- */
+/* --- NUEVO DISEÑO: PUNTOS CLAVE (ARGUMENTOS) --- */
 .arguments-panel {
     width: 100%;
-    background: rgba(253, 185, 19, 0.1); /* Fondo amarillo muy suave */
-    border-radius: 15px;
     overflow: hidden;
     height: 0; 
     opacity: 0;
-    transition: all 0.5s ease;
-    border: 1px solid rgba(253, 185, 19, 0.3);
+    margin-top: 10px;
 }
 
 .arguments-content {
-    padding: 25px;
+    padding: 10px 0 20px 0;
     text-align: left;
-    border-left: 5px solid var(--tf-purple); /* Borde lateral morado */
 }
 
-.arg-title { color: var(--tf-orange); font-weight: bold; margin-bottom: 10px; font-family: 'Sora', sans-serif; }
-.arg-list { margin: 0; padding-left: 20px; color: #444; }
-.arg-list li { margin-bottom: 8px; font-size: 0.95rem; }
-
-/* BOTÓN DE REVELAR */
-.reveal-btn {
-    background: white;
-    border: 2px solid var(--tf-purple);
-    color: var(--tf-purple);
-    padding: 12px 30px;
-    border-radius: 30px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 0.9rem;
-    transition: 0.3s;
+.arg-title { 
+    color: var(--tf-purple); 
+    font-weight: 800; 
+    margin-bottom: 15px; 
+    font-family: 'Sora', sans-serif; 
+    font-size: 1.2rem;
+    border-bottom: 2px solid rgba(75, 30, 122, 0.1);
+    padding-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 20px;
+}
+
+.arg-grid { 
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 15px;
+    margin: 0; 
+    padding: 0; 
+    list-style: none;
+}
+
+/* Diseño de tarjeta individual para cada punto */
+.arg-item { 
+    background: var(--tf-bg-solid);
+    border: 1px solid #E5E7EB;
+    border-left: 5px solid var(--tf-purple);
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 0.95rem; 
+    line-height: 1.5;
+    font-weight: 500;
+    color: var(--tf-text-main);
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+/* BOTÓN DE REVELAR MEJORADO */
+.reveal-btn {
+    background: var(--tf-orange);
+    border: 2px solid var(--tf-orange);
+    color: white;
+    padding: 14px 32px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    box-shadow: 0 4px 15px rgba(227, 82, 5, 0.2);
 }
 .reveal-btn:hover { 
-    background: var(--tf-purple); 
-    color: white;
-    box-shadow: 0 5px 15px rgba(75, 30, 122, 0.3); 
+    background: #c24503; 
+    border-color: #c24503;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(227, 82, 5, 0.3); 
 }
 
 /* --- NAVEGACIÓN (FLECHAS) --- */
@@ -196,73 +228,61 @@
 
 .nav-arrow {
     background: white;
-    border: 1px solid var(--tf-purple);
+    border: 2px solid #EAEAEA;
     width: 50px;
     height: 50px;
     border-radius: 50%;
     color: var(--tf-purple);
     font-size: 1.5rem;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
 }
-.nav-arrow:hover { 
-    background: var(--tf-purple); 
-    color: white; 
-    transform: scale(1.1); 
+.nav-arrow:hover:not(:disabled) { 
+    border-color: var(--tf-purple);
+    color: var(--tf-purple); 
+    transform: scale(1.05); 
 }
 .nav-arrow:disabled { 
-    opacity: 0.4; 
+    opacity: 0.3; 
     cursor: not-allowed; 
-    background: #eee; 
-    border-color: #ccc; 
-    color: #999;
-    pointer-events: none; 
+    background: #FAFAFA; 
 }
 
 .slide-indicator {
     font-family: 'Sora', sans-serif;
-    font-weight: bold;
+    font-weight: 600;
     letter-spacing: 2px;
-    font-size: 0.9rem;
-    color: var(--tf-purple);
+    font-size: 0.95rem;
+    color: var(--tf-text-muted);
 }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-    .header-logos {
-        flex-direction: row; /* Mantener fila en móviles, ajustar tamaño */
-        justify-content: space-between;
-        padding: 0 5px;
-    }
-    .header-logos img {
-        height: 80px; /* Logos más pequeños en móvil */
-    }
-    .debate-card { padding: 25px; min-height: 350px; }
-    .nav-controls { padding: 0 10px; }
-    
-    /* Ajuste para que los logos no se peguen si son anchos */
-    .header-logos { gap: 15px; }
+    .header-logos { padding: 0; }
+    .header-logos img { height: 80px; }
+    .debate-card { padding: 30px 20px; }
+    .nav-controls { padding: 0; }
+    .arg-grid { grid-template-columns: 1fr; }
 }
 </style>
 
 <div id="debate-slider-container">
     
-    <!-- SECCIÓN LOGOS (AGREGADA) -->
     <div class="header-logos">
-        <img src="../Styles/UNP I.svg" alt="Logo UNP" style="height:160px; width:auto;">
-        <img src="../Styles/logo.png" alt="Logo Comisión" style="height:160px; width:auto;">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP">
+        <img src="../Styles/logo.png" alt="Logo Institucional">
     </div>
 
-    <!-- Fondo -->
+    <!-- Fondo sutil -->
     <div class="geo-shape shape-1"></div>
     <div class="geo-shape shape-2"></div>
 
-    <!-- TARJETA CENTRAL -->
-    <div class="debate-card" id="main-card">
+    <!-- TARJETA CENTRAL (Con Aria-live para que el lector de pantalla anuncie cambios) -->
+    <div class="debate-card" id="main-card" aria-live="polite">
         <div class="card-label" id="slide-label">INTRODUCCIÓN</div>
         <h2 class="card-title" id="slide-title">Juego 1: El Debate Transfeminista</h2>
         <p class="card-context" id="slide-context">
@@ -270,26 +290,29 @@
             <strong>Dinámica:</strong> Discutan la pregunta en grupo. Luego, usen el botón para revelar los puntos clave desde una perspectiva transfeminista.
         </p>
         
-        <!-- Panel Oculto -->
-        <div class="arguments-panel" id="arg-panel">
+        <button class="reveal-btn" id="toggle-btn" onclick="toggleArguments()" style="display:none;" aria-expanded="false" aria-controls="arg-panel">
+            <span>👁️ Revelar Puntos Clave</span>
+        </button>
+
+        <!-- Panel de Puntos Clave (Rediseñado como Grid de Tarjetas) -->
+        <div class="arguments-panel" id="arg-panel" aria-hidden="true">
             <div class="arguments-content">
-                <div class="arg-title">💡 Puntos Clave para el Debate:</div>
-                <ul class="arg-list" id="arg-list">
+                <div class="arg-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/><circle cx="12" cy="12" r="4"/></svg>
+                    Perspectiva Transfeminista:
+                </div>
+                <ul class="arg-grid" id="arg-list">
                     <!-- JS rellena esto -->
                 </ul>
             </div>
         </div>
-
-        <button class="reveal-btn" id="toggle-btn" onclick="toggleArguments()" style="display:none;">
-            <span>👁️ Ver Perspectiva Transfeminista</span>
-        </button>
     </div>
 
     <!-- CONTROLES -->
     <div class="nav-controls">
-        <button class="nav-arrow" id="prev-btn" onclick="changeSlide(-1)">❮</button>
+        <button class="nav-arrow" id="prev-btn" onclick="changeSlide(-1)" aria-label="Anterior">❮</button>
         <div class="slide-indicator">1 / 5</div>
-        <button class="nav-arrow" id="next-btn" onclick="changeSlide(1)">❯</button>
+        <button class="nav-arrow" id="next-btn" onclick="changeSlide(1)" aria-label="Siguiente">❯</button>
     </div>
 </div>
 
@@ -299,7 +322,7 @@ const slides = [
     {
         label: "INICIO",
         title: "Juego 1: El Debate Transfeminista",
-        context: "Objetivo: Fomentar la reflexión crítica sobre el sistema sexo-género.<br><br>Preparen sus argumentos.",
+        context: "Objetivo: Fomentar la reflexión crítica sobre el sistema sexo-género.<br><br>Preparen sus argumentos en grupo.",
         hasArguments: false
     },
     {
@@ -311,30 +334,30 @@ const slides = [
             "Criticar el determinismo biológico: La genitalidad no define el género.",
             "Reconocer la identidad de género como un derecho humano fundamental.",
             "Analizar cómo la exclusión de mujeres trans reproduce violencias patriarcales.",
-            "La categoría 'mujer' es diversa (cis, trans, racializada, diversa) y no monolítica."
+            "La categoría 'mujer' es diversa (cis, trans, racializada) y no monolítica."
         ]
     },
     {
         label: "TEMA 2",
         title: "¿Inclusión sin violencias?",
-        context: "¿Cómo garantizamos espacios seguros para mujeres trans sin reproducir otras violencias o segregación?",
+        context: "¿Cómo garantizamos espacios seguros para mujeres trans sin reproducir otras violencias o segregación institucional?",
         hasArguments: true,
         points: [
-            "Cuestionar la idea de que las mujeres trans son un 'peligro' para las mujeres cis (discurso de odio).",
-            "Promover la integración en lugar de la segregación (espacios separados).",
-            "El enfoque diferencial no significa trato desigual, sino protección específica ante riesgos específicos.",
+            "Cuestionar la idea de que las personas trans son un 'peligro' (discurso de odio).",
+            "Promover la integración real en lugar de crear espacios separados (segregación).",
+            "El enfoque diferencial no significa trato desigual, sino protección ante riesgos específicos.",
             "Escuchar las voces de las personas trans en el diseño de los protocolos."
         ]
     },
     {
         label: "TEMA 3",
         title: "Protección Institucional",
-        context: "¿Qué acciones concretas puede tomar la UNP para proteger eficazmente a personas trans?",
+        context: "¿Qué acciones concretas puede tomar la entidad para proteger eficazmente a personas trans?",
         hasArguments: true,
         points: [
-            "Implementar evaluaciones de riesgo que entiendan el prejuicio y el odio como móviles de violencia.",
-            "Capacitación obligatoria para evitar la revictimización y el malgenerizar en la atención.",
-            "Reconocer el nombre identitario en todos los trámites, independientemente del documento legal.",
+            "Implementar evaluaciones de riesgo que entiendan el prejuicio como móvil de violencia.",
+            "Capacitación obligatoria para evitar malgenerizar en la atención.",
+            "Reconocer el nombre identitario en todos los trámites.",
             "Rutas de emergencia específicas para crímenes de odio."
         ]
     },
@@ -344,9 +367,9 @@ const slides = [
         context: "Hemos analizado cómo el sistema sexo-género influye en la institucionalidad. La reflexión profunda es el primer paso para una protección efectiva.",
         hasArguments: true,
         points: [
-            "El sistema binario rígido genera exclusión.",
-            "La institución debe adaptarse a la realidad de las personas, no al revés.",
-            "Garantizar derechos trans es garantizar derechos humanos."
+            "El sistema binario rígido genera exclusión automática.",
+            "La institución debe adaptarse a la realidad ciudadana, no al revés.",
+            "Garantizar los derechos de personas trans es garantizar Derechos Humanos."
         ]
     }
 ];
@@ -367,7 +390,8 @@ function updateUI() {
     const nextBtn = document.getElementById('next-btn');
 
     // Animación de Salida
-    gsap.to(card, {opacity: 0, y: -20, duration: 0.3, onComplete: () => {
+    gsap.to(card, {opacity: 0, y: -15, duration: 0.3, onComplete: () => {
+        
         // Actualizar Textos
         label.innerText = data.label;
         title.innerHTML = data.title;
@@ -377,11 +401,17 @@ function updateUI() {
         // Resetear Panel de Argumentos
         closeArguments();
         
-        // Configurar Botón de Revelar
+        // Configurar Puntos Clave
         if(data.hasArguments) {
             btn.style.display = 'flex';
             const list = document.getElementById('arg-list');
-            list.innerHTML = data.points.map(p => `<li>${p}</li>`).join('');
+            // Formatear cada punto como una tarjeta con un icono
+            list.innerHTML = data.points.map(p => `
+                <li class="arg-item">
+                    <span aria-hidden="true" style="font-size: 1.2rem;">💡</span>
+                    <span>${p}</span>
+                </li>
+            `).join('');
         } else {
             btn.style.display = 'none';
         }
@@ -391,7 +421,7 @@ function updateUI() {
         nextBtn.disabled = currentIndex === slides.length - 1;
 
         // Animación de Entrada
-        gsap.to(card, {opacity: 1, y: 0, duration: 0.5});
+        gsap.to(card, {opacity: 1, y: 0, duration: 0.4});
     }});
 }
 
@@ -400,31 +430,57 @@ function changeSlide(direction) {
     updateUI();
 }
 
-// Lógica de Acordeón para los Argumentos
+// Lógica para Abrir/Cerrar los argumentos con GSAP (Accesible)
 function toggleArguments() {
     const panel = document.getElementById('arg-panel');
+    const btn = document.getElementById('toggle-btn');
     const btnText = document.querySelector('#toggle-btn span');
     
-    if (panel.style.height && panel.style.height !== '0px') {
-        // Cerrar
-        gsap.to(panel, {height: 0, opacity: 0, duration: 0.5});
-        btnText.innerText = "👁️ Ver Perspectiva Transfeminista";
+    const isClosed = panel.style.height === '0px' || panel.style.height === '';
+
+    if (!isClosed) {
+        // Cerrar Panel
+        gsap.to(panel, {height: 0, opacity: 0, duration: 0.4});
+        btnText.innerText = "👁️ Revelar Puntos Clave";
+        btn.setAttribute('aria-expanded', 'false');
+        panel.setAttribute('aria-hidden', 'true');
     } else {
-        // Abrir
-        gsap.to(panel, {height: "auto", opacity: 1, duration: 0.5});
-        btnText.innerText = "❌ Ocultar Argumentos";
+        // Abrir Panel calculando su altura natural
+        gsap.set(panel, {height: "auto"}); 
+        const targetHeight = panel.offsetHeight;
+        
+        gsap.fromTo(panel, 
+            {height: 0, opacity: 0}, 
+            {height: targetHeight, opacity: 1, duration: 0.4, onComplete: () => panel.style.height = "auto"}
+        );
+        
+        // Animar las tarjetas en cascada
+        gsap.fromTo(".arg-item", 
+            {opacity: 0, y: 15}, 
+            {opacity: 1, y: 0, stagger: 0.1, duration: 0.4, delay: 0.1}
+        );
+
+        btnText.innerText = "❌ Ocultar Puntos Clave";
+        btn.setAttribute('aria-expanded', 'true');
+        panel.setAttribute('aria-hidden', 'false');
     }
 }
 
+// Resetear estado al cambiar de slide
 function closeArguments() {
     const panel = document.getElementById('arg-panel');
+    const btn = document.getElementById('toggle-btn');
     const btnText = document.querySelector('#toggle-btn span');
+    
     panel.style.height = '0px';
     panel.style.opacity = '0';
-    if(btnText) btnText.innerText = "👁️ Ver Perspectiva Transfeminista";
+    panel.setAttribute('aria-hidden', 'true');
+    
+    if(btn) btn.setAttribute('aria-expanded', 'false');
+    if(btnText) btnText.innerText = "👁️ Revelar Puntos Clave";
 }
 
-// Iniciar
+// Inicializar
 updateUI();
 
 </script>

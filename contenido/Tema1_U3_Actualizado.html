@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revisión Crítica del Sistema Sexo-Género</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           PALETA INSTITUCIONAL Y VARIABLES
+           ========================================= */
+        :root {
+            --primary: #480241;
+            --secondary: #7235A8;
+            --accent: #FBA511;
+            --alert: #CE4651;
+            --base: #FFFFFF;
+            
+            --bg-page: #F8F7FA;
+            --text-main: #2A2A2B;
+            --line-color: #D3C5E0;
+            
+            --shadow-soft: 0 4px 12px rgba(72, 2, 65, 0.08);
+            --shadow-hard: 0 8px 24px rgba(72, 2, 65, 0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.6;
+            font-size: 17px;
+            padding-bottom: 100px;
+        }
+
+        /* =========================================
+           SISTEMA DE RESALTADO DE CONCEPTOS CLAVE
+           ========================================= */
+        mark {
+            background-color: transparent;
+            font-weight: 700;
+            padding: 0.1rem 0.3rem;
+            border-radius: 4px;
+        }
+
+        /* Resaltado para Conceptos de Identidad/Expresión/Orientación */
+        .hl-identidad {
+            background-color: rgba(251, 165, 17, 0.2);
+            color: #935B00;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        /* Resaltado para Conceptos de Teoría/Normatividad */
+        .hl-teoria {
+            background-color: rgba(114, 53, 168, 0.15);
+            color: var(--secondary);
+            border-bottom: 2px solid var(--secondary);
+        }
+
+        /* Resaltado para Conceptos de Violencia/Estructura */
+        .hl-violencia {
+            background-color: rgba(206, 70, 81, 0.12);
+            color: var(--alert);
+            border-bottom: 2px solid var(--alert);
+        }
+
+        /* =========================================
+           CABECERA INSTITUCIONAL
+           ========================================= */
+        header {
+            background-color: var(--base);
+            border-bottom: 4px solid var(--primary);
+            padding: 1.2rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .logos { display: flex; gap: 2rem; align-items: center; }
+        .logo-img { max-height: 50px; }
+        .course-title {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.1rem;
+            border-right: 4px solid var(--accent);
+            padding-right: 1.5rem;
+        }
+
+        main { max-width: 1100px; margin: 0 auto; padding: 4rem 2rem; }
+
+        /* =========================================
+           DIAGRAMA 1: FLUJO DE DESCONSTRUCCIÓN
+           ========================================= */
+        .section-flowchart {
+            margin-bottom: 6rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .flow-title { color: var(--primary); font-size: 2.5rem; font-weight: 800; margin-bottom: 2rem; text-align: center; }
+        
+        .flow-root { background: var(--base); border-top: 6px solid var(--primary); padding: 2rem; border-radius: 8px; max-width: 800px; text-align: center; box-shadow: var(--shadow-soft); font-size: 1.15rem; }
+        
+        .flow-connector { width: 4px; height: 50px; background-color: var(--primary); position: relative; }
+        .flow-connector::after { content: '▼'; position: absolute; bottom: -12px; left: -6px; color: var(--primary); font-size: 1.2rem; }
+        
+        .flow-bridge { background: var(--secondary); color: var(--base); padding: 1.5rem 3rem; border-radius: 50px; font-weight: 600; text-align: center; max-width: 700px; box-shadow: var(--shadow-hard); z-index: 2; }
+        
+        .flow-branches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 3rem; position: relative; width: 100%; }
+        .flow-branches::before { content: ''; position: absolute; top: -3rem; left: 12.5%; right: 12.5%; height: 4px; background-color: var(--primary); }
+        
+        .branch-node { background: var(--base); border: 2px solid var(--primary); padding: 1.5rem; border-radius: 8px; text-align: center; font-weight: 500; position: relative; box-shadow: var(--shadow-soft); }
+        .branch-node::before { content: ''; position: absolute; top: -3rem; left: 50%; width: 4px; height: 3rem; background-color: var(--primary); transform: translateX(-50%); }
+
+        .flow-synthesis { margin-top: 4rem; background: rgba(114, 53, 168, 0.05); border-left: 6px solid var(--secondary); padding: 2rem; max-width: 800px; border-radius: 8px; font-size: 1.1rem; }
+
+        /* =========================================
+           DIAGRAMA 2: MAPA MENTAL RADIAL (Red de Tensiones)
+           ========================================= */
+        .section-mindmap { margin-bottom: 6rem; padding-top: 4rem; border-top: 2px dashed var(--line-color); }
+        .section-title { color: var(--secondary); font-size: 2rem; text-align: center; margin-bottom: 0.5rem; }
+        .section-subtitle { text-align: center; margin-bottom: 4rem; font-size: 1.15rem; font-weight: 600; }
+
+        .diagram-mindmap {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 3rem;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .mindmap-col { display: flex; flex-direction: column; gap: 1.5rem; }
+        
+        .mindmap-center {
+            background: var(--primary); color: var(--base);
+            padding: 2.5rem; border-radius: 50%;
+            text-align: center; font-weight: 800; font-size: 1.2rem;
+            box-shadow: var(--shadow-hard); z-index: 2;
+            width: 220px; height: 220px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .mindmap-node {
+            background: var(--base); border: 2px solid var(--secondary);
+            padding: 1.2rem; border-radius: 8px; position: relative;
+            font-weight: 500; box-shadow: var(--shadow-soft);
+        }
+
+        /* Líneas conectoras del mapa mental */
+        .mindmap-col.left .mindmap-node::after {
+            content: ''; position: absolute; right: -3rem; top: 50%; width: 3rem; height: 3px; background: var(--secondary); z-index: 1;
+        }
+        .mindmap-col.right .mindmap-node::before {
+            content: ''; position: absolute; left: -3rem; top: 50%; width: 3rem; height: 3px; background: var(--secondary); z-index: 1;
+        }
+
+        /* =========================================
+           DIAGRAMA 3: EMBUDO DE CONVERGENCIA INTERSECCIONAL
+           ========================================= */
+        .section-convergence { margin-bottom: 6rem; padding-top: 4rem; border-top: 2px dashed var(--line-color); }
+        
+        .diagram-converge {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .converge-left {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .converge-node {
+            background: var(--base); border-left: 5px solid var(--accent);
+            padding: 1.2rem; font-weight: 600; border-radius: 4px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        /* Corchete de convergencia (CSS Puro) */
+        .converge-bracket {
+            width: 50px;
+            border: 4px solid var(--primary);
+            border-left: none;
+            border-radius: 0 20px 20px 0;
+            position: relative;
+            margin: 1rem 0;
+        }
+
+        .converge-bracket::after {
+            content: '▶';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .converge-right {
+            flex: 1;
+            background: rgba(206, 70, 81, 0.05);
+            border: 3px solid var(--alert);
+            padding: 3rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: inset 0 0 30px rgba(206, 70, 81, 0.1);
+            max-width: 450px;
+        }
+
+        /* =========================================
+           DIAGRAMA 4: ÁRBOL DE FALLOS OPERATIVOS
+           ========================================= */
+        .section-tree { padding-top: 4rem; border-top: 2px dashed var(--line-color); }
+
+        .diagram-tree { display: flex; flex-direction: column; align-items: center; margin-top: 3rem; }
+
+        .tree-root { background: var(--alert); color: var(--base); padding: 1.5rem 3rem; border-radius: 8px; font-weight: 700; font-size: 1.15rem; text-align: center; box-shadow: var(--shadow-hard); z-index: 2; }
+        
+        .tree-trunk { width: 4px; height: 40px; background: var(--alert); }
+        
+        .tree-horizontal-bar { width: 85%; height: 4px; background: var(--alert); position: relative; }
+        
+        .tree-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; width: 100%; margin-top: 40px; position: relative; }
+        
+        .tree-node { position: relative; display: flex; flex-direction: column; align-items: center; }
+        
+        .tree-stem { position: absolute; top: -40px; width: 4px; height: 40px; background: var(--alert); }
+        
+        .tree-card { background: var(--base); border: 2px solid var(--alert); padding: 1.5rem; border-radius: 8px; text-align: center; font-weight: 500; width: 100%; box-shadow: var(--shadow-soft); }
+
+        /* =========================================
+           RESPONSIVIDAD
+           ========================================= */
+        @media (max-width: 1024px) {
+            .flow-branches { grid-template-columns: 1fr 1fr; gap: 3rem 1.5rem; }
+            .flow-branches::before { left: 25%; right: 25%; }
+            .branch-node:nth-child(3)::before, .branch-node:nth-child(4)::before { top: -3rem; height: 3rem; }
+            .diagram-mindmap { grid-template-columns: 1fr; gap: 4rem; justify-items: center; }
+            .mindmap-col.left .mindmap-node::after, .mindmap-col.right .mindmap-node::before { display: none; }
+            .mindmap-col { width: 100%; align-items: center; }
+            .mindmap-node { width: 100%; max-width: 400px; text-align: center; }
+            .diagram-converge { flex-direction: column; align-items: center; }
+            .converge-bracket { width: 100%; height: 40px; border: 4px solid var(--primary); border-top: none; border-radius: 0 0 20px 20px; margin: 0; }
+            .converge-bracket::after { right: 50%; top: auto; bottom: -20px; transform: translateX(50%); }
+            .tree-grid { grid-template-columns: repeat(2, 1fr); }
+            .tree-node:nth-child(3) .tree-stem, .tree-node:nth-child(4) .tree-stem { display: none; } /* Simplificación en móvil */
+        }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 1rem; text-align: center; }
+            .course-title { border-right: none; border-top: 3px solid var(--accent); padding-right: 0; padding-top: 0.5rem; }
+            .flow-branches { grid-template-columns: 1fr; padding-left: 1.5rem; }
+            .flow-branches::before { display: none; }
+            .branch-node::before { left: -1rem; top: 50%; width: 1rem; height: 4px; transform: translateY(-50%); }
+            .tree-horizontal-bar { display: none; }
+            .tree-grid { grid-template-columns: 1fr; margin-top: 0; gap: 1rem; }
+            .tree-stem { display: none; }
+            main { padding: 2rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logos">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP" class="logo-img">
+            <img src="../Styles/logo.png" alt="Logo Institucional" class="logo-img">
+        </div>
+        <div class="course-title">Prevención de Violencias de Género</div>
+    </header>
+
+    <main>
+        
+        <!-- DIAGRAMA 1: FLUJO LÓGICO DE DESCONSTRUCCIÓN -->
+        <section class="section-flowchart">
+            <h1 class="flow-title">Revisión crítica del sistema sexo-género</h1>
+            <p style="color: var(--secondary); font-weight: 700; margin-bottom: 2rem;">Desarrollo del contenido</p>
+            
+            <div class="flow-root">
+                El sistema sexo-género corresponde al conjunto de normas sociales, culturales e institucionales que históricamente han asociado características biológicas con roles, comportamientos y expectativas sociales diferenciadas entre hombres y mujeres.
+            </div>
+            
+            <div class="flow-connector"></div>
+            
+            <div class="flow-bridge">
+                Diversas corrientes feministas y transfeministas han cuestionado este modelo binario, señalando que:
+            </div>
+            
+            <div class="flow-connector" style="height: 40px;"></div>
+            
+            <div class="flow-branches">
+                <div class="branch-node">El género es una construcción social e histórica.</div>
+                <div class="branch-node">Las <mark class="hl-identidad">identidades de género</mark> son diversas y no necesariamente binarias.</div>
+                <div class="branch-node">Los roles de género producen <mark class="hl-violencia">desigualdades estructurales</mark>.</div>
+                <div class="branch-node">Las instituciones pueden reproducir exclusión mediante normas aparentemente neutrales.</div>
+            </div>
+
+            <div class="flow-synthesis">
+                Las perspectivas <mark class="hl-teoria">transfeministas</mark> incorporan además críticas sobre cómo las estructuras patriarcales y <mark class="hl-teoria">cisnormativas</mark> afectan particularmente a <mark class="hl-identidad">personas trans y no binarias</mark>.
+            </div>
+        </section>
+
+        <!-- DIAGRAMA 2: MAPA MENTAL RADIAL (Red de tensiones) -->
+        <section class="section-mindmap">
+            <h2 class="section-title">Tensiones contemporáneas</h2>
+            <p class="section-subtitle">Actualmente existen debates relacionados con:</p>
+            
+            <div class="diagram-mindmap">
+                <!-- Nodos Izquierdos -->
+                <div class="mindmap-col left">
+                    <div class="mindmap-node">Reconocimiento legal de <mark class="hl-identidad">identidades no binarias</mark>.</div>
+                    <div class="mindmap-node">Acceso igualitario a derechos.</div>
+                    <div class="mindmap-node">Inclusión en sistemas administrativos.</div>
+                </div>
+                
+                <!-- Nodo Central -->
+                <div class="mindmap-center">
+                    Debates y<br>Tensiones<br>Contemporáneas
+                </div>
+                
+                <!-- Nodos Derechos -->
+                <div class="mindmap-col right">
+                    <div class="mindmap-node">Violencias digitales y discursivas.</div>
+                    <div class="mindmap-node">Representación institucional.</div>
+                    <div class="mindmap-node">Garantías de seguridad para <mark class="hl-identidad">personas LGBTIQ+</mark>.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DIAGRAMA 3: EMBUDO DE CONVERGENCIA INTERSECCIONAL -->
+        <section class="section-convergence">
+            <h2 class="section-title" style="color: var(--primary);">Racialización de la violencia</h2>
+            <p class="section-subtitle" style="font-weight: 400;">La violencia no afecta de manera homogénea a todas las personas LGBTIQ+.<br>
+            <strong>Organismos internacionales y organizaciones sociales han documentado mayores niveles de riesgo para:</strong></p>
+            
+            <div class="diagram-converge">
+                <!-- Origen: Poblaciones (Múltiples entradas) -->
+                <div class="converge-left">
+                    <div class="converge-node">Personas trans afrodescendientes.</div>
+                    <div class="converge-node">Personas indígenas LGBTIQ+.</div>
+                    <div class="converge-node">Personas migrantes.</div>
+                    <div class="converge-node">Liderazgos sociales y comunitarios diversos.</div>
+                </div>
+                
+                <!-- Estructura visual de canalización (Corchete) -->
+                <div class="converge-bracket"></div>
+                
+                <!-- Resultado: Causa estructural convergente -->
+                <div class="converge-right">
+                    Estas violencias se relacionan con <mark class="hl-violencia">racismo estructural, pobreza, exclusión territorial y violencia armada</mark>.
+                </div>
+            </div>
+        </section>
+
+        <!-- DIAGRAMA 4: ÁRBOL DE FALLOS OPERATIVOS (Prejuicios) -->
+        <section class="section-tree">
+            <h2 class="section-title" style="color: var(--alert);">Prejuicios institucionales</h2>
+            
+            <div class="diagram-tree">
+                <!-- Tronco del árbol -->
+                <div class="tree-root">
+                    En contextos de seguridad y protección, pueden presentarse:
+                </div>
+                <div class="tree-trunk"></div>
+                
+                <!-- Barra horizontal de distribución -->
+                <div class="tree-horizontal-bar"></div>
+                
+                <!-- Ramas y Nodos -->
+                <div class="tree-grid">
+                    <div class="tree-node">
+                        <div class="tree-stem"></div>
+                        <div class="tree-card">Uso incorrecto del <mark class="hl-identidad">nombre identitario</mark>.</div>
+                    </div>
+                    <div class="tree-node">
+                        <div class="tree-stem"></div>
+                        <div class="tree-card">Trato discriminatorio.</div>
+                    </div>
+                    <div class="tree-node">
+                        <div class="tree-stem"></div>
+                        <div class="tree-card">Desconocimiento de <mark class="hl-identidad">identidad de género</mark>.</div>
+                    </div>
+                    <div class="tree-node">
+                        <div class="tree-stem"></div>
+                        <div class="tree-card">Negación de servicios.</div>
+                    </div>
+                    <div class="tree-node">
+                        <div class="tree-stem"></div>
+                        <div class="tree-card">Revictimización.</div>
+                    </div>
+                    <div class="tree-node">
+                        <div class="tree-stem"></div>
+                        <div class="tree-card">Estigmatización de liderazgos sociales diversos.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+</body>
+</html>

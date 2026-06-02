@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prevención de Violencias de Género - Unidad 1</title>
+    <!-- Tipografía profesional y de alta legibilidad -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           SISTEMA DE DISEÑO Y VARIABLES
+           ========================================= */
+        :root {
+            --primary: #480241;
+            --secondary: #7235A8;
+            --accent: #FBA511;
+            --alert: #CE4651;
+            --base: #FFFFFF;
+            
+            /* Variantes tonales para jerarquía y accesibilidad */
+            --bg-page: #F4F1F6;
+            --border-light: #D8CFE0;
+            --text-main: #2A2A2A;
+            --text-muted: #5B5B5B;
+            --success: #2E7D32; /* Para feedback pedagógico */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.6;
+            font-size: 16px;
+            padding-bottom: 100px;
+        }
+
+        /* Accesibilidad: Foco evidente */
+        *:focus-visible {
+            outline: 4px solid var(--accent);
+            outline-offset: 4px;
+        }
+
+        /* =========================================
+           ESTILOS DE RESALTADO (HIGHLIGHTS)
+           ========================================= */
+        mark, .highlight {
+            background-color: rgba(251, 165, 17, 0.2); /* Naranja con transparencia */
+            color: var(--primary); /* Morado oscuro para contraste */
+            font-weight: 600;
+            padding: 0.1em 0.3em;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        /* =========================================
+           HEADER INSTITUCIONAL
+           ========================================= */
+        header {
+            background-color: var(--base);
+            border-bottom: 5px solid var(--primary);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(72, 2, 65, 0.08);
+        }
+
+        .logo-container {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .logo-img {
+            max-height: 90px;
+            width: auto;
+        }
+
+        .course-title {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.15rem;
+            text-align: right;
+            border-right: 4px solid var(--accent);
+            padding-right: 1.5rem;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pedagogical-instruction {
+            background-color: var(--secondary);
+            color: var(--base);
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            border-left: 6px solid var(--accent);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .meta-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        /* =========================================
+           ACTIVIDAD 1: CONSTRUCCIÓN LÓGICA (Flujo)
+           ========================================= */
+        .activity-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        /* Zona de Construcción (Izquierda) */
+        .timeline-builder {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: relative;
+        }
+
+        .timeline-builder::before {
+            content: '';
+            position: absolute;
+            left: 24px;
+            top: 20px;
+            bottom: 20px;
+            width: 4px;
+            background-color: var(--border-light);
+            z-index: 0;
+        }
+
+        .timeline-slot {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 1.5rem;
+            min-height: 120px;
+        }
+
+        .slot-indicator {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background-color: var(--base);
+            border: 4px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .slot-content {
+            background-color: rgba(255,255,255,0.5);
+            border: 2px dashed var(--border-light);
+            border-radius: 8px;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        /* Estado lleno */
+        .timeline-slot.filled .slot-indicator {
+            border-color: var(--secondary);
+            background-color: var(--secondary);
+            color: var(--base);
+        }
+        
+        .timeline-slot.filled .slot-content {
+            background-color: var(--base);
+            border: 2px solid var(--secondary);
+            color: var(--text-main);
+            box-shadow: 0 4px 12px rgba(114, 53, 168, 0.15);
+            font-weight: 400;
+            border-left: 6px solid var(--primary);
+        }
+
+        /* Zona de Opciones (Derecha) */
+        .options-bank {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-card {
+            background-color: var(--base);
+            border: 2px solid var(--border-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--text-main);
+            line-height: 1.6;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .option-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(251, 165, 17, 0.15);
+        }
+
+        .option-card:active {
+            transform: scale(0.98);
+        }
+
+        .option-card.hidden {
+            display: none;
+        }
+
+        /* Animación de error */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        .shake-error {
+            animation: shake 0.4s ease;
+            border-color: var(--alert) !important;
+            background-color: rgba(206, 70, 81, 0.05) !important;
+        }
+
+        /* Mensaje de éxito */
+        .success-message {
+            display: none;
+            background-color: #E8F5E9;
+            color: var(--success);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 6px solid var(--success);
+            margin-top: 1rem;
+            font-weight: 500;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* =========================================
+           ACTIVIDAD 2: MAPA DE OBJETIVOS
+           ========================================= */
+        .objectives-container {
+            background-color: var(--base);
+            border-radius: 12px;
+            padding: 3rem;
+            box-shadow: 0 8px 24px rgba(72, 2, 65, 0.06);
+            border-top: 6px solid var(--primary);
+            margin-bottom: 2rem;
+        }
+
+        .central-node {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .obj-node {
+            background-color: var(--bg-page);
+            border: 2px solid var(--border-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .obj-node::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background-color: var(--secondary);
+            border-radius: 8px 8px 0 0;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            transform-origin: left;
+        }
+
+        .obj-node:hover {
+            border-color: var(--secondary);
+            box-shadow: 0 6px 16px rgba(114, 53, 168, 0.1);
+        }
+
+        .obj-node:hover::before {
+            transform: scaleX(1);
+        }
+
+        .obj-verb {
+            font-weight: 700;
+            color: var(--secondary);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+            display: inline-block;
+            background-color: rgba(251, 165, 17, 0.2);
+            padding: 4px 10px;
+            border-radius: 4px;
+            width: fit-content;
+        }
+
+        .obj-text {
+            color: var(--text-main);
+            font-size: 1.05rem;
+        }
+
+        .footer-note {
+            background-color: var(--bg-page);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--text-muted);
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 2rem;
+        }
+
+        /* =========================================
+           BOTÓN FLOTANTE INTELIGENTE
+           ========================================= */
+        .sticky-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--alert);
+            color: var(--base);
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(206, 70, 81, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sticky-btn:hover {
+            transform: translateY(-3px);
+            background-color: #A3333D;
+        }
+
+        .sticky-btn.end-state {
+            background-color: var(--primary);
+            cursor: default;
+            transform: none;
+            box-shadow: 0 4px 10px rgba(72, 2, 65, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* =========================================
+           RESPONSIVE DESIGN
+           ========================================= */
+        @media (max-width: 900px) {
+            .activity-grid {
+                grid-template-columns: 1fr;
+            }
+            .objectives-grid {
+                grid-template-columns: 1fr;
+            }
+            header {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            .course-title {
+                border-right: none;
+                border-top: 3px solid var(--accent);
+                padding-right: 0;
+                padding-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP" class="logo-img">
+            <img src="../Styles/logo.png" alt="Logo Institucional" class="logo-img">
+        </div>
+        <div class="course-title">
+            Curso: Prevención de Violencias de Género
+        </div>
+    </header>
+
+    <main>
+        
+        <!-- SECCIÓN 1: PROCESAMIENTO ACTIVO DEL CONTEXTO -->
+        <section aria-labelledby="title-presentacion">
+            <div class="section-header">
+                <h1 id="title-presentacion" class="section-title">Presentación de la Unidad</h1>
+            </div>
+
+            <!-- Recurso Pedagógico: Constructor Lógico -->
+            <div class="pedagogical-instruction" role="alert">
+                <span aria-hidden="true" style="font-size: 1.5rem;">🧩</span>
+                <p><strong>Actividad de Análisis:</strong> Para comprender el origen de este módulo, lea los planteamientos y seleccione el orden lógico (del 1 al 4) para construir el flujo del contexto.</p>
+            </div>
+
+            <div class="activity-grid">
+                <!-- Izquierda: Flujo a construir -->
+                <div class="timeline-builder" aria-live="polite" id="timeline-container">
+                    
+                    <div class="timeline-slot" id="slot-0">
+                        <div class="slot-indicator">1</div>
+                        <div class="slot-content">Identifique el problema histórico...</div>
+                    </div>
+                    
+                    <div class="timeline-slot" id="slot-1">
+                        <div class="slot-indicator">2</div>
+                        <div class="slot-content">Identifique la respuesta social...</div>
+                    </div>
+                    
+                    <div class="timeline-slot" id="slot-2">
+                        <div class="slot-indicator">3</div>
+                        <div class="slot-content">Identifique el avance jurídico...</div>
+                    </div>
+                    
+                    <div class="timeline-slot" id="slot-3">
+                        <div class="slot-indicator">4</div>
+                        <div class="slot-content">Identifique el propósito de la unidad...</div>
+                    </div>
+
+                    <div class="success-message" id="success-msg">
+                        ✔ <strong>¡Secuencia lógica completada!</strong> Ha identificado correctamente cómo el contexto histórico y la movilización social derivan en nuestra responsabilidad institucional.
+                    </div>
+                </div>
+
+                <!-- Derecha: Opciones (Párrafos literales con Resaltados) -->
+                <div class="options-bank" id="options-container">
+                    <button class="option-card" data-correct-slot="2" onclick="checkAnswer(this)">
+                        En Colombia, la <mark>Corte Constitucional</mark> ha consolidado una <mark>línea jurisprudencial</mark> que reconoce derechos fundamentales relacionados con <mark>identidad de género, libre desarrollo de la personalidad, dignidad humana</mark> y acceso igualitario a servicios y protección institucional.
+                    </button>
+
+                    <button class="option-card" data-correct-slot="0" onclick="checkAnswer(this)">
+                        Las identidades de género y las orientaciones sexuales diversas han sido históricamente objeto de <mark>discriminación, exclusión y violencia</mark> en distintos ámbitos sociales e institucionales. Durante décadas, muchas instituciones públicas reprodujeron prácticas basadas en <mark>estereotipos binarios</mark>, prejuicios culturales y modelos rígidos del sistema sexo-género, generando barreras de acceso a derechos y afectaciones en la vida de personas <mark>trans, no binarias y de sectores LGBTIQ+</mark>.
+                    </button>
+
+                    <button class="option-card" data-correct-slot="3" onclick="checkAnswer(this)">
+                        Esta unidad busca <mark>fortalecer capacidades institucionales</mark> para reconocer identidades diversas, <mark>prevenir violencias específicas</mark> y aplicar <mark>enfoques diferenciales</mark> en contextos de seguridad y protección, promoviendo prácticas administrativas inclusivas y <mark>libres de discriminación</mark>.
+                    </button>
+
+                    <button class="option-card" data-correct-slot="1" onclick="checkAnswer(this)">
+                        En respuesta a estas desigualdades, los <mark>movimientos transfeministas y feministas decoloniales</mark> junto a organizaciones de derechos humanos han impulsado <mark>transformaciones jurídicas, sociales e institucionales</mark> orientadas al reconocimiento de la diversidad y a la garantía del <mark>principio de igualdad y no discriminación</mark>.
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: MAPA CONCEPTUAL DE OBJETIVOS -->
+        <section aria-labelledby="title-objetivos">
+            <h2 id="title-objetivos" class="section-title">Objetivos de Aprendizaje</h2>
+            
+            <div class="pedagogical-instruction" style="background-color: var(--primary);">
+                <span aria-hidden="true" style="font-size: 1.5rem;">🧭</span>
+                <p><strong>Mapa de Capacidades:</strong> Observe la estructura de los objetivos. Cada competencia integra una acción y un enfoque de aplicación institucional.</p>
+            </div>
+
+            <div class="objectives-container">
+                <!-- Nodo Central Literal -->
+                <div class="central-node">
+                    Al finalizar esta unidad, la persona participante estará en capacidad de:
+                </div>
+
+                <!-- Red de Objetivos Literales con resaltados -->
+                <div class="objectives-grid">
+                    
+                    <!-- Objetivo 1 -->
+                    <div class="obj-node" tabindex="0">
+                        <span class="obj-verb" aria-hidden="true">Dimensión Crítica</span>
+                        <p class="obj-text">Analizar críticamente el <mark>sistema sexo-género</mark> y sus tensiones contemporáneas desde <mark>perspectivas transfeministas</mark>.</p>
+                    </div>
+
+                    <!-- Objetivo 2 -->
+                    <div class="obj-node" tabindex="0">
+                        <span class="obj-verb" aria-hidden="true">Dimensión Jurídica</span>
+                        <p class="obj-text">Reconocer el <mark>marco jurídico y social</mark> que garantiza derechos a <mark>identidades no binarias y trans</mark>, incluyendo jurisprudencia relevante.</p>
+                    </div>
+
+                    <!-- Objetivo 3 -->
+                    <div class="obj-node" tabindex="0">
+                        <span class="obj-verb" aria-hidden="true">Dimensión Diagnóstica</span>
+                        <p class="obj-text">Identificar las <mark>violencias específicas</mark> hacia personas con orientaciones e identidades diversas y proponer <mark>estrategias de prevención</mark>.</p>
+                    </div>
+
+                    <!-- Objetivo 4 -->
+                    <div class="obj-node" tabindex="0">
+                        <span class="obj-verb" aria-hidden="true">Dimensión Práctica</span>
+                        <p class="obj-text">Aplicar el <mark>enfoque diferencial</mark> y <mark>prácticas comunicativas inclusivas</mark> en la atención institucional y el lenguaje administrativo.</p>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Botón Flotante de Accesibilidad -->
+    <button class="sticky-btn" id="sticky-btn" onclick="scrollPage()" aria-label="Avanzar lectura">
+        <span>⬇</span> Continuar exploración
+    </button>
+
+    <script>
+        /* =========================================
+           LÓGICA PEDAGÓGICA (PROCESAMIENTO ACTIVO)
+           ========================================= */
+
+        let currentExpectedStep = 0;
+
+        function checkAnswer(buttonElement) {
+            const selectedSlotId = parseInt(buttonElement.getAttribute('data-correct-slot'));
+
+            // Verifica si el usuario seleccionó el párrafo lógicamente correcto para la etapa actual
+            if (selectedSlotId === currentExpectedStep) {
+                // Respuesta Correcta: Mover texto al diagrama
+                const targetSlot = document.getElementById(`slot-${currentExpectedStep}`);
+                const slotContent = targetSlot.querySelector('.slot-content');
+                
+                // Transición visual
+                targetSlot.classList.add('filled');
+                slotContent.innerHTML = buttonElement.innerHTML;
+                
+                // Ocultar opción usada
+                buttonElement.classList.add('hidden');
+                
+                // Avanzar flujo
+                currentExpectedStep++;
+
+                // Verificar si terminó el flujo
+                if (currentExpectedStep === 4) {
+                    document.getElementById('success-msg').style.display = 'block';
+                    document.getElementById('options-container').style.display = 'none';
+                }
+
+            } else {
+                // Respuesta Incorrecta: Feedback pedagógico inmediato
+                buttonElement.classList.add('shake-error');
+                
+                // Quitar clase después de la animación para permitir reintento
+                setTimeout(() => {
+                    buttonElement.classList.remove('shake-error');
+                }, 400);
+            }
+        }
+
+        /* =========================================
+           BOTÓN FLOTANTE INTELIGENTE
+           ========================================= */
+        const stickyBtn = document.getElementById('sticky-btn');
+        
+        function scrollPage() {
+            if (!stickyBtn.classList.contains('end-state')) {
+                window.scrollBy({ top: window.innerHeight * 0.7, behavior: 'smooth' });
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            // Calcular posición para saber si llegó al fondo
+            const scrollPos = window.scrollY + window.innerHeight;
+            const bottomThreshold = document.documentElement.scrollHeight - 60;
+
+            if (scrollPos >= bottomThreshold) {
+                stickyBtn.innerHTML = '✔ Fin de la unidad';
+                stickyBtn.classList.add('end-state');
+                stickyBtn.setAttribute('aria-label', 'Ha llegado al final del contenido');
+            } else {
+                stickyBtn.innerHTML = '<span>⬇</span> Continuar exploración';
+                stickyBtn.classList.remove('end-state');
+                stickyBtn.setAttribute('aria-label', 'Avanzar lectura');
+            }
+        });
+    </script>
+</body>
+</html>

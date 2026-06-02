@@ -3,7 +3,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-/* --- 1. ESTÉTICA "AURORA FLUIDA" (CLARA - 25N) --- */
+/* --- 1. ESTÉTICA "AURORA FLUIDA" --- */
 :root {
     /* Fondos */
     --fluid-bg: #F4F6F9;                 /* Fondo fluido claro */
@@ -40,25 +40,25 @@
     border: 1px solid #e0e0e0;
 }
 
-/* Fondo Aurora Animado (Suavizado para fondo claro) */
+/* Fondo Aurora Animado */
 .aurora-blob {
     position: absolute;
     filter: blur(80px);
-    opacity: 0.25; /* Menos opacidad para no saturar */
+    opacity: 0.25; 
     border-radius: 50%;
     animation: floatAurora 12s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 0;
 }
-.blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--accent-cyan); } /* Morado */
-.blob-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: var(--accent-purple); animation-delay: -5s; } /* Naranja */
-.blob-3 { top: 40%; left: 40%; width: 30vw; height: 30vw; background: var(--accent-pink); animation-duration: 15s; } /* Rosa */
+.blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--accent-cyan); } 
+.blob-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: var(--accent-purple); animation-delay: -5s; } 
+.blob-3 { top: 40%; left: 40%; width: 30vw; height: 30vw; background: var(--accent-pink); animation-duration: 15s; } 
 
 @keyframes floatAurora {
     0% { transform: translate(0, 0) scale(1); }
     100% { transform: translate(40px, -40px) scale(1.1); }
 }
 
-/* Grid de Ruido (Sutil) */
+/* Grid de Ruido */
 .noise-overlay {
     position: absolute; top:0; left:0; width:100%; height:100%;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
@@ -75,7 +75,6 @@
     display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
 }
 
-/* Logos Container */
 .logos-container {
     display: flex; align-items: center; gap: 15px; margin-right: auto;
 }
@@ -84,71 +83,31 @@
 }
 
 .title-group {
-    display: flex; flex-direction: column;
+    display: flex; flex-direction: column; margin-left: auto;
 }
 
 .prism-title {
     font-family: 'Space Grotesk', sans-serif;
     font-size: clamp(1.2rem, 3vw, 1.6rem);
-    color: var(--accent-cyan); /* Morado */
+    color: var(--accent-cyan); 
     font-weight: 700;
     margin: 0;
-}
-
-.prism-nav { display: flex; gap: 10px; margin-left: auto; }
-.nav-pill {
-    padding: 8px 18px; border-radius: 20px;
-    background: #fff; border: 1px solid #ddd;
-    font-size: 0.9rem; cursor: pointer; transition: 0.3s;
-    color: var(--text-muted); font-weight: 500;
-}
-.nav-pill:hover { background: #f9f9f9; transform: translateY(-2px); }
-.nav-pill.active { 
-    background: var(--accent-cyan); color: white; border-color: var(--accent-cyan); 
-    box-shadow: 0 4px 10px rgba(72, 2, 65, 0.2);
 }
 
 /* --- CONTENIDO --- */
 .prism-content {
     flex: 1; position: relative; z-index: 5;
-    padding: 40px; display: flex; flex-direction: column; align-items: center;
+    padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center;
     overflow-y: auto;
 }
 
-/* SECCIÓN 1: CONCEPTOS (Tarjetas) */
-.concept-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px; width: 100%; max-width: 1100px;
-    display: none; 
-}
-.holo-card {
-    background: #FFFFFF; border: 1px solid #eee;
-    border-left: 4px solid var(--accent-purple); /* Borde Naranja */
-    border-radius: 12px; padding: 25px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-    transition: 0.3s; position: relative; overflow: hidden;
-}
-.holo-card:hover { 
-    transform: translateY(-5px); 
-    border-color: var(--accent-cyan); /* Cambia a Morado */
-    box-shadow: 0 10px 30px rgba(72, 2, 65, 0.1); 
-}
-.holo-card h3 { 
-    color: var(--accent-cyan); margin-top:0; margin-bottom: 10px;
-    font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem;
-}
-.holo-card p {
-    font-size: 0.95rem; line-height: 1.6; color: var(--text-muted);
-}
-
-/* SECCIÓN 2: SIMULADOR (CHAT) */
+/* --- SIMULADOR (CHAT) --- */
 .sim-container {
     width: 100%; max-width: 700px;
     background: #FFFFFF; border: 1px solid #ddd;
     border-radius: 16px; overflow: hidden;
     display: flex; flex-direction: column;
     height: 550px; 
-    display: none; 
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
@@ -168,7 +127,7 @@
     border-left: 4px solid var(--accent-cyan); color: var(--text-main);
 }
 .user-choice {
-    background: #FFF3E0; /* Naranja muy claro */
+    background: #FFF3E0; 
     border-bottom-right-radius: 2px; align-self: flex-end;
     border-right: 4px solid var(--accent-purple); text-align: right;
     color: #444;
@@ -185,34 +144,23 @@
     transition: 0.2s; text-align: left; font-size: 0.95rem; font-weight: 500;
 }
 .option-btn:hover { 
-    background: #F3E5F5; /* Morado claro */
+    background: #F3E5F5; 
     border-color: var(--accent-cyan); color: var(--accent-cyan); 
 }
-
-/* SECCIÓN 3: OBJETIVOS (INFO) */
-.info-section {
-    width: 100%; max-width: 800px; display: none;
-    background: #FFFFFF; padding: 40px; border-radius: 16px; 
-    border: 1px solid #eee; border-top: 5px solid var(--accent-yellow);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-}
-.info-section h3 { margin-top: 0; font-family: 'Space Grotesk', sans-serif; }
-.info-section li { margin-bottom: 10px; color: var(--text-muted); }
 
 /* ANIMACIONES */
 @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
-    .prism-header { flex-direction: column; align-items: flex-start; }
-    .logos-container { width: 100%; justify-content: space-between; margin-bottom: 10px; }
-    .prism-nav { width: 100%; justify-content: center; margin-left: 0; }
+    .prism-header { flex-direction: column; align-items: center; text-align: center; }
+    .logos-container { width: 100%; justify-content: center; margin-bottom: 10px; margin-right: 0; }
+    .title-group { margin-left: 0; }
 }
 @media (max-width: 600px) {
     .client-logo { height: 80px; }
     .prism-content { padding: 20px; }
 }
-
 </style>
 
 <div id="prism-container">
@@ -228,52 +176,12 @@
             <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo" style="height:100px; width:auto;">
         </div>
         <div class="title-group">
-            <h2 class="prism-title">Unidad 3: Identidades Diversas</h2>
-        </div>
-        <div class="prism-nav">
-            <div class="nav-pill" onclick="showSection('info', this)">🎯 Objetivos</div>
-            <div class="nav-pill active" onclick="showSection('concepts', this)">🧠 Conceptos</div>
-            <div class="nav-pill" onclick="showSection('sim', this)">💬 Simulador</div>
+            <h2 class="prism-title">Simulador: Identidades Diversas</h2>
         </div>
     </div>
 
     <div class="prism-content">
-        
-        <!-- SECCIÓN 1: OBJETIVOS & JUSTIFICACIÓN -->
-        <div id="sec-info" class="info-section">
-            <h3 style="color:var(--accent-cyan)">OBJETIVOS DE APRENDIZAJE</h3>
-            <ul style="line-height:1.6; padding-left:20px;">
-                <li>Analizar críticamente el sistema sexo-género y tensiones transfeministas.</li>
-                <li>Reconocer el marco jurídico para identidades no binarias y trans.</li>
-                <li>Identificar violencias específicas y proponer estrategias.</li>
-                <li>Aplicar enfoque diferencial y comunicación inclusiva.</li>
-            </ul>
-            <div style="margin-top:25px; padding:20px; background:#FFF8E1; border-left:4px solid var(--accent-purple); border-radius: 0 8px 8px 0; color: #444;">
-                <strong>JUSTIFICACIÓN:</strong> Esta unidad es clave para comprender la diversidad y los retos institucionales, fortaleciendo la capacidad para garantizar la no discriminación.
-            </div>
-        </div>
-
-        <!-- SECCIÓN 2: CONCEPTOS CLAVE (TARJETAS) -->
-        <div id="sec-concepts" class="concept-grid" style="display:grid;">
-            <div class="holo-card">
-                <h3>Sistema Sexo-Género</h3>
-                <p>Construcción social que asigna roles binarios. Las perspectivas transfeministas cuestionan esta rigidez, proponiendo un espectro fluido.</p>
-            </div>
-            <div class="holo-card">
-                <h3>Marco Jurídico</h3>
-                <p>Jurisprudencia que protege el libre desarrollo de la personalidad. Incluye el reconocimiento de identidades Trans y No Binarias en documentos oficiales.</p>
-            </div>
-            <div class="holo-card">
-                <h3>Enfoque Diferencial</h3>
-                <p>Reconoce que las violencias afectan de forma distinta según la orientación sexual e identidad de género. Exige respuestas institucionales adaptadas.</p>
-            </div>
-            <div class="holo-card">
-                <h3>Lenguaje Inclusivo</h3>
-                <p>Prácticas comunicativas que evitan el sexismo y la asunción de la cisnormatividad en la atención al ciudadano.</p>
-            </div>
-        </div>
-
-        <!-- SECCIÓN 3: SIMULADOR (CHAT) -->
+        <!-- SECCIÓN ÚNICA: SIMULADOR (CHAT) -->
         <div id="sec-sim" class="sim-container">
             <div class="chat-window" id="chat-feed">
                 <div class="chat-bubble bot">
@@ -288,32 +196,10 @@
                 <button class="option-btn" onclick="playTurn(2)">B. "Buenos días, ¿cómo le gustaría ser llamada/o?" (Preguntar pronombre)</button>
             </div>
         </div>
-
     </div>
 </div>
 
 <script>
-// --- LÓGICA DE NAVEGACIÓN ---
-function showSection(id, btn) {
-    // Ocultar todo
-    document.getElementById('sec-info').style.display = 'none';
-    document.getElementById('sec-concepts').style.display = 'none';
-    document.getElementById('sec-sim').style.display = 'none';
-    
-    // Quitar active
-    document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
-
-    // Mostrar selección (con animación GSAP)
-    const target = document.getElementById('sec-' + id);
-    if(id === 'concepts') target.style.display = 'grid';
-    else if(id === 'sim') target.style.display = 'flex';
-    else target.style.display = 'block';
-
-    btn.classList.add('active');
-    
-    gsap.fromTo(target, {opacity: 0, y: 15}, {opacity: 1, y: 0, duration: 0.4});
-}
-
 // --- LÓGICA DEL SIMULADOR (JUEGO DE ROLES) ---
 let simStep = 0;
 
@@ -425,7 +311,6 @@ function playTurn(optionIndex) {
     }, 500);
 }
 
-// Iniciar con la sección por defecto (Conceptos)
-showSection('concepts', document.querySelectorAll('.nav-pill')[1]);
-
+// Animación inicial al cargar la página
+gsap.fromTo("#sec-sim", {opacity: 0, y: 15}, {opacity: 1, y: 0, duration: 0.6});
 </script>

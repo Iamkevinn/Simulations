@@ -135,7 +135,7 @@
         .btn-classify:hover { background-color: var(--color-3); transform: translate(-2px, -2px); box-shadow: 6px 6px 0px var(--color-1); }
         .btn-classify:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px transparent; }
 
-        /* --- SECCIÓN 2: PUZZLE SEMÁNTICO (NUEVO) --- */
+        /* --- SECCIÓN 2: PUZZLE SEMÁNTICO --- */
         .matching-container {
             background-color: var(--color-5);
             border: var(--border-thick);
@@ -151,8 +151,8 @@
 
         .matching-grid {
             display: grid;
-            grid-template-columns: 1fr 2fr; /* Columna de verbos más pequeña que la de contextos */
-            gap: 20px;
+            grid-template-columns: 1fr 2fr; 
+            gap: 30px;
         }
 
         .matching-col {
@@ -160,6 +160,23 @@
             flex-direction: column;
             gap: 15px;
         }
+
+        /* Títulos de las columnas */
+        .col-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            color: var(--color-1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 3px solid var(--color-3);
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .col-title i { color: var(--color-3); }
 
         .match-btn {
             background-color: var(--bg-body);
@@ -192,22 +209,30 @@
             transform: translate(2px, 2px);
         }
 
-        /* Verbos (Lado Izquierdo) */
-        .verb-btn { justify-content: center; text-align: center; font-family: 'Outfit'; font-size: 1.2rem; }
+        /* Diferenciación visual: Verbos vs Complementos */
+        .verb-btn { 
+            justify-content: center; 
+            text-align: center; 
+            font-family: 'Outfit'; 
+            font-size: 1.2rem; 
+            border-left: 8px solid var(--color-3); /* Marca visual naranja */
+        }
         
-        /* Complementos (Lado Derecho) */
-        .comp-btn { justify-content: flex-start; }
+        .comp-btn { 
+            justify-content: flex-start; 
+            background-color: #fdfdfd; /* Ligeramente más blanco */
+        }
 
         /* Bloque Fusión (Éxito) */
         .matched-result {
-            grid-column: 1 / -1; /* Ocupa todo el ancho */
+            grid-column: 1 / -1; 
             background-color: var(--color-5);
             border: 3px solid var(--color-1);
             padding: 20px;
-            font-weight: 800;
+            font-weight: 600;
             font-size: 1.15rem;
-            color: var(--color-1);
-            box-shadow: inset 0 -10px 0 rgba(251, 165, 17, 0.4);
+            color: var(--text-dark);
+            box-shadow: 6px 6px 0px rgba(72, 2, 65, 0.1);
             display: flex;
             align-items: center;
             gap: 15px;
@@ -215,7 +240,21 @@
             margin-bottom: 5px;
         }
 
-        .matched-result i { color: var(--color-success, #198754); font-size: 1.5rem; }
+        .matched-result i { color: #198754; font-size: 1.5rem; }
+
+        /* Estilo para resaltar la acción en la oración fusionada */
+        .highlight-action {
+            background-color: var(--color-3);
+            color: var(--color-1);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            padding: 4px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid var(--color-1);
+            margin-right: 5px;
+        }
 
         @keyframes mergeIn {
             from { opacity: 0; transform: scale(0.95) translateY(-10px); }
@@ -251,7 +290,7 @@
             .classification-board { grid-template-columns: 1fr; }
             .card-actions { grid-template-columns: 1fr; }
             
-            .matching-grid { grid-template-columns: 1fr; } /* Apila verbos y complementos en móvil */
+            .matching-grid { grid-template-columns: 1fr; gap: 40px; }
             .verb-btn { justify-content: flex-start; text-align: left; }
 
             .hero-title { font-size: 2.2rem; }
@@ -320,7 +359,7 @@
                 <span>Completa el Paso 1 para desbloquear</span>
             </div>
             
-            <span class="instruction-badge">Paso 2: Conecta la acción institucional con su contexto</span>
+            <span class="instruction-badge">Paso 2: Conecta la acción con su contexto</span>
             
             <div class="matching-container">
                 <div class="builder-core">
@@ -331,14 +370,16 @@
                     
                     <!-- Columna de Acciones (Verbos) -->
                     <div class="matching-col" id="col-verbs">
+                        <h3 class="col-title"><i class="fa-solid fa-bolt"></i> Acción Institucional</h3>
                         <button class="match-btn verb-btn" data-id="1" onclick="selectVerb(this)">Reconocer</button>
                         <button class="match-btn verb-btn" data-id="2" onclick="selectVerb(this)">Comprender</button>
                         <button class="match-btn verb-btn" data-id="3" onclick="selectVerb(this)">Analizar</button>
                         <button class="match-btn verb-btn" data-id="4" onclick="selectVerb(this)">Incorporar</button>
                     </div>
 
-                    <!-- Columna de Contextos (Complementos - Mezclados intencionalmente) -->
+                    <!-- Columna de Contextos (Complementos) -->
                     <div class="matching-col" id="col-comps">
+                        <h3 class="col-title"><i class="fa-solid fa-layer-group"></i> Contexto de Aplicación</h3>
                         <button class="match-btn comp-btn" data-id="3" onclick="selectComp(this)">discriminaciones institucionales.</button>
                         <button class="match-btn comp-btn" data-id="1" onclick="selectComp(this)">desigualdades históricas.</button>
                         <button class="match-btn comp-btn" data-id="4" onclick="selectComp(this)">enfoques territoriales y comunitarios.</button>
@@ -351,7 +392,7 @@
             </div>
         </section>
 
-        <!-- PASO 3: DIARIO DE REFLEXIÓN (Bloqueado) -->
+        <!-- PASO 3: DIARIO DE REFLEXIÓN -->
         <section class="module-section" id="sec-3">
             <div class="locked-overlay">
                 <i class="fa-solid fa-lock"></i>
@@ -363,6 +404,11 @@
                 <div class="reflection-prompt">
                     ¿Cómo pueden las instituciones evitar reproducir prácticas coloniales, racistas o patriarcales en procedimientos de atención y protección?
                 </div>
+                
+                <!-- Área de texto añadida para que el usuario pueda escribir -->
+                <textarea id="reflectionText" class="reflection-textarea" placeholder="Escribe tu reflexión aquí... (mínimo 20 caracteres)" onkeyup="validateReflection()"></textarea>
+                
+                <button id="btnSubmitRef" class="btn-submit" onclick="finishModule()" disabled>Registrar Reflexión</button>
             </div>
         </section>
 
@@ -403,21 +449,17 @@
             }
         }
 
-        // --- LÓGICA PASO 2: PUZZLE SEMÁNTICO (NUEVO) ---
+        // --- LÓGICA PASO 2: PUZZLE SEMÁNTICO ---
         let activeVerbBtn = null;
         let matchesCompleted = 0;
 
         function selectVerb(btn) {
-            // Deseleccionar el anterior si existía
             if(activeVerbBtn) activeVerbBtn.classList.remove('selected');
-            
-            // Seleccionar el nuevo
             activeVerbBtn = btn;
             activeVerbBtn.classList.add('selected');
         }
 
         function selectComp(compBtn) {
-            // Si el usuario no ha seleccionado una acción primero, no hace nada
             if(!activeVerbBtn) {
                 compBtn.classList.add('error-shake');
                 setTimeout(() => { compBtn.classList.remove('error-shake'); }, 400);
@@ -428,8 +470,8 @@
             const compId = compBtn.getAttribute('data-id');
 
             if(verbId === compId) {
-                // Éxito: Fusionar los textos exactos originales
-                const fullSentence = `${activeVerbBtn.innerText} ${compBtn.innerText}`;
+                // Éxito: Fusionar los textos, resaltando el verbo con una clase especial
+                const fullSentence = `<span class="highlight-action">${activeVerbBtn.innerText}</span> ${compBtn.innerText}`;
                 
                 // Crear bloque de resultado
                 const resultArea = document.getElementById('matched-results-area');
@@ -460,7 +502,6 @@
                 setTimeout(() => {
                     activeVerbBtn.classList.remove('error-shake');
                     compBtn.classList.remove('error-shake');
-                    // Resetear selección
                     activeVerbBtn.classList.remove('selected');
                     activeVerbBtn = null;
                 }, 400);
@@ -472,6 +513,7 @@
             const text = document.getElementById('reflectionText').value;
             const btn = document.getElementById('btnSubmitRef');
             
+            // Validar si el texto tiene una longitud mínima para activar el botón
             if(text.trim().length > 20) {
                 btn.removeAttribute('disabled');
             } else {
@@ -481,10 +523,14 @@
 
         function finishModule() {
             const btn = document.getElementById('btnSubmitRef');
+            const textarea = document.getElementById('reflectionText');
+            
             btn.innerHTML = "<i class='fa-solid fa-check-double'></i> Reflexión Registrada";
-            btn.style.backgroundColor = "var(--color-success, #198754)";
-            btn.style.borderColor = "var(--color-success, #198754)";
+            btn.style.backgroundColor = "#198754";
+            btn.style.borderColor = "#198754";
             btn.setAttribute('disabled', 'true');
+            textarea.setAttribute('disabled', 'true'); // Bloqueamos el campo de texto
+            
             checkScroll(); 
         }
 

@@ -3,628 +3,427 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ley 2453 - Responsive</title>
+<title>Ley 2453 - Violencia Política (Aprendizaje Activo)</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Roboto+Slab:wght@300;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Roboto+Slab:wght@300;700&display=swap" rel="stylesheet">
 
 <style>
     /* =========================================
-       1. RESET Y VARIABLES GLOBALES (PALETA CLARA 25N)
+       1. RESET Y VARIABLES GLOBALES
        ========================================= */
-    * {
-        box-sizing: border-box; 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+        --color-1: #480241; /* Morado Oscuro */
+        --color-2: #7235A8; /* Morado Claro */
+        --color-3: #FBA511; /* Naranja Mostaza */
+        --color-4: #CE4651; /* Rojo Alerta */
+        --color-5: #FFFFFF; /* Blanco */
+        
+        --bg-body: #F9F8FA;
+        --text-main: #333333;
+        --success: #2E7D32;
+        --success-bg: #E8F5E9;
     }
 
-:root {
-    --purple-main: #170047;   /* Morado UNP (Principal) */
-    --purple-dark: #480241;   /* Morado Oscuro */
-    --purple-light: #D23B78;  /* Magenta/Rosa (Acento) */
+    body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; padding-bottom: 80px;}
+
+    *:focus-visible { outline: 3px solid var(--color-3); outline-offset: 2px; }
+
+    /* =========================================
+       2. CABECERA Y LOGOS
+       ========================================= */
+    header.main-header {
+        background-color: var(--color-5); border-bottom: 5px solid var(--color-1);
+        padding: 1.5rem 2rem; display: flex; justify-content: space-between;
+        align-items: center; position: sticky; top: 0; z-index: 1000;
+        box-shadow: 0 4px 15px rgba(72, 2, 65, 0.1);
+    }
+    .logos-container { display: flex; gap: 20px; align-items: center; }
+    .client-logo { height: 60px; width: auto; object-fit: contain; }
+    .course-title { color: var(--color-1); font-weight: 900; font-size: 1.1rem; border-right: 4px solid var(--color-3); padding-right: 1.5rem; text-align: right; text-transform: uppercase; }
+
+    main { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem; }
+
+    /* =========================================
+       3. INTRODUCCIÓN Y ALERTAS
+       ========================================= */
+    .title-banner { text-align: center; margin-bottom: 3rem; }
+    .badge-date { background: var(--color-2); color: var(--color-5); padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; display: inline-block; margin-bottom: 10px; }
+    .title-banner h1 { font-family: 'Roboto Slab', serif; font-size: clamp(2.5rem, 5vw, 4rem); color: var(--color-1); margin: 0; line-height: 1.1; }
+    .title-banner h2 { color: var(--color-2); font-size: 1.3rem; margin-top: 5px; }
     
-    --accent-orange: #FF9800; /* Naranja (Detalles) */
-    --accent-yellow: #FEC82F; /* Amarillo (Fondo/Highlights) */
-    
-    --white: #ffffff;         /* Blanco puro */
-    --text-slate: #333333;    /* Texto principal oscuro */
-    --bg-gradient: linear-gradient(
-        135deg,
-        #ffffff 0%,
-        #FFFDE7 100%
-    ); /* Fondo muy claro, casi blanco */
-}
-
-    body {
-        margin: 0;
-        font-family: 'Montserrat', sans-serif;
-    }
-
-    /* =========================================
-       2. CONTENEDOR PRINCIPAL
-       ========================================= */
-    .political-arena-wrapper {
-        position: relative;
-        background: var(--bg-gradient);
-        color: var(--text-slate);
-        padding: 40px 20px;
-        overflow: hidden;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column; /* Cambiado a columna para logos arriba */
-        align-items: center;
-    }
-
-    /* FONDO ANIMADO (SUAVIZADO) */
-    .arena-bg {
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        pointer-events: none;
-        z-index: 0;
-    }
-
-    .float-icon {
-        position: absolute;
-        font-size: 3rem;
-        color: var(--purple-main);
-        opacity: 0.03; /* Muy sutil */
-        animation: floatUp 15s infinite linear;
-    }
-
-    .i1 { left: 10%; top: 100%; animation-delay: 0s; font-size: 4rem; }
-    .i2 { left: 30%; top: 100%; animation-delay: 3s; font-size: 2rem; }
-    .i3 { left: 60%; top: 100%; animation-delay: 6s; font-size: 5rem; }
-    .i4 { left: 80%; top: 100%; animation-delay: 2s; font-size: 3rem; }
-    .i5 { left: 50%; top: 100%; animation-delay: 9s; font-size: 2.5rem; }
-
-    @keyframes floatUp {
-        0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-        100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
-    }
-
-    .arena-container {
-        position: relative;
-        z-index: 2;
-        max-width: 1100px;
-        width: 100%;
-    }
-
-    /* =========================================
-       LOGOS DEL CLIENTE (NUEVO)
-       ========================================= */
-    .logos-header {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 30px;
-        margin-bottom: 30px;
-        width: 100%;
-        z-index: 10;
-        flex-wrap: wrap;
-    }
-
-    .client-logo {
-        height: 120px;
-        width: auto;
-        object-fit: contain;
-        transition: transform 0.3s ease;
-    }
-    .client-logo:hover { transform: scale(1.05); }
-
-
-    /* =========================================
-       3. HEADER Y NOTICIAS
-       ========================================= */
-    .breaking-news { text-align: center; margin-bottom: 50px; }
-
-    .ticker-wrap {
-        width: 100%;
-        overflow: hidden;
-        background-color: var(--purple-main);
-        color: white;
-        border-radius: 5px;
-        margin-bottom: 30px;
-        box-shadow: 0 5px 15px rgba(72, 2, 65, 0.2);
-    }
-
-    .ticker {
-        display: flex;
-        white-space: nowrap;
-        animation: ticker 25s infinite linear;
-    }
-
-    .ticker__item {
-        padding: 10px 40px;
-        font-weight: 700;
-        font-size: 0.9rem;
-        letter-spacing: 1px;
-    }
-
-    @keyframes ticker {
-        0% { transform: translate3d(0, 0, 0); }
-        100% { transform: translate3d(-50%, 0, 0); }
-    }
-
-    .main-headline h1 {
-        font-family: 'Roboto Slab', serif;
-        font-size: clamp(2.5rem, 6vw, 5rem);
-        line-height: 1;
-        margin: 15px 0;
-        color: var(--purple-main);
-        text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
-    }
-
-    .date-badge {
-        display: inline-block;
-        background: var(--purple-light);
-        color: white;
-        padding: 6px 15px;
-        border-radius: 4px;
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 0.8rem;
-    }
-
-    .subtitle {
-        font-size: clamp(1.1rem, 3vw, 1.5rem);
-        font-weight: 700;
-        color: var(--purple-dark);
-        margin-bottom: 25px;
-    }
-
     .alert-box {
-        display: inline-block;
-        background: #FFF3E0; /* Naranja muy claro */
-        border: 2px solid var(--accent-orange);
-        color: #E65100;
-        padding: 12px 25px;
-        border-radius: 12px;
-        font-size: 0.95rem;
-        max-width: 90%;
-        animation: pulseAlert 2s infinite;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        background-color: rgba(206, 70, 81, 0.1); border-left: 6px solid var(--color-4);
+        padding: 1.2rem; border-radius: 0 8px 8px 0; margin: 2rem auto; max-width: 800px;
+        font-weight: 700; color: var(--color-1); display: flex; align-items: center; gap: 15px;
     }
+    .alert-box i { font-size: 1.5rem; color: var(--color-4); }
 
-    @keyframes pulseAlert { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+    /* Instrucciones UI */
+    .inst-box { background: var(--color-2); color: var(--color-5); padding: 1rem 1.5rem; border-radius: 8px; font-weight: 600; display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .locked { opacity: 0.4; pointer-events: none; filter: grayscale(100%); transition: 0.4s; }
+
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+    .error-shake { animation: shake 0.4s ease; border-color: var(--color-4) !important; background-color: rgba(206, 70, 81, 0.1) !important; color: var(--color-4) !important;}
 
     /* =========================================
-       4. TARJETAS (FLIP CARDS)
+       ACTIVIDAD 1: FLASHCARDS ACTIVAS (INFERIR)
        ========================================= */
-    .campaign-deck {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 30px;
-        margin-bottom: 60px;
-        perspective: 1000px;
-    }
-
-    .campaign-card {
-        background-color: transparent;
-        width: 100%;
-        max-width: 320px;
-        height: 420px;
-        perspective: 1000px;
-        cursor: pointer;
-    }
-
-    .card-inner {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        text-align: center;
-        transition: transform 0.8s;
-        transform-style: preserve-3d;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        border-radius: 20px;
-    }
-
-    .campaign-card.flipped .card-inner { transform: rotateY(180deg); }
-
-    .card-front, .card-back {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
-        border-radius: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 25px;
-        border: 1px solid #eee;
-    }
-
-    .card-front {
-        background: white;
-        color: var(--text-slate);
-        border-bottom: 5px solid var(--purple-main);
-    }
-
-    .card-back {
-        background: var(--purple-main);
-        color: white;
-        transform: rotateY(180deg);
-        border: 4px solid var(--accent-yellow);
-    }
-
-    .icon-circle {
-        width: 90px; height: 90px;
-        background: var(--accent-yellow);
-        color: var(--purple-main);
-        border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 2.5rem;
-        margin-bottom: 25px;
-    }
-
-    .tap-hint {
-        margin-top: auto;
-        padding-top: 20px;
-        font-size: 0.8rem;
-        color: #888;
-        animation: bounce 1s infinite;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: 600;
-    }
-
-    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-
-    .card-back h3 { font-family: 'Roboto Slab', serif; font-size: 1.4rem; margin-bottom: 10px; color: var(--accent-yellow); }
-    .card-back p { line-height: 1.6; font-size: 0.95rem; }
-    .goal-tag { background: white; color: var(--purple-main); padding: 5px 12px; border-radius: 5px; font-weight: 800; font-size: 0.75rem; margin-top: 15px; text-transform: uppercase;}
-    .contrast-box { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; margin-top: 15px; font-weight: 700; font-size: 0.85rem; width: 100%; border: 1px dashed rgba(255,255,255,0.3); }
-
-    /* =========================================
-       5. SECCIÓN DE VIOLENCIA (GRID)
-       ========================================= */
-    .battle-section {
-        background: white;
-        padding: 40px 25px;
-        border-radius: 20px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-        text-align: center;
-        margin-bottom: 60px;
-        border: 1px solid #e0e0e0;
-    }
-
-    .battle-title { font-family: 'Roboto Slab', serif; font-size: clamp(1.5rem, 4vw, 2rem); color: var(--purple-main); margin-top: 0; }
-    .battle-desc { margin-bottom: 30px; color: #666; font-size: 1rem; }
-
-    .violence-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 15px;
-        justify-content: center;
-    }
-
-    .v-item {
-        position: relative;
-        aspect-ratio: 1 / 1; 
-        border-radius: 15px;
-        overflow: hidden;
-        cursor: pointer;
-        width: 100%;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-
-    .v-cover {
-        position: absolute;
-        width: 100%; height: 100%;
-        color: white;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        transition: 0.3s;
-        z-index: 2;
-        padding: 10px;
-        text-align: center;
-    }
-
-    .v-cover i { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 10px; }
-    .v-cover span { font-weight: 800; font-size: 0.8rem; letter-spacing: 0.5px; }
-
-    /* Colores Específicos */
-    .v-cover.verbal { background: #E53935; } /* Rojo */
-    .v-cover.physical { background: #8E24AA; } /* Morado */
-    .v-cover.digital { background: #1E88E5; } /* Azul */
-    .v-cover.economic { background: #FDD835; color: #333; } /* Amarillo */
-    .v-cover.symbolic { background: #FB8C00; } /* Naranja */
-
-    .v-reveal {
-        position: absolute;
-        width: 100%; height: 100%;
-        background: var(--purple-main);
-        color: white;
-        display: flex; align-items: center; justify-content: center;
-        padding: 15px;
-        font-size: 0.85rem;
-        z-index: 1;
-        line-height: 1.4;
-    }
-
-    .v-item:hover .v-cover {
-        transform: translateY(-100%) rotate(5deg);
-        opacity: 0;
-    }
-
-    .source-center { margin-top: 30px; font-size: 0.75rem; color: #888; font-style: italic; }
-
-    /* =========================================
-       6. VOTACIÓN Y BOTONES
-       ========================================= */
-    .voting-booth {
-        display: flex; justify-content: center;
-        width: 100%;
-    }
-
-    .ballot-box {
-        background: var(--purple-main);
-        color: white;
-        padding: 40px;
-        border-radius: 20px;
-        text-align: center;
-        box-shadow: 0 15px 30px rgba(72, 2, 65, 0.3);
-        width: 100%;
-        max-width: 650px;
-        position: relative;
-        overflow: hidden;
+    .act1-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 4rem; }
+    
+    .active-card {
+        background: var(--color-5); border: 2px solid var(--border-color); border-radius: 12px;
+        padding: 2rem; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        display: flex; flex-direction: column; align-items: center; gap: 1.5rem; transition: 0.3s;
     }
     
-    /* Detalle decorativo */
-    .ballot-box::before {
-        content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-        pointer-events: none;
+    .card-icon { width: 70px; height: 70px; background: var(--color-3); color: var(--color-1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+    .card-title { font-family: 'Roboto Slab', serif; color: var(--color-1); font-size: 1.5rem; font-weight: 700; margin: 0; }
+    
+    .card-question { font-weight: 600; color: var(--text-main); font-size: 1rem; }
+    
+    .card-options { display: flex; gap: 10px; width: 100%; justify-content: center; flex-wrap: wrap;}
+    .opt-btn {
+        background: var(--bg-body); border: 2px solid var(--color-2); color: var(--color-2);
+        padding: 0.8rem 1.2rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; font-family: 'Montserrat', sans-serif;
     }
+    .opt-btn:hover { background: var(--color-2); color: var(--color-5); }
+    
+    .card-reveal { display: none; background: var(--color-1); color: var(--color-5); padding: 1.5rem; border-radius: 8px; width: 100%; text-align: left; font-size: 0.95rem; margin-top: 1rem; border-left: 5px solid var(--color-3); animation: fadeIn 0.4s ease; }
+    .card-reveal h4 { color: var(--color-3); margin-bottom: 10px; font-family: 'Roboto Slab'; }
+    .source-txt { display: block; font-size: 0.75rem; color: #BBB; margin-top: 10px; font-style: italic; }
 
-    .ballot-box p { font-size: 1.2rem; margin-bottom: 25px; font-weight: 700; position: relative; z-index: 2; }
-
-    .vote-btn {
-        background: var(--accent-yellow);
-        color: var(--purple-main);
-        border: none;
-        padding: 18px 40px;
-        font-size: 1.1rem;
-        font-weight: 900;
-        border-radius: 50px;
-        cursor: pointer;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        transition: 0.2s;
-        max-width: 100%;
-        white-space: normal;
-        position: relative; z-index: 2;
-    }
-
-    .vote-btn:hover {
-        transform: translateY(-2px);
-        background: #fff;
-    }
-
-    .vote-btn:active {
-        transform: translateY(2px);
-    }
-
-    .vote-confirmation {
-        margin-top: 20px;
-        font-size: 1.1rem;
-        font-weight: 800;
-        display: none;
-        color: var(--accent-yellow);
-        animation: popIn 0.5s ease;
-        position: relative; z-index: 2;
-    }
-
-    @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
     /* =========================================
-       7. MEDIA QUERIES
+       ACTIVIDAD 2: DRAG & DROP (CLASIFICAR ELEMENTOS)
        ========================================= */
-    @media (max-width: 600px) {
-        .political-arena-wrapper { padding: 20px 10px; }
-        .logos-header { gap: 15px; margin-bottom: 20px; }
-        .client-logo { height: 85px; }
-        .alert-box { font-size: 0.85rem; text-align: left; }
-        .campaign-card { height: 380px; }
-        .battle-section { padding: 25px 15px; }
-        .ballot-box { padding: 30px 20px; }
+    .act2-container { background: var(--color-5); border: 1px solid var(--border-color); border-radius: 12px; padding: 2rem; box-shadow: 0 8px 20px rgba(0,0,0,0.05); margin-bottom: 4rem; }
+    
+    .drag-bank { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 2rem; padding: 1.5rem; background: rgba(72, 2, 65, 0.05); border: 2px dashed var(--color-1); border-radius: 8px; }
+    
+    .drag-item {
+        background: var(--color-5); border: 2px solid var(--color-1); color: var(--color-1);
+        padding: 0.8rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.2s; font-size: 0.95rem; text-align: center;
+    }
+    .drag-item:hover { transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.15); }
+    .drag-item.selected { background: var(--color-3); border-color: var(--color-1); color: var(--color-1); }
+    .drag-item.used { display: none; }
+
+    .drop-zones-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; }
+    
+    .drop-zone {
+        border: 2px dashed var(--color-2); border-radius: 8px; padding: 1rem;
+        display: flex; flex-direction: column; align-items: center; gap: 1rem; min-height: 150px; transition: 0.3s;
+        cursor: pointer; background: var(--color-5);
+    }
+    .drop-zone:hover { background: rgba(114, 53, 168, 0.05); border-style: solid; }
+    .zone-icon { font-size: 2rem; margin-bottom: 5px; }
+    .zone-title { font-weight: 800; font-family: 'Roboto Slab'; text-transform: uppercase; font-size: 0.9rem; text-align: center; color: var(--color-1); }
+    
+    .drop-zone.filled { border-style: solid; background: var(--success-bg); border-color: var(--success); cursor: default; }
+    .drop-zone.filled .zone-title { color: var(--success); }
+    
+    .filled-content { font-size: 0.9rem; font-weight: 600; color: var(--text-main); text-align: center; padding: 10px; background: rgba(255,255,255,0.8); border-radius: 4px; border-left: 3px solid var(--success); width: 100%; animation: fadeIn 0.3s ease; }
+
+    /* =========================================
+       ACTIVIDAD 3: EVALUACIÓN Y FIRMA (DECISIÓN)
+       ========================================= */
+    .eval-box {
+        background: var(--color-1); color: var(--color-5); padding: 3rem; border-radius: 12px;
+        text-align: center; box-shadow: 0 10px 30px rgba(72, 2, 65, 0.2);
+    }
+    
+    .eval-box h3 { font-family: 'Roboto Slab'; font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--color-3); }
+    .eval-case {
+        background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 8px;
+        font-size: 1.1rem; font-style: italic; margin-bottom: 2rem; border-left: 5px solid var(--color-3); text-align: left;
+    }
+    
+    .dec-btns { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+    
+    .dec-btn {
+        background: var(--color-5); color: var(--color-1); border: 3px solid var(--color-5);
+        padding: 1rem 2rem; border-radius: 50px; font-weight: 800; font-size: 1.1rem;
+        cursor: pointer; transition: 0.3s; font-family: 'Montserrat';
+    }
+    .dec-btn:hover { background: transparent; color: var(--color-5); }
+    
+    .final-msg { display: none; margin-top: 2rem; font-size: 1.2rem; font-weight: 800; color: var(--success); background: var(--base); padding: 15px; border-radius: 8px; animation: fadeIn 0.5s ease; }
+
+    /* =========================================
+       BOTÓN STICKY
+       ========================================= */
+    .sticky-btn {
+        position: fixed; bottom: 2rem; right: 2rem; background-color: var(--color-1); color: var(--color-5);
+        border: none; padding: 1rem 1.5rem; border-radius: 50px; font-size: 1rem; font-weight: 800;
+        cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: 0.3s; z-index: 1000;
+    }
+    .sticky-btn:hover { background-color: var(--color-2); transform: translateY(-3px); }
+    .sticky-btn.completed { background-color: var(--success); cursor: default; transform: none; }
+
+    @media (max-width: 800px) {
+        header.main-header { flex-direction: column; gap: 15px; text-align: center; }
+        .course-title { border: none; padding: 0; }
+        .act1-grid { grid-template-columns: 1fr; }
+        .drop-zones-grid { grid-template-columns: 1fr 1fr; }
+        .eval-box { padding: 2rem 1.5rem; }
+    }
+    @media (max-width: 500px) {
+        .drop-zones-grid { grid-template-columns: 1fr; }
     }
 </style>
 </head>
 <body>
 
-<div class="political-arena-wrapper">
-    <!-- Fondo Animado -->
-    <div class="arena-bg">
-        <i class="fas fa-venus float-icon i1"></i>
-        <i class="fas fa-check-to-slot float-icon i2"></i>
-        <i class="fas fa-bullhorn float-icon i3"></i>
-        <i class="fas fa-venus float-icon i4"></i>
-        <i class="fas fa-gavel float-icon i5"></i>
-    </div>
+    <header class="main-header">
+        <div class="logos-container">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+            <img src="../Styles/logo.png" alt="Logo Institucional" class="client-logo">
+        </div>
+        <div class="course-title">Ley 2453 de 2025</div>
+    </header>
 
-    <!-- LOGOS DEL CLIENTE -->
-    <div class="logos-header">
-        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo" style="height:160px; width:auto;">
-        <img src="../Styles/logo.png" alt="Logo Comisión" class="client-logo" style="height:160px; width:auto;">
-    </div>
+    <main>
+        <!-- TÍTULO -->
+        <div class="title-banner">
+            <span class="badge-date">Sancionada: 02 de Abril de 2025</span>
+            <h1>LEY 2453</h1>
+            <h2>Violencia contra las mujeres en política</h2>
+        </div>
 
-    <div class="arena-container">
-        
-        <!-- HEADER -->
-        <header class="breaking-news">
-            <div class="ticker-wrap">
-                <div class="ticker">
-                    <div class="ticker__item">📢 LEY 2453 DE 2025: NUEVO HITO DEMOCRÁTICO</div>
-                    <div class="ticker__item">🛑 SANCIÓN A LA VIOLENCIA POLÍTICA</div>
-                    <div class="ticker__item">🗳️ PARTICIPACIÓN EN IGUALDAD</div>
-                    <!-- Repetición para loop -->
-                    <div class="ticker__item">📢 LEY 2453 DE 2025: NUEVO HITO DEMOCRÁTICO</div>
-                    <div class="ticker__item">🛑 SANCIÓN A LA VIOLENCIA POLÍTICA</div>
-                    <div class="ticker__item">🗳️ PARTICIPACIÓN EN IGUALDAD</div>
-                </div>
+        <div class="alert-box">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>
+                <strong>ATENCIÓN:</strong> Objeto totalmente distinto a la Ley 2365.
             </div>
-            <div class="main-headline">
-                <span class="date-badge">Sancionada: 02 de Abril de 2025</span>
-                <h1>LEY 2453</h1>
-                <p class="subtitle">Violencia contra las mujeres en política</p>
-                <div class="alert-box">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <span><strong>ATENCIÓN:</strong> Objeto totalmente distinto a la Ley 2365.</span>
-                </div>
-            </div>
-        </header>
+        </div>
 
-        <!-- ZONA DE CAMPAÑA -->
-        <div class="campaign-deck">
+        <!-- =========================================
+             ACTIVIDAD 1: FLASHCARDS ACTIVAS (DEDUCIR)
+             ========================================= -->
+        <div class="inst-box">
+            <i class="fas fa-brain"></i> Actividad 1: Analice el concepto y deduzca a qué aspecto de la ley corresponde para revelar el contenido real.
+        </div>
+
+        <section class="act1-grid">
             
-            <!-- TARJETA 1 -->
-            <div class="campaign-card" onclick="flipCard(this)">
-                <div class="card-inner">
-                    <div class="card-front">
-                        <div class="icon-circle"><i class="fas fa-bullseye"></i></div>
-                        <h2>El Objetivo</h2>
-                        <p class="tap-hint"><i class="fas fa-hand-pointer"></i> Toca para revelar</p>
-                    </div>
-                    <div class="card-back">
-                        <h3>Participación Segura</h3>
-                        <p>Busca <strong>prevenir, atender, seguir y sancionar</strong> la violencia contra las mujeres en el ejercicio de sus derechos políticos.</p>
-                        <div class="goal-tag">META: IGUALDAD SIN VIOLENCIA</div>
-                        <span class="source-text" style="font-size:0.7rem; margin-top:10px; display:block; opacity:0.8;">Fuente: Función Pública</span>
-                    </div>
+            <!-- Tarjeta 1 -->
+            <div class="active-card" id="card-1">
+                <div class="card-icon"><i class="fas fa-bullseye"></i></div>
+                <h3 class="card-title">El Objetivo</h3>
+                <p class="card-question">¿Cuál es la finalidad principal de esta ley?</p>
+                <div class="card-options">
+                    <button class="opt-btn" onclick="checkCard(1, false, this)">Sancionar acoso laboral</button>
+                    <button class="opt-btn" onclick="checkCard(1, true, this)">Garantizar participación segura</button>
+                </div>
+                <div class="card-reveal" id="reveal-1">
+                    <h4>Participación Segura</h4>
+                    <p>Busca <strong>prevenir, atender, seguir y sancionar</strong> la violencia contra las mujeres en el ejercicio de sus derechos políticos.<br><br>
+                    <span style="color:var(--color-3); font-weight: 800;">META: IGUALDAD SIN VIOLENCIA</span></p>
+                    <span class="source-txt">Fuente: Función Pública</span>
                 </div>
             </div>
 
-            <!-- TARJETA 2 -->
-            <div class="campaign-card" onclick="flipCard(this)">
-                <div class="card-inner">
-                    <div class="card-front">
-                        <div class="icon-circle"><i class="fas fa-map-marked-alt"></i></div>
-                        <h2>El Escenario</h2>
-                        <p class="tap-hint"><i class="fas fa-hand-pointer"></i> Toca para revelar</p>
-                    </div>
-                    <div class="card-back">
-                        <h3>Ámbito Exclusivo</h3>
-                        <p>Su ámbito es la <strong>participación política y electoral</strong>.</p>
-                        <div class="contrast-box">
-                            <i class="fas fa-ban"></i> NO es Laboral<br>
-                            <i class="fas fa-ban"></i> NO es Educativo
-                        </div>
-                        <span class="source-text" style="font-size:0.7rem; margin-top:10px; display:block; opacity:0.8;">Fuente: Función Pública</span>
-                    </div>
+            <!-- Tarjeta 2 -->
+            <div class="active-card" id="card-2">
+                <div class="card-icon"><i class="fas fa-map-marked-alt"></i></div>
+                <h3 class="card-title">El Escenario</h3>
+                <p class="card-question">¿En qué ámbito aplica exclusivamente?</p>
+                <div class="card-options">
+                    <button class="opt-btn" onclick="checkCard(2, true, this)">Política y Electoral</button>
+                    <button class="opt-btn" onclick="checkCard(2, false, this)">Educativo y Familiar</button>
+                </div>
+                <div class="card-reveal" id="reveal-2">
+                    <h4>Ámbito Exclusivo</h4>
+                    <p>Su ámbito es la <strong>participación política y electoral</strong>.<br><br>
+                    <span style="color: #FFCDD2; font-weight: bold;"><i class="fas fa-ban"></i> NO es Laboral<br><i class="fas fa-ban"></i> NO es Educativo</span></p>
+                    <span class="source-txt">Fuente: Función Pública</span>
                 </div>
             </div>
 
+        </section>
+
+        <!-- =========================================
+             ACTIVIDAD 2: DRAG & DROP (CLASIFICAR VIOLENCIAS)
+             ========================================= -->
+        <div class="inst-box locked" id="inst-2">
+            <i class="fas fa-hand-pointer"></i> Actividad 2: Identifique la barrera. Seleccione un caso real y asígnelo a su tipología de violencia correspondiente.
         </div>
 
-        <!-- SECCIÓN DE VIOLENCIAS -->
-        <div class="battle-section">
-            <h2 class="battle-title">Identifica las Barreras</h2>
-            <p class="battle-desc">Pasa el cursor (o toca) sobre los cuadros para ver las conductas:</p>
+        <section class="act2-container locked" id="section-2">
             
-            <div class="violence-grid">
-                <!-- Items -->
-                <div class="v-item">
-                    <div class="v-cover verbal">
-                        <i class="fas fa-comment-slash"></i>
-                        <span>VERBAL</span>
-                    </div>
-                    <div class="v-reveal">
-                        <p>Discursos de odio, difamación o descrédito público.</p>
-                    </div>
+            <div class="drag-bank">
+                <div class="drag-item" onclick="selectDrag(this)" data-match="verb">Discursos de odio, difamación o descrédito público.</div>
+                <div class="drag-item" onclick="selectDrag(this)" data-match="eco">Restricción de recursos para campañas.</div>
+                <div class="drag-item" onclick="selectDrag(this)" data-match="simb">Uso de estereotipos para anular su capacidad política.</div>
+                <div class="drag-item" onclick="selectDrag(this)" data-match="digi">Ciberacoso, doxing o violencia en redes sociales.</div>
+                <div class="drag-item" onclick="selectDrag(this)" data-match="fis">Agresiones directas al cuerpo o integridad sexual.</div>
+            </div>
+
+            <div class="drop-zones-grid">
+                <div class="drop-zone" onclick="dropItem(this)" data-id="verb">
+                    <div class="zone-icon" style="color: #E53935;"><i class="fas fa-comment-slash"></i></div>
+                    <div class="zone-title">Verbal</div>
                 </div>
-                <div class="v-item">
-                    <div class="v-cover physical">
-                        <i class="fas fa-user-injured"></i>
-                        <span>FÍSICA/SEXUAL</span>
-                    </div>
-                    <div class="v-reveal">
-                        <p>Agresiones directas al cuerpo o integridad sexual.</p>
-                    </div>
+                
+                <div class="drop-zone" onclick="dropItem(this)" data-id="fis">
+                    <div class="zone-icon" style="color: #8E24AA;"><i class="fas fa-user-injured"></i></div>
+                    <div class="zone-title">Física / Sexual</div>
                 </div>
-                <div class="v-item">
-                    <div class="v-cover digital">
-                        <i class="fas fa-wifi"></i>
-                        <span>DIGITAL</span>
-                    </div>
-                    <div class="v-reveal">
-                        <p>Ciberacoso, doxing o violencia en redes sociales.</p>
-                    </div>
+
+                <div class="drop-zone" onclick="dropItem(this)" data-id="digi">
+                    <div class="zone-icon" style="color: #1E88E5;"><i class="fas fa-wifi"></i></div>
+                    <div class="zone-title">Digital</div>
                 </div>
-                <div class="v-item">
-                    <div class="v-cover economic">
-                        <i class="fas fa-coins"></i>
-                        <span>ECONÓMICA</span>
-                    </div>
-                    <div class="v-reveal">
-                        <p>Restricción de recursos para campañas.</p>
-                    </div>
+
+                <div class="drop-zone" onclick="dropItem(this)" data-id="eco">
+                    <div class="zone-icon" style="color: #FDD835;"><i class="fas fa-coins"></i></div>
+                    <div class="zone-title">Económica</div>
                 </div>
-                <div class="v-item">
-                    <div class="v-cover symbolic">
-                        <i class="fas fa-masks-theater"></i>
-                        <span>SIMBÓLICA</span>
-                    </div>
-                    <div class="v-reveal">
-                        <p>Uso de estereotipos para anular su capacidad política.</p>
-                    </div>
+
+                <div class="drop-zone" onclick="dropItem(this)" data-id="simb">
+                    <div class="zone-icon" style="color: #FB8C00;"><i class="fas fa-masks-theater"></i></div>
+                    <div class="zone-title">Simbólica</div>
                 </div>
             </div>
-            <div class="source-center">Fuente: Función Pública - Definición de categorías específicas</div>
+            
+            <div style="text-align: center; margin-top: 20px; font-size: 0.8rem; color: #888;">Fuente: Función Pública - Definición de categorías específicas</div>
+
+        </section>
+
+        <!-- =========================================
+             ACTIVIDAD 3: CASO DE TOMA DE DECISIÓN
+             ========================================= -->
+        <div class="inst-box locked" id="inst-3">
+            <i class="fas fa-gavel"></i> Actividad 3: Evaluación de Caso Práctico. Analice la situación y tome la decisión correcta.
         </div>
 
-        <!-- GAMIFICACIÓN FINAL -->
-        <div class="voting-booth">
-            <div class="ballot-box">
-                <p>¿Entendido el alcance de la Ley 2453?</p>
-                <button id="vote-btn" class="vote-btn" onclick="castVote()">
-                    <span class="btn-txt">🗳️ RATIFICAR CONOCIMIENTO</span>
-                </button>
-                <div id="vote-conf" class="vote-confirmation">
-                    <i class="fas fa-check-circle"></i> ¡CONOCIMIENTO REGISTRADO!
-                </div>
+        <section class="eval-box locked" id="section-3">
+            <h3>¿Aplica la Ley 2453?</h3>
+            <div class="eval-case">
+                "Una funcionaria pública recibe acoso sistemático por parte de su jefe directo dentro de las oficinas de la entidad, exigiéndole horas extras no remuneradas bajo amenazas de despido."
             </div>
-        </div>
+            
+            <div class="dec-btns">
+                <button class="dec-btn" onclick="checkDecision(false, this)">SÍ APLICA (Es violencia contra la mujer)</button>
+                <button class="dec-btn" onclick="checkDecision(true, this)">NO APLICA (Es ámbito laboral, no político)</button>
+            </div>
 
-    </div>
-</div>
+            <div class="final-msg" id="final-msg">
+                <i class="fas fa-check-circle"></i> ¡DECISIÓN CORRECTA!<br>
+                <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-main);">El ámbito exclusivo de la Ley 2453 es la participación política y electoral. Para acoso laboral se deben activar otras rutas (Ej: Ley 1010).</span>
+            </div>
+        </section>
 
-<script>
-function flipCard(card) {
-    card.classList.toggle('flipped');
-}
+    </main>
 
-function castVote() {
-    const btn = document.getElementById('vote-btn');
-    const msg = document.getElementById('vote-conf');
-    
-    btn.style.transform = "translateY(2px)";
-    btn.style.boxShadow = "none";
-    btn.style.background = "#fff";
-    btn.style.color = "#999";
-    btn.innerHTML = 'Voto Registrado';
-    btn.disabled = true;
-    btn.style.cursor = "default";
+    <!-- Botón Sticky Controlador -->
+    <button class="sticky-btn" id="stickyNav" onclick="scrollToActive()">
+        Completar Actividad 1
+    </button>
 
-    msg.style.display = "block";
-}
+    <script>
+        // --- CONTROLADORES GLOBALES ---
+        let activeSection = 1;
+        let progress = { act1: 0, act2: 0, act3: 0 };
+        const stickyBtn = document.getElementById('stickyNav');
 
-// Animación de entrada
-document.addEventListener('DOMContentLoaded', () => {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = "1";
-                entry.target.style.transform = "translateY(0)";
+        // --- ACTIVIDAD 1: FLASHCARDS (INFERIR) ---
+        function checkCard(cardNum, isCorrect, btn) {
+            const card = document.getElementById(`card-${cardNum}`);
+            
+            if (isCorrect) {
+                // Ocultar botones, mostrar contenido revelado
+                card.querySelector('.card-options').style.display = 'none';
+                card.querySelector('.card-question').style.display = 'none';
+                card.querySelector('.card-reveal').style.display = 'block';
+                card.style.borderColor = "var(--success)";
+                
+                progress.act1++;
+                checkOverallProgress();
+            } else {
+                btn.classList.add('error-shake');
+                setTimeout(() => btn.classList.remove('error-shake'), 400);
             }
-        });
-    });
+        }
 
-    document.querySelectorAll('.campaign-card, .battle-section, .ballot-box').forEach(el => {
-        el.style.opacity = "0";
-        el.style.transform = "translateY(30px)";
-        el.style.transition = "all 0.8s ease-out";
-        observer.observe(el);
-    });
-});
-</script>
+        // --- ACTIVIDAD 2: DRAG & DROP CLASIFICAR ---
+        let selectedDragItem = null;
+
+        function selectDrag(item) {
+            document.querySelectorAll('.drag-item').forEach(i => i.classList.remove('selected'));
+            item.classList.add('selected');
+            selectedDragItem = item;
+        }
+
+        function dropItem(zone) {
+            if (!selectedDragItem) return;
+            if (zone.classList.contains('filled')) return;
+
+            const targetId = zone.getAttribute('data-id');
+            const matchId = selectedDragItem.getAttribute('data-match');
+
+            if (targetId === matchId) {
+                // Correcto: Llenar zona
+                zone.classList.add('filled');
+                zone.innerHTML += `<div class="filled-content">${selectedDragItem.innerText}</div>`;
+                
+                // Ocultar item
+                selectedDragItem.classList.add('used');
+                selectedDragItem.classList.remove('selected');
+                selectedDragItem = null;
+
+                progress.act2++;
+                checkOverallProgress();
+            } else {
+                // Error
+                zone.classList.add('error-shake');
+                setTimeout(() => zone.classList.remove('error-shake'), 400);
+            }
+        }
+
+        // --- ACTIVIDAD 3: DECISIÓN (CASO) ---
+        function checkDecision(isCorrect, btn) {
+            if (isCorrect) {
+                document.querySelectorAll('.dec-btn').forEach(b => b.style.display = 'none');
+                document.getElementById('final-msg').style.display = 'block';
+                progress.act3 = 1;
+                checkOverallProgress();
+            } else {
+                btn.classList.add('error-shake');
+                setTimeout(() => btn.classList.remove('error-shake'), 400);
+            }
+        }
+
+        // --- SISTEMA DE NAVEGACIÓN Y DESBLOQUEO ---
+        function checkOverallProgress() {
+            if (progress.act1 === 2 && activeSection === 1) unlockSection(2);
+            if (progress.act2 === 5 && activeSection === 2) unlockSection(3);
+            if (progress.act3 === 1 && activeSection === 3) {
+                stickyBtn.innerHTML = "✔ Módulo Completado";
+                stickyBtn.classList.add('completed');
+            }
+        }
+
+        function unlockSection(num) {
+            activeSection = num;
+            document.getElementById(`section-${num}`).classList.remove('locked');
+            document.getElementById(`inst-${num}`).classList.remove('locked');
+            stickyBtn.innerHTML = `Completar Actividad ${num}`;
+            setTimeout(() => {
+                document.getElementById(`section-${num}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        }
+
+        function scrollToActive() {
+            if (!stickyBtn.classList.contains('completed')) {
+                document.getElementById(`section-${activeSection}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    </script>
 
 </body>
 </html>

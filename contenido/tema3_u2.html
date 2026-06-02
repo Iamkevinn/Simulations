@@ -3,25 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Interseccionalidad Propositiva</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 <style>
     :root {
-    --bg-core: #F5F5F5;            /* Fondo claro */
-    --bad: #E85D9A;                /* Rosa para Retos/Desarmonías */
-    --good: #9B59B6;               /* Morado para Saberes/Diálogos */
-    --epist: #FF6B35;              /* Naranja para epistemología */
-    --gold: #FFB84D;               /* Dorado para Transformación */
-    --glass: rgba(255, 255, 255, 0.98); /* Vidrio institucional */
-    --text: #2C2C2C;               /* Texto principal */
-    --border: #E85D9A;             /* Bordes */
-}
+        --bg-core: #F4F6F9;            
+        --bad: #D23B78;                /* Rosa fuerte para Retos/Desarmonías */
+        --good: #7235A8;               /* Morado para Saberes/Diálogos */
+        --epist: #FBA511;              /* Naranja para epistemología */
+        --gold: #FDB913;               /* Dorado/Amarillo para Transformación */
+        --glass: rgba(255, 255, 255, 0.95); 
+        --text: #333333;               
+        --error: #CE4651;              /* Rojo para errores */
+        --success: #2E7D32;            /* Verde para aciertos */
+    }
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     body {
         margin: 0;
         background-color: var(--bg-core);
         color: var(--text);
-        font-family: 'Segoe UI', Roboto, sans-serif;
+        font-family: 'Nunito', sans-serif;
         height: 100vh;
         width: 100vw;
         overflow: hidden;
@@ -29,380 +32,364 @@
         flex-direction: column;
     }
 
+    h1, h2, h3, .header-title, .core-system, .btn-action, .side-title {
+        font-family: 'Outfit', sans-serif;
+    }
+
+    /* --- ACCESIBILIDAD --- */
+    *:focus-visible {
+        outline: 4px solid var(--epist);
+        outline-offset: 4px;
+        border-radius: 8px;
+    }
+
     /* --- FONDO --- */
     .ambient-bg {
         position: absolute; width: 100%; height: 100%;
-        background: radial-gradient(circle at center, #FFFFFF 0%, #F0F0F0 80%);
+        background: radial-gradient(circle at center, #FFFFFF 0%, #EAEAEA 100%);
         z-index: 0;
     }
     .grid-lines {
         position: absolute; width: 200%; height: 200%;
-        background-image: radial-gradient(rgba(155, 89, 182, 0.1) 1px, transparent 1px); /* Morado muy sutil */
+        background-image: radial-gradient(rgba(114, 53, 168, 0.1) 1px, transparent 1px);
         background-size: 30px 30px;
-        opacity: 0.5;
-        animation: rotateBg 120s linear infinite;
+        opacity: 0.6;
+        animation: rotateBg 150s linear infinite;
     }
     @keyframes rotateBg { from { transform: translate(-25%, -25%) rotate(0deg); } to { transform: translate(-25%, -25%) rotate(360deg); } }
 
     /* --- HEADER CON LOGOS --- */
     .top-header {
-        height: 70px;
+        height: 80px;
         background: var(--glass);
-        border-bottom: 3px solid var(--border);
+        border-bottom: 4px solid var(--good);
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 0 20px;
         z-index: 100;
-        box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
     
-    .logos-container {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        flex-shrink: 0;
-    }
-    
-    .logos-container img {
-        height: 45px;
-        width: auto;
-        object-fit: contain;
-        transition: transform 0.3s ease;
-    }
-    
-    .logos-container img:hover { transform: scale(1.05); }
+    .logos-container { display: flex; align-items: center; gap: 15px; flex-shrink: 0; }
+    .logos-container img { height: 50px; width: auto; object-fit: contain; }
     
     .header-title {
-        flex-grow: 1;
-        text-align: center;
-        font-weight: bold;
-        font-size: 1.1rem;
-        color: var(--good); /* Cambio sutil a morado para indicar propósito */
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        flex-grow: 1; text-align: center; font-weight: 800; font-size: 1.2rem;
+        color: var(--good); text-transform: uppercase; letter-spacing: 1px;
     }
     
     .score-display {
-        flex-shrink: 0;
-        font-weight: bold;
-        color: var(--epist);
-        font-size: 0.9rem;
+        flex-shrink: 0; font-weight: 800; color: var(--epist); font-size: 1rem;
+        background: rgba(251, 165, 17, 0.1); padding: 5px 15px; border-radius: 20px;
     }
 
     /* --- ARENA DE JUEGO --- */
     .game-arena {
-        flex-grow: 1;
-        position: relative;
-        z-index: 10;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
+        flex-grow: 1; position: relative; z-index: 10;
+        display: flex; justify-content: center; align-items: center; overflow: hidden;
     }
 
-    /* SVG para líneas curvas */
-    .svg-layer {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        pointer-events: none; z-index: 1;
+    /* --- TÍTULOS LATERALES (NUEVO) --- */
+    .side-title {
+        position: absolute;
+        top: 50%;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        font-weight: 800;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        opacity: 0.5;
+        z-index: 5;
+        pointer-events: none; /* Para no bloquear clics */
     }
+    .side-bad {
+        left: 15px;
+        transform: translateY(-50%) rotate(180deg);
+        color: var(--bad);
+    }
+    .side-good {
+        right: 15px;
+        transform: translateY(-50%);
+        color: var(--good);
+    }
+
+    .svg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
     
     .energy-path {
-        fill: none;
-        stroke: var(--good); /* Morado para indicar tejido social */
-        stroke-width: 4;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        stroke-dasharray: 1000;
-        stroke-dashoffset: 1000;
-        animation: drawFlow 2s forwards ease-in-out;
-        filter: drop-shadow(0 0 5px var(--good));
-        opacity: 0.8;
+        fill: none; stroke: var(--good); stroke-width: 5;
+        stroke-linecap: round; stroke-linejoin: round;
+        stroke-dasharray: 1000; stroke-dashoffset: 1000;
+        animation: drawFlow 1.5s forwards ease-in-out;
+        filter: drop-shadow(0 0 5px var(--good)); opacity: 0.9;
     }
     @keyframes drawFlow { to { stroke-dashoffset: 0; } }
 
     /* NÚCLEO CENTRAL */
     .core-system {
-        position: absolute;
-        width: 130px; height: 130px; /* Ligeramente más grande para el texto */
-        background: white;
-        border: 3px solid var(--bad); /* Comienza como "problemático/hegemónico" */
-        border-radius: 50%;
+        position: absolute; width: 140px; height: 140px;
+        background: white; border: 4px solid var(--bad); border-radius: 50%;
         display: flex; justify-content: center; align-items: center;
-        text-align: center; font-weight: bold; font-size: 0.75rem;
-        box-shadow: 0 5px 25px rgba(0,0,0, 0.1);
-        z-index: 20;
-        transition: all 0.8s ease;
-        color: var(--text);
-        padding: 10px;
-        text-transform: uppercase;
+        text-align: center; font-weight: 800; font-size: 0.8rem;
+        box-shadow: 0 5px 25px rgba(0,0,0, 0.1); z-index: 20;
+        transition: all 0.8s ease; color: var(--text); padding: 10px;
+        text-transform: uppercase; letter-spacing: 1px;
     }
     .core-system::before {
         content: ''; position: absolute; width: 130%; height: 130%;
-        border: 1px dashed rgba(155, 89, 182, 0.3); border-radius: 50%;
-        animation: spin 40s linear infinite;
+        border: 2px dashed rgba(210, 59, 120, 0.3); border-radius: 50%;
+        animation: spin 30s linear infinite;
     }
     @keyframes spin { 100% { transform: rotate(360deg); } }
     
     .core-system.active {
-        border-color: var(--gold);
-        box-shadow: 0 0 40px rgba(255, 184, 77, 0.4);
-        background: #fffbf0;
-        animation: pulseCore 0.8s 1;
+        border-color: var(--gold); box-shadow: 0 0 40px rgba(253, 185, 19, 0.5);
+        background: #FFFAF0; animation: pulseCore 0.8s 1;
     }
-    @keyframes pulseCore { 50% { transform: scale(1.05); } }
+    .core-system.active::before { border-color: rgba(253, 185, 19, 0.5); }
+    @keyframes pulseCore { 50% { transform: scale(1.1); } }
 
     /* --- NODOS FLOTANTES --- */
     .node {
-        position: absolute;
-        width: 60px; height: 60px;
-        border-radius: 50%;
+        position: absolute; width: 65px; height: 65px; border-radius: 50%;
         display: flex; justify-content: center; align-items: center;
-        font-size: 1.5rem; cursor: pointer;
-        background: white;
-        border: 2px solid #ddd;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.27), background 0.3s, border-color 0.3s;
-        z-index: 10;
-        animation-name: floatOrbit;
-        animation-timing-function: ease-in-out;
-        animation-iteration-count: infinite;
+        font-size: 1.6rem; cursor: pointer; background: white;
+        border: 3px solid #ddd; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s, background 0.3s, border-color 0.3s;
+        z-index: 10; padding: 0; margin: 0;
+        animation: floatOrbit ease-in-out infinite;
     }
 
-    @keyframes floatOrbit {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-12px); }
-        100% { transform: translateY(0px); }
-    }
+    @keyframes floatOrbit { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
     
-    .node:hover { 
-        animation-play-state: paused;
-        transform: scale(1.15) translateY(-5px); 
-        z-index: 50; 
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    .node:hover, .node:focus { 
+        animation-play-state: paused; transform: scale(1.15) translateY(-5px); 
+        z-index: 50; box-shadow: 0 10px 25px rgba(0,0,0,0.2); outline: none;
     }
 
-    .node.active { 
-        transform: scale(1.25); 
-        z-index: 60; 
-        box-shadow: 0 0 20px rgba(0,0,0,0.2);
-        animation: none;
-    }
+    .node.active { transform: scale(1.25); z-index: 60; animation: none; }
 
     /* Colores Específicos */
     .node-bad { border-color: var(--bad); color: var(--bad); }
-    .node-bad.active { background: var(--bad); color: white; }
+    .node-bad.active { background: var(--bad); color: white; box-shadow: 0 0 20px rgba(210, 59, 120, 0.5); }
 
     .node-good { border-color: var(--good); color: var(--good); }
-    .node-good.active { background: var(--good); color: white; }
+    .node-good.active { background: var(--good); color: white; box-shadow: 0 0 20px rgba(114, 53, 168, 0.5); }
     
-    /* EPISTEMOLOGÍA */
+    /* EPISTEMOLOGÍA (Reducida y ajustada) */
     .node-epist {
-        width: auto; height: auto;
-        padding: 10px 20px; border-radius: 30px;
-        background: white;
-        border: 2px solid var(--epist); 
-        color: var(--epist);
-        font-size: 0.9rem; font-weight: 800;
-        box-shadow: 0 5px 15px rgba(255, 107, 53, 0.2);
+        width: auto; height: auto; padding: 6px 18px; border-radius: 25px;
+        background: white; border: 2px solid var(--epist); color: var(--epist);
+        font-size: 0.85rem; font-weight: 800;
+        box-shadow: 0 5px 15px rgba(251, 165, 17, 0.2);
+        white-space: nowrap; /* Evita que el texto se rompa */
     }
-    
-    .node-epist:hover {
-        background: var(--epist); color: white;
-    }
+    .node-epist:hover, .node-epist:focus { background: var(--epist); color: white; }
 
-    /* ESTADO RESUELTO (INTEGRADO) */
-    .node.resolved {
-        background: var(--gold); 
-        color: white; 
-        border-color: var(--gold);
-        box-shadow: 0 0 20px var(--gold);
-        animation: pop 0.6s;
-    }
+    .node.resolved { background: var(--gold); color: white; border-color: var(--gold); box-shadow: 0 0 20px var(--gold); animation: pop 0.6s; pointer-events: none; }
     @keyframes pop { 50% { transform: scale(1.3); } }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } }
+    .shake-error { animation: shake 0.4s ease; border-color: var(--error) !important; background: #ffeaea !important; }
+
+    /* --- NOTIFICACIONES TOAST --- */
+    .toast-container {
+        position: fixed; top: 100px; left: 50%; transform: translateX(-50%);
+        z-index: 1000; display: flex; flex-direction: column; gap: 10px; align-items: center;
+    }
+    .toast {
+        background: white; padding: 15px 25px; border-radius: 8px; font-weight: bold; font-family: 'Nunito';
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 10px;
+        opacity: 0; transform: translateY(-20px); transition: all 0.3s;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.error { border-left: 5px solid var(--error); color: var(--error); }
+    .toast.success { border-left: 5px solid var(--success); color: var(--success); }
+    .toast.info { border-left: 5px solid var(--epist); color: var(--text); }
 
     /* --- HUD INFERIOR --- */
     .hud-panel {
-        background: var(--glass);
-        border-top: 4px solid var(--good); /* Morado para enfatizar solución */
-        padding: 20px; z-index: 100;
-        min-height: 190px;
-        display: flex; flex-direction: column;
-        box-shadow: 0 -5px 25px rgba(0,0,0,0.05);
+        background: var(--glass); border-top: 5px solid var(--good);
+        padding: 25px; z-index: 100; min-height: 220px;
+        display: flex; flex-direction: column; box-shadow: 0 -5px 25px rgba(0,0,0,0.05);
     }
     .hud-header { 
-        display: flex; 
-        justify-content: space-between; 
-        color: var(--text); 
-        font-weight: 800; 
-        font-size: 0.85rem; 
-        margin-bottom: 10px; 
-        border-bottom: 1px solid #eee;
-        padding-bottom: 5px;
+        display: flex; justify-content: space-between; align-items: center;
+        color: var(--text); font-weight: 800; font-size: 0.95rem; 
+        margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;
+        text-transform: uppercase;
     }
-    .hud-content { 
-        font-size: 0.95rem; 
-        line-height: 1.5; 
-        color: #444; 
-        flex-grow: 1; 
-        max-height: 150px; 
-        overflow-y: auto; 
-    }
-    
-    .action-btn {
-        margin-top: 12px;
-        background: linear-gradient(135deg, var(--good), #8E44AD);
-        border: none; padding: 14px; width: 100%;
-        color: white; font-weight: bold; border-radius: 8px;
-        cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
-        display: none; animation: slideUp 0.4s;
-        box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
-        font-size: 0.9rem;
-    }
-    
-    .action-btn:hover {
-        transform: translateY(-2px);
-        filter: brightness(1.1);
-    }
-    
-    @keyframes slideUp { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .status-badge { background: #eee; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; color: #555; }
+    .status-badge.active { background: rgba(114, 53, 168, 0.1); color: var(--good); }
 
-    /* MODAL VICTORIA */
+    .hud-content { font-size: 1.05rem; line-height: 1.6; color: #444; flex-grow: 1; overflow-y: auto; }
+    
+    .btn-action {
+        margin-top: 15px; background: var(--good); border: none; padding: 15px; width: 100%;
+        color: white; font-weight: 800; border-radius: 8px; font-size: 1rem;
+        cursor: pointer; text-transform: uppercase; letter-spacing: 2px;
+        display: none; box-shadow: 0 4px 15px rgba(114, 53, 168, 0.3); transition: all 0.3s;
+    }
+    .btn-action:hover, .btn-action:focus-visible { background: #5a2a85; transform: translateY(-2px); }
+
+    /* --- MODALES --- */
     .modal { 
-        display: none; 
-        position: fixed; top:0; left:0; 
-        width:100%; height:100%; 
-        background: rgba(44, 44, 44, 0.9); 
-        z-index: 200; 
-        justify-content: center; align-items: center; 
-        padding: 20px; 
-        backdrop-filter: blur(5px);
+        display: flex; position: fixed; top:0; left:0; width:100%; height:100%; 
+        background: rgba(0,0,0,0.7); z-index: 200; justify-content: center; align-items: center; 
+        padding: 20px; backdrop-filter: blur(5px); opacity: 1; transition: opacity 0.3s;
     }
+    .modal.hidden { opacity: 0; pointer-events: none; }
     .modal-box { 
-        background: white; 
-        border-left: 6px solid var(--gold); 
-        padding: 40px 30px; 
-        text-align: center; 
-        border-radius: 12px; 
-        max-width: 550px; 
-        animation: pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.27);
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        background: white; border-radius: 16px; padding: 40px; text-align: center; 
+        max-width: 600px; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
     }
-    
-    .modal-box h2 {
-        color: var(--text);
-        margin-top: 0;
-        font-size: 1.8rem;
-    }
-    
-    .modal-box p {
-        color: #555;
-        line-height: 1.7;
-        font-size: 1rem;
-        margin-bottom: 25px;
-    }
+    .modal-box h2 { color: var(--good); margin-top: 0; font-size: 2rem; margin-bottom: 20px; }
+    .modal-box p { color: #555; line-height: 1.7; font-size: 1.1rem; margin-bottom: 30px; }
+    .btn-start { background: var(--epist); color: white; border: none; padding: 15px 40px; font-size: 1.2rem; font-weight: 800; border-radius: 30px; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(251, 165, 17, 0.3); }
+    .btn-start:hover { transform: scale(1.05); background: #e0930f; }
 
     /* Responsive */
     @media (max-width: 768px) {
-        .logos-container img { height: 35px; }
-        .top-header { padding: 0 10px; }
-        .logos-container { gap: 8px; }
-        .header-title { font-size: 0.8rem; }
+        .logos-container img { height: 40px; }
+        .header-title { display: none; }
         .node { width: 50px; height: 50px; font-size: 1.3rem; }
         .core-system { width: 100px; height: 100px; font-size: 0.65rem; }
+        .hud-panel { min-height: 200px; padding: 15px; }
+        .side-title { font-size: 0.75rem; letter-spacing: 2px; }
+        .side-bad { left: 5px; }
+        .side-good { right: 5px; }
     }
-
 </style>
 </head>
 <body>
 
     <div class="ambient-bg"><div class="grid-lines"></div></div>
 
+    <!-- MODAL INSTRUCCIONES INICIALES -->
+    <div class="modal" id="start-modal">
+        <div class="modal-box">
+            <h2>Instrucciones del Reto</h2>
+            <p>
+                La atención institucional está bloqueada por un <strong>Modelo Hegemónico</strong>. Tu misión es transformarlo aplicando enfoques decoloniales e interseccionales.<br><br>
+                1. Selecciona una <b style="color:var(--bad)">Brecha Institucional (Rosa)</b> de la izquierda.<br>
+                2. Encuentra el <b style="color:var(--good)">Saber Comunitario (Morado)</b> de la derecha que la solucione.<br>
+                3. Haz clic en "Tejer Sentidos" para reparar el sistema.
+            </p>
+            <button class="btn-start" onclick="closeStartModal()">Comenzar Reto</button>
+        </div>
+    </div>
+
+    <!-- TOAST ALERTS -->
+    <div class="toast-container" id="toast-container" aria-live="assertive"></div>
+
     <!-- HEADER CON LOGOS -->
-    <div class="top-header">
+    <header class="top-header">
         <div class="logos-container">
-            <img src="../Styles/UNP I.svg" alt="Logo UNP" style="height:80px; width:auto;">
-            <img src="../Styles/logo.png" alt="Logo Comisión" style="height:60px; width:auto;">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP">
+            <img src="../Styles/logo.png" alt="Logo Institucional">
         </div>
-        <div class="header-title">INTERSECCIONALIDAD PROPOSITIVA</div>
-        <div class="score-display" id="score">TEJIDO: 0%</div>
-    </div>
+        <div class="header-title">Interseccionalidad Propositiva</div>
+        <div class="score-display" id="score" aria-label="Progreso del tejido">TEJIDO: 0%</div>
+    </header>
 
-    <div class="game-arena" id="arena">
-        <svg class="svg-layer" id="svg-layer"></svg>
+    <main class="game-arena" id="arena" aria-label="Área de juego interactiva">
+        
+        <!-- Títulos Laterales Fijos -->
+        <div class="side-title side-bad">Brechas Institucionales</div>
+        <div class="side-title side-good">Saberes Comunitarios</div>
 
-        <!-- NÚCLEO (Fijo - Cambia de nombre al ganar) -->
-        <div class="core-system" id="core">MODELO<br>HEGEMÓNICO</div>
+        <svg class="svg-layer" id="svg-layer" aria-hidden="true"></svg>
 
-        <!-- NODOS (Flotantes) -->
-        <!-- Epistemología (Arriba) -->
-        <div class="node node-epist" id="epist" onclick="showEpist()">🧠 EPISTEMOLOGÍAS</div>
+        <!-- NÚCLEO -->
+        <div class="core-system" id="core" aria-live="polite">MODELO<br>HEGEMÓNICO</div>
 
-        <!-- RETOS (Izquierda - Rosa) -->
-        <div class="node node-bad" id="bad1" onclick="selectNode('bad1')">⚠️</div>
-        <div class="node node-bad" id="bad2" onclick="selectNode('bad2')">🔫</div>
-        <div class="node node-bad" id="bad3" onclick="selectNode('bad3')">📉</div>
-        <div class="node node-bad" id="bad4" onclick="selectNode('bad4')">👤</div>
+        <!-- Epistemología -->
+        <button class="node node-epist" id="epist" onclick="showEpist()" aria-label="Ver concepto de Epistemologías Feministas">🧠 EPISTEMOLOGÍA</button>
 
-        <!-- SOLUCIONES (Derecha - Morado) -->
-        <div class="node node-good" id="good1" onclick="selectNode('good1')">🤝</div>
-        <div class="node node-good" id="good2" onclick="selectNode('good2')">🛡️</div>
-        <div class="node node-good" id="good3" onclick="selectNode('good3')">👂</div>
-        <div class="node node-good" id="good4" onclick="selectNode('good4')">🌿</div>
-    </div>
+        <!-- RETOS (Izquierda) -->
+        <button class="node node-bad" id="bad1" onclick="selectNode('bad1')" aria-label="Brecha: Rigidez Normativa">⚠️</button>
+        <button class="node node-bad" id="bad2" onclick="selectNode('bad2')" aria-label="Brecha: Modelo Militarizado">🔫</button>
+        <button class="node node-bad" id="bad3" onclick="selectNode('bad3')" aria-label="Brecha: Desconocimiento">📉</button>
+        <button class="node node-bad" id="bad4" onclick="selectNode('bad4')" aria-label="Brecha: Enfoque Individual">👤</button>
 
-    <!-- HUD -->
-    <div class="hud-panel">
+        <!-- SOLUCIONES (Derecha) -->
+        <button class="node node-good" id="good1" onclick="selectNode('good1')" aria-label="Saber: Gobernanza Propia">🤝</button>
+        <button class="node node-good" id="good2" onclick="selectNode('good2')" aria-label="Saber: Protección Colectiva">🛡️</button>
+        <button class="node node-good" id="good3" onclick="selectNode('good3')" aria-label="Saber: Escucha Profunda">👂</button>
+        <button class="node node-good" id="good4" onclick="selectNode('good4')" aria-label="Saber: Guardia y Territorio">🌿</button>
+    </main>
+
+    <!-- HUD (Panel de instrucciones y lectura) -->
+    <section class="hud-panel" aria-label="Panel de información">
         <div class="hud-header">
-            <span>PANEL DE DIÁLOGO INTERCULTURAL</span>
-            <span style="color: var(--epist);">ESTADO: ESPERANDO CONEXIÓN</span>
+            <span>Panel de Diálogo</span>
+            <span class="status-badge" id="hud-status">Esperando Acción</span>
         </div>
-        <div class="hud-content" id="hud-desc">
-            <strong>Desafío Epistémico:</strong> La UNP no necesita "reparaciones" superficiales.<br>
-            Tu misión es <b>tejer un nuevo sentido</b> conectando las brechas institucionales <span style="color:var(--bad)">(Rosa)</span> con los Saberes Comunitarios <span style="color:var(--good)">(Morado)</span> para redefinir la seguridad.
+        <div class="hud-content" id="hud-desc" aria-live="polite">
+            Selecciona un elemento flotante en la pantalla para analizar la situación. Comienza por una <b style="color:var(--bad)">Brecha (Nodos Rosas de la izquierda)</b>.
         </div>
-        <button class="action-btn" id="btn-action">TEJER SABERES</button>
-    </div>
+        <button class="btn-action" id="btn-action">TEJER SENTIDOS</button>
+    </section>
 
     <!-- MODAL VICTORIA -->
-    <div class="modal" id="win-modal">
-        <div class="modal-box">
+    <div class="modal hidden" id="win-modal">
+        <div class="modal-box" style="border-left: 8px solid var(--gold);">
             <h2 style="color:var(--gold)">¡REDEFINICIÓN COMPLETADA!</h2>
             <p>
-                Has evitado el extractivismo epistémico. Los saberes comunitarios no han servido como simples accesorios para "desbloquear" el sistema, sino que han transformado su núcleo. <br><br>
+                Has evitado el extractivismo epistémico. Los saberes comunitarios no han servido como simples accesorios, sino que han transformado el núcleo institucional.<br><br>
                 Ahora la protección se entiende desde la <strong>Seguridad Humana</strong> y el cuidado colectivo.
             </p>
-            <button onclick="location.reload()" style="background:var(--text); border:none; padding:12px 25px; font-weight:bold; cursor:pointer; margin-top:10px; border-radius:6px; color:white; text-transform:uppercase;">Reiniciar Experiencia</button>
+            <button class="btn-start" onclick="location.reload()" style="background:var(--text); box-shadow:none;">Reiniciar Experiencia</button>
         </div>
     </div>
 
 <script>
-    // --- 1. CONFIGURACIÓN Y POSICIONAMIENTO ---
+    // --- UI Y ACCESIBILIDAD ---
+    function closeStartModal() {
+        document.getElementById('start-modal').classList.add('hidden');
+    }
+
+    function showToast(message, type) {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        let icon = type === 'error' ? '❌ ' : type === 'success' ? '✨ ' : 'ℹ️ ';
+        toast.innerHTML = icon + message;
+        
+        container.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 10);
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // --- POSICIONAMIENTO Y ANIMACIONES ---
     function positionElements() {
         const arena = document.getElementById('arena');
         const centerX = arena.offsetWidth / 2;
         const centerY = arena.offsetHeight / 2;
-        
         const minDim = Math.min(arena.offsetWidth, arena.offsetHeight);
-        const radius = minDim < 600 ? minDim * 0.38 : 230; 
+        const radius = minDim < 600 ? minDim * 0.38 : 250; 
 
-        // Epistemología
         const epist = document.getElementById('epist');
         epist.style.left = (centerX - epist.offsetWidth/2) + 'px';
-        epist.style.top = (centerY - radius - 55) + 'px';
+        // Se subió el botón de epistemología restando 75 en vez de 60
+        epist.style.top = (centerY - radius - 75) + 'px'; 
 
-        // Izquierda (Retos)
-        distributeArc(['bad1', 'bad2', 'bad3', 'bad4'], 140, 220, centerX, centerY, radius);
-
-        // Derecha (Saberes)
-        distributeArc(['good1', 'good2', 'good3', 'good4'], -40, 40, centerX, centerY, radius);
+        // Matemáticas corregidas para garantizar que Bad = Izquierda y Good = Derecha
+        // Usamos trigonometría pura sin offsets rotados
+        distributeArc(['bad1', 'bad2', 'bad3', 'bad4'], 135, 225, centerX, centerY, radius);
+        distributeArc(['good1', 'good2', 'good3', 'good4'], 45, -45, centerX, centerY, radius);
     }
 
     function distributeArc(ids, startAngle, endAngle, cx, cy, r) {
         const step = (endAngle - startAngle) / (ids.length - 1);
         ids.forEach((id, index) => {
-            const angleDeg = startAngle + (step * index);
-            const angleRad = (angleDeg - 90) * (Math.PI / 180);
+            // Conversión estandar a radianes (0 es derecha, 90 es abajo, 180 es izquierda)
+            const angleRad = (startAngle + (step * index)) * (Math.PI / 180);
             const el = document.getElementById(id);
             const x = cx + r * Math.cos(angleRad);
             const y = cy + r * Math.sin(angleRad);
@@ -412,35 +399,28 @@
     }
 
     function randomizeFloat() {
-        const nodes = document.querySelectorAll('.node');
-        nodes.forEach(node => {
-            const duration = 3 + Math.random() * 4;
-            const delay = Math.random() * 2;
-            node.style.animationDuration = `${duration}s`;
-            node.style.animationDelay = `${delay}s`;
+        document.querySelectorAll('.node').forEach(node => {
+            node.style.animationDuration = (3 + Math.random() * 4) + 's';
+            node.style.animationDelay = (Math.random() * 2) + 's';
         });
     }
 
     window.addEventListener('load', () => { positionElements(); randomizeFloat(); });
     window.addEventListener('resize', positionElements);
 
-
-    // --- 2. LÓGICA SEMÁNTICA (Data ajustada al enfoque) ---
+    // --- LÓGICA DE JUEGO ---
     const db = {
-        epist: { 
-            title: "3. EPISTEMOLOGÍAS FEMINISTAS", 
-            text: "No se trata de incluir mujeres en un sistema patriarcal, sino de valorar sus experiencias y saberes como fuentes legítimas para <b>redefinir</b> qué significa estar seguros." 
-        },
+        epist: { title: "EPISTEMOLOGÍAS FEMINISTAS", text: "No se trata de incluir mujeres en un sistema patriarcal, sino de valorar sus experiencias y saberes como fuentes legítimas para <b>redefinir</b> qué significa estar seguros." },
         
-        bad1: { title: "BRECHA: RIGIDEZ NORMATIVA", text: "El sistema exige pruebas que no existen en la oralidad y desconoce las dinámicas informales del riesgo.", pair: "good3" }, 
-        bad2: { title: "BRECHA: MODELO MILITARIZADO", text: "La protección centrada en armas ignora la autonomía territorial y rompe el tejido de confianza.", pair: "good4" }, 
-        bad3: { title: "BRECHA: DESCONOCIMIENTO", text: "Falta de reconocimiento a las autoridades propias, imponiendo lógicas externas sobre las comunidades.", pair: "good1" }, 
-        bad4: { title: "BRECHA: ENFOQUE INDIVIDUAL", text: "Proteger al individuo aislado rompe su rol dentro de la comunidad y lo deja vulnerable.", pair: "good2" }, 
+        bad1: { title: "BRECHA: RIGIDEZ NORMATIVA", text: "El sistema exige pruebas documentales que no existen en la oralidad y desconoce las dinámicas informales del riesgo.", pair: "good3" }, 
+        bad2: { title: "BRECHA: MODELO MILITARIZADO", text: "La protección centrada en armas y escoltas ignora la autonomía territorial y rompe el tejido de confianza comunitario.", pair: "good4" }, 
+        bad3: { title: "BRECHA: DESCONOCIMIENTO AUTORIDAD", text: "Falta de reconocimiento a las autoridades propias, imponiendo lógicas estatales externas sobre las comunidades.", pair: "good1" }, 
+        bad4: { title: "BRECHA: ENFOQUE INDIVIDUAL", text: "Proteger al individuo aislado rompe su rol dentro de la comunidad y lo deja aún más vulnerable a largo plazo.", pair: "good2" }, 
 
         good1: { title: "SABER: GOBERNANZA PROPIA", text: "Articulación horizontal con autoridades étnicas (Cabildos/Consejos). Validación de sus mandatos de protección." },
-        good2: { title: "SABER: PROTECCIÓN COLECTIVA", text: "El sujeto de protección es el tejido social. Análisis de riesgo comunitario y medidas para el colectivo." },
+        good2: { title: "SABER: PROTECCIÓN COLECTIVA", text: "El sujeto de protección es el tejido social. Análisis de riesgo comunitario y medidas para el colectivo en su conjunto." },
         good3: { title: "SABER: ESCUCHA PROFUNDA", text: "Validación de la palabra y marcos conceptuales locales. No revictimizar con burocracia ajena." },
-        good4: { title: "SABER: GUARDIA Y TERRITORIO", text: "Respeto a la autonomía territorial. Fortalecimiento de Guardias Indígenas y Cimarronas como actores legítimos." }
+        good4: { title: "SABER: GUARDIA Y TERRITORIO", text: "Respeto a la autonomía territorial. Fortalecimiento de Guardias Indígenas y Cimarronas como actores legítimos de seguridad." }
     };
 
     let activeBad = null;
@@ -463,20 +443,23 @@
             document.querySelectorAll('.node-good').forEach(n => n.classList.remove('active'));
             btn.style.display = 'none';
 
-            updateHud(db[id].title, db[id].text + "<br><br><span style='color:var(--good); font-weight:bold;'>Busca el Saber Comunitario que dialoga con esta brecha.</span>");
+            updateHud(db[id].title, db[id].text + "<br><br><span style='color:var(--good); font-weight:bold;'><i class='fa-solid fa-arrow-right'></i> Paso 2: Selecciona un Saber Comunitario (Morado) que solucione esto.</span>", "Buscando solución...");
         } else {
             if(!activeBad) {
-                updateHud("ORDEN DEL DIÁLOGO", "Primero identifica una <b style='color:var(--bad)'>Brecha Institucional (Rosa)</b> que necesite ser redefinida.");
+                showToast("Primero selecciona una Brecha (Nodos Rosas de la izquierda)", "info");
+                el.classList.add('shake-error');
+                setTimeout(() => el.classList.remove('shake-error'), 400);
                 return;
             }
             document.querySelectorAll('.node-good').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
             activeGood = id;
-            updateHud(db[id].title, db[id].text);
+            
+            updateHud(db[id].title, db[id].text, "Listo para tejer", true);
             
             btn.style.display = 'block';
-            btn.innerText = "TEJER SENTIDOS"; // Cambio de texto en botón
             btn.onclick = tryMatch;
+            btn.focus(); 
         }
     }
 
@@ -484,10 +467,23 @@
         if(db[activeBad].pair === activeGood) {
             success(activeBad, activeGood);
         } else {
-            updateHud("NO HAY DIÁLOGO FLUIDO", "Este saber es valioso, pero no responde directamente a la naturaleza estructural de la brecha seleccionada. Intenta otra conexión.");
-            document.getElementById(activeGood).classList.remove('active');
+            showToast("Conexión incorrecta. Este saber no soluciona esta brecha.", "error");
+            
+            const badNode = document.getElementById(activeBad);
+            const goodNode = document.getElementById(activeGood);
+            
+            badNode.classList.add('shake-error');
+            goodNode.classList.add('shake-error');
+            
+            setTimeout(() => {
+                badNode.classList.remove('shake-error');
+                goodNode.classList.remove('shake-error');
+                goodNode.classList.remove('active');
+            }, 400);
+
             activeGood = null;
             btn.style.display = 'none';
+            updateHud(db[activeBad].title, db[activeBad].text + "<br><br><span style='color:var(--error); font-weight:bold;'>Intenta conectar con otro saber.</span>", "Buscando solución...");
         }
     }
 
@@ -496,12 +492,12 @@
         const g = document.getElementById(goodId);
         const c = document.getElementById('core');
 
-        b.className = "node resolved"; b.innerHTML = "✨";
-        g.className = "node resolved"; g.innerHTML = "✨";
+        b.className = "node resolved"; b.innerHTML = "✨"; b.setAttribute('aria-label', 'Resuelto');
+        g.className = "node resolved"; g.innerHTML = "✨"; g.setAttribute('aria-label', 'Resuelto');
         
         drawCurvedLine(b, c, g);
+        showToast("¡Diálogo establecido correctamente!", "success");
 
-        // Efecto visual en el centro
         c.classList.add('active');
         setTimeout(() => c.classList.remove('active'), 1200);
 
@@ -509,19 +505,16 @@
         document.getElementById('score').innerText = `TEJIDO: ${(solved/4)*100}%`;
         
         activeBad = null; activeGood = null; btn.style.display = 'none';
-        updateHud("DIÁLOGO ESTABLECIDO", "La interseccionalidad ha transformado este aspecto del protocolo.");
+        updateHud("CONEXIÓN EXITOSA", "La interseccionalidad ha transformado este aspecto de la ruta. Continúa con las brechas restantes.", "Conectado");
 
-        // CONDICIÓN DE VICTORIA
         if(solved === 4) {
             setTimeout(() => {
-                // AQUÍ OCURRE LA REDEFINICIÓN VISUAL DEL NÚCLEO
                 c.innerHTML = "SEGURIDAD<br>HUMANA"; 
                 c.style.borderColor = "var(--gold)";
                 c.style.color = "var(--good)";
-                c.style.fontSize = "0.85rem";
                 
-                document.getElementById('win-modal').style.display = 'flex';
-            }, 1500);
+                document.getElementById('win-modal').classList.remove('hidden');
+            }, 1800);
         }
     }
 
@@ -540,18 +533,23 @@
 
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
         path.setAttribute("class", "energy-path");
-        
-        // Curva cuadrática doble para simular tejido pasando por el centro
-        const d = `M ${p1.x},${p1.y} Q ${p1.x},${pc.y} ${pc.x},${pc.y} Q ${p2.x},${pc.y} ${p2.x},${p2.y}`;
-
-        path.setAttribute("d", d);
+        path.setAttribute("d", `M ${p1.x},${p1.y} Q ${p1.x},${pc.y} ${pc.x},${pc.y} Q ${p2.x},${pc.y} ${p2.x},${p2.y}`);
         svg.appendChild(path);
     }
 
-    function showEpist() { updateHud(db.epist.title, db.epist.text); }
-    function updateHud(t, txt) { document.getElementById('hud-desc').innerHTML = `<strong style="color:var(--text); text-transform:uppercase;">${t}</strong><br>${txt}`; }
+    function showEpist() { 
+        updateHud(db.epist.title, db.epist.text, "Lectura Conceptual"); 
+    }
+
+    function updateHud(t, txt, status = "Esperando Acción", isActive = false) { 
+        document.getElementById('hud-desc').innerHTML = `<strong style="color:var(--text); text-transform:uppercase; font-size:1.1rem;">${t}</strong><br><br>${txt}`; 
+        
+        const statusBadge = document.getElementById('hud-status');
+        statusBadge.innerText = status;
+        if(isActive) statusBadge.classList.add('active');
+        else statusBadge.classList.remove('active');
+    }
 
 </script>
-
 </body>
 </html>

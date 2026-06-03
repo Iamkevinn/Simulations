@@ -3,403 +3,1250 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interacción y Conceptos: El Cuidado</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
-    /* --- SCOPED RESET & VARIABLES --- */
-    #unp-game-master {
-        font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
-        color: #333;
-        background: linear-gradient(180deg, #ffffff 0%, #fdf2f8 100%);
-        max-width: 100%;
-        overflow-x: hidden;
-        margin: 0 auto;
-        padding-bottom: 80px;
+/* =========================================================
+   VARIABLES Y RESET
+   ========================================================= */
+:root {
+    --c1: #480241;   /* Morado oscuro */
+    --c2: #7235A8;   /* Morado medio */
+    --c3: #FBA511;   /* Naranja/Amarillo */
+    --c4: #CE4651;   /* Rojo */
+    --c5: #FFFFFF;
+    --success: #2A8143;
+    --bg-page: #F4F0F8;
+    --bg-logo: #EDE6EC;
+    --text: #2A2A2B;
+    --border: #D3C5E0;
+    --shadow: 0 8px 24px rgba(72,2,65,0.09);
+    --shadow-hover: 0 12px 32px rgba(72,2,65,0.16);
+    --font-ui: 'Montserrat', sans-serif;
+    --font-body: 'Nunito', sans-serif;
+    --radius: 12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-page);
+    color: var(--text);
+    line-height: 1.65;
+    font-size: 16px;
+    padding-bottom: 100px;
+}
+
+h1, h2, h3, h4 { font-family: var(--font-ui); }
+
+*:focus-visible {
+    outline: 3px solid var(--c3);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+header {
+    background-color: var(--bg-logo);
+    border-bottom: 5px solid var(--c1);
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 800;
+    box-shadow: 0 4px 12px rgba(72,2,65,0.08);
+}
+
+.header-logos { display: flex; gap: 2rem; align-items: center; }
+.header-logo { max-height: 52px; }
+
+.header-text {
+    color: var(--c1);
+    font-family: var(--font-ui);
+    font-weight: 800;
+    font-size: 1rem;
+    text-align: right;
+    border-left: 4px solid var(--c3);
+    padding-left: 1.2rem;
+    line-height: 1.3;
+}
+
+/* =========================================================
+   HERO INTRODUCTORIO
+   ========================================================= */
+.hero {
+    background: linear-gradient(135deg, var(--c1) 0%, var(--c2) 100%);
+    color: var(--c5);
+    text-align: center;
+    padding: 3.5rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    height: 40px;
+    background: var(--bg-page);
+    clip-path: ellipse(55% 100% at 50% 100%);
+}
+
+.hero h1 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 800;
+    margin-bottom: 0.8rem;
+    line-height: 1.2;
+}
+
+.hero p {
+    font-size: 1.05rem;
+    opacity: 0.88;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    font-weight: 600;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: rgba(251,165,17,0.22);
+    border: 2px solid var(--c3);
+    color: var(--c3);
+    padding: 0.5rem 1.2rem;
+    border-radius: 50px;
+    font-family: var(--font-ui);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   LAYOUT PRINCIPAL
+   ========================================================= */
+main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+/* =========================================================
+   TARJETA DE ACTIVIDAD (BASE)
+   ========================================================= */
+.activity-card {
+    background: var(--c5);
+    border-radius: var(--radius);
+    border-top: 6px solid var(--c2);
+    box-shadow: var(--shadow);
+    padding: 2.2rem;
+    position: relative;
+}
+
+.activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f0e8f8;
+}
+
+.activity-header h2 {
+    color: var(--c1);
+    font-size: 1.25rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    line-height: 1.3;
+}
+
+.activity-header h2 i { color: var(--c3); flex-shrink: 0; }
+
+/* Número de nivel */
+.level-badge {
+    background: var(--c1);
+    color: var(--c5);
+    font-family: var(--font-ui);
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    white-space: nowrap;
+    align-self: center;
+}
+
+/* Bloque de instrucción */
+.instruction {
+    background: rgba(251,165,17,0.12);
+    border-left: 5px solid var(--c3);
+    padding: 0.9rem 1.2rem;
+    border-radius: 0 6px 6px 0;
+    font-weight: 700;
+    color: var(--c1);
+    font-size: 0.97rem;
+    line-height: 1.55;
+    margin-bottom: 1.8rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+}
+
+.instruction i { color: var(--c3); font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
+
+/* Botón de info / modal */
+.info-btn {
+    background: var(--c2);
+    color: var(--c5);
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(114,53,168,0.3);
+    transition: all 0.2s;
+    flex-shrink: 0;
+    animation: pulse-info 2.5s infinite;
+    font-family: var(--font-ui);
+    font-weight: 800;
+}
+.info-btn:hover { background: var(--c1); transform: scale(1.1); }
+
+@keyframes pulse-info {
+    0%   { box-shadow: 0 0 0 0 rgba(114,53,168,0.5); }
+    70%  { box-shadow: 0 0 0 9px rgba(114,53,168,0); }
+    100% { box-shadow: 0 0 0 0 rgba(114,53,168,0); }
+}
+
+/* =========================================================
+   ACTIVIDAD 1: DRAG & DROP
+   ========================================================= */
+.drag-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    justify-content: center;
+    background: var(--bg-page);
+    padding: 1.2rem;
+    border-radius: 8px;
+    border: 1px dashed var(--border);
+    margin-bottom: 1.5rem;
+}
+
+.drag-item {
+    background: var(--c1);
+    color: var(--c5);
+    padding: 0.65rem 1.2rem;
+    border-radius: 30px;
+    cursor: grab;
+    font-weight: 700;
+    font-size: 0.9rem;
+    font-family: var(--font-ui);
+    transition: all 0.2s;
+    user-select: none;
+    border: none;
+    display: inline-block;
+}
+.drag-item:hover { background: var(--c2); transform: translateY(-2px); }
+.drag-item.dragging { opacity: 0.5; cursor: grabbing; }
+.drag-item.correct-drop {
+    background: var(--success);
+    cursor: default;
+    pointer-events: none;
+    animation: pop-in 0.3s ease;
+}
+.drag-item.mobile-selected {
+    background: var(--c3);
+    color: var(--c1);
+    transform: scale(1.05);
+    box-shadow: 0 0 0 3px var(--c1);
+}
+
+@keyframes pop-in {
+    0%   { transform: scale(0.8); }
+    60%  { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.drop-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+}
+
+.drop-zone {
+    background: var(--bg-page);
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 1.2rem;
+    min-height: 160px;
+    transition: all 0.25s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.drop-zone.hovered {
+    border-color: var(--c3);
+    background: rgba(251,165,17,0.08);
+    transform: scale(1.01);
+}
+
+.drop-zone-label {
+    font-family: var(--font-ui);
+    font-weight: 800;
+    font-size: 0.85rem;
+    color: var(--c2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 0.4rem;
+}
+
+/* Mobile hint para drag */
+.mobile-hint {
+    display: none;
+    text-align: center;
+    font-size: 0.82rem;
+    color: #888;
+    font-style: italic;
+    margin-top: 0.5rem;
+}
+
+/* =========================================================
+   ACTIVIDAD 2: ROMPER MITOS
+   ========================================================= */
+.myth-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.myth-card {
+    background: var(--bg-page);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.2rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.97rem;
+    color: var(--c1);
+    transition: all 0.2s;
+    border-bottom: 4px solid var(--border);
+}
+.myth-card:hover { border-color: var(--c2); transform: translateY(-3px); box-shadow: var(--shadow); }
+
+.truth-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--c1);
+    color: var(--c5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.35s;
+    padding: 1rem;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    text-align: center;
+}
+
+.truth-overlay strong {
+    font-family: var(--font-ui);
+    font-size: 0.92rem;
+    color: var(--c3);
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+.truth-icon { font-size: 1.8rem; }
+
+.myth-card.broken { border-color: var(--success); }
+.myth-card.broken .truth-overlay { opacity: 1; }
+
+/* =========================================================
+   ACTIVIDAD 3: SPOTLIGHT / LINTERNA
+   ========================================================= */
+.spotlight-wrapper {
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.spotlight-mobile-note {
+    display: none;
+    background: rgba(251,165,17,0.12);
+    border-left: 4px solid var(--c3);
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--c1);
+    margin-bottom: 0.8rem;
+    border-radius: 0 6px 6px 0;
+}
+
+.spotlight-container {
+    position: relative;
+    background: #1a0f2e;
+    color: #d4c5e8;
+    padding: 2.2rem;
+    cursor: none;
+    overflow: hidden;
+    min-height: 280px;
+    border-radius: 10px;
+}
+
+.spotlight-mask {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle 130px at var(--x, 50%) var(--y, 50%), transparent 0%, rgba(10,5,20,0.97) 100%);
+    z-index: 3;
+    pointer-events: none;
+    transition: background 0.05s;
+}
+
+.flashlight-icon {
+    position: absolute;
+    top: var(--y, 50%);
+    left: var(--x, 50%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    font-size: 1.5rem;
+    z-index: 4;
+    opacity: 0.8;
+}
+
+.hidden-text {
+    font-size: 1rem;
+    line-height: 1.85;
+    position: relative;
+    z-index: 2;
+    font-weight: 600;
+}
+
+.hidden-text p { margin-bottom: 1.2rem; }
+
+.highlight {
+    color: var(--c3);
+    font-weight: 800;
+    text-shadow: 0 0 12px rgba(251,165,17,0.5);
+}
+
+/* =========================================================
+   ACTIVIDAD 4: SLIDER
+   ========================================================= */
+.slider-box {
+    background: var(--bg-page);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+}
+
+.slider-question {
+    font-family: var(--font-ui);
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--c1);
+    margin-bottom: 1.5rem;
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.6rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--c2);
+}
+
+input[type=range] {
+    width: 100%;
+    max-width: 460px;
+    accent-color: var(--c3);
+    height: 6px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto 0.6rem;
+}
+
+.slider-hint {
+    font-size: 0.82rem;
+    color: #888;
+    font-style: italic;
+    margin-top: 0.5rem;
+    font-weight: 600;
+}
+
+.slider-result {
+    display: none;
+    margin-top: 1.5rem;
+    background: #e6f4ea;
+    border-left: 5px solid var(--success);
+    border-radius: 0 8px 8px 0;
+    padding: 1.1rem 1.3rem;
+    text-align: left;
+    animation: pop-in 0.35s ease;
+}
+
+.slider-result h3 {
+    color: var(--success);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.slider-result p {
+    font-size: 0.97rem;
+    color: #1e4d2b;
+    line-height: 1.6;
+}
+
+/* =========================================================
+   MODALES
+   ========================================================= */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,8,24,0.82);
+    z-index: 9999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-box {
+    background: var(--c5);
+    width: 100%;
+    max-width: 580px;
+    max-height: 82vh;
+    overflow-y: auto;
+    border-radius: var(--radius);
+    padding: 2.2rem;
+    position: relative;
+    border-top: 6px solid var(--c3);
+    box-shadow: 0 24px 60px rgba(72,2,65,0.3);
+    transform: translateY(16px);
+    transition: transform 0.3s;
+}
+
+.modal-overlay.active .modal-box { transform: translateY(0); }
+
+.modal-close {
+    position: absolute;
+    top: 1rem; right: 1.2rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #aaa;
+    line-height: 1;
+    padding: 0.2rem;
+    transition: color 0.2s;
+}
+.modal-close:hover { color: var(--c4); }
+
+.modal-badge {
+    display: inline-block;
+    background: var(--c3);
+    color: var(--c1);
+    font-family: var(--font-ui);
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 0.25rem 0.8rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 0.8rem;
+}
+
+.modal-box h3 {
+    color: var(--c1);
+    font-size: 1.35rem;
+    margin-bottom: 1.2rem;
+    line-height: 1.3;
+}
+
+.modal-box p, .modal-box li {
+    font-size: 1rem;
+    line-height: 1.68;
+    color: #444;
+    margin-bottom: 0.9rem;
+}
+
+.modal-box ul { padding-left: 1.4rem; }
+.modal-box li { margin-bottom: 0.5rem; }
+.modal-box strong { color: var(--c4); }
+
+.modal-footer {
+    margin-top: 1.5rem;
+    text-align: right;
+}
+
+.modal-cta {
+    background: var(--c1);
+    color: var(--c5);
+    border: none;
+    padding: 0.75rem 1.8rem;
+    border-radius: 8px;
+    font-family: var(--font-ui);
+    font-weight: 800;
+    font-size: 0.92rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.2s;
+}
+.modal-cta:hover { background: var(--c2); }
+
+/* =========================================================
+   FLECHA INTELIGENTE (SCROLL)
+   ========================================================= */
+.scroll-btn {
+    position: fixed;
+    bottom: 1.8rem;
+    right: 1.8rem;
+    background: var(--c1);
+    color: var(--c5);
+    border: none;
+    padding: 0.9rem 1.6rem;
+    border-radius: 50px;
+    font-family: var(--font-ui);
+    font-weight: 800;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    box-shadow: 0 6px 20px rgba(72,2,65,0.3);
+    z-index: 1000;
+    transition: all 0.3s;
+    letter-spacing: 0.02em;
+}
+.scroll-btn:hover { background: var(--c2); transform: translateY(-3px); }
+.scroll-btn.at-bottom { background: var(--success); cursor: default; }
+.scroll-btn.at-bottom:hover { transform: none; }
+
+.scroll-arrow {
+    font-size: 1rem;
+    transition: transform 0.3s;
+}
+.scroll-btn.at-bottom .scroll-arrow { transform: none; }
+
+/* Barra de progreso de scroll */
+.scroll-progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: var(--c3);
+    z-index: 9000;
+    transition: width 0.15s;
+    width: 0%;
+}
+
+/* =========================================================
+   DIVISOR ENTRE SECCIONES
+   ========================================================= */
+.section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--c2);
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.5;
+}
+.section-divider::before, .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+/* =========================================================
+   ESTADOS DE FEEDBACK
+   ========================================================= */
+.feedback-msg {
+    display: none;
+    margin-top: 1.2rem;
+    padding: 0.9rem 1.1rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.97rem;
+    line-height: 1.5;
+}
+.feedback-msg.show-success {
+    display: block;
+    background: #e6f4ea;
+    border-left: 4px solid var(--success);
+    color: #137333;
+}
+.feedback-msg.show-error {
+    display: block;
+    background: #fce8e6;
+    border-left: 4px solid var(--c4);
+    color: #a0191f;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 900px) {
+    header { flex-direction: column; gap: 1rem; padding: 1.2rem; }
+    .header-text { border-left: none; padding-left: 0; border-top: 3px solid var(--c3); padding-top: 0.6rem; text-align: center; }
+}
+
+@media (max-width: 600px) {
+    main { padding: 2rem 1rem; gap: 2rem; }
+    .activity-card { padding: 1.4rem 1.1rem; }
+    .activity-header h2 { font-size: 1.05rem; }
+    .hero { padding: 2.5rem 1.2rem 3.5rem; }
+
+    /* Drag: columnas apiladas en móvil */
+    .drop-columns { grid-template-columns: 1fr; }
+    .mobile-hint { display: block; }
+
+    /* Spotlight: visible sin hover en móvil */
+    .spotlight-container {
+        cursor: default;
+        background: #1a0f2e;
     }
+    .spotlight-mask { display: none; }
+    .flashlight-icon { display: none; }
+    .spotlight-mobile-note { display: block; }
 
-    #unp-game-master * { box-sizing: border-box; }
-
-    :root {
-        --unp-purple: #4a148c;
-        --unp-purple-light: #7c43bd;
-        --unp-orange: #ff6f00;
-        --unp-yellow: #fbc02d;
-        --unp-white: #ffffff;
-        --unp-dark: #1a1a1a;
-    }
-
-    /* --- ESTILOS GENERALES --- */
-    .game-header {
-        text-align: center;
-        padding: 50px 20px;
-        background: radial-gradient(circle at top right, var(--unp-purple-light), var(--unp-purple));
-        color: white;
-        border-radius: 0 0 40px 40px;
-        margin-bottom: 50px;
-        box-shadow: 0 10px 30px rgba(74, 20, 140, 0.3);
-        position: relative;
-    }
-
-    .level-container {
-        max-width: 900px;
-        margin: 0 auto 80px auto;
-        padding: 20px;
-        position: relative;
-    }
-
-    .level-header-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        border-bottom: 2px solid var(--unp-yellow);
-        padding-bottom: 10px;
-    }
-
-    .level-title {
-        color: var(--unp-purple);
-        font-size: 1.4rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        margin: 0;
-    }
-
-    /* --- BOTÓN DE INFORMACIÓN (NUEVO) --- */
-    .info-btn {
-        background: var(--unp-purple);
-        color: white;
-        width: 40px; height: 40px;
-        border-radius: 50%;
-        border: none;
-        font-size: 1.2rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        transition: 0.3s;
-        animation: pulse-btn 2s infinite;
-        z-index: 5;
-    }
-
-    .info-btn:hover {
-        background: var(--unp-orange);
-        transform: scale(1.1);
-    }
-
-    @keyframes pulse-btn {
-        0% { box-shadow: 0 0 0 0 rgba(74, 20, 140, 0.7); }
-        70% { box-shadow: 0 0 0 10px rgba(74, 20, 140, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(74, 20, 140, 0); }
-    }
-
-    /* --- MODAL (POP-UP DE TEXTO) --- */
-    .modal-overlay {
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.85);
-        z-index: 9999;
-        display: none; /* Oculto por defecto */
-        justify-content: center;
-        align-items: center;
-        backdrop-filter: blur(5px);
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-
-    .modal-content {
-        background: white;
-        width: 90%;
-        max-width: 600px;
-        max-height: 80vh;
-        overflow-y: auto;
-        border-radius: 15px;
-        padding: 30px;
-        position: relative;
-        transform: translateY(20px);
-        transition: transform 0.3s;
-        border-left: 8px solid var(--unp-orange);
-    }
-
-    .modal-overlay.active { display: flex; opacity: 1; }
-    .modal-overlay.active .modal-content { transform: translateY(0); }
-
-    .close-modal {
-        position: absolute;
-        top: 15px; right: 20px;
-        font-size: 1.5rem;
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: #999;
-    }
-    .close-modal:hover { color: var(--unp-orange); }
-
-    .modal-text h3 { color: var(--unp-purple); margin-top: 0; }
-    .modal-text p { font-size: 1rem; line-height: 1.6; color: #444; margin-bottom: 15px; }
-    .modal-text strong { color: var(--unp-orange); }
-
-    /* --- JUEGOS ESTILOS (Mantenemos los previos mejorados) --- */
-    
-    /* Drag & Drop */
-    .drag-area { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 20px; }
-    .drop-zone { flex: 1; min-width: 280px; background: white; border: 2px dashed #ccc; border-radius: 15px; padding: 20px; min-height: 200px; transition: 0.3s; }
-    .drop-zone.hovered { border-color: var(--unp-orange); background: #fff8e1; }
-    .drag-item { background: var(--unp-orange); color: white; padding: 10px; border-radius: 8px; cursor: grab; margin: 5px; display: inline-block; }
-    .drag-item.correct { background: #4caf50; pointer-events: none; }
-
-    /* Myths */
-    .myth-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-top: 20px;}
-    .myth-card { background: #eee; height: 160px; border-radius: 15px; display: flex; align-items: center; justify-content: center; padding: 15px; cursor: pointer; position: relative; overflow: hidden; text-align: center; font-weight: bold; color: #555; transition: 0.2s; border-bottom: 4px solid #ccc; }
-    .myth-card:hover { transform: translateY(-3px); }
-    .truth-content { position: absolute; top:0; left:0; width:100%; height:100%; background: var(--unp-purple); color: white; display:flex; flex-direction:column; justify-content:center; align-items:center; opacity:0; transition:0.4s; padding: 10px; font-size: 0.9rem;}
-    .myth-card.broken .truth-content { opacity: 1; }
-
-    /* Spotlight */
-    .spotlight-container { position: relative; background: #222; color: #ddd; padding: 30px; border-radius: 15px; cursor: none; overflow: hidden; min-height: 300px;}
-    .spotlight-mask { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle 120px at var(--x) var(--y), transparent 0%, rgba(0,0,0,0.96) 100%); z-index: 3; pointer-events: none; }
-    .flashlight-icon { position: absolute; top: var(--y); left: var(--x); transform: translate(-50%, -50%); pointer-events: none; font-size: 24px; z-index: 4; opacity: 0.7; }
-    .hidden-text { font-size: 1.1rem; line-height: 1.8; position: relative; z-index: 2; }
-    .highlight { color: var(--unp-yellow); font-weight: bold; text-shadow: 0 0 10px var(--unp-orange); }
-
-    /* Slider */
-    .slider-box { background: white; padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
-    input[type=range] { width: 100%; max-width: 400px; accent-color: var(--unp-orange); }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .spotlight-mask { background: rgba(0,0,0,0.5); } /* Menos oscuro en móvil */
-        .spotlight-container { cursor: auto; background: #333; }
-        .modal-content { width: 95%; padding: 20px; }
-    }
+    .scroll-btn { right: 1rem; bottom: 1rem; padding: 0.75rem 1.2rem; font-size: 0.82rem; }
+    .myth-grid { grid-template-columns: 1fr; }
+    .modal-box { padding: 1.5rem 1.2rem; }
+}
 </style>
 </head>
 <body>
 
-<div id="unp-game-master">
+<!-- Barra de progreso scroll -->
+<div class="scroll-progress" id="scrollProgress"></div>
 
-    <!-- HEADER -->
-    <header class="game-header">
-        <h1>Interacción y Conceptos: El Cuidado</h1>
-        <p>Juega para descubrir las dinámicas y haz clic en el botón ➕ para leer la teoría completa.</p>
-        <div style="margin-top:20px; font-size:2rem; animation: bounce 2s infinite;">👇</div>
-    </header>
+<!-- HEADER -->
+<header>
+    <div class="header-logos">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="header-logo" onerror="this.style.display='none'">
+        <img src="../Styles/logo.png" alt="Logo Institucional" class="header-logo" onerror="this.style.display='none'">
+    </div>
+</header>
 
-    <!-- NIVEL 1: DOBLE DESIGUALDAD -->
-    <section class="level-container">
-        <div class="level-header-row">
-            <h2 class="level-title">1. La Doble Desigualdad</h2>
-            <button class="info-btn" onclick="openModal('modal1')" title="Leer concepto completo">➕</button>
-        </div>
-        
-        <p style="margin-bottom: 15px;">Arrastra el problema hacia quien lo sufre:</p>
-        
-        <div id="drag-items-container" style="text-align: center;">
-            <span class="drag-item" draggable="true" id="d1" ondragstart="drag(event)">Esquema solo físico</span>
-            <span class="drag-item" draggable="true" id="d2" ondragstart="drag(event)">Carga invisibilizada</span>
-            <span class="drag-item" draggable="true" id="d3" ondragstart="drag(event)">Desgaste personal</span>
-            <span class="drag-item" draggable="true" id="d4" ondragstart="drag(event)">Sin dimensión emocional</span>
-        </div>
+<!-- HERO -->
+<div class="hero" role="banner">
+    <h1 style="margin-top:1.2rem;">Interacción y Conceptos:<br>El Cuidado</h1>
+    <p>Completa cada actividad para descubrir las dinámicas del cuidado. Usa el botón <strong>ⓘ</strong> en cada sección para leer la teoría completa.</p>
+</div>
 
-        <div class="drag-area">
-            <div class="drop-zone" ondrop="drop(event, 'protected')" ondragover="allowDrop(event)">
-                <h3 style="color:var(--unp-purple)">Hacia Personas Protegidas 👤</h3>
+<!-- MAIN -->
+<main>
+
+    <!-- =============================================
+         ACTIVIDAD 1: DOBLE DESIGUALDAD (DRAG & DROP)
+         ============================================= -->
+    <section class="activity-card" aria-labelledby="act1-title">
+        <div class="activity-header">
+            <h2 id="act1-title">
+                <i class="fas fa-arrows-alt" aria-hidden="true"></i>
+                La Doble Desigualdad
+            </h2>
+            <div style="display:flex; align-items:center; gap:0.7rem;">
+                <span class="level-badge">Nivel 1</span>
+                <button class="info-btn" onclick="openModal('modal1')" aria-label="Leer concepto completo: La Doble Desigualdad" title="Leer la teoría completa">ⓘ</button>
             </div>
-            <div class="drop-zone" ondrop="drop(event, 'staff')" ondragover="allowDrop(event)">
-                <h3 style="color:var(--unp-purple)">Hacia Personal Institucional 🏢</h3>
+        </div>
+
+        <div class="instruction" role="note">
+            <i class="fas fa-hand-pointer" aria-hidden="true"></i>
+            <span><strong>¿Cómo jugar?</strong> Arrastra (o toca en móvil) cada tarjeta y suéltala en la columna correcta: ¿a quién afecta ese problema directamente?</span>
+        </div>
+
+        <!-- Banco de items -->
+        <div class="drag-bank" id="dragBank" role="list" aria-label="Tarjetas para clasificar">
+            <span class="drag-item" draggable="true" id="d1" role="listitem" tabindex="0"
+                  onclick="mobileSelect(this)" ondragstart="drag(event)" aria-label="Esquema solo físico">
+                Esquema solo físico
+            </span>
+            <span class="drag-item" draggable="true" id="d2" role="listitem" tabindex="0"
+                  onclick="mobileSelect(this)" ondragstart="drag(event)" aria-label="Carga invisibilizada">
+                Carga invisibilizada
+            </span>
+            <span class="drag-item" draggable="true" id="d3" role="listitem" tabindex="0"
+                  onclick="mobileSelect(this)" ondragstart="drag(event)" aria-label="Desgaste personal">
+                Desgaste personal
+            </span>
+            <span class="drag-item" draggable="true" id="d4" role="listitem" tabindex="0"
+                  onclick="mobileSelect(this)" ondragstart="drag(event)" aria-label="Sin dimensión emocional">
+                Sin dimensión emocional
+            </span>
+        </div>
+
+        <p class="mobile-hint" aria-hidden="true">
+            📱 En móvil: toca una tarjeta (se resalta en amarillo) y luego toca la columna destino.
+        </p>
+
+        <div class="drop-columns" role="group" aria-label="Columnas de clasificación">
+            <!-- Columna A -->
+            <div class="drop-zone" id="zone-protected"
+                 ondrop="drop(event,'protected')" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"
+                 onclick="mobileDrop(this,'protected')" tabindex="0"
+                 role="region" aria-label="Zona: Hacia Personas Protegidas">
+                <div class="drop-zone-label">
+                    <i class="fas fa-user" aria-hidden="true"></i> Personas Protegidas
+                </div>
+            </div>
+            <!-- Columna B -->
+            <div class="drop-zone" id="zone-staff"
+                 ondrop="drop(event,'staff')" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"
+                 onclick="mobileDrop(this,'staff')" tabindex="0"
+                 role="region" aria-label="Zona: Hacia Personal Institucional">
+                <div class="drop-zone-label">
+                    <i class="fas fa-building" aria-hidden="true"></i> Personal Institucional
+                </div>
+            </div>
+        </div>
+
+        <div class="feedback-msg" id="fb-drag" role="alert"></div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true">continúa</div>
+
+    <!-- =============================================
+         ACTIVIDAD 2: DESNATURALIZAR (ROMPER MITOS)
+         ============================================= -->
+    <section class="activity-card" aria-labelledby="act2-title">
+        <div class="activity-header">
+            <h2 id="act2-title">
+                <i class="fas fa-ban" aria-hidden="true"></i>
+                Desnaturalizar el Cuidado
+            </h2>
+            <div style="display:flex; align-items:center; gap:0.7rem;">
+                <span class="level-badge">Nivel 2</span>
+                <button class="info-btn" onclick="openModal('modal2')" aria-label="Leer concepto: Desnaturalizar el Cuidado" title="Leer la teoría completa">ⓘ</button>
+            </div>
+        </div>
+
+        <div class="instruction" role="note">
+            <i class="fas fa-hand-pointer" aria-hidden="true"></i>
+            <span><strong>¿Cómo jugar?</strong> Haz clic (o toca) sobre cada bloque para romper el mito y revelar la realidad que se esconde detrás.</span>
+        </div>
+
+        <div class="myth-grid" role="list">
+            <div class="myth-card" role="listitem button" onclick="breakMyth(this)" tabindex="0"
+                 onkeydown="if(event.key==='Enter'||event.key===' ')breakMyth(this)"
+                 aria-label="Mito: Es disposición biológica. Toca para revelar la verdad.">
+                <span aria-hidden="true">💬</span>
+                <span>"Es disposición biológica"</span>
+                <div class="truth-overlay" aria-hidden="true">
+                    <span class="truth-icon">🚫</span>
+                    <strong>No es biológico</strong>
+                    Es trabajo con valor político.
+                </div>
+            </div>
+            <div class="myth-card" role="listitem button" onclick="breakMyth(this)" tabindex="0"
+                 onkeydown="if(event.key==='Enter'||event.key===' ')breakMyth(this)"
+                 aria-label="Mito: Es un atributo femenino. Toca para revelar la verdad.">
+                <span aria-hidden="true">💬</span>
+                <span>"Es un atributo femenino"</span>
+                <div class="truth-overlay" aria-hidden="true">
+                    <span class="truth-icon">🏛️</span>
+                    <strong>Es estructural</strong>
+                    Garantía de derechos.
+                </div>
+            </div>
+            <div class="myth-card" role="listitem button" onclick="breakMyth(this)" tabindex="0"
+                 onkeydown="if(event.key==='Enter'||event.key===' ')breakMyth(this)"
+                 aria-label="Mito: Es natural y gratuito. Toca para revelar la verdad.">
+                <span aria-hidden="true">💬</span>
+                <span>"Es natural y gratuito"</span>
+                <div class="truth-overlay" aria-hidden="true">
+                    <span class="truth-icon">💰</span>
+                    <strong>Requiere recursos</strong>
+                    Formación y presupuesto.
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- NIVEL 2: DESNATURALIZAR -->
-    <section class="level-container">
-        <div class="level-header-row">
-            <h2 class="level-title">2. Desnaturalizar el Cuidado</h2>
-            <button class="info-btn" onclick="openModal('modal2')" title="Leer concepto completo">➕</button>
-        </div>
+    <div class="section-divider" aria-hidden="true">continúa</div>
 
-        <p>Los prejuicios ocultan el valor real. <strong>Haz clic varias veces</strong> en los bloques para romper los mitos:</p>
-
-        <div class="myth-grid">
-            <div class="myth-card" onclick="breakMyth(this)">
-                "Es disposición biológica"
-                <div class="truth-content">🚫 NO ES BIOLÓGICO<br><small>Es trabajo con valor político.</small></div>
-            </div>
-            <div class="myth-card" onclick="breakMyth(this)">
-                "Es un atributo femenino"
-                <div class="truth-content">🏛️ ES ESTRUCTURAL<br><small>Garantía de derechos.</small></div>
-            </div>
-            <div class="myth-card" onclick="breakMyth(this)">
-                "Es natural y gratuito"
-                <div class="truth-content">💰 REQUIERE RECURSOS<br><small>Formación y presupuesto.</small></div>
+    <!-- =============================================
+         ACTIVIDAD 3: SPOTLIGHT / LINTERNA
+         ============================================= -->
+    <section class="activity-card" aria-labelledby="act3-title">
+        <div class="activity-header">
+            <h2 id="act3-title">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                Feminización e Invisibilización
+            </h2>
+            <div style="display:flex; align-items:center; gap:0.7rem;">
+                <span class="level-badge">Nivel 3</span>
+                <button class="info-btn" onclick="openModal('modal3')" aria-label="Leer concepto: Feminización e Invisibilización" title="Leer la teoría completa">ⓘ</button>
             </div>
         </div>
-    </section>
 
-    <!-- NIVEL 3: INVISIBILIZACIÓN (LINTERNA) -->
-    <section class="level-container">
-        <div class="level-header-row">
-            <h2 class="level-title">3. Feminización e Invisibilización</h2>
-            <button class="info-btn" onclick="openModal('modal3')" title="Leer concepto completo">➕</button>
+        <div class="instruction" role="note">
+            <i class="fas fa-lightbulb" aria-hidden="true"></i>
+            <span><strong>¿Cómo jugar?</strong> Mueve el cursor sobre el área oscura para iluminar con la linterna y descubrir el texto oculto. En móvil el texto es visible directamente.</span>
         </div>
 
-        <p>Usa tu mouse/dedo como linterna para leer la realidad oculta en la estructura estatal:</p>
+        <div class="spotlight-wrapper">
+            <!-- Aviso exclusivo para móvil -->
+            <div class="spotlight-mobile-note" aria-hidden="true">
+                <i class="fas fa-mobile-alt"></i> Estás en móvil — el contenido está visible completo.
+            </div>
 
-        <div class="spotlight-container" id="spotlightArea">
-            <div class="spotlight-mask" id="spotlightMask"></div>
-            <div class="flashlight-icon">🔦</div>
-            <div class="hidden-text">
-                <p>La <span class="highlight">feminización del cuidado</span> es la asignación cultural de estas tareas a las mujeres.</p>
-                <br>
-                <p>Su invisibilización estatal implica que <span class="highlight">no se contabiliza</span> en políticas públicas ni economía formal.</p>
-                <br>
-                <p>Invisibilizarlo perpetúa la explotación. Reconocerlo permite avanzar hacia una institución <span class="highlight">corresponsable</span>.</p>
+            <div class="spotlight-container" id="spotlightArea" role="region" aria-label="Área interactiva: mueve el cursor para iluminar el texto">
+                <div class="spotlight-mask" id="spotlightMask" aria-hidden="true"></div>
+                <div class="flashlight-icon" id="flashlightIcon" aria-hidden="true">🔦</div>
+                <div class="hidden-text">
+                    <p>La <span class="highlight">feminización del cuidado</span> es la asignación cultural de estas tareas a las mujeres.</p>
+                    <p>Su invisibilización estatal implica que <span class="highlight">no se contabiliza</span> en políticas públicas ni economía formal.</p>
+                    <p>Invisibilizarlo perpetúa la explotación. Reconocerlo permite avanzar hacia una institución <span class="highlight">corresponsable</span>.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- NIVEL 4: EVIDENCIAS (SLIDER) -->
-    <section class="level-container">
-        <div class="level-header-row">
-            <h2 class="level-title">4. Evidencias y Datos</h2>
+    <div class="section-divider" aria-hidden="true">continúa</div>
+
+    <!-- =============================================
+         ACTIVIDAD 4: SLIDER / EVIDENCIAS
+         ============================================= -->
+    <section class="activity-card" aria-labelledby="act4-title">
+        <div class="activity-header">
+            <h2 id="act4-title">
+                <i class="fas fa-chart-bar" aria-hidden="true"></i>
+                Evidencias y Datos
+            </h2>
+            <span class="level-badge">Nivel 4</span>
+        </div>
+
+        <div class="instruction" role="note">
+            <i class="fas fa-sliders-h" aria-hidden="true"></i>
+            <span><strong>¿Cómo jugar?</strong> Mueve el deslizador hacia la derecha si crees que las mujeres dedican más horas, o hacia la izquierda para los hombres. Supera el 60% para revelar la respuesta.</span>
         </div>
 
         <div class="slider-box">
-            <p>¿Quién dedica más horas al cuidado no remunerado?</p>
-            <div style="display:flex; justify-content:space-between; margin:10px 0; font-weight:bold; color:#777;">
-                <span>Hombres</span>
-                <span>Mujeres</span>
+            <p class="slider-question">¿Quién dedica más horas al cuidado no remunerado?</p>
+            <div class="slider-labels" aria-hidden="true">
+                <span>◀ Hombres</span>
+                <span>Mujeres ▶</span>
             </div>
-            <input type="range" min="0" max="100" value="50" onchange="if(this.value > 60) document.getElementById('sliderRes').style.display='block'">
-            
-            <div id="sliderRes" style="display:none; margin-top:20px; background:#e8f5e9; padding:15px; border-radius:10px; border:1px solid #4caf50;">
-                <h3 style="color:#2e7d32; margin:0;">📊 ¡Exacto!</h3>
-                <p>Encuestas de uso del tiempo muestran que <strong>las mujeres dedican más horas al trabajo de cuidado no remunerado comparadas con hombres.</strong> <br><br>
-El mercado laboral del cuidado suele caracterizarse por <strong>salarios bajos, informalidad y ausencia de protección social</strong> (por ejemplo, trabajo doméstico).
-</p>
+            <input type="range" min="0" max="100" value="50"
+                   aria-label="Deslizador: mueve hacia la derecha para indicar que las mujeres dedican más horas"
+                   oninput="checkSlider(this.value)">
+            <p class="slider-hint" aria-live="polite" id="sliderHint">Mueve el deslizador hacia la respuesta correcta</p>
+
+            <div class="slider-result" id="sliderRes" role="alert">
+                <h3><i class="fas fa-check-circle"></i> ¡Exacto!</h3>
+                <p>Encuestas de uso del tiempo muestran que <strong>las mujeres dedican más horas al trabajo de cuidado no remunerado</strong> en comparación con los hombres.</p>
+                <p>El mercado laboral del cuidado suele caracterizarse por <strong>salarios bajos, informalidad y ausencia de protección social</strong> (por ejemplo, trabajo doméstico).</p>
             </div>
         </div>
     </section>
 
-</div>
+</main>
 
-<!-- --- MODALES CON TEXTO COMPLETO (OCULTOS) --- -->
+<!-- =============================================
+     MODALES DE TEORÍA
+     ============================================= -->
 
 <!-- Modal 1 -->
-<div class="modal-overlay" id="modal1" onclick="closeModal('modal1')">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <button class="close-modal" onclick="closeModal('modal1')">×</button>
-        <div class="modal-text">
-            <h3>Doble Desigualdad</h3>
-            <p>Esta lógica reproduce una doble desigualdad:</p>
-            <p>1. <strong>Hacia las personas protegidas:</strong> cuando se reduce la protección a un esquema físico sin comprender sus dimensiones sociales y emocionales.</p>
-            <p>2. <strong>Hacia el propio personal institucional:</strong> cuando el trabajo de cuidado se vuelve una carga invisibilizada y desproporcionada.</p>
+<div class="modal-overlay" id="modal1" role="dialog" aria-modal="true" aria-labelledby="modal1-title" onclick="closeModal('modal1')">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal('modal1')" aria-label="Cerrar">×</button>
+        <span class="modal-badge"><i class="fas fa-book-open"></i> Teoría completa</span>
+        <h3 id="modal1-title">La Doble Desigualdad</h3>
+        <p>Esta lógica reproduce una doble desigualdad:</p>
+        <p><strong>1. Hacia las personas protegidas:</strong> cuando se reduce la protección a un esquema físico sin comprender sus dimensiones sociales y emocionales.</p>
+        <p><strong>2. Hacia el propio personal institucional:</strong> cuando el trabajo de cuidado se vuelve una carga invisibilizada y desproporcionada.</p>
+        <div class="modal-footer">
+            <button class="modal-cta" onclick="closeModal('modal1')">Entendido, continuar</button>
         </div>
     </div>
 </div>
 
 <!-- Modal 2 -->
-<div class="modal-overlay" id="modal2" onclick="closeModal('modal2')">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <button class="close-modal" onclick="closeModal('modal2')">×</button>
-        <div class="modal-text">
-            <h3>Desnaturalizar el Cuidado</h3>
-            <p>Desnaturalizar el cuidado implica reconocer que:</p>
-            <ul>
-                <li>No es una disposición biológica ni un atributo femenino.</li>
-                <li>Es trabajo con <strong>valor político, social y económico</strong>.</li>
-                <li>Constituye una condición estructural para la garantía de derechos.</li>
-                <li>Requiere formación, recursos, distribución equitativa y reconocimiento institucional.</li>
-            </ul>
+<div class="modal-overlay" id="modal2" role="dialog" aria-modal="true" aria-labelledby="modal2-title" onclick="closeModal('modal2')">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal('modal2')" aria-label="Cerrar">×</button>
+        <span class="modal-badge"><i class="fas fa-book-open"></i> Teoría completa</span>
+        <h3 id="modal2-title">Desnaturalizar el Cuidado</h3>
+        <p>Desnaturalizar el cuidado implica reconocer que:</p>
+        <ul>
+            <li>No es una disposición biológica ni un atributo femenino.</li>
+            <li>Es trabajo con <strong>valor político, social y económico</strong>.</li>
+            <li>Constituye una condición estructural para la garantía de derechos.</li>
+            <li>Requiere formación, recursos, distribución equitativa y reconocimiento institucional.</li>
+        </ul>
+        <div class="modal-footer">
+            <button class="modal-cta" onclick="closeModal('modal2')">Entendido, continuar</button>
         </div>
     </div>
 </div>
 
 <!-- Modal 3 -->
-<div class="modal-overlay" id="modal3" onclick="closeModal('modal3')">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <button class="close-modal" onclick="closeModal('modal3')">×</button>
-        <div class="modal-text">
-            <h3>Feminización e Invisibilización</h3>
-            <p>La <strong>feminización del cuidado</strong> se refiere al predominio de las mujeres en las tareas de cuidado —tanto remuneradas como no remuneradas— y a la asignación social y cultural de roles de cuidado como “femeninos”.</p>
-            <p>Su invisibilización dentro de la estructura estatal implica que estas tareas y su valor no se reconocen, no se contabilizan adecuadamente en políticas públicas ni en la economía formal, lo que reproduce desigualdades de género y limita derechos sociales y económicos.</p>
-            <p>Desde esta perspectiva, el cuidado no puede seguir siendo entendido como un complemento opcional de la protección, sino como su <strong>núcleo sustantivo</strong>. Invisibilizarlo perpetúa una forma de explotación estructural que sostiene tanto al mercado como al Estado.</p>
+<div class="modal-overlay" id="modal3" role="dialog" aria-modal="true" aria-labelledby="modal3-title" onclick="closeModal('modal3')">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal('modal3')" aria-label="Cerrar">×</button>
+        <span class="modal-badge"><i class="fas fa-book-open"></i> Teoría completa</span>
+        <h3 id="modal3-title">Feminización e Invisibilización</h3>
+        <p>La <strong>feminización del cuidado</strong> se refiere al predominio de las mujeres en las tareas de cuidado —tanto remuneradas como no remuneradas— y a la asignación social y cultural de roles de cuidado como "femeninos".</p>
+        <p>Su invisibilización dentro de la estructura estatal implica que estas tareas y su valor no se reconocen, no se contabilizan adecuadamente en políticas públicas ni en la economía formal, lo que reproduce desigualdades de género y limita derechos sociales y económicos.</p>
+        <p>Desde esta perspectiva, el cuidado no puede seguir siendo entendido como un complemento opcional de la protección, sino como su <strong>núcleo sustantivo</strong>. Invisibilizarlo perpetúa una forma de explotación estructural que sostiene tanto al mercado como al Estado.</p>
+        <div class="modal-footer">
+            <button class="modal-cta" onclick="closeModal('modal3')">Entendido, continuar</button>
         </div>
     </div>
 </div>
 
-<!-- Modal 4 -->
-<div class="modal-overlay" id="modal4" onclick="closeModal('modal4')">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <button class="close-modal" onclick="closeModal('modal4')">×</button>
-        <div class="modal-text">
-            <h3>Evidencias y Ejemplos</h3>
-            <p><strong>Encuestas de uso del tiempo:</strong> muestran que las mujeres dedican más horas al trabajo de cuidado no remunerado comparadas con hombres.</p>
-            <p><strong>Mercado laboral del cuidado:</strong> suele caracterizarse por salarios bajos, informalidad y ausencia de protección social (por ejemplo, trabajo doméstico).</p>
-        </div>
-    </div>
-</div>
+<!-- =============================================
+     FLECHA INTELIGENTE DE SCROLL
+     ============================================= -->
+<button class="scroll-btn" id="scrollBtn" onclick="handleScrollBtn()" aria-label="Desplazarse hacia abajo">
+    <i class="fas fa-chevron-down scroll-arrow" id="scrollArrow" aria-hidden="true"></i>
+    <span id="scrollLabel">Sigue bajando</span>
+</button>
 
 <script>
-    // --- FUNCIONES MODALES ---
-    function openModal(id) {
-        document.getElementById(id).classList.add('active');
-        document.body.style.overflow = 'hidden'; // Evitar scroll de fondo
+/* ============================================
+   MODALES
+   ============================================ */
+function openModal(id) {
+    const el = document.getElementById(id);
+    el.style.display = 'flex';
+    requestAnimationFrame(() => el.classList.add('active'));
+    document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+    const el = document.getElementById(id);
+    el.classList.remove('active');
+    setTimeout(() => { el.style.display = 'none'; }, 300);
+    document.body.style.overflow = '';
+}
+// Cerrar con Escape
+document.addEventListener('keydown', e => {
+    if(e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.active').forEach(m => closeModal(m.id));
     }
-    function closeModal(id) {
-        document.getElementById(id).classList.remove('active');
-        document.body.style.overflow = 'auto';
-    }
+});
 
-    // --- DRAG & DROP ---
-    function allowDrop(ev) { ev.preventDefault(); }
-    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
-    function drop(ev, zone) {
-        ev.preventDefault();
-        var data = ev.dataTransfer.getData("text");
-        var item = document.getElementById(data);
-        
-        // Validación simplificada para demostración
-        if ((zone === 'protected' && (data === 'd1' || data === 'd4')) || 
-            (zone === 'staff' && (data === 'd2' || data === 'd3'))) {
-            ev.target.appendChild(item);
-            item.style.backgroundColor = "#4caf50"; // Verde al acertar
-            item.innerHTML += " ✓";
-        } else {
-            alert("Intenta de nuevo. ¿A quién afecta más directamente?");
+/* ============================================
+   DRAG & DROP — DESKTOP
+   ============================================ */
+function allowDrop(ev) { ev.preventDefault(); }
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+    ev.target.classList.add('dragging');
+}
+
+function dragEnter(ev) {
+    ev.preventDefault();
+    ev.currentTarget.classList.add('hovered');
+}
+
+function dragLeave(ev) {
+    ev.currentTarget.classList.remove('hovered');
+}
+
+function drop(ev, zone) {
+    ev.preventDefault();
+    ev.currentTarget.classList.remove('hovered');
+
+    const data = ev.dataTransfer.getData("text");
+    const item = document.getElementById(data);
+    if(!item) return;
+    item.classList.remove('dragging');
+    placeItem(item, zone, ev.currentTarget);
+}
+
+function placeItem(item, zone, targetEl) {
+    const correctMap = { d1: 'protected', d2: 'staff', d3: 'staff', d4: 'protected' };
+    const fb = document.getElementById('fb-drag');
+
+    if(correctMap[item.id] === zone) {
+        item.classList.add('correct-drop');
+        item.innerHTML += ' <i class="fas fa-check" aria-hidden="true"></i>';
+        item.setAttribute('aria-label', item.textContent.trim() + ' — clasificado correctamente');
+        targetEl.appendChild(item);
+        const correct = document.querySelectorAll('.drag-item.correct-drop').length;
+        if(correct === 4) {
+            fb.textContent = '✅ ¡Perfecto! Has clasificado todos los problemas correctamente.';
+            fb.className = 'feedback-msg show-success';
         }
+    } else {
+        fb.textContent = '❌ No es la columna correcta para ese elemento. Piensa: ¿a quién afecta más directamente?';
+        fb.className = 'feedback-msg show-error';
+        setTimeout(() => { fb.className = 'feedback-msg'; }, 2500);
     }
-    // Mobile click fallback
-    let selectedItem = null;
-    document.querySelectorAll('.drag-item').forEach(i => {
-        i.addEventListener('click', function() { selectedItem = this; this.style.border = "2px solid blue"; });
-    });
-    document.querySelectorAll('.drop-zone').forEach(z => {
-        z.addEventListener('click', function() {
-            if(selectedItem) { /* Logic similar to drop */ this.appendChild(selectedItem); selectedItem.style.border="none"; selectedItem=null; }
-        });
-    });
+}
 
-    // --- BREAK MYTHS ---
-    function breakMyth(el) {
-        el.classList.add('broken');
-        // Pequeña vibración visual
-        el.style.transform = "rotate(2deg)";
-        setTimeout(() => el.style.transform = "rotate(0deg)", 100);
+/* ============================================
+   DRAG & DROP — MÓVIL (TAP)
+   ============================================ */
+let mobileSelected = null;
+
+function mobileSelect(el) {
+    if(el.classList.contains('correct-drop')) return;
+    // Deselect prev
+    if(mobileSelected) mobileSelected.classList.remove('mobile-selected');
+    if(mobileSelected === el) { mobileSelected = null; return; }
+    el.classList.add('mobile-selected');
+    mobileSelected = el;
+}
+
+function mobileDrop(zone, zoneName) {
+    if(!mobileSelected) return;
+    mobileSelected.classList.remove('mobile-selected');
+    placeItem(mobileSelected, zoneName, zone);
+    mobileSelected = null;
+}
+
+/* ============================================
+   ROMPER MITOS
+   ============================================ */
+function breakMyth(el) {
+    el.classList.add('broken');
+    el.setAttribute('aria-pressed', 'true');
+    el.style.transform = 'scale(0.97)';
+    setTimeout(() => { el.style.transform = ''; }, 150);
+}
+
+/* ============================================
+   SPOTLIGHT
+   ============================================ */
+const area = document.getElementById('spotlightArea');
+const mask = document.getElementById('spotlightMask');
+const flashIcon = document.getElementById('flashlightIcon');
+
+area.addEventListener('mousemove', e => {
+    const rect = area.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    area.style.setProperty('--x', x + 'px');
+    area.style.setProperty('--y', y + 'px');
+    flashIcon.style.top = y + 'px';
+    flashIcon.style.left = x + 'px';
+});
+
+area.addEventListener('touchmove', e => {
+    const touch = e.touches[0];
+    const rect = area.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+    area.style.setProperty('--x', x + 'px');
+    area.style.setProperty('--y', y + 'px');
+}, { passive: true });
+
+/* ============================================
+   SLIDER
+   ============================================ */
+let sliderRevealed = false;
+function checkSlider(val) {
+    const hint = document.getElementById('sliderHint');
+    const res = document.getElementById('sliderRes');
+    if(val > 60 && !sliderRevealed) {
+        sliderRevealed = true;
+        res.style.display = 'block';
+        hint.textContent = '¡Correcto! Lee los datos a continuación.';
+    } else if(val <= 60 && !sliderRevealed) {
+        const pct = Math.round(val);
+        hint.textContent = pct < 40 ? 'Hmm, ¿seguro? Muévelo más hacia las mujeres.' : 'Estás cerca, sigue un poco más...';
     }
+}
 
-    // --- SPOTLIGHT ---
-    const area = document.getElementById('spotlightArea');
-    area.addEventListener('mousemove', e => {
-        const rect = area.getBoundingClientRect();
-        area.style.setProperty('--x', (e.clientX - rect.left) + 'px');
-        area.style.setProperty('--y', (e.clientY - rect.top) + 'px');
-    });
+/* ============================================
+   FLECHA INTELIGENTE + PROGRESO
+   ============================================ */
+const scrollBtn = document.getElementById('scrollBtn');
+const scrollLabel = document.getElementById('scrollLabel');
+const scrollArrow = document.getElementById('scrollArrow');
+const progressBar = document.getElementById('scrollProgress');
 
-    // Animación Bounce Header
-    const styleSheet = document.createElement("style");
-    styleSheet.innerText = "@keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} }";
-    document.head.appendChild(styleSheet);
+function updateScroll() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
 
+    // Barra de progreso
+    progressBar.style.width = pct + '%';
+
+    // Estado del botón
+    const nearBottom = pct >= 96;
+    if(nearBottom) {
+        scrollBtn.classList.add('at-bottom');
+        scrollLabel.textContent = 'Contenido completado';
+        scrollArrow.className = 'fas fa-check scroll-arrow';
+        scrollBtn.setAttribute('aria-label', 'Has llegado al final del contenido');
+    } else {
+        scrollBtn.classList.remove('at-bottom');
+        scrollLabel.textContent = 'Sigue bajando';
+        scrollArrow.className = 'fas fa-chevron-down scroll-arrow';
+        scrollBtn.setAttribute('aria-label', 'Desplazarse hacia abajo');
+    }
+}
+
+function handleScrollBtn() {
+    if(!scrollBtn.classList.contains('at-bottom')) {
+        window.scrollBy({ top: window.innerHeight * 0.72, behavior: 'smooth' });
+    }
+}
+
+window.addEventListener('scroll', updateScroll, { passive: true });
+updateScroll(); // Estado inicial
 </script>
-
 </body>
 </html>

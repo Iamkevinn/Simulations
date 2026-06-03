@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invisibilización del trabajo doméstico en la economía formal</title>
+    <style>
+        /* === PALETA DE COLORES === 
+           1. #480241 (Morado muy oscuro)
+           2. #7235A8 (Morado medio)
+           3. #FBA511 (Naranja)
+           4. #CE4651 (Rojo oscuro)
+           5. #FFFFFF (Blanco)
+        */
+
+        :root {
+            --color-dark: #480241;
+            --color-primary: #7235A8;
+            --color-accent: #FBA511;
+            --color-danger: #CE4651;
+            --color-light: #FFFFFF;
+            --color-bg: #fcfafb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-dark);
+            line-height: 1.6;
+            padding-bottom: 100px;
+        }
+
+        /* === CABECERA === */
+        .header {
+            background-color: var(--color-light);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-bottom: 6px solid var(--color-accent);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo-container {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .client-logo {
+            max-height: 100px; /* Logos bastante visibles */
+            width: auto;
+            object-fit: contain;
+        }
+
+        .header h1 {
+            color: var(--color-dark);
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 800;
+            max-width: 950px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* === INSTRUCCIONES ACCESIBLES (1 Columna estricta) === */
+        .instruction-box {
+            display: block; 
+            background-color: #fff6e8;
+            border: 2px solid var(--color-accent);
+            border-left: 8px solid var(--color-accent);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .inst-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--color-dark);
+            margin-bottom: 10px;
+        }
+
+        .inst-text {
+            font-size: 1.1rem;
+            color: var(--color-dark);
+            font-weight: 500;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* === TARJETAS === */
+        .activity-card {
+            background: var(--color-light);
+            border-radius: 12px;
+            padding: 35px 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            margin-bottom: 50px;
+            border-top: 5px solid var(--color-primary);
+        }
+
+        .activity-card h2 {
+            margin-bottom: 20px;
+            color: var(--color-dark);
+            font-size: 1.7rem;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+            padding-bottom: 10px;
+        }
+
+        /* === DINÁMICA 1: RECONSTRUIR SECUENCIA LÓGICA === */
+        .build-area {
+            min-height: 80px;
+            background-color: rgba(114, 53, 168, 0.05);
+            border: 2px dashed var(--color-primary);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .build-area:empty::before {
+            content: "Haz clic en los fragmentos de abajo en el orden correcto para armar la frase aquí...";
+            color: #888;
+            font-style: italic;
+        }
+
+        .fragments-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .text-fragment {
+            background-color: var(--color-dark);
+            color: var(--color-light);
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            user-select: none;
+        }
+
+        .text-fragment:hover { transform: translateY(-3px); background-color: var(--color-primary); }
+        .text-fragment.in-sentence { background-color: #2e7d32; cursor: default; transform: none; box-shadow: none; }
+
+        /* === DINÁMICA 2: DETECTAR ERRORES EN LISTA === */
+        .error-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .error-btn {
+            background-color: var(--color-light);
+            border: 2px solid var(--color-primary);
+            color: var(--color-dark);
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .error-btn:hover { background-color: rgba(114, 53, 168, 0.1); }
+        .error-btn.checked { background-color: var(--color-dark); color: white; border-color: var(--color-dark); cursor: default; }
+        .error-btn.is-error { background-color: var(--color-danger); color: white; border-color: var(--color-danger); text-decoration: line-through; }
+
+        /* === DINÁMICA 3: COMPLETAR FLUJO (DIAGRAMA) === */
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .flow-node {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .flow-arrow {
+            font-size: 2rem;
+            color: var(--color-accent);
+            font-weight: bold;
+        }
+
+        .flow-empty {
+            background-color: #f0e6f7;
+            border: 3px dashed var(--color-primary);
+            color: var(--color-primary);
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            max-width: 450px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .flow-empty.active { border-color: var(--color-accent); background-color: rgba(251, 165, 17, 0.2); }
+        .flow-empty.filled { background-color: #2e7d32; border-color: #1b5e20; color: white; cursor: default; border-style: solid; }
+
+        .flow-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            background-color: var(--color-dark);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .f-opt {
+            background-color: var(--color-light);
+            color: var(--color-dark);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .f-opt:hover { background-color: var(--color-accent); }
+        .f-opt.used { opacity: 0.3; pointer-events: none; }
+
+        /* === DINÁMICA 4: CAUSA Y CONSECUENCIA (INLINE SELECTS) === */
+        .cause-effect-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .ce-item {
+            background-color: var(--color-bg);
+            border-left: 5px solid var(--color-primary);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .inline-select {
+            appearance: none;
+            background-color: #fff6e8;
+            border: 2px solid var(--color-accent);
+            padding: 5px 35px 5px 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--color-dark);
+            border-radius: 20px;
+            cursor: pointer;
+            outline: none;
+            margin-left: 10px;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23480241%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px top 55%;
+            background-size: 12px auto;
+            transition: 0.3s;
+        }
+
+        .inline-select.correct {
+            background-color: #e6f7e6;
+            border-color: #2e7d32;
+            color: #1b5e20;
+            pointer-events: none;
+            background-image: none;
+        }
+
+        /* FUENTE */
+        .source-box {
+            background-color: var(--color-dark);
+            color: var(--color-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            font-size: 1rem;
+            text-align: center;
+        }
+        .source-box a { color: var(--color-accent); font-weight: bold; text-decoration: none; }
+        .source-box a:hover { text-decoration: underline; }
+
+        /* === TOASTS === */
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 15px; pointer-events: none; }
+        .toast {
+            background-color: var(--color-danger); color: #FFFFFF; padding: 20px 30px; border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3); border: 2px solid #FFFFFF; font-weight: 700; font-size: 1.15rem;
+            max-width: 400px; opacity: 0; transform: translateX(50px); transition: opacity 0.4s ease, transform 0.4s ease;
+            display: flex; align-items: center; gap: 15px; pointer-events: auto; line-height: 1.4;
+        }
+        .toast.toast-warning { background-color: var(--color-accent); color: var(--color-dark); border-color: var(--color-dark); }
+        .toast.toast-success { background-color: #2e7d32; color: #FFFFFF; }
+        .toast.show { opacity: 1; transform: translateX(0); }
+
+        /* === FLECHA ACCESIBILIDAD === */
+        .smart-scroll {
+            position: fixed; bottom: 30px; right: 30px; background-color: var(--color-accent); color: var(--color-dark);
+            padding: 15px 25px; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.4s all ease; z-index: 1000; animation: bounce 2s infinite; font-size: 1.1rem;
+        }
+        .smart-scroll.completed { background-color: #2e7d32; color: white; animation: none; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
+
+    </style>
+</head>
+<body>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <header class="header">
+        <div class="logo-container">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo">
+            <img src="../Styles/logo.png" alt="Logo Institucional" class="client-logo">
+        </div>
+        <h1>Invisibilización del trabajo doméstico y reproductivo</h1>
+    </header>
+
+    <div class="container">
+
+        <!-- DINÁMICA 1: RECONSTRUIR SECUENCIA -->
+        <div class="activity-card">
+            <h2>Reto 1: Reconstruir la realidad</h2>
+            
+            <div class="instruction-box">
+                <div class="inst-title">🧠 Instrucción: Ordenar el concepto</div>
+                <p class="inst-text">La idea principal de esta unidad está fragmentada y desordenada. <strong>Haz clic en los bloques inferiores en el orden lógico</strong> para reconstruir la afirmación central.</p>
+            </div>
+            
+            <div class="build-area" id="sentence-box"></div>
+
+            <div class="fragments-pool">
+                <div class="text-fragment" data-order="3">de las sociedades y economías,</div>
+                <div class="text-fragment" data-order="1">El trabajo doméstico y reproductivo</div>
+                <div class="text-fragment" data-order="5">no haya sido reconocido ni remunerado adecuadamente.</div>
+                <div class="text-fragment" data-order="2">sostiene el funcionamiento</div>
+                <div class="text-fragment" data-order="4">aunque históricamente</div>
+            </div>
+        </div>
+
+        <!-- DINÁMICA 2: DETECTAR ERRORES -->
+        <div class="activity-card">
+            <h2>Reto 2: ¿Qué es el Trabajo Reproductivo?</h2>
+
+            <div class="instruction-box">
+                <div class="inst-title">🧠 Instrucción: Encontrar el error</div>
+                <p class="inst-text">A continuación, se listan varias actividades de sostenimiento vital. Haz clic sobre cada una para confirmarla, pero ¡cuidado! <strong>hay un concepto falso infiltrado</strong> que debes detectar para eliminarlo.</p>
+            </div>
+
+            <div class="error-grid" id="error-grid">
+                <button class="error-btn" data-correct="true">Alimentación</button>
+                <button class="error-btn" data-correct="true">Limpieza</button>
+                <button class="error-btn" data-correct="true">Organización del hogar</button>
+                <button class="error-btn" data-correct="false">Generación de rentas financieras de capital</button>
+                <button class="error-btn" data-correct="true">Crianza</button>
+                <button class="error-btn" data-correct="true">Sostenimiento emocional</button>
+                <button class="error-btn" data-correct="true">Cuidado cotidiano</button>
+            </div>
+        </div>
+
+        <!-- DINÁMICA 3: COMPLETAR FLUJO (DIAGRAMA) -->
+        <div class="activity-card">
+            <h2>Reto 3: La historia de la Medición</h2>
+
+            <div class="instruction-box">
+                <div class="inst-title">🧠 Instrucción: Completar el flujo</div>
+                <p class="inst-text">¿Cómo evolucionó el reconocimiento de estas labores? Selecciona una caja vacía del diagrama (borde punteado) y luego elige la respuesta correcta del menú oscuro para completar el proceso institucional.</p>
+            </div>
+
+            <div class="flowchart">
+                <div class="flow-node">Economía clásica tradicional</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-empty" data-answer="1">Seleccionar impacto histórico...</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node">Organismos Internacionales y DANE</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-empty" data-answer="2">Seleccionar respuesta actual...</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-empty" data-answer="3">Seleccionar instrumento de medición...</div>
+            </div>
+
+            <div class="flow-options">
+                <button class="f-opt" data-opt="3">Cuenta Satélite de Economía del Cuidado</button>
+                <button class="f-opt" data-opt="1">Excluyó estas actividades de la productividad</button>
+                <button class="f-opt" data-opt="2">Comienzan a medir su aporte económico</button>
+            </div>
+        </div>
+
+        <!-- DINÁMICA 4: CAUSA Y CONSECUENCIA (INLINE) -->
+        <div class="activity-card">
+            <h2>Reto 4: Impactos de la Invisibilización</h2>
+
+            <div class="instruction-box">
+                <div class="inst-title">🧠 Instrucción: Conectar Causa y Efecto</div>
+                <p class="inst-text">Lee cada escenario y despliega la lista para seleccionar el impacto estructural que se genera. (Debes acertar las 5 para completar la unidad).</p>
+            </div>
+
+            <div class="cause-effect-list">
+                
+                <div class="ce-item">
+                    Al no recibir ingresos propios por dedicar su vida exclusivamente a labores del hogar, se genera una profunda 
+                    <select class="inline-select" data-correct="Dependencia económica">
+                        <option value="">Selecciona impacto...</option>
+                        <option value="Sobrecarga laboral">Sobrecarga laboral</option>
+                        <option value="Dependencia económica">Dependencia económica</option>
+                        <option value="Desigualdad pensional">Desigualdad pensional</option>
+                    </select>.
+                </div>
+
+                <div class="ce-item">
+                    Cuando una mujer llega a la vejez y descubre que nunca pudo cotizar a la seguridad social por estar cuidando, sufre de 
+                    <select class="inline-select" data-correct="Desigualdad pensional">
+                        <option value="">Selecciona impacto...</option>
+                        <option value="Desigualdad pensional">Desigualdad pensional</option>
+                        <option value="Menor participación">Menor participación política</option>
+                        <option value="Limitaciones de tiempo">Limitaciones de tiempo</option>
+                    </select>.
+                </div>
+
+                <div class="ce-item">
+                    Si una persona cumple su horario en un empleo formal y al llegar a casa debe asumir todas las tareas domésticas, padece de 
+                    <select class="inline-select" data-correct="Sobrecarga laboral">
+                        <option value="">Selecciona impacto...</option>
+                        <option value="Dependencia económica">Dependencia económica</option>
+                        <option value="Sobrecarga laboral">Sobrecarga laboral femenina</option>
+                        <option value="Menor participación">Menor participación política</option>
+                    </select>.
+                </div>
+
+                <div class="ce-item">
+                    El dedicar la mayor parte del día al sostenimiento de otros reduce las posibilidades de autocuidado, creando severas 
+                    <select class="inline-select" data-correct="Limitaciones de tiempo">
+                        <option value="">Selecciona impacto...</option>
+                        <option value="Limitaciones de tiempo">Limitaciones de tiempo</option>
+                        <option value="Desigualdad pensional">Desigualdad pensional</option>
+                        <option value="Dependencia económica">Dependencia económica</option>
+                    </select>.
+                </div>
+
+                <div class="ce-item">
+                    La falta de redes de apoyo y exceso de labores invisibles aísla a las cuidadoras, resultando en una 
+                    <select class="inline-select" data-correct="Menor participación">
+                        <option value="">Selecciona impacto...</option>
+                        <option value="Sobrecarga laboral">Sobrecarga laboral</option>
+                        <option value="Limitaciones de tiempo">Limitaciones de tiempo</option>
+                        <option value="Menor participación">Menor participación pública y política</option>
+                    </select>.
+                </div>
+
+            </div>
+        </div>
+
+        <div class="source-box">
+            <p style="margin-bottom: 10px;"><strong>Nota importante sobre datos estadísticos:</strong><br>El Departamento Administrativo Nacional de Estadística (DANE) desarrolla mediciones periódicas sobre este tema. No se afirman cifras específicas en este módulo, ya que deben consultarse en el reporte oficial vigente.</p>
+            Fuente: <a href="https://www.dane.gov.co/index.php/estadisticas-por-tema/cuentas-nacionales/cuenta-satelite-economia-del-cuidado" target="_blank">DANE – Cuenta Satélite de Economía del Cuidado</a>
+        </div>
+
+    </div>
+
+    <!-- FLECHA DE ACCESIBILIDAD -->
+    <div id="smartScroll" class="smart-scroll" onclick="scrollToBottom()">
+        <span>Sigue bajando</span>
+        <span style="font-size: 1.4rem;">↓</span>
+    </div>
+
+    <script>
+        // === SISTEMA DE TOASTS ===
+        function showToast(message, type = 'error') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            let icon = '❌';
+            if(type === 'warning') { icon = '⚠️'; toast.classList.add('toast-warning'); }
+            if(type === 'success') { icon = '✅'; toast.classList.add('toast-success'); }
+            
+            toast.innerHTML = `<span style="font-size: 1.5rem;">${icon}</span> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 4500); 
+        }
+
+        // === RETO 1: ORDENAR FRASE ===
+        let expectedOrder = 1;
+        const buildArea = document.getElementById('sentence-box');
+        document.querySelectorAll('.text-fragment').forEach(frag => {
+            frag.addEventListener('click', function() {
+                if(this.classList.contains('in-sentence')) return;
+
+                const myOrder = parseInt(this.getAttribute('data-order'));
+                if(myOrder === expectedOrder) {
+                    this.classList.add('in-sentence');
+                    buildArea.appendChild(this);
+                    expectedOrder++;
+                    if(expectedOrder > 5) showToast("¡Excelente! Has reconstruido la problemática central.", "success");
+                } else {
+                    showToast("Ese fragmento no va ahí. Lee bien el sentido lógico de la frase.", "error");
+                }
+            });
+        });
+
+        // === RETO 2: DETECTAR ERROR ===
+        document.querySelectorAll('.error-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if(this.classList.contains('checked') || this.classList.contains('is-error')) return;
+
+                if(this.getAttribute('data-correct') === "true") {
+                    this.classList.add('checked');
+                    this.innerHTML = "✓ " + this.innerHTML;
+                } else {
+                    this.classList.add('is-error');
+                    this.innerHTML = "FALSO: " + this.innerHTML;
+                    showToast("¡Correcto! Esa actividad pertenece a la economía financiera tradicional, NO al cuidado.", "success");
+                    // Auto-check the rest to save time
+                    document.querySelectorAll('.error-btn[data-correct="true"]').forEach(b => {
+                        if(!b.classList.contains('checked')) {
+                            b.classList.add('checked'); b.innerHTML = "✓ " + b.innerHTML;
+                        }
+                    });
+                }
+            });
+        });
+
+        // === RETO 3: DIAGRAMA DE FLUJO ===
+        let activeFlowNode = null;
+        const flowEmpties = document.querySelectorAll('.flow-empty');
+        const flowOpts = document.querySelectorAll('.f-opt');
+
+        flowEmpties.forEach(empty => {
+            empty.addEventListener('click', function() {
+                if(this.classList.contains('filled')) return;
+                flowEmpties.forEach(e => e.classList.remove('active'));
+                this.classList.add('active');
+                activeFlowNode = this;
+            });
+        });
+
+        flowOpts.forEach(opt => {
+            opt.addEventListener('click', function() {
+                if(!activeFlowNode) { showToast("Primero selecciona un recuadro punteado del diagrama.", "warning"); return; }
+                if(this.classList.contains('used')) return;
+
+                const myOpt = this.getAttribute('data-opt');
+                const needed = activeFlowNode.getAttribute('data-answer');
+
+                if(myOpt === needed) {
+                    activeFlowNode.textContent = this.textContent;
+                    activeFlowNode.classList.remove('active');
+                    activeFlowNode.classList.add('filled');
+                    this.classList.add('used');
+                    activeFlowNode = null;
+                    
+                    // Comprobar si terminaron
+                    if(document.querySelectorAll('.flow-empty.filled').length === 3) {
+                        showToast("¡Flujo completado! Así evolucionó la medición estadística.", "success");
+                    }
+                } else {
+                    activeFlowNode.style.borderColor = "var(--color-danger)";
+                    showToast("Paso incorrecto en el proceso histórico. Intenta con otro.", "error");
+                    setTimeout(() => { activeFlowNode.style.borderColor = "var(--color-accent)"; }, 1200);
+                }
+            });
+        });
+
+        // === RETO 4: CAUSA Y CONSECUENCIA ===
+        let selectsCompleted = 0;
+        document.querySelectorAll('.inline-select').forEach(sel => {
+            sel.addEventListener('change', function() {
+                const correctAnswer = this.getAttribute('data-correct');
+                if(this.value === correctAnswer) {
+                    this.classList.add('correct');
+                    selectsCompleted++;
+                    if(selectsCompleted === 5) {
+                        showToast("¡Unidad dominada! Has conectado perfectamente las causas estructurales con sus impactos.", "success");
+                    }
+                } else if(this.value !== "") {
+                    showToast("Análisis incorrecto. Ese no es el impacto principal descrito en la frase.", "error");
+                    this.value = ""; // Reset
+                }
+            });
+        });
+
+        // === FLECHA ACCESIBILIDAD ===
+        const smartScroll = document.getElementById('smartScroll');
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.innerHeight + window.scrollY;
+            const threshold = document.body.offsetHeight - 60;
+            if (scrollPos >= threshold) {
+                smartScroll.classList.add('completed');
+                smartScroll.innerHTML = 'Unidad Completada ✓';
+                smartScroll.onclick = null;
+                smartScroll.style.cursor = "default";
+            } else {
+                smartScroll.classList.remove('completed');
+                smartScroll.innerHTML = 'Sigue bajando <span style="font-size: 1.4rem;">↓</span>';
+                smartScroll.onclick = scrollToBottom;
+                smartScroll.style.cursor = "pointer";
+            }
+        });
+        function scrollToBottom() { window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }
+    </script>
+</body>
+</html>

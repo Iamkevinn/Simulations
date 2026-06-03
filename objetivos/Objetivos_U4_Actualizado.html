@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNIDAD 4. Políticas Públicas y Transformación Social</title>
+    
+    <!-- Fuentes premium -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Iconos FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================================
+           VARIABLES DE COLOR Y DISEÑO
+           ========================================================= */
+        :root {
+            --color-1: #480241; /* Morado Oscuro */
+            --color-2: #7235A8; /* Morado Medio */
+            --color-3: #FBA511; /* Naranja */
+            --color-4: #CE4651; /* Rojo */
+            --color-5: #FFFFFF; /* Blanco */
+            
+            --bg-logos: #EDE6EC; 
+            --bg-app: #F4F0F8; 
+            --text-main: #2C2C2C; 
+            
+            --font-ui: 'Montserrat', sans-serif;
+            --font-body: 'Nunito', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        h1, h2, h3, h4, .fuente-ui { font-family: var(--font-ui); }
+
+        /* Accesibilidad: Foco evidente */
+        *:focus-visible { outline: 3px solid var(--color-3); outline-offset: 3px; border-radius: 4px; }
+
+        /* =========================================================
+           HEADER Y LOGOS
+           ========================================================= */
+        header {
+            background-color: var(--bg-logos);
+            color: var(--color-1);
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-bottom: 5px solid var(--color-1);
+        }
+
+        .logos-container {
+            display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; flex-wrap: wrap;
+        }
+
+        .client-logo { max-height: 70px; border-radius: 8px; }
+
+        h1 { font-size: 1.8rem; margin-bottom: 10px; color: var(--color-1); font-weight: 800; line-height: 1.3;}
+        .intro-text { font-size: 1.1rem; max-width: 800px; margin: 0 auto; color: var(--text-main); font-weight: 700; text-transform: uppercase;}
+
+        /* =========================================================
+           CONTENEDOR PRINCIPAL Y TARJETAS
+           ========================================================= */
+        main { max-width: 850px; margin: 30px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 40px; }
+
+        .activity-card {
+            background-color: var(--color-5);
+            border-top: 6px solid var(--color-2);
+            border-radius: 12px; padding: 30px;
+            box-shadow: 0 10px 30px rgba(72, 2, 65, 0.08);
+        }
+
+        .activity-header h2 { color: var(--color-1); font-size: 1.5rem; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .activity-header i { color: var(--color-3); }
+
+        /* Instrucción en 1 sola columna normal */
+        .instruction {
+            display: block; 
+            background-color: rgba(251, 165, 17, 0.15);
+            border-left: 5px solid var(--color-3);
+            padding: 15px; margin-bottom: 25px;
+            font-weight: 700; color: var(--color-1); border-radius: 0 4px 4px 0;
+            line-height: 1.5; font-size: 1.05rem;
+        }
+        .instruction i { margin-right: 8px; color: var(--color-3); font-size: 1.2rem;}
+
+        /* Botones de acción general */
+        .btn-action { 
+            background-color: var(--color-3); color: var(--color-1); border: none; padding: 15px 25px; 
+            font-size: 1.1rem; font-weight: 800; font-family: var(--font-ui); border-radius: 8px; 
+            cursor: pointer; margin-top: 20px; display: block; width: 100%; text-transform: uppercase; transition: 0.3s;
+        }
+        .btn-action:hover { background-color: #e0930f; transform: translateY(-2px); }
+        .btn-action:disabled { background-color: #ccc; cursor: not-allowed; transform: none; }
+
+        .feedback { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; font-weight: 700; line-height: 1.5; font-size: 1.05rem;}
+        .feedback.success { display: block; background-color: #e6f4ea; border-left: 4px solid #34a853; color: #137333; }
+        .feedback.error { display: block; background-color: #fce8e6; border-left: 4px solid var(--color-4); color: #c5221f; }
+
+        /* Diseño de listas/opciones apiladas en filas (1 Columna) */
+        .stacked-list { display: flex; flex-direction: column; gap: 12px; }
+
+        /* Textos originales exactos de lectura */
+        .verbatim-text {
+            background-color: #fdfdfd; padding: 25px; border-left: 4px solid var(--color-2); 
+            border-radius: 8px; font-size: 1.15rem; line-height: 1.8; margin-bottom: 20px;
+            color: #222; font-weight: 500; border: 1px solid #eee; border-left: 4px solid var(--color-2);
+        }
+
+        /* =========================================================
+           ACTIVIDAD 1: COMPLETAR CONCEPTO (Banco de palabras)
+           ========================================================= */
+        .blank-slot {
+            display: inline-block; min-width: 140px; height: 35px; border-bottom: 3px dashed var(--color-1);
+            background-color: rgba(251, 165, 17, 0.1); vertical-align: middle; text-align: center;
+            font-weight: 800; color: var(--color-1); cursor: pointer; padding: 0 10px; border-radius: 4px 4px 0 0;
+        }
+        .word-bank { display: flex; gap: 10px; flex-wrap: wrap; background-color: var(--bg-app); padding: 20px; border-radius: 8px; justify-content: center; border: 1px solid #ddd; }
+        .word-chip {
+            background-color: var(--color-1); color: white; padding: 10px 20px; border-radius: 30px;
+            cursor: pointer; font-weight: 700; border: none; font-family: var(--font-ui); transition: transform 0.2s;
+        }
+        .word-chip:hover { transform: scale(1.05); background-color: var(--color-2); }
+        .word-chip.hidden { display: none; }
+
+        /* =========================================================
+           ACTIVIDAD 2: VERDADERO O FALSO CON JUSTIFICACIÓN
+           ========================================================= */
+        .statement-box {
+            background-color: var(--color-1); color: var(--color-5);
+            padding: 25px; border-radius: 8px; font-size: 1.2rem; font-weight: 700; margin-bottom: 20px;
+            text-align: center; position: relative; line-height: 1.6;
+        }
+        .statement-box::before { content: 'Afirmación a evaluar:'; position: absolute; top: -12px; left: 20px; background: var(--color-3); color: var(--color-1); font-size: 0.85rem; padding: 4px 15px; border-radius: 12px; font-weight: 900; text-transform: uppercase;}
+        
+        .radio-group { display: flex; flex-direction: column; gap: 15px; }
+        .radio-label {
+            text-align: center; background-color: var(--color-5); border: 2px solid var(--color-2);
+            padding: 15px; border-radius: 8px; cursor: pointer; font-weight: 800; font-family: var(--font-ui);
+            color: var(--color-1); transition: all 0.2s; font-size: 1.1rem;
+        }
+        .radio-label:hover { background-color: rgba(114, 53, 168, 0.05); }
+        .radio-label input { display: none; }
+        .radio-label.selected { background-color: var(--color-2); color: white; border-color: var(--color-1); }
+
+        .justification-box { margin-top: 15px; font-size: 1.1rem; color: #333; display: none; border-top: 2px dashed #ccc; padding-top: 15px;}
+
+        /* =========================================================
+           ACTIVIDAD 3: CLASIFICACIÓN (Checkboxes apilados)
+           ========================================================= */
+        .check-row {
+            display: flex; align-items: center; gap: 15px; background-color: var(--bg-app);
+            padding: 15px 20px; border-radius: 8px; cursor: pointer; border: 1px solid transparent;
+            font-size: 1.1rem; font-weight: 600; transition: 0.2s;
+        }
+        .check-row:hover { border-color: var(--color-2); background-color: white;}
+        .check-row input[type="checkbox"] { width: 24px; height: 24px; accent-color: var(--color-1); cursor: pointer; }
+        
+        /* =========================================================
+           ACTIVIDAD 4: CONSTRUCTOR SECUENCIAL (1 Columna)
+           ========================================================= */
+        .step-container { background-color: var(--bg-app); padding: 25px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd;}
+        .step-title { font-family: var(--font-ui); color: var(--color-1); font-weight: 800; margin-bottom: 15px; font-size: 1.2rem; }
+        .step-option {
+            background-color: white; border: 2px solid #ddd; padding: 18px; border-radius: 8px;
+            cursor: pointer; font-size: 1.05rem; font-weight: 600; transition: 0.2s; text-align: left; line-height: 1.5; color: var(--text-main); font-family: var(--font-body);
+        }
+        .step-option:hover { border-color: var(--color-2); background-color: rgba(114, 53, 168, 0.05); }
+        
+        .objective-result {
+            background-color: var(--color-1); color: white; padding: 20px; border-radius: 8px;
+            margin-bottom: 12px; display: flex; gap: 12px; align-items: flex-start; font-weight: 500; font-size: 1.1rem; line-height: 1.6;
+            border-left: 6px solid var(--color-3);
+        }
+        .objective-result i { color: var(--color-3); margin-top: 4px; font-size: 1.2rem;}
+
+        /* =========================================================
+           BOTÓN FLOTANTE INTELIGENTE (SCROLL)
+           ========================================================= */
+        .sticky-btn {
+            position: fixed; bottom: 30px; right: 30px; background-color: var(--color-3); color: var(--color-1);
+            border: none; padding: 15px 25px; border-radius: 30px; font-size: 1rem; font-weight: 800; font-family: var(--font-ui);
+            cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px;
+            transition: all 0.3s ease; z-index: 1000;
+        }
+        .sticky-btn:hover { transform: translateY(-3px); background-color: #e0930f; }
+        .sticky-btn.end-state { background-color: var(--color-1); color: white; cursor: default; transform: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+
+        @media (max-width: 768px) {
+            .activity-card { padding: 20px; }
+            .sticky-btn { bottom: 15px; right: 15px; padding: 12px 20px; font-size: 0.9rem; }
+            .radio-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logos-container">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+UNP'">
+            <img src="../Styles/logo.png" alt="Logo Institucional" class="client-logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Institucional'">
+        </div>
+        <h1>UNIDAD 4. Políticas Públicas y Transformación Social</h1>
+        <p class="intro-text">Presentación de la Unidad</p>
+    </header>
+
+    <main>
+
+        <!-- ACTIVIDAD 1: COMPLETAR CONCEPTO -->
+        <section class="activity-card">
+            <div class="activity-header">
+                <h2><i class="fas fa-pen-nib"></i> 1. El rol de las Políticas Públicas</h2>
+            </div>
+            
+            <div class="instruction">
+                <i class="fas fa-hand-pointer"></i> <strong>Instrucción:</strong> Haz clic en una palabra del banco inferior para llenar los espacios vacíos y completar con exactitud el primer párrafo de la unidad. 
+            </div>
+
+            <div class="verbatim-text">
+                "Las políticas públicas son herramientas fundamentales mediante las cuales el Estado busca garantizar derechos, reducir desigualdades y transformar condiciones estructurales de exclusión. Sin embargo, las políticas no son <span class="blank-slot" data-id="1"></span>: pueden contribuir a disminuir brechas históricas o, por el contrario, reproducir <span class="blank-slot" data-id="2"></span> relacionadas con género, raza, clase, orientación sexual, identidad de género, discapacidad y territorio."
+            </div>
+
+            <div class="word-bank" id="wordBank">
+                <button class="word-chip" data-word="neutrales">neutrales</button>
+                <button class="word-chip" data-word="desigualdades">desigualdades</button>
+                <button class="word-chip" data-word="invisibles">invisibles</button> <!-- Intrusa -->
+            </div>
+
+            <button class="btn-action" onclick="checkAct1()">Validar Lectura</button>
+            <div class="feedback" id="act1-feedback" role="alert"></div>
+        </section>
+
+        <!-- ACTIVIDAD 2: VERDADERO O FALSO CON JUSTIFICACIÓN -->
+        <section class="activity-card">
+            <div class="activity-header">
+                <h2><i class="fas fa-balance-scale"></i> 2. Análisis Crítico</h2>
+            </div>
+            
+            <div class="instruction">
+                <i class="fas fa-book-reader"></i> <strong>Instrucción:</strong> Lee atentamente el siguiente fragmento del contenido de la unidad. Luego, evalúa la afirmación inferior decidiendo si es Verdadera o Falsa.
+            </div>
+
+            <div class="verbatim-text">
+                "En América Latina, los movimientos feministas y de derechos humanos han impulsado la incorporación de enfoques de género e interseccionales en planes de desarrollo, políticas de cuidado, participación política y sistemas de protección frente a las violencias basadas en género.<br><br>
+                Esta unidad permitirá analizar críticamente las políticas públicas y las reformas estructurales desde una perspectiva feminista y de derechos humanos, fortaleciendo capacidades institucionales para promover transformaciones orientadas a la igualdad, la no discriminación y la vida libre de violencias."
+            </div>
+
+            <div class="statement-box">
+                "La incorporación de los enfoques de género e interseccionales en América Latina ha sido una iniciativa exclusiva y automática del Estado, sin requerir impulso de la sociedad civil."
+            </div>
+
+            <!-- Opciones apiladas (1 columna) -->
+            <div class="radio-group" id="vf-group">
+                <label class="radio-label" onclick="selectVF(this, 'verdadero')">
+                    <input type="radio" name="vf"> VERDADERO
+                </label>
+                <label class="radio-label" onclick="selectVF(this, 'falso')">
+                    <input type="radio" name="vf"> FALSO
+                </label>
+            </div>
+
+            <div class="feedback" id="act2-feedback" role="alert">
+                <div class="justification-box" id="justification-text"></div>
+            </div>
+        </section>
+
+        <!-- ACTIVIDAD 3: CLASIFICACIÓN (Checkboxes) -->
+        <section class="activity-card">
+            <div class="activity-header">
+                <h2><i class="fas fa-map-marker-alt"></i> 3. El Contexto Colombiano</h2>
+            </div>
+            
+            <div class="instruction">
+                <i class="fas fa-check-square"></i> <strong>Instrucción:</strong> El texto señala: <em>"En Colombia, estos debates han tenido especial relevancia en la implementación de políticas relacionadas con..."</em><br><br>Selecciona en la lista inferior <strong>únicamente los 5 temas exactos</strong> que menciona la unidad.
+            </div>
+
+            <!-- Checkboxes apilados (1 columna) -->
+            <div class="stacked-list" id="colombia-checks">
+                <label class="check-row"><input type="checkbox" value="correct"> Participación política de las mujeres.</label>
+                <label class="check-row"><input type="checkbox" value="incorrect"> Reducción de aranceles tecnológicos.</label>
+                <label class="check-row"><input type="checkbox" value="correct"> Prevención de violencias.</label>
+                <label class="check-row"><input type="checkbox" value="correct"> Derechos laborales.</label>
+                <label class="check-row"><input type="checkbox" value="correct"> Acceso a la justicia.</label>
+                <label class="check-row"><input type="checkbox" value="incorrect"> Privatización de los sistemas de transporte.</label>
+                <label class="check-row"><input type="checkbox" value="correct"> Protección de lideresas y personas defensoras de derechos humanos.</label>
+            </div>
+
+            <button class="btn-action" onclick="checkAct3()">Verificar Temas</button>
+            <div class="feedback" id="act3-feedback" role="alert"></div>
+        </section>
+
+        <!-- ACTIVIDAD 4: CONSTRUCTOR DE OBJETIVOS (Paso a paso) -->
+        <section class="activity-card">
+            <div class="activity-header">
+                <h2><i class="fas fa-bullseye"></i> 4. Objetivos de Aprendizaje</h2>
+            </div>
+            
+            <div class="instruction">
+                <i class="fas fa-list-ol"></i> <strong>Instrucción:</strong> Al finalizar esta unidad, la persona participante estará en capacidad de lograr cuatro metas. Reconstruye el texto exacto de los objetivos seleccionando la continuación correcta.
+            </div>
+
+            <!-- Área de resultados donde caen los objetivos completados -->
+            <div id="completed-objectives" style="margin-bottom: 20px;"></div>
+
+            <!-- Paso actual interactivo -->
+            <div class="step-container" id="step-container">
+                <div class="step-title" id="step-title">Objetivo 1 de 4: Analizar los instrumentos de política pública...</div>
+                <div class="stacked-list" id="step-options">
+                    <!-- Botones generados por JS -->
+                </div>
+            </div>
+
+            <div class="feedback" id="act4-feedback" role="alert" style="display: none; background-color: var(--color-1); color: white; border-left: 5px solid var(--color-3);">
+                ¡Excelente! Has consolidado la lectura de la presentación y los objetivos exactos de esta unidad. Estás listo/a para iniciar el desarrollo del módulo.
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Botón Flotante Inteligente -->
+    <button class="sticky-btn" id="sticky-btn" onclick="scrollPage()" aria-label="Bajar para ver más contenido">
+        <span>⬇</span> Sigue bajando
+    </button>
+
+    <script>
+        /* ==========================================
+           LOGICA ACT 1: COMPLETAR ESPACIOS
+           ========================================== */
+        const blanks = document.querySelectorAll('.blank-slot');
+        const wordChips = document.querySelectorAll('.word-chip');
+        const correctWordsAct1 = ['neutrales', 'desigualdades'];
+
+        wordChips.forEach(chip => {
+            chip.addEventListener('click', function() {
+                const word = this.getAttribute('data-word');
+                for(let blank of blanks) {
+                    if(blank.innerText === '') {
+                        blank.innerText = word;
+                        this.classList.add('hidden');
+                        break;
+                    }
+                }
+            });
+        });
+
+        blanks.forEach(blank => {
+            blank.addEventListener('click', function() {
+                if(this.innerText !== '') {
+                    const word = this.innerText;
+                    const chip = document.querySelector(`.word-chip[data-word="${word}"]`);
+                    if(chip) chip.classList.remove('hidden');
+                    this.innerText = ''; 
+                }
+            });
+        });
+
+        function checkAct1() {
+            let currentAnswers = Array.from(blanks).map(b => b.innerText);
+            let fb = document.getElementById('act1-feedback');
+            
+            if(currentAnswers.includes('')) {
+                showFeedback(fb, 'error', 'Debes rellenar todos los espacios tocando las palabras del banco inferior.');
+                return;
+            }
+
+            let isCorrect = true;
+            for(let i=0; i<2; i++) {
+                if(currentAnswers[i] !== correctWordsAct1[i]) isCorrect = false;
+            }
+
+            if(isCorrect) {
+                showFeedback(fb, 'success', '¡Excelente! Has reconstruido con exactitud el párrafo inicial del módulo.');
+                document.getElementById('wordBank').style.pointerEvents = 'none';
+            } else {
+                showFeedback(fb, 'error', 'Una de las palabras no encaja en el texto original o usaste la palabra intrusa. Haz clic en tu respuesta para devolverla al banco e intenta de nuevo.');
+            }
+        }
+
+        /* ==========================================
+           LOGICA ACT 2: VERDADERO/FALSO
+           ========================================== */
+        function selectVF(labelEl, choice) {
+            // Quitar seleccion previa
+            document.querySelectorAll('.radio-label').forEach(el => el.classList.remove('selected'));
+            labelEl.classList.add('selected');
+            
+            let fb = document.getElementById('act2-feedback');
+            let justBox = document.getElementById('justification-text');
+
+            if(choice === 'falso') {
+                showFeedback(fb, 'success', '¡Correcto! Es FALSO.');
+                justBox.style.display = 'block';
+                justBox.innerHTML = "<strong>Justificación:</strong> El texto indica literalmente que <em>'los movimientos feministas y de derechos humanos han impulsado la incorporación'</em> de estos enfoques, demostrando que ha sido un logro de la sociedad civil y no una iniciativa automática del Estado.";
+            } else {
+                showFeedback(fb, 'error', 'Incorrecto. Vuelve a leer detenidamente el primer párrafo proporcionado.');
+                justBox.style.display = 'block';
+                justBox.innerHTML = "<strong>Pista:</strong> Busca la frase que explica quiénes 'han impulsado la incorporación de enfoques de género' en América Latina.";
+            }
+        }
+
+        /* ==========================================
+           LOGICA ACT 3: CHECKBOXES (Lista de 1 Columna)
+           ========================================== */
+        function checkAct3() {
+            let checkboxes = document.querySelectorAll('#colombia-checks input[type="checkbox"]');
+            let fb = document.getElementById('act3-feedback');
+            
+            let correctSelected = 0;
+            let incorrectSelected = 0;
+
+            checkboxes.forEach(cb => {
+                if(cb.checked) {
+                    if(cb.value === 'correct') correctSelected++;
+                    else incorrectSelected++;
+                }
+            });
+
+            if(correctSelected === 5 && incorrectSelected === 0) {
+                showFeedback(fb, 'success', '¡Perfecto! Has identificado textualmente los 5 debates con especial relevancia en Colombia.');
+            } else if(incorrectSelected > 0) {
+                showFeedback(fb, 'error', 'Has seleccionado temas que no aparecen en el texto original. Revisa tus elecciones.');
+            } else {
+                showFeedback(fb, 'error', `Has seleccionado ${correctSelected} de los 5 temas correctos. Faltan opciones por marcar.`);
+            }
+        }
+
+        /* ==========================================
+           LOGICA ACT 4: CONSTRUCTOR DE OBJETIVOS
+           ========================================== */
+        const objectivesData = [
+            {
+                start: 'Analizar los instrumentos de política pública...',
+                correct: '...con enfoque de género y su aplicación en el desarrollo nacional.',
+                wrongs: [
+                    '...para garantizar un trato estandarizado a todos los ciudadanos.',
+                    '...enfocados exclusivamente en la reducción de aranceles.'
+                ]
+            },
+            {
+                start: 'Evaluar el impacto de las reformas estructurales...',
+                correct: '...en mujeres y poblaciones diversas desde una perspectiva interseccional.',
+                wrongs: [
+                    '...solo en la economía de las empresas multinacionales.',
+                    '...sin considerar variables de género, raza o territorio.'
+                ]
+            },
+            {
+                start: 'Identificar mecanismos de participación política...',
+                correct: '...y estrategias para fortalecer la representación de grupos históricamente excluidos.',
+                wrongs: [
+                    '...para mantener el sistema de representación hegemónico actual.',
+                    '...y privatizar los espacios de diálogo institucional.'
+                ]
+            },
+            {
+                start: 'Reconocer los alcances del Convenio 190 de la OIT...',
+                correct: '...y las barreras para garantizar el acceso a la justicia de género.',
+                wrongs: [
+                    '...y cómo este impide la creación de políticas públicas.',
+                    '...y las ventajas de mantener jerarquías históricas.'
+                ]
+            }
+        ];
+
+        let currentObjIndex = 0;
+
+        function renderObjectiveStep() {
+            if(currentObjIndex >= objectivesData.length) {
+                document.getElementById('step-container').style.display = 'none';
+                document.getElementById('act4-feedback').style.display = 'block';
+                return;
+            }
+
+            const data = objectivesData[currentObjIndex];
+            document.getElementById('step-title').innerText = `Objetivo ${currentObjIndex + 1} de 4: ${data.start}`;
+            
+            const optionsContainer = document.getElementById('step-options');
+            optionsContainer.innerHTML = '';
+
+            // Mezclar opciones
+            let options = [data.correct, ...data.wrongs];
+            options = options.sort(() => Math.random() - 0.5);
+
+            options.forEach(opt => {
+                let btn = document.createElement('button');
+                btn.className = 'step-option';
+                btn.innerText = opt;
+                btn.onclick = () => checkObjectiveAnswer(opt === data.correct, data.start, data.correct);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkObjectiveAnswer(isCorrect, startText, correctText) {
+            if(isCorrect) {
+                // Agregar al contenedor de completados con texto literal
+                const completedContainer = document.getElementById('completed-objectives');
+                const div = document.createElement('div');
+                div.className = 'objective-result';
+                div.innerHTML = `<i class="fas fa-check-circle"></i> <span>${startText} <strong>${correctText.replace('...', '')}</strong></span>`;
+                completedContainer.appendChild(div);
+
+                currentObjIndex++;
+                renderObjectiveStep();
+            } else {
+                // Shake sutil animacion CSS inline JS fallback
+                const stepCont = document.getElementById('step-container');
+                stepCont.style.transition = "transform 0.1s";
+                stepCont.style.transform = "translateX(-10px)";
+                setTimeout(() => stepCont.style.transform = "translateX(10px)", 100);
+                setTimeout(() => stepCont.style.transform = "translateX(0)", 200);
+            }
+        }
+
+        renderObjectiveStep(); // Iniciar Act 4
+
+        /* ==========================================
+           UTILIDADES (Feedback y Scroll Flotante)
+           ========================================== */
+        function showFeedback(element, type, message) {
+            element.className = `feedback ${type}`;
+            element.innerHTML = message;
+        }
+
+        const stickyBtn = document.getElementById('sticky-btn');
+        function scrollPage() {
+            if (!stickyBtn.classList.contains('end-state')) {
+                window.scrollBy({ top: window.innerHeight * 0.7, behavior: 'smooth' });
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.scrollY + window.innerHeight;
+            const bottomThreshold = document.documentElement.scrollHeight - 80;
+
+            if (scrollPos >= bottomThreshold) {
+                stickyBtn.innerHTML = '✔ Unidad Explorada';
+                stickyBtn.classList.add('end-state');
+                stickyBtn.setAttribute('aria-label', 'Has llegado al final del contenido');
+            } else {
+                stickyBtn.innerHTML = '<span>⬇</span> Sigue bajando';
+                stickyBtn.classList.remove('end-state');
+                stickyBtn.setAttribute('aria-label', 'Bajar para ver más contenido');
+            }
+        });
+        window.dispatchEvent(new Event('scroll'));
+
+    </script>
+</body>
+</html>

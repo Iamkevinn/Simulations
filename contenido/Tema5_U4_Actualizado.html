@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acceso a la Justicia de Género</title>
+
+<!-- Tipografía moderna, Tipografía de Escritura a Mano y GSAP -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<style>
+    /* === 1. SISTEMA DE DISEÑO ESTRICTO === */
+    :root {
+        --c-dark-purple: #480241;
+        --c-purple: #7235A8;
+        --c-orange: #FBA511;
+        --c-red: #CE4651;
+        --c-white: #FFFFFF;
+        
+        --font-main: 'Plus Jakarta Sans', sans-serif;
+        --font-hand: 'Architects Daughter', cursive; /* Fuente para el caso práctico */
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+        font-family: var(--font-main);
+        background-color: var(--c-white);
+        color: #333333;
+        padding-bottom: 120px;
+    }
+
+    /* === 2. HEADER INSTITUCIONAL === */
+    .module-header {
+        background-color: var(--c-white);
+        padding: 30px 20px;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        border-bottom: 6px solid var(--c-purple);
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .client-logo {
+        max-height: 110px;
+        width: auto;
+        max-width: 45%;
+        object-fit: contain;
+    }
+
+    .hero-title {
+        background-color: var(--c-dark-purple);
+        color: var(--c-white);
+        text-align: center;
+        padding: 40px 20px;
+    }
+    .hero-title h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 10px; }
+    .hero-title p { font-size: 1.1rem; opacity: 0.9; max-width: 700px; margin: 0 auto; }
+
+    /* === 3. ESTRUCTURA DE TARJETAS === */
+    .section-card {
+        max-width: 900px; margin: 40px auto; background: var(--c-white);
+        border-radius: 12px; box-shadow: 0 10px 30px rgba(72, 2, 65, 0.1);
+        border: 1px solid rgba(114, 53, 168, 0.15); overflow: hidden;
+    }
+    .card-header { padding: 25px 30px; border-bottom: 2px dashed #E0E0E0; }
+    .card-title { font-size: 1.5rem; color: var(--c-dark-purple); font-weight: 800; }
+    .card-body { padding: 30px; }
+
+    /* === 4. ACCESIBILIDAD Y CONTEXTO === */
+    .context-box {
+        background: rgba(114, 53, 168, 0.05); border-left: 6px solid var(--c-purple);
+        padding: 25px; border-radius: 0 8px 8px 0; margin-bottom: 30px;
+    }
+    .context-title { font-size: 0.95rem; text-transform: uppercase; color: var(--c-purple); font-weight: 800; letter-spacing: 1px; margin-bottom: 10px; }
+    .context-box p { font-size: 1.1rem; line-height: 1.7; margin-bottom: 10px; }
+    
+    .instruction-box {
+        background: rgba(251, 165, 17, 0.1); border: 2px solid var(--c-orange);
+        padding: 15px 20px; border-radius: 8px; margin-bottom: 25px;
+    }
+    .instruction-box p { font-size: 1rem; color: var(--c-dark-purple); font-weight: 600; margin-bottom: 5px; }
+
+    .btn-action {
+        background: var(--c-purple); color: var(--c-white); border: none; padding: 16px 24px;
+        border-radius: 8px; font-weight: 800; font-size: 1.1rem; cursor: pointer;
+        transition: var(--transition); width: 100%; margin-top: 15px;
+    }
+    .btn-action:hover:not(:disabled) { background: var(--c-dark-purple); transform: translateY(-2px); }
+    .btn-action:disabled { background: #ccc; cursor: not-allowed; color: #888; }
+
+    .feedback-alert { display: none; padding: 20px; border-radius: 8px; margin-top: 20px; font-weight: 600; font-size: 1.1rem; line-height: 1.6; }
+    .feedback-success { background: rgba(114, 53, 168, 0.1); border-left: 6px solid var(--c-purple); color: var(--c-dark-purple); }
+    .feedback-error { background: rgba(206, 70, 81, 0.1); border-left: 6px solid var(--c-red); color: var(--c-red); }
+
+    /* === NUEVA ACTIVIDAD 1: OPCIONES PLAUSIBLES === */
+    .mc-btn {
+        background: var(--c-white); border: 2px solid #E0E0E0; padding: 20px; border-radius: 8px;
+        font-size: 1.1rem; font-weight: 600; cursor: pointer; text-align: left; transition: var(--transition);
+        margin-bottom: 15px; width: 100%; color: var(--c-dark-purple); line-height: 1.6;
+    }
+    .mc-btn:hover { border-color: var(--c-orange); background: rgba(251, 165, 17, 0.05); transform: translateX(5px); }
+    .mc-btn.selected-correct { border-color: var(--c-purple); background: rgba(114, 53, 168, 0.1); }
+    .mc-btn.selected-wrong { border-color: var(--c-red); background: rgba(206, 70, 81, 0.1); }
+
+    /* === ACTIVIDAD 2: CLASIFICAR BARRERAS === */
+    .sorter-container { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .sorter-card {
+        background-color: var(--c-white); border: 3px solid var(--c-orange); border-radius: 12px;
+        padding: 40px 20px; width: 100%; max-width: 600px; text-align: center; font-size: 1.4rem;
+        font-weight: 800; color: var(--c-dark-purple); box-shadow: 0 8px 20px rgba(251, 165, 17, 0.15); min-height: 150px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .sorter-actions { display: flex; gap: 15px; width: 100%; max-width: 600px; flex-wrap: wrap; justify-content: center; }
+    .btn-sort {
+        flex: 1; min-width: 150px; padding: 15px; border: none; border-radius: 12px; font-size: 1.05rem;
+        font-weight: 800; cursor: pointer; color: var(--c-white); transition: var(--transition);
+    }
+    .btn-sort.inst { background-color: var(--c-dark-purple); }
+    .btn-sort.soc { background-color: var(--c-purple); }
+    .btn-sort.terr { background-color: var(--c-orange); color: var(--c-dark-purple); }
+    .btn-sort:hover { transform: scale(1.05); }
+
+    /* === ACTIVIDAD 3: DETECTAR ERROR (CORTE IDH) === */
+    .tf-container { display: flex; flex-direction: column; gap: 15px; }
+    .tf-btn {
+        background-color: var(--c-white); border: 2px solid #E0E0E0; color: var(--c-dark-purple);
+        padding: 25px; border-radius: 12px; font-size: 1.15rem; font-weight: 600; cursor: pointer;
+        text-align: left; transition: var(--transition); line-height: 1.6;
+    }
+    .tf-btn:hover { border-color: var(--c-purple); background: rgba(114, 53, 168, 0.05); transform: translateX(5px); }
+    .tf-btn.wrong { background-color: var(--c-red); color: var(--c-white); border-color: var(--c-red); }
+
+    /* === ACTIVIDAD 4: INTRUSO (OPORTUNIDADES) === */
+    .grid-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+    .option-btn {
+        background-color: var(--c-white); border: 2px solid #E0E0E0; color: var(--c-dark-purple);
+        padding: 20px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: var(--transition);
+    }
+    .option-btn:hover { border-color: var(--c-purple); background: rgba(114, 53, 168, 0.05); }
+    .option-btn.correct { background-color: var(--c-purple); color: var(--c-white); border-color: var(--c-dark-purple); transform: scale(1.02); }
+    .option-btn.wrong { background-color: var(--c-red); color: var(--c-white); border-color: var(--c-red); }
+
+    /* === NUEVA ACTIVIDAD 5: DISEÑO DE PAPEL (REFLEXIÓN) === */
+    .paper-note {
+        background-color: #FDFBF7; /* Color pergamino claro */
+        /* Crear líneas de cuaderno con un gradiente repetitivo */
+        background-image: repeating-linear-gradient(transparent, transparent 31px, rgba(114, 53, 168, 0.2) 32px);
+        background-attachment: local;
+        border: 1px solid #E0DCE3;
+        border-radius: 2px 15px 15px 2px;
+        box-shadow: 5px 5px 20px rgba(72, 53, 168, 0.1);
+        font-family: var(--font-hand);
+        font-size: 1.5rem;
+        color: var(--c-dark-purple);
+        position: relative;
+        transform: rotate(-1deg);
+        margin: 10px auto 30px auto;
+        padding: 35px 25px 35px 60px;
+        line-height: 32px; /* Alineado a las líneas del gradiente */
+    }
+    /* Margen rojo típico de cuaderno */
+    .paper-note::before {
+        content: ''; position: absolute; top: 0; left: 40px; bottom: 0; width: 2px; background: var(--c-red); opacity: 0.7;
+    }
+    
+    .paper-note .paper-title { font-weight: 700; font-size: 1.8rem; border-bottom: 2px solid var(--c-dark-purple); display: inline-block; margin-bottom: 15px; }
+    .paper-note p { margin-bottom: 15px; }
+    .paper-note ul { padding-left: 20px; list-style-type: disc; margin-bottom: 15px; }
+    
+    .handwritten-textarea {
+        width: 100%; min-height: 120px;
+        background: transparent; border: none; outline: none;
+        font-family: var(--font-hand); font-size: 1.5rem; color: var(--c-purple);
+        line-height: 32px; resize: none; margin-top: 10px;
+    }
+    .handwritten-textarea::placeholder { color: rgba(114, 53, 168, 0.4); }
+
+    /* === SMART SCROLL === */
+    .smart-scroll {
+        position: fixed; bottom: 30px; right: 30px; background-color: var(--c-orange); color: var(--c-dark-purple);
+        padding: 15px 25px; border-radius: 30px; font-weight: 800; font-size: 1.1rem; box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        display: flex; align-items: center; gap: 12px; z-index: 1000; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        cursor: pointer; border: 2px solid var(--c-dark-purple);
+    }
+    .smart-scroll.completed { background-color: var(--c-purple); color: var(--c-white); border-color: var(--c-white); }
+    .arrow-icon { font-size: 1.4rem; transition: transform 0.5s; }
+    .smart-scroll.completed .arrow-icon { transform: rotate(180deg); }
+
+    @media (max-width: 768px) {
+        .sorter-actions { flex-direction: column; }
+        .btn-sort { width: 100%; }
+        .smart-scroll { bottom: 20px; right: 50%; transform: translateX(50%); width: max-content; }
+        .smart-scroll.completed { transform: translateX(50%) translateY(0); }
+        .paper-note { padding-left: 45px; transform: rotate(0deg); }
+        .paper-note::before { left: 25px; }
+    }
+</style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="module-header">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo" onerror="this.src='https://via.placeholder.com/250x100/FFFFFF/480241?text=Logo+UNP'">
+        <img src="../Styles/logo.png" alt="Logo Institucional" class="client-logo" onerror="this.src='https://via.placeholder.com/250x100/FFFFFF/7235A8?text=Logo+Institucional'">
+    </header>
+
+    <div class="hero-title">
+        <h1>Acceso a la Justicia de Género</h1>
+        <p>Barreras persistentes y oportunidades institucionales frente a las violaciones de derechos.</p>
+    </div>
+
+    <!-- NUEVA ACT 1: OPCIONES PLAUSIBLES -->
+    <div class="section-card">
+        <div class="card-header"><div class="card-title">1. El Concepto Fundamental: Análisis Crítico</div></div>
+        <div class="card-body">
+            
+            <div class="instruction-box">
+                <p><strong>Instrucción:</strong> Lee las siguientes afirmaciones. Toca la opción que define de manera precisa y textual el "Acceso a la Justicia" y la realidad actual según las investigaciones internacionales.</p>
+            </div>
+            
+            <div>
+                <button class="mc-btn" onclick="checkAct1(this, false)">
+                    <b>A)</b> El acceso a la justicia se limita a tener leyes escritas, logrando que mujeres y personas diversas estén exentas de barreras internacionales.
+                </button>
+                <button class="mc-btn" onclick="checkAct1(this, true)">
+                    <b>B)</b> El acceso a la justicia implica que las personas puedan acudir a mecanismos efectivos de protección y reparación frente a violaciones de derechos. Sin embargo, múltiples investigaciones internacionales han identificado barreras persistentes para mujeres y personas diversas.
+                </button>
+                <button class="mc-btn" onclick="checkAct1(this, false)">
+                    <b>C)</b> El acceso a la justicia significa que los mecanismos de reparación son efectivos exclusivamente cuando no existen barreras institucionales en zonas urbanas.
+                </button>
+            </div>
+
+            <div id="fbAct1" class="feedback-alert"></div>
+        </div>
+    </div>
+
+    <!-- ACT 2: CLASIFICAR BARRERAS -->
+    <div class="section-card">
+        <div class="card-header"><div class="card-title">2. Clasificación de Barreras Frecuentes</div></div>
+        <div class="card-body">
+            
+            <div class="context-box">
+                <div class="context-title">Las 3 Dimensiones del Obstáculo</div>
+                <p>El acceso se ve frenado por barreras de tres tipos: <b>Institucionales</b> (trato de las entidades), <b>Sociales</b> (presión del entorno comunitario) y <b>Territoriales</b> (geografía y presencia del Estado).</p>
+            </div>
+
+            <div class="instruction-box">
+                <p><strong>Instrucción:</strong> Aparecerá una barrera específica extraída del contenido. Decide a qué categoría pertenece tocando el botón correspondiente.</p>
+            </div>
+
+            <div class="sorter-container">
+                <div style="font-weight: 800; color: var(--c-orange); font-size: 1.1rem;" id="sortProg">Concepto 1 de 11</div>
+                <div class="sorter-card" id="sortCard">Cargando...</div>
+                <div class="sorter-actions">
+                    <button class="btn-sort inst" onclick="handleSort('Institucional')">🏛️ Institucional</button>
+                    <button class="btn-sort soc" onclick="handleSort('Social')">👥 Social</button>
+                    <button class="btn-sort terr" onclick="handleSort('Territorial')">🗺️ Territorial</button>
+                </div>
+                <div id="fbAct2" class="feedback-alert" style="width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACT 3: DETECTAR EL ERROR (CORTE IDH) -->
+    <div class="section-card">
+        <div class="card-header"><div class="card-title">3. Debida Diligencia y Reparación Transformadora</div></div>
+        <div class="card-body">
+            
+            <div class="context-box">
+                <div class="context-title">Postura de la Corte Interamericana (IDH)</div>
+                <p>El Estado no solo debe actuar, sino que tiene obligaciones reforzadas frente a la violencia basada en género (VBG). La reparación va más allá de un castigo aislado.</p>
+            </div>
+
+            <div class="instruction-box">
+                <p><strong>Instrucción:</strong> Identifica el error. Lee estas dos afirmaciones y toca la que contiene información FALSA o limitante según los lineamientos de la Corte IDH.</p>
+            </div>
+
+            <div class="tf-container">
+                <button class="tf-btn" onclick="checkTF(this, false)">
+                    <b>A)</b> La Corte Interamericana de Derechos Humanos señala que los Estados tienen obligaciones reforzadas frente a VBG, y que la reparación debe buscar cambios estructurales que impidan repetición.
+                </button>
+                <button class="tf-btn" onclick="checkTF(this, true)">
+                    <b>B)</b> La Corte Interamericana de Derechos Humanos ha señalado que la reparación transformadora debe limitarse exclusivamente a sanciones individuales para cerrar el caso.
+                </button>
+            </div>
+            <div id="fbAct3" class="feedback-alert"></div>
+        </div>
+    </div>
+
+    <!-- ACT 4: INTRUSO EN OPORTUNIDADES INSTITUCIONALES -->
+    <div class="section-card">
+        <div class="card-header"><div class="card-title">4. Oportunidades Institucionales</div></div>
+        <div class="card-body">
+            
+            <div class="instruction-box">
+                <p><strong>Instrucción:</strong> El contenido enumera 5 grandes oportunidades para mejorar el acceso a la justicia. Entre las opciones abajo, encuentra y toca la <b>intrusa</b> (la que NO promueve el acceso a la justicia con perspectiva de género).</p>
+            </div>
+
+            <div class="grid-options" id="intruderGrid">
+                <button class="option-btn" data-correct="false">Protocolos especializados.</button>
+                <button class="option-btn" data-correct="false">Formación continua.</button>
+                <button class="option-btn" data-correct="true">Sistemas de revictimización burocrática.</button> <!-- INTRUSO -->
+                <button class="option-btn" data-correct="false">Sistemas de monitoreo.</button>
+                <button class="option-btn" data-correct="false">Atención psicosocial.</button>
+                <button class="option-btn" data-correct="false">Articulación interinstitucional.</button>
+            </div>
+            
+            <div id="fbAct4" class="feedback-alert"></div>
+        </div>
+    </div>
+
+    <!-- NUEVA ACT 5: REFLEXIÓN EN PAPEL ESCRITO A MANO -->
+    <div class="section-card">
+        <div class="card-header"><div class="card-title">5. Caso Práctico y Empatía Analítica</div></div>
+        <div class="card-body">
+            
+            <div class="instruction-box">
+                <p><strong>Instrucción:</strong> Lee el caso desde el punto de vista de la víctima. Tómate un momento para ponerte en su lugar y responde las preguntas orientadoras en el cuaderno de notas (es tu espacio de reflexión personal).</p>
+            </div>
+
+            <div class="paper-note">
+                <span class="paper-title">Expediente de Lideresa Social</span>
+                <p>Situación reportada: Soy beneficiaria de medidas de protección y he denunciado violencia política, acoso digital y exclusión de espacios institucionales de participación.</p>
+                <p>El problema: La respuesta de la institución se ha limitado a darme medidas de seguridad física. Han ignorado totalmente los impactos psicosociales y de género que estoy sufriendo.</p>
+                <p>Preguntas para el analista:</p>
+                <ul>
+                    <li>¿Qué formas de violencia identificas en mi caso?</li>
+                    <li>¿Qué enfoques crees que deberían aplicarse en vez de solo darme escoltas?</li>
+                    <li>¿Qué obligaciones institucionales existen para un caso como el mío?</li>
+                    <li>¿Cómo podrías fortalecer una respuesta verdaderamente integral?</li>
+                    <li>¿Qué relación tiene mi caso con el Convenio 190 y el acceso a la justicia?</li>
+                </ul>
+                
+                <p style="margin-top:20px; color:var(--c-purple);">Mis apuntes de análisis (escribe aquí tu reflexión):</p>
+                <textarea class="handwritten-textarea" placeholder="Creo que en este caso las formas de violencia son..."></textarea>
+            </div>
+
+            <button class="btn-action" id="btnReflection" onclick="completeReflection()">Marcar caso como analizado</button>
+
+            <div id="fbAct5" class="feedback-alert"></div>
+        </div>
+    </div>
+
+    <!-- FLECHA INTELIGENTE -->
+    <div id="smartScroll" class="smart-scroll" aria-label="Navegación inteligente">
+        <span id="scrollText">Continúa bajando</span>
+        <span class="arrow-icon" id="scrollIcon">⬇</span>
+    </div>
+
+<script>
+    /* ==========================================
+       ACT 1: OPCIONES PLAUSIBLES
+       ========================================== */
+    function checkAct1(btn, isCorrect) {
+        const fbAct1 = document.getElementById('fbAct1');
+        const btns = document.querySelectorAll('.mc-btn');
+        fbAct1.style.display = 'block';
+        
+        if (isCorrect) {
+            btn.classList.add('selected-correct');
+            fbAct1.className = 'feedback-alert feedback-success';
+            fbAct1.innerHTML = '<b>¡Correcto!</b> Has identificado la premisa textual y precisa que enmarca el problema del acceso a la justicia y sus barreras persistentes.';
+            btns.forEach(b => b.disabled = true);
+            gsap.from(fbAct1, {y: 10, opacity: 0, duration: 0.4});
+        } else {
+            btn.classList.add('selected-wrong');
+            fbAct1.className = 'feedback-alert feedback-error';
+            fbAct1.innerHTML = '<b>Opción incorrecta.</b> Esta afirmación contradice la realidad de las investigaciones internacionales. Vuelve a intentarlo.';
+            gsap.to(btn, {x: [-5, 5, -5, 5, 0], duration: 0.3});
+            setTimeout(() => { btn.classList.remove('selected-wrong'); }, 1000);
+        }
+    }
+
+    /* ==========================================
+       ACT 2: CLASIFICADOR
+       ========================================== */
+    const barreras = [
+        { t: "Revictimización", type: "Institucional" }, { t: "Miedo a represalias", type: "Social" },
+        { t: "Falta de presencia institucional", type: "Territorial" }, { t: "Falta de formación", type: "Institucional" },
+        { t: "Dependencia económica", type: "Social" }, { t: "Limitaciones de acceso rural", type: "Territorial" },
+        { t: "Sesgos discriminatorios", type: "Institucional" }, { t: "Estigmatización", type: "Social" },
+        { t: "Riesgos de seguridad", type: "Territorial" }, { t: "Procesos excesivamente burocráticos", type: "Institucional" },
+        { t: "Violencia comunitaria", type: "Social" }
+    ].sort(() => Math.random() - 0.5);
+
+    let idx2 = 0;
+    const card2 = document.getElementById('sortCard');
+    const prog2 = document.getElementById('sortProg');
+    const fbAct2 = document.getElementById('fbAct2');
+    const btnsSort = document.querySelectorAll('.btn-sort');
+
+    function renderSorter() {
+        if(idx2 < barreras.length) {
+            card2.textContent = barreras[idx2].t; prog2.textContent = `Concepto ${idx2 + 1} de ${barreras.length}`;
+            gsap.from(card2, {scale: 0.9, opacity: 0, duration: 0.3});
+        } else {
+            card2.innerHTML = "🎉 ¡Clasificación Exitosa!"; card2.style.borderColor = "var(--c-purple)";
+            btnsSort.forEach(b => b.style.display = 'none'); prog2.style.display = 'none';
+            fbAct2.style.display = 'block'; fbAct2.className = 'feedback-alert feedback-success';
+            fbAct2.innerHTML = '<b>¡Excelente!</b> Identificar si el obstáculo viene de la institución, de la sociedad o del territorio, es el primer paso para diseñar una reparación transformadora.';
+        }
+    }
+
+    function handleSort(choice) {
+        if(choice === barreras[idx2].type) { idx2++; renderSorter(); } 
+        else {
+            gsap.to(card2, {x: [-10, 10, -10, 10, 0], duration: 0.4});
+            card2.style.backgroundColor = "rgba(206, 70, 81, 0.1)"; card2.style.borderColor = "var(--c-red)";
+            setTimeout(() => { card2.style.backgroundColor = "var(--c-white)"; card2.style.borderColor = "var(--c-orange)"; }, 600);
+        }
+    }
+    renderSorter();
+
+    /* ==========================================
+       ACT 3: DETECTAR EL ERROR
+       ========================================== */
+    function checkTF(btn, isWrongStatement) {
+        const fbAct3 = document.getElementById('fbAct3');
+        const btns = document.querySelectorAll('.tf-btn');
+        fbAct3.style.display = 'block';
+        
+        if (isWrongStatement) {
+            btn.classList.add('wrong');
+            fbAct3.className = 'feedback-alert feedback-success';
+            fbAct3.innerHTML = '<b>¡Exacto! Has detectado el error.</b><br>La Corte Interamericana señala explícitamente que la reparación transformadora <b>NO</b> debe limitarse a sanciones individuales, sino buscar cambios estructurales.';
+            btns.forEach(b => b.disabled = true);
+            gsap.from(fbAct3, {y: 10, opacity: 0, duration: 0.4});
+        } else {
+            fbAct3.className = 'feedback-alert feedback-error';
+            fbAct3.innerHTML = '<b>Incorrecto.</b> Esa afirmación es verdadera. El objetivo de la actividad es detectar la información errónea o limitante.';
+            gsap.to(btn, {x: [-5, 5, -5, 5, 0], duration: 0.3});
+        }
+    }
+
+    /* ==========================================
+       ACT 4: INTRUSO
+       ========================================== */
+    const intruderBtns = document.querySelectorAll('.option-btn');
+    const fbAct4 = document.getElementById('fbAct4');
+
+    intruderBtns.forEach(btn => {
+        btn.onclick = () => {
+            if(btn.disabled) return;
+            fbAct4.style.display = 'block';
+            
+            if (btn.dataset.correct === "true") {
+                btn.classList.add('correct');
+                fbAct4.className = 'feedback-alert feedback-success';
+                fbAct4.innerHTML = '<b>¡Bien hecho!</b> "Sistemas de revictimización burocrática" es una barrera, NO una oportunidad. Las oportunidades reales son: protocolos, formación, monitoreo, atención psicosocial y articulación.';
+                intruderBtns.forEach(b => b.disabled = true);
+                gsap.from(fbAct4, {scale: 0.98, opacity: 0, duration: 0.4});
+            } else {
+                btn.classList.add('wrong');
+                fbAct4.className = 'feedback-alert feedback-error';
+                fbAct4.innerHTML = '<b>Esa SÍ es una oportunidad institucional.</b> Busca la que representa un retroceso o barrera.';
+                gsap.to(btn, {x: [-5, 5, -5, 5, 0], duration: 0.3});
+                setTimeout(() => { btn.classList.remove('wrong'); }, 800);
+            }
+        };
+    });
+
+    /* ==========================================
+       ACT 5: REFLEXIÓN EN PAPEL (SIN QUIZ)
+       ========================================== */
+    function completeReflection() {
+        const fbAct5 = document.getElementById('fbAct5');
+        const btn = document.getElementById('btnReflection');
+        
+        fbAct5.style.display = 'block';
+        fbAct5.className = 'feedback-alert feedback-success';
+        fbAct5.innerHTML = '<b>¡Gracias por tu análisis!</b> Tomarse el tiempo de reflexionar y ponerse en los zapatos de la víctima es el primer paso para ofrecer una respuesta institucional empática, integral y con perspectiva de género. ¡Buen trabajo!';
+        
+        btn.innerHTML = "Reflexión Completada ✔";
+        btn.style.backgroundColor = "var(--c-dark-purple)";
+        btn.disabled = true;
+        
+        // Bloquear el textarea sutilmente
+        document.querySelector('.handwritten-textarea').disabled = true;
+        
+        gsap.from(fbAct5, {y: 10, opacity: 0, duration: 0.4});
+    }
+
+    /* ==========================================
+       FLECHA INTELIGENTE
+       ========================================== */
+    const sScroll = document.getElementById('smartScroll');
+    const sText = document.getElementById('scrollText');
+
+    window.addEventListener('scroll', () => {
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        const scrolled = window.scrollY;
+
+        if (Math.ceil(scrolled) >= scrollable - 30) {
+            sScroll.classList.add('completed');
+            sText.textContent = "¡Módulo Completado!";
+        } else {
+            sScroll.classList.remove('completed');
+            sText.textContent = "Continúa bajando";
+        }
+    });
+
+    sScroll.onclick = () => {
+        if(sScroll.classList.contains('completed')) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            window.scrollBy({ top: window.innerHeight * 0.7, left: 0, behavior: 'smooth' });
+        }
+    };
+
+</script>
+
+</body>
+</html>

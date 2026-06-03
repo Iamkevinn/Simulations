@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instrumentos de Política Pública con Enfoque de Género</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        /* =========================================================
+           VARIABLES
+           ========================================================= */
+        :root {
+            --color-1: #480241;
+            --color-2: #7235A8;
+            --color-3: #FBA511;
+            --color-4: #CE4651;
+            --color-5: #FFFFFF;
+            
+            --bg-logos: #EDE6EC; 
+            --bg-app: #F4F0F8; 
+            --text-main: #333333;
+            --success: #2A8143;
+            
+            --font-ui: 'Montserrat', sans-serif;
+            --font-body: 'Nunito', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        h1, h2, h3, h4, .fuente-ui { font-family: var(--font-ui); }
+        *:focus-visible { outline: 3px solid var(--color-3); outline-offset: 3px; border-radius: 4px; }
+
+        /* =========================================================
+           HEADER
+           ========================================================= */
+        header {
+            background-color: var(--bg-logos);
+            color: var(--color-1);
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-bottom: 5px solid var(--color-1);
+        }
+
+        .logos-container { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+        .client-logo { max-height: 70px; border-radius: 8px; }
+
+        h1 { font-size: 1.8rem; margin-bottom: 10px; color: var(--color-1); font-weight: 800; line-height: 1.3;}
+        .intro-text { font-size: 1.1rem; max-width: 800px; margin: 0 auto; color: var(--color-1); font-weight: 700; opacity: 0.8;}
+
+        /* =========================================================
+           TARJETAS Y ELEMENTOS BASE
+           ========================================================= */
+        main { max-width: 850px; margin: 30px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 40px; }
+
+        .activity-card {
+            background-color: var(--color-5);
+            border-top: 6px solid var(--color-2);
+            border-radius: 12px; padding: 30px;
+            box-shadow: 0 10px 30px rgba(72, 2, 65, 0.08);
+        }
+
+        .activity-header h2 { color: var(--color-1); font-size: 1.5rem; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .activity-header i { color: var(--color-3); }
+
+        .instruction {
+            display: block; 
+            background-color: rgba(251, 165, 17, 0.15);
+            border-left: 5px solid var(--color-3);
+            padding: 15px; margin-bottom: 25px;
+            font-weight: 700; color: var(--color-1); border-radius: 0 4px 4px 0;
+            line-height: 1.5; font-size: 1.05rem;
+        }
+        .instruction i { margin-right: 8px; color: var(--color-3); font-size: 1.2rem;}
+
+        .btn-action { 
+            background-color: var(--color-3); color: var(--color-1); border: none; padding: 15px 25px; 
+            font-size: 1.1rem; font-weight: 800; font-family: var(--font-ui); border-radius: 8px; 
+            cursor: pointer; margin-top: 20px; display: block; width: 100%; text-transform: uppercase; transition: 0.3s;
+        }
+        .btn-action:hover { background-color: #e0930f; transform: translateY(-2px); }
+        .btn-action:disabled { background-color: #ccc; cursor: not-allowed; transform: none; color: #666; }
+
+        .feedback { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; font-weight: 700; line-height: 1.5; font-size: 1.05rem;}
+        .feedback.success { display: block; background-color: #e6f4ea; border-left: 4px solid #34a853; color: #137333; }
+        .feedback.error { display: block; background-color: #fce8e6; border-left: 4px solid var(--color-4); color: #c5221f; }
+
+        /* =========================================================
+           ACTIVIDAD 1
+           ========================================================= */
+        .sentence-item { background: var(--bg-app); padding: 25px; border-left: 4px solid var(--color-2); border-radius: 8px; font-size: 1.15rem; line-height: 2; margin-bottom: 20px;}
+        .blank-slot {
+            display: inline-block; min-width: 140px; height: 35px; border-bottom: 3px dashed var(--color-1);
+            background-color: rgba(251, 165, 17, 0.1); vertical-align: middle; text-align: center;
+            font-weight: 800; color: var(--color-1); cursor: pointer; padding: 0 10px; border-radius: 4px 4px 0 0;
+        }
+        .word-bank { display: flex; gap: 10px; flex-wrap: wrap; background-color: #f9f9f9; padding: 20px; border-radius: 8px; justify-content: center; border: 1px solid #ddd; }
+        .word-chip {
+            background-color: var(--color-1); color: white; padding: 10px 20px; border-radius: 30px;
+            cursor: pointer; font-weight: 700; border: none; font-family: var(--font-ui); transition: transform 0.2s;
+        }
+        .word-chip:hover { transform: scale(1.05); background-color: var(--color-2); }
+        .word-chip.hidden { display: none; }
+
+        /* =========================================================
+           ACTIVIDAD 2
+           ========================================================= */
+        .intruder-grid { display: flex; flex-direction: column; gap: 12px; }
+        .intruder-btn {
+            background-color: var(--color-5); border: 2px solid #ddd; padding: 18px; border-radius: 8px;
+            font-family: var(--font-body); font-size: 1.05rem; font-weight: 600; color: var(--text-main);
+            cursor: pointer; text-align: left; transition: all 0.2s; display: flex; align-items: center; gap: 15px;
+        }
+        .intruder-btn:hover { border-color: var(--color-2); background-color: rgba(114, 53, 168, 0.05); }
+        .intruder-btn i { color: var(--color-2); font-size: 1.2rem; }
+
+        /* =========================================================
+           ACTIVIDAD 3
+           ========================================================= */
+        .match-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        .match-col { display: flex; flex-direction: column; gap: 12px; }
+        .match-col-title { font-family: var(--font-ui); color: var(--color-1); font-weight: 800; font-size: 1.1rem; margin-bottom: 5px; }
+        .match-btn {
+            background-color: var(--color-5); border: 2px solid var(--color-2); padding: 15px;
+            border-radius: 8px; cursor: pointer; text-align: left; font-size: 1rem; font-weight: 600;
+            color: var(--text-main); transition: all 0.2s; font-family: var(--font-body);
+        }
+        .match-btn:hover { background-color: rgba(114, 53, 168, 0.05); transform: translateX(5px); }
+        .match-btn.selected { background-color: var(--color-2); color: white; border-color: var(--color-1); }
+        .match-btn.matched { background-color: #e6f4ea; border-color: #34a853; color: #137333; pointer-events: none; opacity: 0.8; }
+
+        /* =========================================================
+           ACTIVIDAD 4
+           ========================================================= */
+        .classifier-container { display: flex; flex-direction: column; gap: 20px; }
+        .current-item-box {
+            background-color: var(--color-1); color: var(--color-5);
+            padding: 30px 20px; text-align: center; border-radius: 8px; font-size: 1.3rem;
+            font-weight: 700; min-height: 120px; display: flex; align-items: center; justify-content: center;
+            box-shadow: inset 0 -5px 0 var(--color-3);
+        }
+        .sort-buttons { display: flex; gap: 15px; flex-wrap: wrap; }
+        .sort-btn { 
+            flex: 1; min-width: 200px; padding: 15px; font-size: 1.1rem; font-weight: 800; 
+            border: none; border-radius: 8px; cursor: pointer; color: var(--color-5); font-family: var(--font-ui);
+            transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-herramienta { background-color: var(--color-2); }
+        .btn-riesgo { background-color: var(--color-4); }
+        .sort-btn:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        
+        .results-board { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .sorted-item { background-color: var(--bg-app); padding: 12px 15px; border-radius: 6px; font-size: 1rem; border-left: 4px solid #ccc; font-weight: 600;}
+        .sorted-item.correct { border-left-color: #34a853; }
+        .sorted-item.incorrect { border-left-color: var(--color-4); }
+
+        /* =========================================================
+           ACTIVIDAD 5: TABLERO DE CONTROL
+           ========================================================= */
+
+        /* Grilla de tarjetas de falla */
+        .tc-failures-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .tc-failure-card {
+            background-color: var(--bg-app);
+            border: 2px solid var(--color-4);
+            border-radius: 12px;
+            padding: 22px 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            position: relative;
+            animation: tc-pulse 2.5s infinite;
+        }
+        .tc-failure-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(206, 70, 81, 0.2);
+            border-color: var(--color-1);
+        }
+        .tc-failure-card.tc-repaired {
+            background-color: #e6f4ea;
+            border-color: #34a853;
+            cursor: default;
+            pointer-events: none;
+            animation: none;
+            box-shadow: none;
+        }
+
+        @keyframes tc-pulse {
+            0%   { box-shadow: 0 0 0 0 rgba(206, 70, 81, 0.35); }
+            70%  { box-shadow: 0 0 0 8px rgba(206, 70, 81, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(206, 70, 81, 0); }
+        }
+
+        .tc-card-icon { font-size: 2.4rem; }
+        .tc-card-title {
+            font-family: var(--font-ui);
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--color-1);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .tc-card-desc {
+            font-size: 0.88rem;
+            color: #666;
+            line-height: 1.45;
+        }
+        .tc-badge {
+            margin-top: 6px;
+            background: var(--color-4);
+            color: white;
+            padding: 5px 14px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-family: var(--font-ui);
+            transition: background 0.3s;
+        }
+        .tc-repaired .tc-badge {
+            background: #34a853;
+        }
+
+        /* Consola de herramientas */
+        .tc-console {
+            display: none;
+            background: var(--bg-app);
+            border: 2px solid var(--color-2);
+            border-radius: 10px;
+            padding: 22px;
+            margin-bottom: 20px;
+            animation: tc-slide-up 0.35s ease-out;
+        }
+        @keyframes tc-slide-up {
+            from { transform: translateY(12px); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
+        }
+
+        .tc-console-label {
+            font-family: var(--font-ui);
+            font-weight: 800;
+            font-size: 0.92rem;
+            color: var(--color-1);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 14px;
+            border-bottom: 2px solid var(--color-3);
+            padding-bottom: 8px;
+        }
+
+        .tc-tools-grid {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .tc-tool-btn {
+            background-color: var(--color-5);
+            color: var(--color-1);
+            border: 2px solid var(--color-2);
+            padding: 13px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            flex: 1 1 180px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            font-weight: 700;
+            font-family: var(--font-ui);
+            font-size: 0.92rem;
+        }
+        .tc-tool-btn:hover {
+            background-color: var(--color-2);
+            border-color: var(--color-2);
+            color: white;
+            transform: scale(1.02);
+        }
+        .tc-tool-icon { font-size: 1.4rem; }
+
+        .tc-console-error {
+            color: var(--color-4);
+            margin-top: 12px;
+            font-weight: 700;
+            display: none;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        /* Modal de éxito */
+        .tc-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(72, 2, 65, 0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .tc-modal-overlay.active { display: flex; }
+
+        .tc-modal-box {
+            background: white;
+            border-radius: 16px;
+            padding: 40px 36px;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(72, 2, 65, 0.25);
+            animation: tc-pop 0.3s ease-out;
+        }
+        @keyframes tc-pop {
+            from { transform: scale(0.85); opacity: 0; }
+            to   { transform: scale(1);    opacity: 1; }
+        }
+
+        .tc-modal-check { font-size: 3.5rem; display: block; margin-bottom: 14px; }
+        .tc-modal-title {
+            font-family: var(--font-ui);
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--color-1);
+            margin-bottom: 16px;
+        }
+        .tc-modal-body {
+            font-size: 1rem;
+            line-height: 1.65;
+            color: #555;
+            margin-bottom: 26px;
+        }
+        .tc-modal-close {
+            background-color: var(--color-3);
+            color: var(--color-1);
+            border: none;
+            padding: 13px 30px;
+            font-size: 1rem;
+            font-weight: 800;
+            font-family: var(--font-ui);
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
+        .tc-modal-close:hover { background-color: #e0930f; transform: translateY(-2px); }
+
+        /* Mensaje final dentro de la tarjeta */
+        .tc-final-msg {
+            display: none;
+            background: #e6f4ea;
+            border-left: 5px solid #34a853;
+            border-radius: 0 8px 8px 0;
+            padding: 15px;
+            margin-top: 10px;
+            font-weight: 700;
+            color: #137333;
+            font-size: 1.05rem;
+        }
+        .tc-final-msg.visible { display: block; }
+
+        /* =========================================================
+           BOTÓN FLOTANTE
+           ========================================================= */
+        .sticky-btn {
+            position: fixed; bottom: 30px; right: 30px; background-color: var(--color-3); color: var(--color-1);
+            border: none; padding: 15px 25px; border-radius: 30px; font-size: 1rem; font-weight: 800; font-family: var(--font-ui);
+            cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px;
+            transition: all 0.3s ease; z-index: 1000;
+        }
+        .sticky-btn:hover { transform: translateY(-3px); background-color: #e0930f; }
+        .sticky-btn.end-state { background-color: var(--color-1); color: white; cursor: default; transform: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+
+        @media (max-width: 768px) {
+            .activity-card { padding: 20px; }
+            .sticky-btn { bottom: 15px; right: 15px; padding: 12px 20px; font-size: 0.9rem; }
+            .tc-modal-box { padding: 28px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logos-container">
+            <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+UNP'">
+            <img src="../Styles/logo.png" alt="Logo Institucional" class="client-logo" onerror="this.src='https://via.placeholder.com/150x50?text=Logo+Institucional'">
+        </div>
+        <h1>Instrumentos de Política Pública con Enfoque de Género</h1>
+        <p class="intro-text">Desarrollo en el Nacional</p>
+    </header>
+
+    <main>
+
+        <!-- ACTIVIDAD 1 -->
+        <section class="activity-card">
+            <div class="activity-header">
+                <h2><i class="fas fa-pen-nib"></i> 1. Desarrollo del contenido</h2>
+            </div>
+            <div class="instruction">
+                <i class="fas fa-hand-pointer"></i> <strong>Reto de Reconstrucción:</strong> Toca una palabra del banco inferior para llenar los espacios vacíos y descubrir el objetivo central de estas políticas.
+            </div>
+            <div class="sentence-item">
+                Las políticas públicas con enfoque de género buscan identificar <span class="blank-slot" data-id="1"></span> estructurales y diseñar acciones orientadas a garantizar <span class="blank-slot" data-id="2"></span> material y ejercicio efectivo de <span class="blank-slot" data-id="3"></span>.
+            </div>
+            <div class="word-bank" id="wordBank">
+                <button class="word-chip" data-word="derechos">derechos</button>
+                <button class="word-chip" data-word="igualdad">igualdad</button>
+                <button class="word-chip" data-word="desigualdades">desigualdades</button>
+                <button class="word-chip" data-word="neutralidad">neutralidad</button>
+            </div>
+            <button class="btn-action" onclick="checkAct1()">Validar Concepto</button>
+            <div class="feedback" id="act1-feedback" role="alert"></div>
+        </section>
+
+        <!-- ACTIVIDAD 2 -->
+        <section class="activity-card">
+            <div class="activity-header">
+                <h2><i class="fas fa-search"></i> 2. Fundamentos en Colombia</h2>
+            </div>
+            <div class="instruction">
+                <i class="fas fa-times-circle"></i> <strong>Auditoría Normativa:</strong> La incorporación del enfoque de género en Colombia tiene bases claras. De la siguiente lista, <strong>encuentra y haz clic en el documento INTRUSO</strong> que NO pertenece a los fundamentos mencionados en la unidad.
+            </div>
+            <div class="intruder-grid">
+                <button class="intruder-btn" onclick="checkIntruder(this, false)"><i class="fas fa-book"></i> Constitución Política de 1991.</button>
+                <button class="intruder-btn" onclick="checkIntruder(this, false)"><i class="fas fa-balance-scale"></i> Ley 1257 de 2008.</button>
+                <button class="intruder-btn" onclick="checkIntruder(this, true)"><i class="fas fa-ban"></i> Código de Policía Local.</button>
+                <button class="intruder-btn" onclick="checkIntruder(this, false)"><i class="fas fa-map"></i> Plan Nacional de Desarrollo.</button>
+                <button class="intruder-btn" onclick="checkIntruder(this, false)"><i class="fas fa-flag"></i> Política Pública Nacional de Equidad de Género.</button>
+                <button class="intruder-btn" onclick="checkIntruder(this, false)"><i class="fas fa-globe"></i> Instrumentos internacionales de derechos humanos.</button>
+            </div>
+            <div class="feedback" id="act2-feedback" role="alert"></div>
+        </section>
+
+        <!-- ACTIVIDAD 3 -->
+        <section class="activity-card">
+            <div class="activity-header">
+                <h2><i class="fas fa-link"></i> 3. Enfoques Aplicados</h2>
+            </div>
+            <div class="instruction">
+                <i class="fas fa-bullseye"></i> <strong>Conexión Lógica:</strong> Selecciona un enfoque y luego selecciona su definición exacta para emparejarlos.
+            </div>
+            <div class="match-grid">
+                <div class="match-col" id="col-enfoque">
+                    <div class="match-col-title">Enfoque:</div>
+                    <button class="match-btn" data-col="A" data-id="1">Enfoque diferencial</button>
+                    <button class="match-btn" data-col="A" data-id="2">Enfoque interseccional</button>
+                    <button class="match-btn" data-col="A" data-id="3">Enfoque de derechos humanos</button>
+                </div>
+                <div class="match-col" id="col-definicion">
+                    <div class="match-col-title">Definición:</div>
+                    <button class="match-btn" data-col="B" data-match="2">Analiza cómo distintas desigualdades operan simultáneamente.</button>
+                    <button class="match-btn" data-col="B" data-match="3">Comprende a las personas como sujetas de derechos y al Estado como garante.</button>
+                    <button class="match-btn" data-col="B" data-match="1">Reconoce impactos diferenciados según género, etnia, orientación sexual, discapacidad, ruralidad y otras condiciones.</button>
+                </div>
+            </div>
+            <div class="feedback" id="act3-feedback" role="alert"></div>
+        </section>
+
+        <!-- ACTIVIDAD 4 -->
+        <section class="activity-card">
+            <div class="activity-header">
+                <h2><i class="fas fa-layer-group"></i> 4. Herramientas vs Riesgos</h2>
+            </div>
+            <div class="instruction">
+                <i class="fas fa-bolt"></i> <strong>Clasificación Rápida:</strong> Lee el concepto que aparece en el recuadro central y decide rápidamente si es una "Herramienta de análisis" o un "Riesgo Institucional".
+            </div>
+            <div class="classifier-container">
+                <div class="current-item-box" id="currentItemDisplay" aria-live="polite">Cargando...</div>
+                <div class="sort-buttons">
+                    <button class="sort-btn btn-herramienta" onclick="sortItem('herramienta')"><i class="fas fa-tools"></i> Herramienta de Análisis</button>
+                    <button class="sort-btn btn-riesgo" onclick="sortItem('riesgo')"><i class="fas fa-exclamation-triangle"></i> Riesgo Institucional</button>
+                </div>
+                <div class="results-board" id="results-board"></div>
+            </div>
+            <div class="feedback" id="act4-feedback" role="alert"></div>
+        </section>
+
+        <!-- ACTIVIDAD 5: TABLERO DE CONTROL -->
+        <section class="activity-card">
+            <div class="activity-header">
+                <h2><i class="fas fa-tachometer-alt"></i> 5. Tablero de Control</h2>
+            </div>
+            <div class="instruction">
+                <i class="fas fa-wrench"></i> <strong>Transformación Institucional:</strong> El sistema tiene tres alertas activas. Haz clic en cada alerta y selecciona la herramienta normativa que la resuelve.
+            </div>
+
+            <!-- Tarjetas de alerta -->
+            <div class="tc-failures-grid">
+                <div class="tc-failure-card" id="tc-fail-1" onclick="tcOpenRepair(1)" role="button" tabindex="0" aria-label="Alerta: Vacío normativo">
+                    <div class="tc-card-icon" id="tc-icon-1">⚠️</div>
+                    <div class="tc-card-title">Vacío Normativo</div>
+                    <div class="tc-card-desc">No hay sanciones claras para violencias ni licencias de maternidad definidas.</div>
+                    <div class="tc-badge" id="tc-badge-1">¡Clic para resolver!</div>
+                </div>
+                <div class="tc-failure-card" id="tc-fail-2" onclick="tcOpenRepair(2)" role="button" tabindex="0" aria-label="Alerta: Falta de rumbo">
+                    <div class="tc-card-icon" id="tc-icon-2">⚠️</div>
+                    <div class="tc-card-title">Falta de Rumbo</div>
+                    <div class="tc-card-desc">La institución no tiene una hoja de ruta clara para la equidad a largo plazo.</div>
+                    <div class="tc-badge" id="tc-badge-2">¡Clic para resolver!</div>
+                </div>
+                <div class="tc-failure-card" id="tc-fail-3" onclick="tcOpenRepair(3)" role="button" tabindex="0" aria-label="Alerta: Sin recursos">
+                    <div class="tc-card-icon" id="tc-icon-3">⚠️</div>
+                    <div class="tc-card-title">Sin Recursos</div>
+                    <div class="tc-card-desc">Hay buenas intenciones, pero no hay dinero asignado específicamente para género.</div>
+                    <div class="tc-badge" id="tc-badge-3">¡Clic para resolver!</div>
+                </div>
+            </div>
+
+            <!-- Consola de herramientas -->
+            <div class="tc-console" id="tc-console">
+                <div class="tc-console-label" id="tc-console-label">Selecciona la herramienta correcta:</div>
+                <div class="tc-tools-grid">
+                    <button class="tc-tool-btn" onclick="tcTryFix('norma')">
+                        <span class="tc-tool-icon">⚖️</span> Leyes 1257 y 1822
+                    </button>
+                    <button class="tc-tool-btn" onclick="tcTryFix('plan')">
+                        <span class="tc-tool-icon">🗺️</span> CONPES Social 161
+                    </button>
+                    <button class="tc-tool-btn" onclick="tcTryFix('presupuesto')">
+                        <span class="tc-tool-icon">💰</span> Presupuestos Sensibles (PSG)
+                    </button>
+                </div>
+                <div class="tc-console-error" id="tc-console-error">❌ Herramienta incorrecta. Intenta otra.</div>
+            </div>
+
+            <!-- Mensaje final -->
+            <div class="tc-final-msg" id="tc-final-msg">
+                <i class="fas fa-check-circle"></i> ¡Institución transformada! Has establecido el marco normativo, la hoja de ruta y el presupuesto necesarios para una política de género efectiva.
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal de éxito -->
+    <div class="tc-modal-overlay" id="tc-modal" role="dialog" aria-modal="true" aria-labelledby="tc-modal-title">
+        <div class="tc-modal-box">
+            <span class="tc-modal-check">✅</span>
+            <h3 class="tc-modal-title" id="tc-modal-title">¡Sistema Transformado!</h3>
+            <p class="tc-modal-body" id="tc-modal-body">...</p>
+            <button class="tc-modal-close" onclick="tcCloseModal()">Entendido, continuar</button>
+        </div>
+    </div>
+
+    <!-- Botón flotante -->
+    <button class="sticky-btn" id="sticky-btn" onclick="scrollPage()" aria-label="Bajar para ver más contenido">
+        <span>⬇</span> Sigue bajando
+    </button>
+
+    <script>
+        /* ==========================================
+           ACTIVIDAD 1: COMPLETAR ESPACIOS
+           ========================================== */
+        const blanks = document.querySelectorAll('.blank-slot');
+        const wordChips = document.querySelectorAll('.word-chip');
+        const correctWordsAct1 = ['desigualdades', 'igualdad', 'derechos'];
+
+        wordChips.forEach(chip => {
+            chip.addEventListener('click', function() {
+                const word = this.getAttribute('data-word');
+                for(let blank of blanks) {
+                    if(blank.innerText === '') {
+                        blank.innerText = word;
+                        this.classList.add('hidden');
+                        break;
+                    }
+                }
+            });
+        });
+
+        blanks.forEach(blank => {
+            blank.addEventListener('click', function() {
+                if(this.innerText !== '') {
+                    const word = this.innerText;
+                    const chip = document.querySelector(`.word-chip[data-word="${word}"]`);
+                    if(chip) chip.classList.remove('hidden');
+                    this.innerText = ''; 
+                }
+            });
+        });
+
+        function checkAct1() {
+            let currentAnswers = Array.from(blanks).map(b => b.innerText);
+            let fb = document.getElementById('act1-feedback');
+            if(currentAnswers.includes('')) {
+                showFeedback(fb, 'error', 'Debes rellenar todos los espacios tocando las palabras del banco inferior.');
+                return;
+            }
+            let isCorrect = true;
+            for(let i=0; i<3; i++) { if(currentAnswers[i] !== correctWordsAct1[i]) isCorrect = false; }
+            if(isCorrect) {
+                showFeedback(fb, 'success', '¡Excelente! Has reconstruido con exactitud el objetivo de las políticas públicas con enfoque de género.');
+                document.getElementById('wordBank').style.pointerEvents = 'none';
+            } else {
+                showFeedback(fb, 'error', 'El orden no es correcto o usaste la palabra intrusa. Analiza la lógica de la frase y haz clic en las palabras erróneas para devolverlas al banco.');
+            }
+        }
+
+        /* ==========================================
+           ACTIVIDAD 2: ELIMINAR INTRUSO
+           ========================================== */
+        function checkIntruder(btn, isIntruder) {
+            let fb = document.getElementById('act2-feedback');
+            document.querySelectorAll('.intruder-btn').forEach(b => {
+                b.style.backgroundColor = 'var(--color-5)';
+                b.style.color = 'var(--text-main)';
+                b.style.borderColor = '#ddd';
+            });
+            if(isIntruder) {
+                btn.style.backgroundColor = 'var(--color-3)';
+                btn.style.color = 'var(--color-1)';
+                btn.style.borderColor = 'var(--color-1)';
+                showFeedback(fb, 'success', '¡Auditoría Correcta! El "Código de Policía Local" no es la base de la política pública con enfoque de género a nivel nacional según los lineamientos estudiados.');
+            } else {
+                btn.style.backgroundColor = 'var(--color-4)';
+                btn.style.color = 'white';
+                showFeedback(fb, 'error', 'Ese documento SÍ pertenece a los fundamentos en Colombia mencionados en la unidad. Sigue buscando el intruso.');
+            }
+        }
+
+        /* ==========================================
+           ACTIVIDAD 3: CONECTAR CONCEPTOS
+           ========================================== */
+        let selectedA = null, selectedB = null, matchesFound = 0;
+
+        document.querySelectorAll('.match-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if(this.classList.contains('matched')) return;
+                let col = this.dataset.col;
+                document.querySelectorAll(`.match-btn[data-col="${col}"]`).forEach(b => {
+                    if(!b.classList.contains('matched')) b.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                if(col === 'A') selectedA = this;
+                if(col === 'B') selectedB = this;
+                if(selectedA && selectedB) {
+                    let fb = document.getElementById('act3-feedback');
+                    if(selectedA.dataset.id === selectedB.dataset.match) {
+                        selectedA.classList.replace('selected', 'matched');
+                        selectedB.classList.replace('selected', 'matched');
+                        matchesFound++;
+                        showFeedback(fb, 'success', matchesFound === 3
+                            ? '¡Misión cumplida! Has asimilado la diferencia crucial entre los enfoques diferencial, interseccional y de DD.HH.'
+                            : '¡Conexión correcta!');
+                    } else {
+                        selectedA.classList.remove('selected');
+                        selectedB.classList.remove('selected');
+                        showFeedback(fb, 'error', 'La definición no corresponde con ese enfoque. Intenta de nuevo.');
+                    }
+                    selectedA = null; selectedB = null;
+                }
+            });
+        });
+
+        /* ==========================================
+           ACTIVIDAD 4: CLASIFICADOR
+           ========================================== */
+        const sortingItems = [
+            { text: "Árbol de problemas", category: "herramienta" },
+            { text: "Invisibilización de desigualdades", category: "riesgo" },
+            { text: "Matrices de impacto", category: "herramienta" },
+            { text: "Falta de datos desagregados", category: "riesgo" },
+            { text: "Indicadores de género", category: "herramienta" },
+            { text: "Reproducción de sesgos institucionales", category: "riesgo" },
+            { text: "Diagnósticos participativos", category: "herramienta" },
+            { text: "Escasa participación de poblaciones afectadas", category: "riesgo" },
+            { text: "Evaluación de brechas", category: "herramienta" }
+        ];
+        let currentItemIndex = 0, scoreSort = 0;
+
+        function loadNextItem() {
+            const display = document.getElementById('currentItemDisplay');
+            if(currentItemIndex < sortingItems.length) {
+                display.innerText = sortingItems[currentItemIndex].text;
+            } else {
+                display.innerHTML = '<i class="fas fa-flag-checkered" style="font-size:2rem; margin-bottom:10px; display:block;"></i> ¡Clasificación Finalizada!';
+                document.querySelector('.sort-buttons').style.display = 'none';
+                const fb = document.getElementById('act4-feedback');
+                if(scoreSort === sortingItems.length) {
+                    showFeedback(fb, 'success', '¡Impecable! Reconoces a la perfección cuáles son los riesgos a evitar y cuáles son las herramientas analíticas para lograrlo.');
+                } else {
+                    showFeedback(fb, 'error', `Has terminado con ${scoreSort} aciertos de ${sortingItems.length}. Revisa el historial arriba para identificar en qué conceptos te confundiste.`);
+                }
+            }
+        }
+
+        function sortItem(chosenCategory) {
+            if(currentItemIndex >= sortingItems.length) return;
+            const currentItem = sortingItems[currentItemIndex];
+            const isCorrect = currentItem.category === chosenCategory;
+            if(isCorrect) scoreSort++;
+            const board = document.getElementById('results-board');
+            const itemDiv = document.createElement('div');
+            itemDiv.className = `sorted-item ${isCorrect ? 'correct' : 'incorrect'}`;
+            let icon = chosenCategory === 'herramienta' ? '🛠️ Herramienta' : '⚠️ Riesgo';
+            itemDiv.innerHTML = `${isCorrect ? '✔️' : '❌'} <strong>[${icon}]</strong>: ${currentItem.text}`;
+            board.prepend(itemDiv);
+            currentItemIndex++;
+            loadNextItem();
+        }
+        loadNextItem();
+
+        /* ==========================================
+           ACTIVIDAD 5: TABLERO DE CONTROL
+           ========================================== */
+        let tcActiveProblem = 0;
+        let tcRepaired = 0;
+
+        const tcFeedback = {
+            1: "<strong>Marco Normativo integrado.</strong><br>La Ley 1257 de 2008 y la Ley 1822 de 2017 cubren los vacíos legales, proporcionando sanciones claras y protección laboral para la maternidad.",
+            2: "<strong>Hoja de Ruta definida.</strong><br>El CONPES Social 161 establece la política pública nacional de equidad de género. Ahora la institución sabe hacia dónde va y con qué metas.",
+            3: "<strong>Presupuesto Sensible al Género activado.</strong><br>Los PSG deben traducirse en apropiaciones concretas: salas de lactancia dotadas, flexibilización de turnos, rutas seguras financiadas. Sin asignaciones específicas, la política se reduce a una declaración formal sin capacidad transformadora."
+        };
+
+        function tcOpenRepair(id) {
+            if(document.getElementById(`tc-fail-${id}`).classList.contains('tc-repaired')) return;
+            tcActiveProblem = id;
+            const console_ = document.getElementById('tc-console');
+            const error = document.getElementById('tc-console-error');
+            console_.style.display = 'block';
+            error.style.display = 'none';
+            const labels = { 1: 'Vacío Normativo', 2: 'Falta de Rumbo', 3: 'Sin Recursos' };
+            document.getElementById('tc-console-label').innerText = `Resolviendo: ${labels[id]} — Selecciona la herramienta:`;
+            console_.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function tcTryFix(toolType) {
+            const correct =
+                (tcActiveProblem === 1 && toolType === 'norma') ||
+                (tcActiveProblem === 2 && toolType === 'plan') ||
+                (tcActiveProblem === 3 && toolType === 'presupuesto');
+
+            if(correct) {
+                document.getElementById('tc-console').style.display = 'none';
+                const card = document.getElementById(`tc-fail-${tcActiveProblem}`);
+                card.classList.add('tc-repaired');
+                document.getElementById(`tc-icon-${tcActiveProblem}`).innerText = '✅';
+                document.getElementById(`tc-badge-${tcActiveProblem}`).innerText = 'Transformado';
+
+                document.getElementById('tc-modal-body').innerHTML = tcFeedback[tcActiveProblem];
+                document.getElementById('tc-modal').classList.add('active');
+
+                tcRepaired++;
+                tcActiveProblem = 0;
+            } else {
+                const err = document.getElementById('tc-console-error');
+                err.style.display = 'block';
+                if(typeof gsap !== 'undefined') {
+                    gsap.from(err, { x: 8, duration: 0.08, repeat: 4, yoyo: true });
+                }
+            }
+        }
+
+        function tcCloseModal() {
+            document.getElementById('tc-modal').classList.remove('active');
+            if(tcRepaired === 3) {
+                document.getElementById('tc-final-msg').classList.add('visible');
+            }
+        }
+
+        /* ==========================================
+           UTILIDADES
+           ========================================== */
+        function showFeedback(element, type, message) {
+            element.className = `feedback ${type}`;
+            element.innerHTML = message;
+        }
+
+        const stickyBtn = document.getElementById('sticky-btn');
+        function scrollPage() {
+            if(!stickyBtn.classList.contains('end-state')) {
+                window.scrollBy({ top: window.innerHeight * 0.7, behavior: 'smooth' });
+            }
+        }
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.scrollY + window.innerHeight;
+            const bottomThreshold = document.documentElement.scrollHeight - 80;
+            if(scrollPos >= bottomThreshold) {
+                stickyBtn.innerHTML = '✔ Unidad Completada';
+                stickyBtn.classList.add('end-state');
+                stickyBtn.setAttribute('aria-label', 'Has llegado al final del contenido');
+            } else {
+                stickyBtn.innerHTML = '<span>⬇</span> Sigue bajando';
+                stickyBtn.classList.remove('end-state');
+                stickyBtn.setAttribute('aria-label', 'Bajar para ver más contenido');
+            }
+        });
+        window.dispatchEvent(new Event('scroll'));
+    </script>
+</body>
+</html>

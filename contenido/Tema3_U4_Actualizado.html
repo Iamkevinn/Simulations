@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Participación Política y Grupos Excluidos</title>
+    
+    <!-- LIBRERÍAS -->
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === 1. SISTEMA DE DISEÑO Y VARIABLES === */
+        :root {
+            --brand-dark-purple: #480241;
+            --brand-purple: #7235A8;
+            --brand-orange: #FBA511;
+            --brand-red: #CE4651;
+            --bg-base: #FFFFFF;
+            
+            --text-main: #333333;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+            padding-bottom: 100px; /* Espacio para la flecha flotante */
+        }
+
+        .module-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-base);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(72, 2, 65, 0.1);
+            border: 1px solid rgba(72, 2, 65, 0.1);
+            overflow: hidden;
+        }
+
+        /* === 2. HEADER Y LOGOS VISIBLES === */
+        .module-header {
+            background-color: var(--bg-base);
+            padding: 35px 20px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            border-bottom: 6px solid var(--brand-purple);
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        .client-logo {
+            max-height: 120px; /* Logos bastante visibles */
+            width: auto;
+            max-width: 45%; 
+            object-fit: contain;
+        }
+
+        .module-title {
+            background-color: var(--brand-dark-purple);
+            color: var(--bg-base);
+            padding: 25px 20px;
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        /* === 3. SECCIONES Y ACCESIBILIDAD === */
+        .activity-section {
+            padding: 40px 30px;
+            border-bottom: 2px dashed #E0E0E0;
+        }
+        
+        .activity-section:last-child {
+            border-bottom: none;
+        }
+
+        .instruction-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--brand-purple);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .instruction-box {
+            background-color: rgba(251, 165, 17, 0.15);
+            border-left: 5px solid var(--brand-orange);
+            padding: 18px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 30px;
+        }
+
+        .instruction-step {
+            font-size: 1.05rem;
+            color: var(--brand-dark-purple);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        /* Botones de Acción Globales */
+        .btn-action {
+            background-color: var(--brand-orange);
+            color: var(--brand-dark-purple);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transition);
+            margin-top: 15px;
+        }
+        .btn-action:hover:not(:disabled) {
+            background-color: #e5940b;
+            transform: translateY(-2px);
+        }
+        .btn-action:disabled {
+            background-color: #e0e0e0;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        /* Mensajes de Feedback */
+        .feedback {
+            margin-top: 20px; padding: 20px; border-radius: 8px;
+            font-size: 1.1rem; display: none; animation: fadeIn 0.5s ease;
+        }
+        .feedback.success {
+            display: block; background-color: rgba(114, 53, 168, 0.1);
+            color: var(--brand-dark-purple); border-left: 6px solid var(--brand-purple);
+        }
+        .feedback.error {
+            display: block; background-color: rgba(206, 70, 81, 0.1);
+            color: var(--brand-red); border-left: 6px solid var(--brand-red);
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* === 4. ACTIVIDAD 1: RECONSTRUIR PREMISA (TAP TO FILL) === */
+        .sentence-container {
+            font-size: 1.2rem; line-height: 2.2; margin-bottom: 25px;
+            background: #FAFAFA; padding: 25px; border-radius: 8px;
+            border: 1px solid #E0E0E0;
+        }
+        .drop-zone {
+            display: inline-block; min-width: 200px; height: 40px;
+            border: 2px dashed var(--brand-purple); border-radius: 6px;
+            vertical-align: middle; background-color: var(--bg-base);
+            cursor: pointer; text-align: center; font-size: 1rem;
+            font-weight: bold; color: var(--brand-dark-purple);
+            padding: 0 10px; line-height: 36px; transition: var(--transition);
+            margin: 5px 0;
+        }
+        .drop-zone:focus { outline: 3px solid var(--brand-orange); }
+        .drop-zone.filled { border: 2px solid var(--brand-purple); background-color: rgba(114, 53, 168, 0.1); }
+        
+        .word-bank {
+            display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 25px;
+            padding: 20px; background-color: #FAFAFA; border-radius: 8px; border: 1px solid #ddd;
+        }
+        .word-chip {
+            background-color: var(--brand-purple); color: var(--bg-base);
+            border: none; padding: 12px 18px; border-radius: 20px; cursor: pointer;
+            font-size: 1rem; font-weight: 600; transition: var(--transition);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .word-chip:hover { background-color: var(--brand-dark-purple); transform: translateY(-2px); }
+        .word-chip.hidden { display: none; }
+
+        /* === 5. ACTIVIDAD 2: CLASIFICADOR (TARJETAS) === */
+        .sorter-container {
+            display: flex; flex-direction: column; align-items: center; gap: 20px;
+        }
+        .sorter-card {
+            background-color: var(--bg-base); border: 3px solid var(--brand-orange);
+            border-radius: 12px; padding: 30px; width: 100%; max-width: 500px;
+            text-align: center; font-size: 1.3rem; font-weight: 700; color: var(--brand-dark-purple);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1); min-height: 120px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .sorter-actions {
+            display: flex; gap: 15px; width: 100%; max-width: 500px;
+        }
+        .btn-sort {
+            flex: 1; padding: 15px; border: none; border-radius: 8px; font-size: 1.1rem;
+            font-weight: bold; cursor: pointer; color: var(--bg-base); transition: var(--transition);
+        }
+        .btn-sort.obs { background-color: var(--brand-red); }
+        .btn-sort.est { background-color: var(--brand-purple); }
+        .btn-sort:hover { filter: brightness(0.9); transform: scale(1.02); }
+        
+        .sorter-progress { width: 100%; max-width: 500px; font-weight: bold; text-align: center; color: var(--brand-dark-purple); }
+
+        /* === 6. ACTIVIDAD 3: ANÁLISIS NORMATIVO (V/F) === */
+        .tf-statement {
+            background-color: var(--brand-dark-purple); color: var(--bg-base);
+            padding: 25px; border-radius: 8px; text-align: center; font-size: 1.25rem;
+            margin-bottom: 20px; font-weight: 600;
+        }
+        .tf-buttons { display: flex; gap: 15px; }
+        .tf-btn {
+            flex: 1; padding: 18px; font-size: 1.1rem; font-weight: bold; border: 2px solid transparent;
+            border-radius: 8px; cursor: pointer; transition: var(--transition);
+        }
+        .tf-btn.true { background-color: var(--bg-base); border-color: var(--brand-purple); color: var(--brand-dark-purple); }
+        .tf-btn.false { background-color: var(--bg-base); border-color: var(--brand-red); color: var(--brand-dark-purple); }
+        .tf-btn:hover { background-color: rgba(0,0,0,0.05); }
+
+        /* === 7. ACTIVIDAD 4: ELIMINAR INTRUSO === */
+        .grid-options {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;
+        }
+        .option-btn {
+            background-color: var(--bg-base); border: 2px solid var(--brand-purple);
+            color: var(--brand-dark-purple); padding: 20px; border-radius: 8px;
+            font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: var(--transition);
+        }
+        .option-btn:hover { background-color: rgba(114, 53, 168, 0.05); }
+        .option-btn.intruder-correct { background-color: var(--brand-purple); color: var(--bg-base); transform: scale(1.05); }
+        .option-btn.intruder-wrong { background-color: var(--brand-red); color: var(--bg-base); border-color: var(--brand-red); animation: shake 0.4s; }
+        
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25%, 75% { transform: translateX(-5px); } 50% { transform: translateX(5px); } }
+
+        /* === 8. FLECHA INTELIGENTE DE SCROLL === */
+        .smart-scroll-indicator {
+            position: fixed; bottom: 30px; right: 30px;
+            background-color: var(--brand-orange); color: var(--brand-dark-purple);
+            padding: 12px 24px; border-radius: 30px; font-weight: 700; font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px;
+            z-index: 1000; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            cursor: pointer; border: 2px solid var(--brand-dark-purple);
+        }
+        .smart-scroll-indicator.completed {
+            background-color: var(--brand-purple); color: var(--bg-base);
+            border-color: var(--brand-purple);
+        }
+        .arrow-icon { font-size: 1.2rem; transition: transform 0.4s; }
+        .smart-scroll-indicator.completed .arrow-icon { transform: rotate(180deg); }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 600px) {
+            .client-logo { max-width: 100%; margin-bottom: 10px; }
+            .module-header { flex-direction: column; padding: 20px; }
+            .drop-zone { width: 100%; min-width: unset; }
+            .tf-buttons { flex-direction: column; }
+            .sorter-actions { flex-direction: column; }
+            .smart-scroll-indicator { bottom: 20px; right: 50%; transform: translateX(50%); width: max-content; }
+            .smart-scroll-indicator.completed { transform: translateX(50%) translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="module-container">
+    <!-- Header Institucional -->
+    <header class="module-header">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo" onerror="this.src='https://via.placeholder.com/250x100/FFFFFF/480241?text=Logo+UNP'">
+        <img src="../Styles/logo.png" alt="Logo Institucional" class="client-logo" onerror="this.src='https://via.placeholder.com/250x100/FFFFFF/7235A8?text=Logo+Institucional'">
+    </header>
+
+    <div class="module-title">
+        Participación Política y Representación de Grupos Históricamente Excluidos
+    </div>
+
+    <!-- ACTIVIDAD 1: Completar la Premisa -->
+    <section class="activity-section" aria-labelledby="act1-title">
+        <h2 id="act1-title" class="instruction-title">1. Reconstruir la Premisa Base</h2>
+        
+        <div class="instruction-box" role="region" aria-label="Instrucciones">
+            <p class="instruction-step"><strong>Paso 1:</strong> Lee el párrafo incompleto.</p>
+            <p class="instruction-step"><strong>Paso 2:</strong> Toca una palabra del "Banco de palabras" para llenar los espacios en orden.</p>
+            <p class="instruction-step"><strong>Paso 3:</strong> ¡Cuidado! Hay una palabra intrusa que no pertenece al texto. Al terminar, verifica tus respuestas.</p>
+        </div>
+        
+        <div class="sentence-container">
+            La participación política constituye un <button class="drop-zone" data-index="0"></button> y un componente esencial de la <button class="drop-zone" data-index="1"></button>. 
+            Sin embargo, las mujeres y poblaciones diversas han enfrentado <button class="drop-zone" data-index="2"></button> para acceder a espacios de <button class="drop-zone" data-index="3"></button> y toma de decisiones.
+        </div>
+
+        <div class="word-bank" id="wordBankAct1"></div>
+        <button id="checkAct1" class="btn-action" disabled>Verificar Respuestas</button>
+        <div id="feedbackAct1" class="feedback" aria-live="polite"></div>
+    </section>
+
+    <!-- ACTIVIDAD 2: Clasificar Elementos (Obstáculos vs Estrategias) -->
+    <section class="activity-section" aria-labelledby="act2-title">
+        <h2 id="act2-title" class="instruction-title">2. Clasificar Conceptos</h2>
+        
+        <div class="instruction-box" role="region" aria-label="Instrucciones">
+            <p class="instruction-step"><strong>Instrucción:</strong> Aparecerá un concepto en pantalla. Debes decidir si se trata de un <strong>Obstáculo frecuente</strong> que enfrentan estas poblaciones, o si es una <strong>Estrategia institucional</strong> para superarlos. Toca el botón correspondiente.</p>
+        </div>
+
+        <div class="sorter-container">
+            <div class="sorter-progress" id="sorterProgress">Elemento 1 de 11</div>
+            <div class="sorter-card" id="sorterCard">Cargando concepto...</div>
+            <div class="sorter-actions">
+                <button class="btn-sort obs" onclick="handleSort('Obstáculo')">❌ Es un Obstáculo</button>
+                <button class="btn-sort est" onclick="handleSort('Estrategia')">✅ Es una Estrategia</button>
+            </div>
+            <div id="feedbackAct2" class="feedback" aria-live="polite" style="width: 100%;"></div>
+        </div>
+    </section>
+
+    <!-- ACTIVIDAD 3: Análisis Normativo -->
+    <section class="activity-section" aria-labelledby="act3-title">
+        <h2 id="act3-title" class="instruction-title">3. Detectar el Error Normativo</h2>
+        
+        <div class="instruction-box" role="region" aria-label="Instrucciones">
+            <p class="instruction-step"><strong>Instrucción:</strong> Lee la siguiente afirmación sobre la participación política y violencia. Determina si refleja verdaderamente el objetivo de la norma.</p>
+        </div>
+        
+        <div class="tf-statement">
+            "La Ley 2453 de 2025 establece medidas únicamente para promover el liderazgo, pero NO tiene la capacidad de sancionar la violencia contra las mujeres en política."
+        </div>
+        
+        <div class="tf-buttons">
+            <button class="tf-btn true" onclick="checkTF(true)">Verdadero</button>
+            <button class="tf-btn false" onclick="checkTF(false)">Falso</button>
+        </div>
+        <div id="feedbackAct3" class="feedback" aria-live="polite"></div>
+    </section>
+
+    <!-- ACTIVIDAD 4: Encontrar la Opción Incorrecta -->
+    <section class="activity-section" aria-labelledby="act4-title">
+        <h2 id="act4-title" class="instruction-title">4. Liderazgos Protegidos: Eliminar la Intrusa</h2>
+        
+        <div class="instruction-box" role="region" aria-label="Instrucciones">
+            <p class="instruction-step"><strong>Instrucción:</strong> En contextos de protección institucional, las mujeres lideresas y personas LGBTIQ+ enfrentan riesgos diferenciados. <strong>Toca el riesgo que NO forma parte de la lista señalada en el texto.</strong></p>
+        </div>
+        
+        <div class="grid-options" id="intruderGrid">
+            <button class="option-btn" data-correct="false">Violencia armada.</button>
+            <button class="option-btn" data-correct="false">Estigmatización.</button>
+            <button class="option-btn" data-correct="true">Exclusión académica.</button> <!-- INTRUSA -->
+            <button class="option-btn" data-correct="false">Amenazas.</button>
+            <button class="option-btn" data-correct="false">Violencia digital.</button>
+            <button class="option-btn" data-correct="false">Violencia política.</button>
+        </div>
+        <div id="feedbackAct4" class="feedback" aria-live="polite"></div>
+    </section>
+
+</div>
+
+<!-- FLECHA INTELIGENTE DE SCROLL -->
+<div id="smartScroll" class="smart-scroll-indicator" aria-label="Indicador de lectura">
+    <span id="scrollText">Continúa bajando</span>
+    <span class="arrow-icon" id="scrollIcon">⬇</span>
+</div>
+
+<script>
+    // ==========================================
+    // LÓGICA ACTIVIDAD 1: COMPLETAR PREMISA
+    // ==========================================
+    const answersAct1 = [
+        "derecho fundamental", 
+        "democracia.", 
+        "barreras estructurales", 
+        "representación"
+    ];
+    // "privilegio opcional" es el distractor
+    const wordsAct1 = [...answersAct1, "privilegio opcional"].sort(() => Math.random() - 0.5);
+    
+    const wordBankAct1 = document.getElementById('wordBankAct1');
+    const dropZonesAct1 = document.querySelectorAll('.drop-zone');
+    const checkBtnAct1 = document.getElementById('checkAct1');
+    const fbAct1 = document.getElementById('feedbackAct1');
+
+    wordsAct1.forEach(word => {
+        const btn = document.createElement('button');
+        btn.className = 'word-chip';
+        btn.textContent = word;
+        btn.onclick = () => moveWordAct1(btn);
+        wordBankAct1.appendChild(btn);
+    });
+
+    function moveWordAct1(chip) {
+        const emptyZone = Array.from(dropZonesAct1).find(z => !z.textContent);
+        if (emptyZone) {
+            emptyZone.textContent = chip.textContent;
+            emptyZone.classList.add('filled');
+            chip.classList.add('hidden');
+            emptyZone.dataset.chipId = chip.textContent;
+            checkCompletionAct1();
+        }
+    }
+
+    dropZonesAct1.forEach(zone => {
+        zone.onclick = () => {
+            if (zone.textContent) {
+                const chip = Array.from(wordBankAct1.children).find(c => c.textContent === zone.dataset.chipId);
+                if (chip) chip.classList.remove('hidden');
+                zone.textContent = '';
+                zone.classList.remove('filled');
+                delete zone.dataset.chipId;
+                checkCompletionAct1();
+            }
+        };
+    });
+
+    function checkCompletionAct1() {
+        const isFull = Array.from(dropZonesAct1).every(z => z.textContent !== '');
+        checkBtnAct1.disabled = !isFull;
+    }
+
+    checkBtnAct1.onclick = () => {
+        const selectedWords = Array.from(dropZonesAct1).map(z => z.textContent);
+        
+        // Validar orden exacto
+        let isCorrect = true;
+        for(let i=0; i<answersAct1.length; i++){
+            if(selectedWords[i] !== answersAct1[i]) isCorrect = false;
+        }
+
+        if (isCorrect) {
+            fbAct1.className = 'feedback success';
+            fbAct1.innerHTML = '<b>¡Exacto!</b> Has reconstruido perfectamente el concepto base sobre el derecho fundamental a la participación política.';
+            checkBtnAct1.disabled = true;
+        } else {
+            fbAct1.className = 'feedback error';
+            fbAct1.innerHTML = '<b>Orden incorrecto o uso de intruso.</b> Toca las palabras en la frase para devolverlas al banco e intenta de nuevo.';
+        }
+    };
+
+    // ==========================================
+    // LÓGICA ACTIVIDAD 2: CLASIFICADOR (TINDER-STYLE)
+    // ==========================================
+    const conceptsToClassify = [
+        { text: "Violencia política basada en género.", type: "Obstáculo" },
+        { text: "Cuotas de participación.", type: "Estrategia" },
+        { text: "Estereotipos sexistas.", type: "Obstáculo" },
+        { text: "Formación en liderazgo.", type: "Estrategia" },
+        { text: "Racismo estructural.", type: "Obstáculo" },
+        { text: "Protocolos contra violencia política.", type: "Estrategia" },
+        { text: "Exclusión territorial.", type: "Obstáculo" },
+        { text: "Medidas de protección.", type: "Estrategia" },
+        { text: "Violencia contra lideresas sociales.", type: "Obstáculo" },
+        { text: "Fortalecimiento de organizaciones sociales.", type: "Estrategia" },
+        { text: "Limitaciones económicas.", type: "Obstáculo" }
+    ].sort(() => Math.random() - 0.5); // Mezclar arreglo
+
+    let currentConceptIndex = 0;
+    const cardEl = document.getElementById('sorterCard');
+    const progressEl = document.getElementById('sorterProgress');
+    const fbAct2 = document.getElementById('feedbackAct2');
+    const btnSorts = document.querySelectorAll('.btn-sort');
+
+    function renderSorterCard() {
+        if(currentConceptIndex < conceptsToClassify.length) {
+            cardEl.textContent = conceptsToClassify[currentConceptIndex].text;
+            progressEl.textContent = `Concepto ${currentConceptIndex + 1} de ${conceptsToClassify.length}`;
+        } else {
+            // Terminó
+            cardEl.textContent = "¡Clasificación Completada!";
+            cardEl.style.borderColor = "var(--brand-purple)";
+            btnSorts.forEach(b => b.style.display = 'none');
+            progressEl.style.display = 'none';
+            fbAct2.className = 'feedback success';
+            fbAct2.innerHTML = '<b>¡Excelente trabajo!</b> Has sabido diferenciar perfectamente cuáles son las barreras estructurales y cuáles son las estrategias institucionales implementadas para combatirlas.';
+        }
+    }
+
+    function handleSort(userChoice) {
+        const currentData = conceptsToClassify[currentConceptIndex];
+        if(userChoice === currentData.type) {
+            // Correcto, avanzar
+            currentConceptIndex++;
+            renderSorterCard();
+        } else {
+            // Error visual
+            cardEl.style.animation = "shake 0.4s";
+            cardEl.style.backgroundColor = "rgba(206, 70, 81, 0.1)";
+            cardEl.style.borderColor = "var(--brand-red)";
+            setTimeout(() => {
+                cardEl.style.animation = "";
+                cardEl.style.backgroundColor = "var(--bg-base)";
+                cardEl.style.borderColor = "var(--brand-orange)";
+            }, 600);
+        }
+    }
+    
+    // Iniciar clasificador
+    renderSorterCard();
+
+    // ==========================================
+    // LÓGICA ACTIVIDAD 3: V/F (ANÁLISIS NORMATIVO)
+    // ==========================================
+    function checkTF(answer) {
+        const fbAct3 = document.getElementById('feedbackAct3');
+        const buttons = document.querySelectorAll('.tf-btn');
+        
+        // La afirmación es FALSA (la norma SI sanciona)
+        if (answer === false) {
+            fbAct3.className = 'feedback success';
+            fbAct3.innerHTML = '<b>¡Correcto! Es Falso.</b> <br>La información indica textualmente que "La <b>Ley 2453 de 2025</b> establece medidas para prevenir, atender y <b>sancionar</b> la violencia contra las mujeres en política en Colombia." <br><a href="https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=259640" target="_blank" style="color:var(--brand-purple); font-weight:bold;">Consultar fuente verificable aquí</a>.';
+            buttons.forEach(b => b.disabled = true);
+        } else {
+            fbAct3.className = 'feedback error';
+            fbAct3.innerHTML = '<b>Incorrecto.</b> Vuelve a analizar. ¿Realmente la ley omite la capacidad de sanción?';
+        }
+    }
+
+    // ==========================================
+    // LÓGICA ACTIVIDAD 4: ELIMINAR INTRUSO
+    // ==========================================
+    const intruderBtns = document.querySelectorAll('.option-btn');
+    const fbAct4 = document.getElementById('feedbackAct4');
+
+    intruderBtns.forEach(btn => {
+        btn.onclick = () => {
+            if(btn.disabled) return;
+            const isIntruder = btn.dataset.correct === "true";
+            
+            if (isIntruder) {
+                btn.classList.add('intruder-correct');
+                fbAct4.className = 'feedback success';
+                fbAct4.innerHTML = '<b>¡Bien hecho!</b> "Exclusión académica" NO está en la lista de riesgos diferenciados de liderazgos protegidos. Los verdaderos son: Violencia armada, Estigmatización, Amenazas, Violencia digital y Violencia política.';
+                intruderBtns.forEach(b => b.disabled = true);
+            } else {
+                btn.classList.add('intruder-wrong');
+                fbAct4.className = 'feedback error';
+                fbAct4.innerHTML = '<b>Incorrecto.</b> Este riesgo <b>SÍ</b> está mencionado explícitamente en el contenido sobre Liderazgos protegidos. Sigue buscando.';
+                setTimeout(() => { btn.classList.remove('intruder-wrong'); }, 600);
+            }
+        };
+    });
+
+    // ==========================================
+    // LÓGICA: FLECHA INTELIGENTE DE SCROLL
+    // ==========================================
+    const smartScroll = document.getElementById('smartScroll');
+    const scrollText = document.getElementById('scrollText');
+
+    window.addEventListener('scroll', () => {
+        // Cálculo del porcentaje de scroll
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        const scrolled = window.scrollY;
+
+        // Si se llegó al final (margen de 20px)
+        if (Math.ceil(scrolled) >= scrollable - 20) {
+            smartScroll.classList.add('completed');
+            scrollText.textContent = "¡Has completado el módulo!";
+        } else {
+            smartScroll.classList.remove('completed');
+            scrollText.textContent = "Continúa bajando";
+        }
+    });
+
+    smartScroll.onclick = () => {
+        // Si no está completado, baja un poco más. Si está completado, sube al inicio.
+        if(smartScroll.classList.contains('completed')) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            window.scrollBy({ top: 500, left: 0, behavior: 'smooth' });
+        }
+    };
+
+</script>
+
+</body>
+</html>

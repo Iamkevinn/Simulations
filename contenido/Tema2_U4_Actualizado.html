@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impacto de Reformas Estructurales</title>
+    <style>
+        /* === VARIABLES DE COLOR Y FUENTE === */
+        :root {
+            --c-dark-purple: #480241;
+            --c-purple: #7235A8;
+            --c-orange: #FBA511;
+            --c-red: #CE4651;
+            --c-white: #FFFFFF;
+            --c-gray-bg: #F4F4F9;
+            --c-gray-text: #333333;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --transition: all 0.3s ease;
+        }
+
+        /* === RESET Y ESTILOS BASE === */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--c-gray-bg);
+            color: var(--c-gray-text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .module-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--c-white);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(72, 2, 65, 0.15);
+            overflow: hidden;
+        }
+
+        /* === HEADER Y LOGOS (AMPLIADOS) === */
+        .module-header {
+            background-color: var(--c-white);
+            padding: 30px 20px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            border-bottom: 5px solid var(--c-purple);
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .client-logo {
+            max-height: 110px; /* LOGOS GIGANTES */
+            width: auto;
+            max-width: 45%; 
+            object-fit: contain;
+        }
+
+        .module-title {
+            background-color: var(--c-dark-purple);
+            color: var(--c-white);
+            padding: 25px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* === SECCIONES DE ACTIVIDAD Y ACCESIBILIDAD === */
+        .activity-section {
+            padding: 35px 30px;
+            border-bottom: 2px dashed #E0E0E0;
+        }
+        
+        .activity-section:last-child {
+            border-bottom: none;
+        }
+
+        .instruction {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--c-purple);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .instruction-box {
+            background-color: rgba(251, 165, 17, 0.1);
+            border-left: 4px solid var(--c-orange);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 25px;
+        }
+
+        .instruction-step {
+            font-size: 1rem;
+            color: var(--c-dark-purple);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        /* === BOTONES GENERALES DE ACCIÓN === */
+        .btn-action {
+            background-color: var(--c-orange);
+            color: var(--c-dark-purple);
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transition);
+            margin-top: 15px;
+        }
+
+        .btn-action:hover:not(:disabled) {
+            background-color: #e6960f;
+            transform: scale(1.02);
+        }
+
+        .btn-action:disabled {
+            background-color: #ccc;
+            color: #777;
+            cursor: not-allowed;
+        }
+
+        /* === NUEVA ACTIVIDAD 1: ORDENAR FRAGMENTOS === */
+        .build-area {
+            min-height: 100px;
+            background-color: #FAFAFA;
+            border: 2px dashed var(--c-purple);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            align-content: flex-start;
+        }
+
+        .fragments-bank {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .fragment-btn {
+            background-color: var(--c-white);
+            border: 2px solid var(--c-purple);
+            color: var(--c-dark-purple);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .fragment-btn:hover, .fragment-btn:focus {
+            background-color: rgba(114, 53, 168, 0.05);
+            outline: 3px solid var(--c-orange);
+            outline-offset: 2px;
+        }
+
+        .fragment-btn.in-build-area {
+            background-color: var(--c-purple);
+            color: var(--c-white);
+        }
+
+        /* === ACTIVIDAD 2: COMPLETAR CONCEPTO === */
+        .sentence-container {
+            font-size: 1.15rem;
+            line-height: 2.2;
+            margin-bottom: 25px;
+            background: #FAFAFA;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #E0E0E0;
+        }
+
+        .bullet-list {
+            list-style-type: disc;
+            margin-left: 40px;
+            margin-top: 10px;
+        }
+
+        .drop-zone {
+            display: inline-block;
+            min-width: 220px;
+            height: 40px;
+            border: 2px dashed var(--c-purple);
+            border-radius: 6px;
+            vertical-align: middle;
+            background-color: var(--c-white);
+            cursor: pointer;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--c-dark-purple);
+            padding: 0 10px;
+            line-height: 36px;
+            transition: var(--transition);
+            margin: 5px 0;
+        }
+
+        .drop-zone:focus {
+            outline: 3px solid var(--c-orange);
+            outline-offset: 2px;
+        }
+
+        .drop-zone.filled {
+            border: 2px solid var(--c-purple);
+            background-color: rgba(114, 53, 168, 0.1);
+        }
+
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .word-chip {
+            background-color: var(--c-purple);
+            color: var(--c-white);
+            border: none;
+            padding: 12px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .word-chip:hover, .word-chip:focus {
+            background-color: var(--c-dark-purple);
+            transform: translateY(-2px);
+            outline: 3px solid var(--c-orange);
+            outline-offset: 2px;
+        }
+
+        .word-chip.hidden {
+            display: none;
+        }
+
+        /* === ACTIVIDAD 3: PALABRA INTRUSA === */
+        .grid-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .option-btn {
+            background-color: var(--c-white);
+            border: 2px solid var(--c-purple);
+            color: var(--c-dark-purple);
+            padding: 18px;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .option-btn:hover, .option-btn:focus {
+            background-color: rgba(114, 53, 168, 0.05);
+            outline: 3px solid var(--c-orange);
+            outline-offset: 2px;
+        }
+
+        .option-btn.intruder-correct {
+            background-color: var(--c-purple);
+            color: var(--c-white);
+            border-color: var(--c-dark-purple);
+            transform: scale(1.03);
+        }
+
+        .option-btn.intruder-wrong {
+            background-color: var(--c-red);
+            color: var(--c-white);
+            border-color: var(--c-red);
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* === ACTIVIDAD 4: SELECCIONAR MEJOR OPCIÓN === */
+        .multiple-choice-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .mc-btn {
+            background-color: var(--c-white);
+            border: 2px solid #E0E0E0;
+            color: var(--c-gray-text);
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mc-btn:hover, .mc-btn:focus {
+            border-color: var(--c-purple);
+            background-color: rgba(114, 53, 168, 0.05);
+            outline: none;
+        }
+
+        .mc-btn.correct {
+            background-color: var(--c-purple);
+            color: var(--c-white);
+            border-color: var(--c-dark-purple);
+        }
+
+        .mc-btn.wrong {
+            background-color: var(--c-red);
+            color: var(--c-white);
+            border-color: var(--c-dark-purple);
+        }
+
+        /* === FEEDBACK MENSAJES === */
+        .feedback {
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .feedback.success {
+            display: block;
+            background-color: rgba(114, 53, 168, 0.1);
+            color: var(--c-dark-purple);
+            border-left: 6px solid var(--c-purple);
+        }
+
+        .feedback.error {
+            display: block;
+            background-color: rgba(206, 70, 81, 0.1);
+            color: var(--c-red);
+            border-left: 6px solid var(--c-red);
+        }
+
+        /* === NOTA INFORMATIVA FINAL === */
+        .info-note {
+            background-color: var(--c-dark-purple);
+            color: var(--c-white);
+            padding: 20px;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 600px) {
+            .client-logo { max-width: 100%; margin-bottom: 10px; }
+            .module-header { flex-direction: column; padding: 20px; }
+            .word-bank { justify-content: center; }
+            .drop-zone { width: 100%; min-width: unset; }
+            .build-area { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="module-container">
+    <!-- Header Institucional: Logos gigantes -->
+    <header class="module-header">
+        <img src="../Styles/UNP I.svg" alt="Logo UNP" class="client-logo" onerror="this.src='https://via.placeholder.com/250x100/FFFFFF/480241?text=Logo+UNP'">
+        <img src="../Styles/logo.png" alt="Logo Institucional" class="client-logo" onerror="this.src='https://via.placeholder.com/250x100/FFFFFF/7235A8?text=Logo+Institucional'">
+    </header>
+
+    <div class="module-title">
+        Reformas estructurales y su impacto en mujeres y poblaciones diversas
+    </div>
+
+    <!-- NUEVA Actividad 1: Construir la premisa inicial (Fidelidad 100% al primer párrafo) -->
+    <section class="activity-section" aria-labelledby="act1-title">
+        <h2 id="act1-title" class="instruction">Actividad 1: Reconstruir la premisa inicial</h2>
+        
+        <div class="instruction-box" role="region" aria-label="Instrucciones de la actividad 1">
+            <p class="instruction-step"><strong>Paso 1:</strong> Lee los fragmentos de texto en los botones grises.</p>
+            <p class="instruction-step"><strong>Paso 2:</strong> Toca los fragmentos en el orden lógico correcto para armar la afirmación principal del módulo. Pasarán al recuadro superior.</p>
+            <p class="instruction-step"><strong>Paso 3:</strong> Si deseas corregir, toca el fragmento en el recuadro superior para devolverlo. Cuando estén todos, pulsa "Verificar Orden".</p>
+        </div>
+        
+        <!-- Área donde se construye la frase -->
+        <div class="build-area" id="buildArea" aria-live="polite" aria-label="Área de construcción de la frase">
+            <!-- Los fragmentos seleccionados vendrán aquí -->
+        </div>
+
+        <!-- Banco de fragmentos desordenados -->
+        <div class="fragments-bank" id="fragmentsBank">
+            <button class="fragment-btn" data-order="2">generan impactos diferenciados</button>
+            <button class="fragment-btn" data-order="3">sobre mujeres y poblaciones históricamente excluidas.</button>
+            <button class="fragment-btn" data-order="1">Las reformas estructurales en ámbitos laborales, pensionales, fiscales y sociales</button>
+        </div>
+
+        <button id="checkAct1" class="btn-action" disabled>Verificar Orden</button>
+        <div id="feedbackAct1" class="feedback" aria-live="polite"></div>
+    </section>
+
+    <!-- Actividad 2: Completar Conceptos (Fidelidad a las listas de afectación) -->
+    <section class="activity-section" aria-labelledby="act2-title">
+        <h2 id="act2-title" class="instruction">Actividad 2: Completar las afectaciones</h2>
+        
+        <div class="instruction-box" role="region" aria-label="Instrucciones de la actividad 2">
+            <p class="instruction-step"><strong>Paso 1:</strong> Lee el texto sobre la economía feminista.</p>
+            <p class="instruction-step"><strong>Paso 2:</strong> Toca una palabra del "Banco de palabras" abajo para llenar los recuadros vacíos. Descarta la opción que NO corresponda al texto.</p>
+        </div>
+        
+        <div class="sentence-container">
+            <strong>La economía feminista ha evidenciado que las mujeres asumen de manera desproporcionada el trabajo doméstico y de cuidados no remunerados, lo que afecta:</strong>
+            <ul class="bullet-list">
+                <li><button class="drop-zone" data-index="0" aria-label="Espacio vacío 1"></button></li>
+                <li><button class="drop-zone" data-index="1" aria-label="Espacio vacío 2"></button></li>
+                <li><button class="drop-zone" data-index="2" aria-label="Espacio vacío 3"></button></li>
+                <li><button class="drop-zone" data-index="3" aria-label="Espacio vacío 4"></button></li>
+                <li><button class="drop-zone" data-index="4" aria-label="Espacio vacío 5"></button></li>
+            </ul>
+        </div>
+
+        <div class="word-bank" id="wordBank" role="group" aria-label="Banco de palabras"></div>
+
+        <button id="checkAct2" class="btn-action" disabled>Verificar Respuestas</button>
+        <div id="feedbackAct2" class="feedback" aria-live="polite"></div>
+    </section>
+
+    <!-- Actividad 3: Palabra Intrusa (Interseccionalidad) -->
+    <section class="activity-section" aria-labelledby="act3-title">
+        <h2 id="act3-title" class="instruction">Actividad 3: Identificar a la población intrusa</h2>
+        
+        <div class="instruction-box" role="region" aria-label="Instrucciones de la actividad 3">
+            <p class="instruction-step"><strong>Instrucción:</strong> El texto indica que los impactos interseccionales aumentan las desigualdades en ciertas poblaciones. <strong>Toca el grupo poblacional que NO es mencionado en la información base.</strong></p>
+        </div>
+        
+        <div class="grid-options" id="intruderGrid" role="group" aria-label="Opciones de grupos poblacionales">
+            <button class="option-btn" data-correct="false">Mujeres rurales.</button>
+            <button class="option-btn" data-correct="false">Mujeres afrodescendientes.</button>
+            <button class="option-btn" data-correct="false">Mujeres indígenas.</button>
+            <button class="option-btn" data-correct="true">Hombres de altos ingresos.</button> <!-- INTRUSA -->
+            <button class="option-btn" data-correct="false">Personas trans.</button>
+            <button class="option-btn" data-correct="false">Personas migrantes.</button>
+            <button class="option-btn" data-correct="false">Mujeres víctimas del conflicto armado.</button>
+        </div>
+        <div id="feedbackAct3" class="feedback" aria-live="polite"></div>
+    </section>
+
+    <!-- Actividad 4: Seleccionar la mejor opción (Comprensión de perspectiva) -->
+    <section class="activity-section" aria-labelledby="act4-title">
+        <h2 id="act4-title" class="instruction">Actividad 4: Conectar concepto y teoría crítica</h2>
+        
+        <div class="instruction-box" role="region" aria-label="Instrucciones de la actividad 4">
+            <p class="instruction-step"><strong>Instrucción:</strong> Desde la <i>Perspectiva feminista crítica</i>, elige la afirmación exacta que han señalado autoras como Silvia Federici y Amaia Pérez Orozco tocando la opción correcta.</p>
+        </div>
+        
+        <div class="multiple-choice-container">
+            <button class="mc-btn" onclick="checkMC(this, false)">A. Las economías contemporáneas remuneran el trabajo de cuidados, visibilizando a la población.</button>
+            <button class="mc-btn" onclick="checkMC(this, true)">B. Las economías contemporáneas dependen históricamente del trabajo de cuidados invisibilizado.</button>
+            <button class="mc-btn" onclick="checkMC(this, false)">C. Las economías contemporáneas no dependen del trabajo de cuidados debido a las reformas fiscales.</button>
+        </div>
+        <div id="feedbackAct4" class="feedback" aria-live="polite"></div>
+    </section>
+</div>
+
+<script>
+    // ==========================================
+    // LÓGICA ACTIVIDAD 1: ORDENAR FRAGMENTOS
+    // ==========================================
+    const fragmentsBank = document.getElementById('fragmentsBank');
+    const buildArea = document.getElementById('buildArea');
+    const checkAct1Btn = document.getElementById('checkAct1');
+    const feedbackAct1 = document.getElementById('feedbackAct1');
+    const totalFragments = 3;
+
+    // Manejar clics en los botones del banco
+    document.querySelectorAll('.fragment-btn').forEach(btn => {
+        btn.onclick = function() {
+            if (this.parentElement === fragmentsBank) {
+                // Mover al área de construcción
+                buildArea.appendChild(this);
+                this.classList.add('in-build-area');
+            } else {
+                // Devolver al banco
+                fragmentsBank.appendChild(this);
+                this.classList.remove('in-build-area');
+            }
+            checkAct1Completion();
+        };
+    });
+
+    function checkAct1Completion() {
+        // Habilitar botón solo si los 3 fragmentos están en el área
+        checkAct1Btn.disabled = buildArea.children.length !== totalFragments;
+    }
+
+    checkAct1Btn.onclick = () => {
+        // Verificar si el orden de los data-order es "1", "2", "3"
+        let isCorrect = true;
+        let currentOrder = Array.from(buildArea.children).map(btn => btn.getAttribute('data-order'));
+        
+        if (currentOrder.join('') === '123') {
+            feedbackAct1.className = 'feedback success';
+            feedbackAct1.innerHTML = '<b>¡Excelente!</b> Has construido perfectamente la premisa principal del tema.';
+            checkAct1Btn.disabled = true;
+            // Deshabilitar botones para fijar respuesta
+            Array.from(buildArea.children).forEach(b => b.style.pointerEvents = 'none');
+        } else {
+            feedbackAct1.className = 'feedback error';
+            feedbackAct1.innerHTML = '<b>Orden incorrecto.</b> Piensa en la causa y el efecto. Toca los fragmentos en el cuadro superior para devolverlos e intenta otro orden.';
+        }
+    };
+
+    // ==========================================
+    // LÓGICA ACTIVIDAD 2: COMPLETAR CONCEPTO
+    // ==========================================
+    const correctAnswers = [
+        "Acceso al empleo formal.", 
+        "Participación política.", 
+        "Ingresos económicos.", 
+        "Tiempo disponible.", 
+        "Acceso a seguridad social."
+    ];
+    
+    // Distractor para obligar a leer y pensar
+    const allWords = [...correctAnswers, "Independencia empresarial."].sort(() => Math.random() - 0.5);
+    
+    const wordBank = document.getElementById('wordBank');
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const checkAct2Btn = document.getElementById('checkAct2');
+    const feedbackAct2 = document.getElementById('feedbackAct2');
+
+    allWords.forEach(word => {
+        const btn = document.createElement('button');
+        btn.className = 'word-chip';
+        btn.textContent = word;
+        btn.setAttribute('aria-label', `Seleccionar palabra: ${word}`);
+        btn.onclick = () => moveWordToZone(btn);
+        wordBank.appendChild(btn);
+    });
+
+    function moveWordToZone(chip) {
+        const emptyZone = Array.from(dropZones).find(z => !z.textContent);
+        if (emptyZone) {
+            emptyZone.textContent = chip.textContent;
+            emptyZone.classList.add('filled');
+            chip.classList.add('hidden');
+            emptyZone.dataset.chipId = chip.textContent;
+            checkAct2Completion();
+        }
+    }
+
+    dropZones.forEach(zone => {
+        zone.onclick = () => {
+            if (zone.textContent) {
+                const chip = Array.from(wordBank.children).find(c => c.textContent === zone.dataset.chipId);
+                if (chip) chip.classList.remove('hidden');
+                
+                zone.textContent = '';
+                zone.classList.remove('filled');
+                delete zone.dataset.chipId;
+                checkAct2Completion();
+            }
+        };
+    });
+
+    function checkAct2Completion() {
+        const isFull = Array.from(dropZones).every(z => z.textContent !== '');
+        checkAct2Btn.disabled = !isFull;
+    }
+
+    checkAct2Btn.onclick = () => {
+        const selectedWords = Array.from(dropZones).map(z => z.textContent);
+        if (selectedWords.includes("Independencia empresarial.")) {
+            feedbackAct2.className = 'feedback error';
+            feedbackAct2.innerHTML = '<b>Hay un error.</b> Has seleccionado una opción que no pertenece al texto original. Revisa tus opciones tocándolas en los recuadros para devolverlas al banco.';
+        } else {
+            feedbackAct2.className = 'feedback success';
+            feedbackAct2.innerHTML = '<b>¡Muy bien!</b> Has reconstruido las afectaciones generadas por la sobrecarga de cuidado, según lo evidencia la CEPAL y ONU Mujeres.';
+            checkAct2Btn.disabled = true;
+        }
+    };
+
+    // ==========================================
+    // LÓGICA ACTIVIDAD 3: PALABRA INTRUSA
+    // ==========================================
+    const intruderBtns = document.querySelectorAll('.option-btn');
+    const feedbackAct3 = document.getElementById('feedbackAct3');
+
+    intruderBtns.forEach(btn => {
+        btn.onclick = () => {
+            if(btn.disabled) return;
+            const isIntruder = btn.dataset.correct === "true";
+            
+            if (isIntruder) {
+                btn.classList.add('intruder-correct');
+                feedbackAct3.className = 'feedback success';
+                feedbackAct3.innerHTML = '<b>¡Correcto!</b> "Hombres de altos ingresos" no está en la lista. El texto establece claramente que las desigualdades aumentan en casos de mujeres rurales, afrodescendientes, indígenas, personas trans, personas migrantes y víctimas del conflicto armado.';
+                intruderBtns.forEach(b => b.disabled = true);
+            } else {
+                btn.classList.add('intruder-wrong');
+                feedbackAct3.className = 'feedback error';
+                feedbackAct3.innerHTML = '<b>Incorrecto.</b> Este grupo <b>SÍ</b> está mencionado explícitamente en el texto original. Sigue buscando a la población intrusa.';
+                setTimeout(() => { btn.classList.remove('intruder-wrong'); }, 600);
+            }
+        };
+    });
+
+    // ==========================================
+    // LÓGICA ACTIVIDAD 4: SELECCIONAR MEJOR OPCIÓN
+    // ==========================================
+    function checkMC(btnElement, isCorrect) {
+        const feedbackAct4 = document.getElementById('feedbackAct4');
+        const allBtns = document.querySelectorAll('.mc-btn');
+        
+        allBtns.forEach(b => b.classList.remove('correct', 'wrong'));
+
+        if (isCorrect) {
+            btnElement.classList.add('correct');
+            feedbackAct4.className = 'feedback success';
+            feedbackAct4.innerHTML = '<b>¡Totalmente preciso!</b> Autoras como Silvia Federici y Amaia Pérez Orozco han señalado exactamente que las economías contemporáneas <b>dependen históricamente del trabajo de cuidados invisibilizado</b>.';
+            allBtns.forEach(b => b.disabled = true);
+        } else {
+            btnElement.classList.add('wrong');
+            feedbackAct4.className = 'feedback error';
+            feedbackAct4.innerHTML = '<b>Incorrecto.</b> Relee las opciones y busca la afirmación exacta de la Perspectiva feminista crítica.';
+        }
+    }
+</script>
+
+</body>
+</html>

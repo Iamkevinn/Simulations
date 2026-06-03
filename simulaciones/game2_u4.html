@@ -3,36 +3,35 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:ital,wght@1,500&display=swap" rel="stylesheet">
 
 <style>
-/* --- 1. SISTEMA DE DISEÑO (IMAGEN UNP - CLARO) --- */
+/* --- 1. SISTEMA DE DISEÑO (PALETA INSTITUCIONAL SOLICITADA) --- */
 :root {
-    /* Paleta extraída de la imagen */
-    --brand-purple: #582C83;     /* Pañoletas / Texto Logo */
-    --brand-magenta: #D23B78;    /* Esquina inferior izquierda */
-    --brand-orange: #F47920;     /* Hojas / Logo 25N */
-    --brand-yellow: #FFC82F;     /* Banner superior */
+    /* Paleta obligatoria */
+    --brand-dark-purple: #480241;
+    --brand-purple: #7235A8;
+    --brand-orange: #FBA511;
+    --brand-red: #CE4651;
     
-    --bg-base: #ffffff;          /* Fondo base limpio */
-    --bg-gradient: #FFFBF0;      /* Tinte cálido muy suave */
+    --bg-base: #FFFFFF;          /* Fondo base sólido (sin degradado) */
 
     --glass: rgba(255, 255, 255, 0.85);   /* Cristal blanco */
-    --glass-border: rgba(88, 44, 131, 0.15); /* Borde morado muy sutil */
+    --glass-border: rgba(72, 2, 65, 0.15); /* Borde basado en dark purple */
 
     --text-main: #333333;        /* Texto principal oscuro */
     --text-muted: #666666;       /* Texto secundario */
-    --text-inverse: #ffffff;     /* Texto sobre botones oscuros */
+    --text-inverse: #FFFFFF;     /* Texto sobre botones oscuros */
 
     /* Semántica */
-    --success: #582C83;          /* Avance (Morado institucional) */
-    --danger: #C62828;           /* Peligro */
-    --warning: #F47920;          /* Advertencia (Naranja) */
+    --success: #7235A8;          /* Avance (Morado claro) */
+    --danger: #CE4651;           /* Peligro (Rojo) */
+    --warning: #FBA511;          /* Advertencia (Naranja) */
 }
 
 #reform-sim-container {
     width: 100%;
     min-height: 850px;
     height: auto;
-    /* Fondo radial suave blanco a crema */
-    background: radial-gradient(circle at top left, var(--bg-base), var(--bg-gradient));
+    /* Fondo sólido blanco, eliminado el radial-gradient */
+    background-color: var(--bg-base);
     position: relative;
     overflow: hidden;
     font-family: 'Plus Jakarta Sans', sans-serif;
@@ -41,20 +40,19 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.1); /* Sombra más suave */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1); 
     border: 1px solid rgba(0,0,0,0.05);
 }
 
-/* --- 2. FONDO VIVO (COLORES DEL PÓSTER) --- */
+/* --- 2. FONDO VIVO (ORBES CON NUEVA PALETA) --- */
 .orb {
     position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.4;
     animation: orbFloat 10s infinite alternate ease-in-out; z-index: 0;
 }
-/* Orbes con los colores de la imagen */
-.orb-1 { width: 350px; height: 350px; background: var(--brand-yellow); top: -80px; left: -80px; opacity: 0.3; }
-.orb-2 { width: 450px; height: 450px; background: var(--brand-magenta); bottom: -100px; right: -100px; animation-duration: 15s; opacity: 0.2; }
-.orb-3 { width: 250px; height: 250px; background: var(--brand-orange); top: 30%; left: 40%; animation-duration: 12s; opacity: 0.15; }
-.orb-4 { width: 200px; height: 200px; background: var(--brand-purple); bottom: 10%; left: 10%; animation-duration: 18s; opacity: 0.15; }
+.orb-1 { width: 350px; height: 350px; background: var(--brand-orange); top: -80px; left: -80px; opacity: 0.2; }
+.orb-2 { width: 450px; height: 450px; background: var(--brand-red); bottom: -100px; right: -100px; animation-duration: 15s; opacity: 0.15; }
+.orb-3 { width: 250px; height: 250px; background: var(--brand-purple); top: 30%; left: 40%; animation-duration: 12s; opacity: 0.15; }
+.orb-4 { width: 200px; height: 200px; background: var(--brand-dark-purple); bottom: 10%; left: 10%; animation-duration: 18s; opacity: 0.15; }
 
 @keyframes orbFloat { from { transform: translate(0,0); } to { transform: translate(40px, 40px); } }
 
@@ -68,7 +66,7 @@
 
 .title-area h2 { 
     margin: 0; font-size: 1.6rem; text-transform: uppercase; letter-spacing: 0.5px; 
-    color: var(--brand-purple); font-weight: 800;
+    color: var(--brand-dark-purple); font-weight: 800;
 }
 .title-area span { font-size: 0.9rem; color: var(--text-muted); font-weight: 500;}
 
@@ -87,10 +85,10 @@
 .metric-bar-bg { width: 100%; height: 8px; background: #EEE; border-radius: 4px; overflow: hidden; }
 .metric-fill { height: 100%; width: 50%; transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 4px; }
 
-/* Colores de métricas basados en la imagen */
-#m-rights .metric-fill { background: var(--brand-purple); } /* Derechos = Morado */
-#m-risk .metric-fill { background: var(--brand-orange); }  /* Riesgo = Naranja */
-#m-legit .metric-fill { background: var(--brand-magenta); } /* Legitimidad = Magenta */
+/* Colores de métricas basados en la nueva paleta */
+#m-rights .metric-fill { background: var(--brand-purple); } 
+#m-risk .metric-fill { background: var(--brand-orange); }  
+#m-legit .metric-fill { background: var(--brand-red); } 
 
 /* --- 4. ESCENARIO CENTRAL --- */
 .scenario-stage {
@@ -108,8 +106,7 @@
     color: var(--text-main);
     border-radius: 24px;
     padding: 40px;
-    /* Sombra elegante para resaltar sobre blanco */
-    box-shadow: 0 20px 60px rgba(88, 44, 131, 0.15), 0 5px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 20px 60px rgba(72, 2, 65, 0.15), 0 5px 15px rgba(0,0,0,0.05); /* Sombra ajustada a dark-purple */
     border: 1px solid rgba(255,255,255,1);
     position: absolute; top: 0; left: 0; width: 100%; height: auto;
     transform-style: preserve-3d;
@@ -119,14 +116,14 @@
 }
 
 .card-tag {
-    background: var(--brand-yellow); color: var(--brand-purple); padding: 6px 14px;
+    background: var(--brand-orange); color: var(--brand-dark-purple); padding: 6px 14px;
     border-radius: 20px; font-size: 0.75rem; font-weight: 800;
     align-self: flex-start; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px;
 }
 
 .card-content h3 { 
     font-family: 'Playfair Display', serif; font-size: 2rem; margin: 0 0 15px 0; 
-    line-height: 1.1; color: var(--brand-purple); 
+    line-height: 1.1; color: var(--brand-dark-purple); 
 }
 .card-content p { font-size: 1.05rem; line-height: 1.7; color: #444; margin-bottom: 30px; }
 
@@ -138,7 +135,7 @@
 .btn-reform {
     background: var(--brand-purple); color: #fff; border: none; padding: 18px;
     border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.95rem;
-    transition: all 0.2s; box-shadow: 0 8px 20px rgba(88, 44, 131, 0.3);
+    transition: all 0.2s; box-shadow: 0 8px 20px rgba(114, 53, 168, 0.3);
 }
 .btn-reproduce {
     background: #f0f0f0; color: #666; border: 1px solid #ddd; padding: 18px;
@@ -146,24 +143,23 @@
     transition: all 0.2s;
 }
 
-.btn-reform:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(88, 44, 131, 0.4); background: #4a2470; }
+.btn-reform:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(114, 53, 168, 0.4); background: var(--brand-dark-purple); }
 .btn-reproduce:hover { transform: translateY(-2px); background: #e0e0e0; color: #333; }
 
 /* --- 5. RESULTADOS / FORO (MODO CLARO) --- */
 .results-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    /* Fondo blanco casi opaco */
     background: rgba(255, 255, 255, 0.98); z-index: 50;
     display: none; flex-direction: column; justify-content: center; align-items: center;
     padding: 30px; text-align: center; box-sizing: border-box;
     color: var(--text-main);
 }
 .forum-title { 
-    font-size: 2.2rem; color: var(--brand-purple); 
+    font-size: 2.2rem; color: var(--brand-dark-purple); 
     font-family: 'Playfair Display', serif; margin-bottom: 20px; 
 }
 .forum-list { text-align: left; max-width: 600px; color: #555; line-height: 1.8; font-size: 1.1rem; }
-.forum-list li { margin-bottom: 12px; padding-left: 10px; border-left: 3px solid var(--brand-yellow); }
+.forum-list li { margin-bottom: 12px; padding-left: 10px; border-left: 3px solid var(--brand-orange); }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
@@ -215,7 +211,7 @@
     <!-- PANTALLA FINAL -->
     <div class="results-overlay" id="final-screen">
         <h2 class="forum-title">El Camino es el Cambio</h2>
-        <div style="font-size:4rem; margin-bottom:20px; color:var(--brand-magenta);">💜</div>
+        <div style="font-size:4rem; margin-bottom:20px; color:var(--brand-purple);">💜</div>
         <p style="margin-bottom:30px; font-size: 1.2rem; color: #444;">Has completado la ruta. Reflexiona sobre la institucionalidad:</p>
         <ul class="forum-list">
             <li>¿Cómo transforma la UNP la realidad de las mujeres protegidas?</li>
@@ -227,7 +223,7 @@
 </div>
 
 <script>
-// --- DATOS DEL CURSO (LÓGICA IGUAL, SOLO CAMBIOS ESTÉTICOS ARRIBA) ---
+// --- DATOS DEL CURSO ---
 const scenarios = [
     {
         tag: "VIOLENCIA DIGITAL",
@@ -310,10 +306,10 @@ function makeDecision(type) {
 
     updateMetrics(outcome.rights, outcome.risk, outcome.legit);
 
-    // Colores de feedback adaptados a la paleta clara
+    // Colores de feedback adaptados
     const borderColor = type === 'reform' ? 'var(--success)' : 'var(--danger)';
     card.style.border = `2px solid ${borderColor}`;
-    card.style.boxShadow = `0 0 20px ${borderColor}40`; // 40 es transparencia hex
+    card.style.boxShadow = `0 0 20px ${borderColor}40`;
     
     card.querySelector('.card-content').innerHTML = `
         <h3 style="color:${borderColor}">${type === 'reform' ? '¡CAMBIO APLICADO!' : 'DESIGUALDAD REPRODUCIDA'}</h3>

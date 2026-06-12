@@ -357,7 +357,7 @@
              ACTIVIDAD 3: BANCO DE PALABRAS (CONSTRUCCIÓN)
              ========================================== -->
         <div class="instruction-banner locked" id="inst-3" role="alert">
-            <i class="fa-solid fa-puzzle-piece"></i> Actividad 3: Reconstruir la conclusión. Seleccione las palabras del banco y encájelas en los espacios para completar el análisis.
+            <i class="fa-solid fa-puzzle-piece"></i> Actividad 3: Reconstruir la conclusión. Seleccione las palabras del banco y encájelas en los espacios para completar el análisis (sin un orden específico).
         </div>
 
         <section class="section-box locked" id="section-3">
@@ -371,10 +371,10 @@
 
             <div class="fill-text" style="margin-bottom: 0;">
                 Estas perspectivas permiten comprender que las violencias basadas en género deben analizarse considerando contexto 
-                <span class="puzzle-slot" data-ans="territorial" onclick="fillPuzzleSlot(this)">[ ? ]</span>, 
-                <span class="puzzle-slot" data-ans="racial" onclick="fillPuzzleSlot(this)">[ ? ]</span>, 
-                <span class="puzzle-slot" data-ans="económico" onclick="fillPuzzleSlot(this)">[ ? ]</span> y 
-                <span class="puzzle-slot" data-ans="político" onclick="fillPuzzleSlot(this)">[ ? ]</span>.
+                <span class="puzzle-slot" onclick="fillPuzzleSlot(this)">[ ? ]</span>, 
+                <span class="puzzle-slot" onclick="fillPuzzleSlot(this)">[ ? ]</span>, 
+                <span class="puzzle-slot" onclick="fillPuzzleSlot(this)">[ ? ]</span> y 
+                <span class="puzzle-slot" onclick="fillPuzzleSlot(this)">[ ? ]</span>.
             </div>
         </section>
 
@@ -478,7 +478,7 @@
             }
         }
 
-        // --- ACTIVIDAD 3: RECONSTRUCCIÓN CON BANCO ---
+        // --- ACTIVIDAD 3: RECONSTRUCCIÓN CON BANCO (SIN ORDEN ESPECÍFICO) ---
         let selectedPuzzle = null;
 
         function selectPuzzleWord(btn) {
@@ -490,22 +490,19 @@
         function fillPuzzleSlot(slot) {
             if(slot.classList.contains('filled') || !selectedPuzzle) return;
 
-            const expected = slot.getAttribute('data-ans');
             const offered = selectedPuzzle.getAttribute('data-word');
 
-            if (expected === offered) {
-                slot.textContent = offered;
-                slot.classList.add('filled');
-                selectedPuzzle.classList.add('used');
-                selectedPuzzle.classList.remove('selected');
-                selectedPuzzle = null;
-                
-                progress.act3++;
-                checkOverallProgress();
-            } else {
-                slot.classList.add('error-shake');
-                setTimeout(() => slot.classList.remove('error-shake'), 400);
-            }
+            // Al no requerir un orden específico, cualquier palabra del banco 
+            // es válida en cualquier slot que esté vacío.
+            slot.textContent = offered;
+            slot.classList.add('filled');
+            
+            selectedPuzzle.classList.add('used');
+            selectedPuzzle.classList.remove('selected');
+            selectedPuzzle = null;
+            
+            progress.act3++;
+            checkOverallProgress();
         }
 
         // --- ACTIVIDAD 4: REFLEXIÓN (CUADERNO) ---

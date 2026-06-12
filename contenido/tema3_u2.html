@@ -271,8 +271,8 @@
             <h2>Instrucciones del Reto</h2>
             <p>
                 La atención institucional está bloqueada por un <strong>Modelo Hegemónico</strong>. Tu misión es transformarlo aplicando enfoques decoloniales e interseccionales.<br><br>
-                1. Selecciona una <b style="color:var(--bad)">Brecha Institucional (Rosa)</b> de la izquierda.<br>
-                2. Encuentra el <b style="color:var(--good)">Saber Comunitario (Morado)</b> de la derecha que la solucione.<br>
+                1. Selecciona una <b style="color:var(--bad)">Brecha Institucional (Rosa)</b> del grupo de retos.<br>
+                2. Encuentra el <b style="color:var(--good)">Saber Comunitario (Morado)</b> que la solucione en el grupo de soluciones.<br>
                 3. Haz clic en "Tejer Sentidos" para reparar el sistema.
             </p>
             <button class="btn-start" onclick="closeStartModal()">Comenzar Reto</button>
@@ -326,7 +326,7 @@
             <span class="status-badge" id="hud-status">Esperando Acción</span>
         </div>
         <div class="hud-content" id="hud-desc" aria-live="polite">
-            Selecciona un elemento flotante en la pantalla para analizar la situación. Comienza por una <b style="color:var(--bad)">Brecha (Nodos Rosas de la izquierda)</b>.
+            Selecciona un elemento flotante en la pantalla para analizar la situación. Comienza por una <b style="color:var(--bad)">Brecha (nodo rosa del grupo de retos)</b>.
         </div>
         <button class="btn-action" id="btn-action">TEJER SENTIDOS</button>
     </section>
@@ -446,7 +446,7 @@
             updateHud(db[id].title, db[id].text + "<br><br><span style='color:var(--good); font-weight:bold;'><i class='fa-solid fa-arrow-right'></i> Paso 2: Selecciona un Saber Comunitario (Morado) que solucione esto.</span>", "Buscando solución...");
         } else {
             if(!activeBad) {
-                showToast("Primero selecciona una Brecha (Nodos Rosas de la izquierda)", "info");
+                showToast("Primero selecciona una Brecha del grupo de retos.", "info");
                 el.classList.add('shake-error');
                 setTimeout(() => el.classList.remove('shake-error'), 400);
                 return;

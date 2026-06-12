@@ -334,15 +334,23 @@
         <section class="activity-card" id="act3">
             <div class="activity-header">
                 <h2>3. Conecta las ideas</h2>
-                <p class="instruction">Instrucción: Selecciona un principio de la columna izquierda y luego su correspondencia o resistencia en la columna derecha para emparejarlos.</p>
+                <!-- MEJORA 1: Instrucción adaptada a pantallas móviles -->
+                <p class="instruction">Instrucción: Selecciona un principio del primer grupo y luego su correspondencia o resistencia en el segundo grupo para emparejarlos.</p>
             </div>
             <div class="match-grid">
                 <div class="match-col" id="colA">
+                    <!-- NUEVO: Título de la primera columna -->
+                    <div style="font-weight: bold; font-size: 0.95rem; color: var(--primary, #333); text-align: center; border-bottom: 2px solid #ccc; padding-bottom: 5px; margin-bottom: 10px; width: 100%;">Principio / Concepto</div>
+                    
                     <button class="match-btn" data-col="A" data-id="1">A. Respeto por identidad autopercibida</button>
                     <button class="match-btn" data-col="A" data-id="2">B. Resistencia frecuente</button>
                     <button class="match-btn" data-col="A" data-id="3">C. No revictimización</button>
                 </div>
+                
                 <div class="match-col" id="colB">
+                    <!-- NUEVO: Título de la segunda columna -->
+                    <div style="font-weight: bold; font-size: 0.95rem; color: var(--primary, #333); text-align: center; border-bottom: 2px solid #ccc; padding-bottom: 5px; margin-bottom: 10px; width: 100%;">Correspondencia / Ejemplo</div>
+                    
                     <button class="match-btn" data-col="B" data-match="2">1. Creer que el lenguaje inclusivo "elimina" el idioma.</button>
                     <button class="match-btn" data-col="B" data-match="3">2. Evitar palabras que hagan a la persona revivir traumas institucionales.</button>
                     <button class="match-btn" data-col="B" data-match="1">3. Usar el nombre y pronombre con el que la persona se identifica.</button>
@@ -542,7 +550,7 @@
                 document.querySelector('.sort-buttons').style.display = 'none';
                 const feedback = document.getElementById('feedback4');
                 if(scoreSort === sortingItems.length) showFeedback(feedback, 'success', '¡Impecable! Clasificaste todas las recomendaciones perfectamente.');
-                else showFeedback(feedback, 'error', `Terminaste con ${scoreSort} aciertos de ${sortingItems.length}. Revisa los cuadros abajo.`);
+                else showFeedback(feedback, 'error', `Terminaste con ${scoreSort} aciertos de ${sortingItems.length}. Revisa los cuadros.`);
             }
         }
         function sortItem(chosenCategory) {

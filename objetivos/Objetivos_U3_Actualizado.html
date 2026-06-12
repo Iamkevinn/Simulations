@@ -452,29 +452,33 @@
                 <span aria-hidden="true" style="font-size: 1.5rem;">🧩</span>
                 <p><strong>Actividad de Análisis:</strong> Para comprender el origen de este módulo, lea los planteamientos y seleccione el orden lógico (del 1 al 4) para construir el flujo del contexto.</p>
             </div>
-
+                <br>
+                <i>Selecciona el planteamiento en el orden correcto para construir el flujo de pasos.</i>
+<br>
+<br>
             <div class="activity-grid">
                 <!-- Izquierda: Flujo a construir -->
                 <div class="timeline-builder" aria-live="polite" id="timeline-container">
                     
+                    <!-- CORRECCIÓN APLICADA: Textos envueltos en un div con width: 100% -->
                     <div class="timeline-slot" id="slot-0">
                         <div class="slot-indicator">1</div>
-                        <div class="slot-content">Identifique el problema histórico...</div>
+                        <div class="slot-content"><div style="width: 100%;">Identifique el problema histórico...</div></div>
                     </div>
                     
                     <div class="timeline-slot" id="slot-1">
                         <div class="slot-indicator">2</div>
-                        <div class="slot-content">Identifique la respuesta social...</div>
+                        <div class="slot-content"><div style="width: 100%;">Identifique la respuesta social...</div></div>
                     </div>
                     
                     <div class="timeline-slot" id="slot-2">
                         <div class="slot-indicator">3</div>
-                        <div class="slot-content">Identifique el avance jurídico...</div>
+                        <div class="slot-content"><div style="width: 100%;">Identifique el avance jurídico...</div></div>
                     </div>
                     
                     <div class="timeline-slot" id="slot-3">
                         <div class="slot-indicator">4</div>
-                        <div class="slot-content">Identifique el propósito de la unidad...</div>
+                        <div class="slot-content"><div style="width: 100%;">Identifique el propósito de la unidad...</div></div>
                     </div>
 
                     <div class="success-message" id="success-msg">
@@ -575,7 +579,9 @@
                 
                 // Transición visual
                 targetSlot.classList.add('filled');
-                slotContent.innerHTML = buttonElement.innerHTML;
+                
+                // CORRECCIÓN APLICADA: Envolver la respuesta en el div protector
+                slotContent.innerHTML = `<div style="width: 100%;">${buttonElement.innerHTML}</div>`;
                 
                 // Ocultar opción usada
                 buttonElement.classList.add('hidden');

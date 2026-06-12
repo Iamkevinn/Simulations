@@ -428,7 +428,8 @@
 
         <!-- ACTIVIDAD 2: AUDITORÍA NORMATIVA (Bloqueada) -->
         <div class="activity-instruction locked" id="inst-2" role="alert">
-            <span>⚖️</span> Actividad 2: Lea cada texto normativo (izquierda) y asígnelo al marco jurídico que le corresponde (derecha).
+            <!-- MEJORA: Instrucción adaptada a pantallas móviles -->
+            <span>⚖️</span> Actividad 2: Lea cada texto normativo del primer grupo y asígnelo al marco jurídico que le corresponde en el segundo grupo.
         </div>
 
         <section class="section-container locked" id="section-2">
@@ -437,6 +438,9 @@
             
             <div class="act2-container">
                 <div class="dossier-list">
+                    <!-- NUEVO: Título de la primera columna -->
+                    <div style="font-weight: bold; font-size: 0.95rem; color: var(--primary, #333); text-align: center; border-bottom: 2px solid #ccc; padding-bottom: 5px; margin-bottom: 5px;">Texto Normativo / Resumen</div>
+                    
                     <div class="dossier-text d-item" data-match="yogyakarta" onclick="selectItem(this, 'act2')">
                         <p>Desarrollan estándares sobre orientación sexual e identidad de género en derechos humanos, si bien no son vinculantes a Colombia son una guía fundamental</p>
                         <p>Fuente verificable:<br><a href="https://yogyakartaprinciples.org/principles-sp/about-the-yogyakarta-principles/" target="_blank">https://yogyakartaprinciples.org/principles-sp/about-the-yogyakarta-principles/</a></p>
@@ -450,11 +454,13 @@
                     <div class="dossier-text d-item" data-match="c622" onclick="selectItem(this, 'act2')">
                         <p>La Corte analizó medidas relacionadas con protección de derechos y no discriminación de personas diversas.</p>
                         <p>Fuente verificable:<br><a href="https://www.corteconstitucional.gov.co/relatoria/2017/C-622-17.htm" target="_blank">https://www.corteconstitucional.gov.co/relatoria/2017/C-622-17.htm</a></p>
-                        <div class="note">No puedo confirmar interpretaciones doctrinales adicionales sobre esta sentencia sin revisión específica de literatura jurídica especializada.</div>
                     </div>
                 </div>
 
                 <div class="framework-zone">
+                    <!-- NUEVO: Título de la segunda columna -->
+                    <div style="font-weight: bold; font-size: 0.95rem; color: var(--primary, #333); text-align: center; border-bottom: 2px solid #ccc; padding-bottom: 5px; margin-bottom: 5px; width: 100%;">Marco Jurídico / Instrumento</div>
+                    
                     <div class="framework-slot" data-id="t447" onclick="verifyMatch(this)">Sentencia T-447 de 2019</div>
                     <div class="framework-slot" data-id="c622" onclick="verifyMatch(this)">Sentencia C-622 de 2017</div>
                     <div class="framework-slot international" data-id="yogyakarta" onclick="verifyMatch(this)">Principios de Yogyakarta</div>

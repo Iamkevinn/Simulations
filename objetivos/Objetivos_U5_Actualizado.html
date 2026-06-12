@@ -297,7 +297,16 @@
         }
 
         .match-column { display: flex; flex-direction: column; gap: 10px; }
-        
+
+        .activity-group-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-primary);
+            margin-bottom: 4px;
+        }
+
         .match-item {
             padding: 15px;
             background-color: var(--color-light);
@@ -418,17 +427,19 @@
         <div class="activity-card" id="reto3">
             <h2>3. Objetivos de Aprendizaje</h2>
             <div class="instruction-box">
-                Conecta el concepto clave con el objetivo o meta institucional. Haz clic en un recuadro de la izquierda y luego en su pareja correspondiente a la derecha.
+                Conecta el concepto clave con el objetivo o meta institucional. Selecciona un elemento de la lista de Conceptos y luego el elemento relacionado en la lista de Correspondencias.
             </div>
 
             <div class="match-container">
                 <div class="match-column" id="col-left">
+                    <h3 class="activity-group-title">Conceptos</h3>
                     <div class="match-item" data-id="1">A. Roles laborales por género</div>
                     <div class="match-item" data-id="2">B. El cuidado como derecho</div>
                     <div class="match-item" data-id="3">C. Nuevas masculinidades</div>
                     <div class="match-item" data-id="4">D. Sistema Nacional del Cuidado</div>
                 </div>
                 <div class="match-column" id="col-right">
+                    <h3 class="activity-group-title">Correspondencias</h3>
                     <div class="match-item right-item" data-match="3">Identificarlas como estrategias pedagógicas hacia la corresponsabilidad.</div>
                     <div class="match-item right-item" data-match="1">Analizar su crítica desde la economía feminista y perspectivas estructurales.</div>
                     <div class="match-item right-item" data-match="4">Evaluar sus avances en la construcción de equidad e invisibilización del trabajo.</div>
@@ -550,7 +561,7 @@
         rightItems.forEach(item => {
             item.addEventListener('click', function() {
                 if(!selectedLeft) {
-                    showToast("Primero selecciona un concepto de la columna izquierda.", "warning");
+                    showToast("Primero selecciona un elemento de la lista de Conceptos.", "warning");
                     return;
                 }
                 if(this.classList.contains('matched')) return;

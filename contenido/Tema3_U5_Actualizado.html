@@ -496,7 +496,7 @@
 
             <div class="instruction-box">
                 <div class="inst-title">🧠 Instrucción: Conectar las acciones</div>
-                <p class="inst-text">Para lograr masculinidades transformadoras se requieren estrategias pedagógicas claras. Relaciona la acción de la izquierda con su objetivo en la derecha para formar la estrategia completa.</p>
+                <p class="inst-text">Para lograr masculinidades transformadoras se requieren estrategias pedagógicas claras. Relaciona cada acción con su objetivo correspondiente para formar la estrategia completa.</p>
             </div>
 
             <div class="match-grid">
@@ -670,7 +670,7 @@
         definitions.forEach(item => {
             item.addEventListener('click', function() {
                 if(!selectedConcept) {
-                    showToast("Primero selecciona una Acción de la columna izquierda.", "warning");
+                    showToast("Primero selecciona una acción del grupo de acciones.", "warning");
                     return;
                 }
                 if(this.classList.contains('matched')) return;

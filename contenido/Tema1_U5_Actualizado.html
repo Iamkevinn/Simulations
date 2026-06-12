@@ -505,7 +505,7 @@
 
             <div class="instruction-box">
                 <div class="inst-title">🧠 Instrucción</div>
-                <p class="inst-text">Relaciona el concepto de la columna izquierda con su definición en la derecha. Haz clic primero en un concepto y luego en su pareja correspondiente.</p>
+                <p class="inst-text">Relaciona cada concepto con su definición correspondiente. Haz clic primero en un concepto y luego en su pareja correspondiente.</p>
             </div>
 
             <div class="match-grid">
@@ -661,7 +661,7 @@
         definitions.forEach(item => {
             item.addEventListener('click', function() {
                 if(!selectedConcept) {
-                    showToast("Primero selecciona un concepto de la columna izquierda.", "warning");
+                    showToast("Primero selecciona un concepto del grupo de conceptos.", "warning");
                     return;
                 }
                 if(this.classList.contains('matched')) return;
